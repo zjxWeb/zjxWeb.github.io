@@ -6,8 +6,12 @@
 
 > 一个神奇的个人博客，总是与惊喜相伴，记录自己的点滴
 
-- 简单、轻便
+- 座右铭 :  Less interests.More interest. 
 
 
-[GitHub](https://github.com/docsifyjs/docsify/)
-[点击进入我的博客](guide)
+[B站主页](https://space.bilibili.com/330132447?spm_id_from=333.1007.0.0)
+[🐻🐻小世界](guide)
+
+<!-- 背景图片 -->
+
+![](_media/bg.jpg)

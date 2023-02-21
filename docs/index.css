@@ -3,7 +3,23 @@
     width        : 150px;
     border-radius: 50%;
 } 
-
+.mask{
+    opacity: 0.2 !important;
+}
+.cover-main{
+    color: aliceblue;
+    font-weight: 600;
+    white-space: 100px;
+}
+.anchor{
+    font-weight: 600;
+    color: rgb(171, 201, 227) !important;
+}
+.cover-main ul li{
+    color:rgb(11, 246, 235);
+    font-size: 25px;
+   
+}
 /* .content{
     overflow-y:scroll;
 } */

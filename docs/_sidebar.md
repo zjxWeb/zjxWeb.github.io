@@ -1,4 +1,11 @@
-* [**主页面**](guide)
-* **学习笔记**
+* [**返回主页**](/)
+* [学习笔记](guide)
   * [c++](study/c++/)
   * [QT](study/QT/)
+  * [Python](study/python/)
+  * [linux](study/linux/)
+  * [数据库](study/dataBase/)
+* [技术博客](tech)
+  * [web](techBlog/web/)
+  * [数字孪生](techBlog/digitalTwins/)
+  * [服务端](techBlog/server/)
