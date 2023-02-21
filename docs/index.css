@@ -1,0 +1,9 @@
+/* logo 图片设置 */
+.cover-main p img {
+    width        : 150px;
+    border-radius: 50%;
+} 
+
+/* .content{
+    overflow-y:scroll;
+} */
