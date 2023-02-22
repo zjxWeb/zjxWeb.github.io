@@ -1,5 +1,5 @@
 # 
-# (一)docsify搭建个人博客
+# docsify搭建个人博客
 
 + [拼搏的小浣熊博客地址](https://zjxweb.github.io/)
 

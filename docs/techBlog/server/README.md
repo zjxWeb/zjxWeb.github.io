@@ -1,14 +1,14 @@
 #  
 
-# (一)git的基本操作，大文件上传（码云和GitHub）和出现error处理
+##  (一)git的基本操作，大文件上传（码云和GitHub）和出现error处理
 
 ### git的基本操作
 
-## 1. 建立仓库（码云和GitHub）
+### 1. 建立仓库（码云和GitHub）
 
 + 可以在`码云`和`github`进行仓库的建立
 
-## 2. 基本操作代码
+### 2. 基本操作代码
 
 + git 的全局设置
 
@@ -42,7 +42,7 @@
     git push -u origin "master"
     ```
 
-## 3. 大文件的上传
+### 3. 大文件的上传
 
 + 安装 git lfs（一个仓库里面执行一次就好了）
 
@@ -77,9 +77,9 @@
 
 + **其余步骤同上**
 
-## 4. ssh 配置
+### 4. ssh 配置
 
-+ ## 生成密钥
+### 生成密钥
 
   ```
   ssh-keygen -t rsa -C “email”
@@ -226,367 +226,300 @@
 
 ![主界面](./src/15.png)
 
-# (五)SQL server (oracle)语句练习案例
+# (五) nodeJS+express+mysql模块封装之服务器渲染小demo
 
-***！！！练习希望可以按顺序执行！！！***
-1. 建表(一)：
-	```
-	create table Teacher(
-	Tno integer ,
-	Tname char(6) ,
-	Title char(6),
-	Dept char(10));
-	
-	create table Teacher(
-	Tno integer Primary Key,
-	Tname char(6) not null,
-	Title char(6),
-	Dept char(10));
-	```
-2. 插入数据（一）：
-	```
-	insert into Teacher
-	values
-	(101,'李华','讲师','计算机');
-	insert into Teacher
-	values
-	(102,'张丽','讲师','通信');
-	insert into Teacher
-	values
-	(103,'刘力伟','助教','计算机');
-	insert into Teacher(Tno,Tname,Dept)
-	values
-	(104,'李春生','计算机');
-	insert into Teacher(Tno,Tname,Dept)
-	values
-	(105,'王华英','自动化');
-	```
-3. 查询（一）：
-	```
-	/*select * from teacher;*/
-	/*select * from teacher where dept='通信';*/
-	/*select distinct dept from teacher;*/
-	/*select count(*) from teacher;*/
-	/*select count(distinct dept) from teacher;*/
-	/*select * from teacher aa,teacher bb where aa.tno=bb.tno;*/
-	```
-4. 建表（二）：
-	```
-	create Table Course(
-	Cno integer not null,
-	Tno integer not null,
-	Cname char(10) not null,
-	credit numeric(3,1) not null,
-	Primary key(cno,tno));
-	```
-5. 插入数据（二）：
-	```
-	insert into Course
-	values(1,101,'数据库',3.5);
-	insert into Course
-	values(1,103,'数据库',3.5);
-	insert into Course
-	values(2,102,'网络',3);
-	insert into Course
-	values(2,101,'网络',3);
-	insert into Course
-	values(3,103,'操作系统',3);
-	```
-6. 查询（二）：
-	```
-	select * 
-	from teacher,course;
-	
-	select * 
-	from teacher,course
-	where teacher.tno=course.tno;
-	```
-7. 查询（三）：
-	```
-	//select cname from course ;
-	//select distinct cname from course;
-	select * from teacher;
-	```
-8. 更新数据：
-	```
-		//update teacher
-		//set dept='通信工程'
-		//where dept='通信';
-	```
-9. 删除数据：
-	```
-	//delete from teacher where dept='计算机';
-	```
-10. 查询（四）：
-	```
-	//select * from course where credit >3;
-	
-	//select * from course where credit between 2 and 3;
-	
-	//select * from teacher where dept in('计算机','自动化' ) ;
-	
-	//select * from teacher where dept not in('计算机') ;
-	
-	//select * from teacher where tname like '李%' ;
-	
-	//select * from teacher where title is null ;
-	
-	//select * from teacher order by tno desc ;
-	
-	//select * from teacher order by title ;
-	
-	//select count(*) from teacher;
-	
-	//select count(distinct cname) from course;
-	
-	select * from course aa, course bb
-	where aa.tno=bb.tno;
-	```
-11. 查询（五）：
-	```
-	//select * from course
-	//    where Tno in ( select Tno 
-	//                    from Teacher
-	//                     where Tname='李华');
-	//
-	//
-	//select * from teacher,course
-	//   where (teacher.tno=course.tno) and Tname='李华';
-	//
-	
-	//select * from course
-	//    where Tno in ( select Tno 
-	//                    from Teacher
-	//                     where Title='讲师');
-	
-	
-	select * from teacher,course
-	   where (teacher.tno=course.tno) and Title='讲师';
-	
-	```
-12. 查询（六）：
-	```
-	select Distinct Tno from course
-	  where 2<=(select count(*) from Course aa
-	                where aa.Tno=course.tno);
-	
-	//select count(*) from Course aa
-	//                where Tno=102;
-	//
-	```
-13. 新建视图：
-	```
-	create view v_t_c
-	   as 
-	      select Teacher.Tno,Tname,Title,Dept,Cno,Cname
-	        from Teacher,course
-	          where Teacher.Tno=course.Tno;
-	```
-14. 视图查询
-	```
-	Select * from v_t_c;
-	
-	Select * from v_t_c where Tno=101;
-	```
-15. 认识NUll：
-	```
-	create table Teacher(
-	Tno integer Primary Key,
-	Tname char(6) not null,
-	Title char(6),
-	Dept char(10));
-	
-	insert into Teacher
-	values
-	(901,'李华','讲师','计算机');
-	insert into Teacher
-	values
-	(902,'张丽','讲师','通信');
-	insert into Teacher
-	values
-	(903,'刘力伟','助教','计算机');
-	
-	insert into Teacher
-	values
-	(904,'赵莺',null,'计算机');
-	insert into Teacher
-	values
-	(905,'张大军',null,null);
-	
-	
-	select * from teacher;
-	
-	Select * from teacher where title is null;
-	
-	select * from teacher where dept is not null;
-	```
-16. 外键1：
-	```
-	create table father_t
-	(Cno integer primary key,
-	 Cname char(10) not null,
-	 Credit numeric(3,1) );
-	
-	insert into father_t
-	values
-	(1,'数据库',2);
-	
-	insert into father_t
-	values
-	(2,'网络',3);
-	
-	```
-17. 外键2：
-	```
-	create table son_t
-	(st_no integer primary key,
-	 fk_cno integer,
-	 grade integer,
-	 foreign key(fk_cno)
-	 references father_t(Cno));
-	
-	insert into son_t
-	values
-	(101,2,86);
-	
-	insert into son_t
-	values
-	(102,5,78);
-	```
-18. 查询（七）：
-	```
-	select * from teacher;
-	
-	select title,count(*) from teacher group by title ;
-	
-	select title,count(*) from teacher group by title having count(*)>1;
-	```
-19. 触发器（建表）：
-	```
-	create table Teacher(
-	Tno integer Primary Key,
-	Tname char(6) not null,
-	Title char(6),
-	Dept char(10));
-	
-	insert into Teacher
-	values
-	(101,'李华','讲师','计算机');
-	insert into Teacher
-	values
-	(102,'张丽','讲师','通信');
-	insert into Teacher
-	values
-	(103,'刘力伟','助教','计算机');
-	insert into Teacher(Tno,Tname,Dept)
-	values
-	(104,'李春生','计算机');
-	insert into Teacher(Tno,Tname,Dept)
-	values
-	(105,'王华英','自动化');
-	
-	
-	create Table Course(
-	Cno integer not null,
-	Tno integer not null,
-	Cname char(10) not null,
-	credit numeric(3,1) not null,
-	Primary key(cno,tno));
-	
-	insert into Course
-	values(1,101,'数据库',3.5);
-	insert into Course
-	values(1,103,'数据库',3.5);
-	insert into Course
-	values(2,102,'网络',3);
-	insert into Course
-	values(2,101,'网络',3);
-	insert into Course
-	values(3,103,'操作系统',3);
-	```
-20. 触发器（测试）：
-	```
-	delete from teacher where tno=101; 
-	select * from teacher;
-	select * from course;
-	```
-21. 触发器2-oracle
-	```
-	create trigger trig_demo1
-	after delete on teacher
-	for each row
-	begin
-	  delete course
-	     where course.tno=:old.tno;
-	end;
-	
-	```
-22. 触发器2-SQL Server 2000:
-	```
-	create trigger trig_demo1
-	  on teacher
-	   for delete
-	as
-	  delete course
-	    from course,deleted
-	        where course.tno=deleted.tno
-	
-	```
-23. 触发器3(测试):
-	```
-	select * from teacher;
-	select * from course; 
-	update teacher
-	  set tno=110
-	where tno=103;
-	select * from teacher;
-	select * from course; 
-	```
-24. 触发器3-oracle:
-	```
-	create trigger trig_demo2
-	   after update on teacher
-	   for each row
-	  
-	   begin
-	        update course
-	        set course.Tno=:new.Tno
-	     where course.Tno=:old.Tno;
-	   end;
-	
-	```
-25. 触发器3-SQL Server 2000
-	```
-	create trigger trig_demo2
-	   on teacher
-	   for update
-	   as
-	   if update(Tno)
-	   begin
-	      Declare @old_Tno integer,@new_Tno integer
-	      select @old_Tno=Tno
-	         from deleted;
-	      select @new_Tno=Tno
-	         from inserted;
-	       update course
-	        set course.Tno=@new_Tno
-	     where course.Tno=@old_Tno;
-	   end;
-	
-	```
-26. 事务(SQL Server 2000)
-	```
-	begin transaction
-	
-	select * from teacher;
-	
-	update teacher
-	  set title=null
-	     where tno=101;
-	
-	select * from teacher;
-	
-	rollback;
-	
-	select * from teacher;
-	```
+### 创建一个小项目
+
+`npm init`
+
+### 下载相关中间件（根据package.js来下载）
+
+### package.js
+
+![package.js](./src/16.png)
+
+### 目录结构
+
+![目录结构](./src/17.png)
+
+### index.js代码
+
+```
+const express = require('express');
+const path = require('path');
+const template = require('art-template');
+const bodyParser = require('body-parser');
+const router = require('./router.js')
+const app = new express();
+
+
+// 启动静态
+app.use('/static', express.static(path.join(__dirname, 'public')))
+
+// 设置模板引擎
+// 设置模板 引擎的路径
+app.set('views',path.join(__dirname,'views'));
+// 设置模板引擎
+app.set('view engine','art');
+
+// 使express 兼容 art-template 模引擎
+
+app.engine('art',require('express-art-template'));
+
+app.use(bodyParser.urlencoded({ extended: false}));
+app.use(bodyParser.json());
+
+
+
+// 配置路由
+app.use(router);
+
+// 监听端口
+
+const server = app.listen(8081,  ()=> {
+
+    const host = server.address().address
+    const port = server.address().port
+    console.log("应用实例，访问地址为 http://%s:%s", host, port)
+  
+  })
+```
+### 利用回调函数的性质完成db.js:
+
+```
+const mysql  = require('mysql');
+
+exports.base = (sql,data,callback) => {
+    const connection = mysql.createConnection({
+        host:'主机地址',
+        user:'root',
+        password:'你的mysql密码',
+        database:'book'
+    });
+    connection.connect();
+
+    connection.query(sql,data,function(error,results,fields){
+        if(error) throw error;
+        callback(results);
+    })
+    connection.end();
+}
+```
+### 建立router.js路由模块（这里以图书管理为例）：
+
+```
+/**
+ * 路由模块
+ */
+
+ const express = require('express');
+ const router = express.Router();
+ const service = require('./serveice.js')
+
+//  路由处理
+ router.get('/',service.showIndex);
+ 
+ router.get('/toBook',service.toAddBook);
+
+ router.post('/addBook',service.addBook);
+
+ router.get('/toEditBook',service.toEditBook);
+ router.post('/editBook',service.editBook);
+
+ router.get('/deleteBook',service.deleteBook)
+//  router.get('/dBook',service.deleteBook)
+ module.exports = router;
+```
+### 业务层抽离，专心业务的书写，建立serveice.js业务模块
+
+```
+/**
+ * 业务模块(处理具体的业务)
+ */
+
+const data = require('./data.json');
+const path = require('path');
+const db = require('./db.js')
+const fs = require('fs');
+
+// 自动生成图书编号
+let maxBookCode = ()=>{
+    let arr= [];
+    data.forEach((item) => {
+        arr.push(item.id);
+    });
+    return Math.max.apply(null,arr);
+}
+
+//  渲染主页面
+exports.showIndex = (req,res) => {
+    let sql = 'select * from book';
+    db.base(sql,null,(result) => {
+        res.render('index',{list:result})
+    });
+}
+
+
+exports.toAddBook = (req,res)=>{
+    res.render('addbook',{})
+}
+
+exports.addBook = (req,res)=>{
+    // 获取表单数据
+    let info = req.body;
+    console.log(info)
+    let book = {};
+    for(let key in info){
+        book[key] = info[key];
+    }
+    let sql = 'insert into book set ?';
+    db.base(sql,book,(result) => {
+        // console.log(result);
+        if(result.affectedRows >= 1){
+            res.redirect('/');
+        }
+    })
+}
+
+exports.toEditBook= (req,res)=>{
+    let id = req.query.id;
+    let sql = "select * from book where id = ?";
+    let data = [id];
+    db.base(sql,data,(result) => {
+        res.render('editBook',result[0]);
+    })
+    
+}
+
+
+exports.editBook= (req,res) => {
+    let info = req.body;
+    console.log(info.description);
+    let sql = "update book set name=?,author=?,category=?,description=? where id=?";
+    let data = [info.name,info.author,info.category,info.description,info.id];
+    db.base(sql,data,(result) => {
+        if(result.affectedRows >= 1){
+            res.redirect('/');
+        }
+    });
+
+}
+
+exports.deleteBook = (req,res) => {
+    let id = req.query.id;
+    let sql = `
+            delete from book where id = ?; 
+            `;
+    let data = [id];
+    db.base(sql,data,(result)=>{
+        if(result.affectedRows >= 1){
+            res.redirect('/');
+        }
+    })
+}
+// exports.dBook = (req,res) => {
+//     let id = req.query.id;
+//     let sql = "ALTER TABLE book ADD id INT NOT NULL PRIMARY KEY AUTO_INCREMENT FIRST;"
+// }
+
+```
+### 数据交互采用的art-template
+
+- 目录结构
+-![目录结构](./src/18.png)
+
+### 主页面，index.art:
+
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>图书馆里系统</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+</head>
+<body>
+    <div class="title">图书馆里系统 <a href="/toBook">添加图书</a></div>
+    <div class="content">
+        <table cellpadding = "0" cellsapcing = "0">
+            <thead>
+                <tr>
+                    <th>编号</th>
+                    <th>名称</th>
+                    <th>作者</th>
+                    <th>类别</th>
+                    <th>描述</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+               {{ each list}}
+                    <tr>
+                        <td>{{ $value.id }}</td>
+                        <td>{{ $value.name }}</td>
+                        <td>{{ $value.author }}</td>
+                        <td>{{ $value.category }}</td>
+                        <td>{{ $value.description }}</td>
+                        <td><a href="/toEditBook?id={{$value.id}}">修改</a>|<a class='del' href="/deleteBook?id={{$value.id}}">删除</a></td>
+                    </tr>
+               {{ /each}}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+```
+### 添加图书个管理图书界面（addBook.art,editBook.art）：
+
+```
+// addBook 添加图书
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>添加图书</title>
+</head>
+<body>
+    <div>添加图书</div>
+    <form action="/addBook" method="post">
+        编号： <input type="text" name="id" id=""><br>
+        名称： <input type="text" name="name" id=""><br>
+        作者： <input type="text" name="author" id=""><br>
+        类别： <input type="text" name="category" id=""><br>
+        描述： <input type="text" name="description" id=""><br>
+        <input type="submit" value="提交">
+    </form>
+</body>
+</html>
+```
+```
+// editBook编辑图书
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>编辑图书</title>
+</head>
+<body>
+    <div>编辑图书</div>
+    <form action="/editBook" method="post">
+        编号： <input type="text" name="id" value = "{{id}}"><br>
+        名称： <input type="text" name="name" value = "{{ name }}"><br>
+        作者： <input type="text" name="author" value = "{{ author }}"><br>
+        类别： <input type="text" name="category" value = "{{ category }}"><br>
+        描述： <input type="text" name="description" value = "{{ description }}"><br>
+        <input type="submit" value="提交">
+    </form>
+</body>
+</html>
+```
+### 输入命令`nodemon index.js`来跑自己的程序吧！体验喜悦的时刻到了！
+
+
+
