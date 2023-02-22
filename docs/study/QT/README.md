@@ -1,5 +1,5 @@
 # QT大法
-> [相关代码地址](https://gitee.com/chuangdu/cppStudy)
+
 ## 1. 入门介绍
 
 ### 1.1 版本控制工具
@@ -1255,4 +1255,193 @@ private:
   + 利用画家画图片  ` painter.drawPixmap(posx,10,QPixmap(":/img/cat.jpg"));`
 
 #### 11.4.1 绘图设备
+
++ 绘图设备是指继承QPainterDevice,的子类。9t一共提供了四个这样的类，分别
+  是QPixmap、QBitmap.QImage和QPicture。其中，
+
+  + QPixmap,专门为图像在屏幕上的显示做了优化
+
+  + QBitmap,是 QPixmap,的一个子类，它的色深限定为1，可以使用QPixmap_的isQBitmap()函数来确定这个QPixmap,是不是一个
+
+    QBitmap。
+
+  + QImage.专门为图像的像素级访凤做了优化。
+
+  + QPicture则可以记录和重现 QPaintex的各条命令。
+
+```c+
+#include "widget.h"
+#include "ui_widget.h"
+#include<QPixmap>
+#include<QPainter>
+#include<QImage>
+#include<QPicture>
+
+Widget::Widget(QWidget *parent)
+    : QWidget(parent)
+    , ui(new Ui::Widget)
+{
+    ui->setupUi(this);
+    // pixmap绘图设备
+//    QPixmap pix(300,300);
+
+//    // 填充颜色
+//    pix.fill(Qt::white);
+//    // 声明画家
+//    QPainter painter(&pix);
+//    painter.setPen(QPen(Qt::green));
+//    painter.drawEllipse(QPoint(150,150),100,100);
+
+    // 保存
+//    pix.save("路径");
+
+
+// QImage 绘图设备  可以对像素进行访问
+//    QImage img(300,300,QImage::Format_ARGB32);
+//    img.fill(Qt::white);
+//    QPainter painter(&img);
+//    painter.setPen(QPen(Qt::green));
+//    painter.drawEllipse(QPoint(150,150),100,100);
+    // 保存
+//    img.save("路径");
+
+    //QPicture 绘图设备  可以记录和重新绘图指令
+    QPicture pic;
+    QPainter painter;
+    painter.begin(&pic); // 开始往pic 上画
+    painter.setPen(QPen(Qt::cyan));
+    painter.drawEllipse(QPoint(150,150),100,100);
+    painter.end();//结束画画
+
+    // 保存到磁盘
+//    pic.save("路径");  E:\\pic.zt
+}
+// 绘图事件
+void Widget::paintEvent(QPaintEvent *)
+{
+//    QPainter painter(this);
+//    // 利用Qimage 对像素进行修改
+//    QImage img;
+////    img.load("路径");
+//    // 修改像素点
+//    for(int i = 50;i < 100;i++)
+//    {
+//        for(int j = 50; j < 100; j++)
+//        {
+//            QRgb value = qRgb(500,0,0);
+//            img.setPixel(i,j,value);
+//        }
+//    }
+//    painter.drawImage(0,0,img);
+
+    QPainter painter(this);
+    // 重现 QPicture的绘图指令
+    QPicture pic;
+    pic.load("E:\\pic.zt");
+    painter.drawPicture(0,0,pic);
+
+
+}
+
+
+Widget::~Widget()
+{
+    delete ui;
+}
+```
+
++ `QPixmap`     `QImage`  `QBitmap`（黑白色）   `QPicture`   `QWidger`
++ `QPixmap` 对不同平台做了显示的优化
+  + `QPixmap pix(300,300)`
+  + `pix.fill`(填充颜色)
+  + 利用画家 往 pix 上画画  ` QPainter painter(&pix);`
+    + 保存`pix.save("路径");`
++ `QImage` 可以对像素进行访问
+  + 使用和`QPixmap`,差不多`Qlmage img(300,300,QlmageFormat_RGB32);`
+  + 其他流程和`QPixmap`.一样
+  + 可以对像素进行修改`img.setPixelii.value);`
++ `QPicture`记录和重现绘图指令
+  + `QPicture pic`
+  + ` painter.begin(&pic);-`
+  + 保存`pic.save(任意后缀名)`
+  + 重现利用画家可以重现 `painter.drawPicture(o,0,pic);`
+
+## 12 QFile文件读写操作
+
++ `QFile`进行读写操作
++ `QFile file( path文件路径) `
++ 读
+  + ``file.open(打开方式) QloDevice:readonlye'`
+  + 全部读取`file.creadAll()`按行读`file.readLinel)atend()`判断是否读到文件尾
+  + 默认支持编码格式`utf-8`
+  + 利用编码格式类指定格式`QTextcodec `
+  + `QTextCodec * codec = QTextCodec…codecEorName("gbk");`
+  + `ui->textEdit->setText( codec->toUnicode(array) );`
+  + 文件对象关闭`close`
++ 写
+  + `file.open( QIODevice:writeOnly / Append)`
+  + `file.write(内容)`
+  + `file.close关闭`
++ `QFileInfo`文件信息的读取
+
+```c++
+#include "widget.h"
+#include "ui_widget.h"
+#include<QFileDialog>
+#include<QFile>
+#include<QTextCodec>
+#include<QFileInfo>
+#include<QDebug>
+#include<QDateTime>
+
+Widget::Widget(QWidget *parent)
+    : QWidget(parent)
+    , ui(new Ui::Widget)
+{
+    ui->setupUi(this);
+    // 点击选取文件按钮，弹出文件对话框
+    connect(ui->pushButton,&QPushButton::clicked,[=](){
+        QString path = QFileDialog::getOpenFileName(this,"打开文件","E:\\dayFile");
+        // 将路径放入到lineEdit中
+        ui->lineEdit->setText(path);
+
+        // 编码格式类
+        QTextCodec * codec = QTextCodec::codecForName("gbk");
+
+        // 读取内容 放到textedit
+        // Qfile 默认支持的格式是 utf-8
+        QFile file(path); //参数就是读取文件的路径
+        //设置打开方式
+        file.open(QIODevice::ReadOnly);
+        QByteArray array;
+//        array  =  file.readAll();
+        while(!file.atEnd()){ // 判断是否读到文件尾部
+            array  +=  file.readLine(); // 按行读
+        }
+        // 将读取到的数据  放入 textEdit中
+        ui->textEdit->setText(array);
+//        ui->textEdit->setText(codec->toUnicode(array));
+        // 对文件对象进行关闭
+        file.close();
+
+
+        // 进行写文件
+        file.open(QIODevice::Append); // 用追加的方式进行写
+        file.write("aaaa");
+        file.close();
+
+
+        // QFileInfo 文件信息读取
+        QFileInfo info(path);
+        qDebug()<< "大小" << info.size() << "后缀名" << info.suffix();
+        qDebug() << "创建日期" << info.created().toString("yyyy/MM/dd hh:mm:ss") ;
+        qDebug() << "最后的修改日期" << info.lastModified().toString("yyyy/MM/dd hh:mm:ss") ;
+    });
+}
+
+Widget::~Widget()
+{
+    delete ui;
+}
+```
 
