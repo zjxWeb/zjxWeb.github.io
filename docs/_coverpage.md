@@ -9,7 +9,7 @@
 - 座右铭 :  Less interests.More interest. 
 
 
-[B站主页](https://space.bilibili.com/330132447?spm_id_from=333.1007.0.0)
+<!-- [B站主页](https://space.bilibili.com/330132447?spm_id_from=333.1007.0.0) -->
 [🐻🐻小世界](guide)
 
 <!-- 背景图片 -->
