@@ -79,7 +79,7 @@
 
 `load data local infile "文件名" into table 表名;`
 
-# SQL server (oracle)语句练习案例
+## SQL server (oracle)语句练习案例
 
 ***！！！练习希望可以按顺序执行！！！***
 1. ### 建表(一)：

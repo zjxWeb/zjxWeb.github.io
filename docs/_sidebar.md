@@ -13,3 +13,4 @@
   * [vim](techBlog/vim/)
 * [好东西tips](tips)
   * [docsify](tips/docsify/)
+  * [Hubilder连接nox](tips/noxHubilder/)
