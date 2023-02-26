@@ -2,9 +2,9 @@
 
 + 个人微信
 
-![微信](./_media/wx.jpg)
+![微信（微信号：agony_triumph）](./_media/wx.jpg)
 
 + 个人QQ
 
-![QQ](./_media/qq.png)
+![QQ：1184159966](./_media/qq.png)
 
