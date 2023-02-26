@@ -8,7 +8,7 @@
   * [web开发](study/web/)
 * [技术博客](tech)
   * [web](techBlog/web/)
-  * [digitalTwins](techBlog/digitalTwins/)
+  * [数字孪生](techBlog/digitalTwins/)
   * [服务端](techBlog/server/)
   * [vim](techBlog/vim/)
 * [好东西tips](tips)
