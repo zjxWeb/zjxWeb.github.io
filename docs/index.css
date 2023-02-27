@@ -23,3 +23,7 @@
 /* .content{
     overflow-y:scroll;
 } */
+body:not(.ready) .app-nav, body:not(.ready)>nav, body:not(.ready) [data-cloak]{
+    display: block;
+    color: aliceblue;
+}
