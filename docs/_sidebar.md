@@ -2,6 +2,7 @@
 * [学习笔记](guide)
   * [c++](study/c++/)
   * [QT](study/QT/)
+  * [socket](study/socket/)
   * [Python](study/python/)
   * [java](study/java/)
     * [多线程](study/java/Multithreading/)
