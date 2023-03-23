@@ -521,5 +521,11 @@ exports.deleteBook = (req,res) => {
 ```
 ### 输入命令`nodemon index.js`来跑自己的程序吧！体验喜悦的时刻到了！
 
+# (六)git文件回滚
+## 1. 查看提交日志
++ ` git reflog`
+## 2. 回滚
++ `git reset --hard 8f3d055`(此处的‘8f3d055’为id，在日志中有的，可以依照自己的日志确定要恢复的版本)
+
 
 

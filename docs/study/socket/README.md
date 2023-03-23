@@ -19,4 +19,672 @@
 #include<WinSock2.h>
 ```
 
-### 3. 
+### 3. chatGPT示例（windows平台版）
+
++ 服务端代码：
+
+```c++
+#include <iostream>
+#include <winsock2.h>
+
+#pragma comment(lib, "ws2_32.lib")
+#pragma warning(disable:4996)
+
+int main() {
+    WSADATA wsaData;
+    WSAStartup(MAKEWORD(2, 2), &wsaData);
+
+    // 创建 socket
+    SOCKET serverSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+
+    // 绑定 IP 地址和端口号
+    sockaddr_in serverAddr;
+    serverAddr.sin_family = AF_INET;
+    serverAddr.sin_port = htons(8080);
+    serverAddr.sin_addr.S_un.S_addr = htonl(INADDR_ANY);
+    bind(serverSocket, (sockaddr*)&serverAddr, sizeof(serverAddr));
+
+    // 监听连接请求
+    listen(serverSocket, SOMAXCONN);
+
+    std::cout << "Server listening on port 8080..." << std::endl;
+
+    // 等待客户端连接
+    sockaddr_in clientAddr;
+    int clientAddrSize = sizeof(clientAddr);
+    SOCKET clientSocket = accept(serverSocket, (sockaddr*)&clientAddr, &clientAddrSize);
+
+    std::cout << "Client connected from " << inet_ntoa(clientAddr.sin_addr) << std::endl;
+
+    // 接收客户端发送的数据
+    char buffer[1024];
+    int recvSize = recv(clientSocket, buffer, sizeof(buffer), 0);
+
+    std::cout << "Received " << recvSize << " bytes from client: " << buffer << std::endl;
+
+    // 发送数据给客户端
+    const char* msg = "Hello, client!";
+    send(clientSocket, msg, strlen(msg), 0);
+
+    // 关闭 socket
+    closesocket(clientSocket);
+    closesocket(serverSocket);
+    WSACleanup();
+
+    return 0;
+}
+
+```
+
++ 客户端代码
+
+```c++
+#include <iostream>
+#include <winsock2.h>
+
+#pragma comment(lib, "ws2_32.lib")
+
+int main() {
+    WSADATA wsaData;
+    WSAStartup(MAKEWORD(2, 2), &wsaData);
+
+    // 创建 socket
+    SOCKET clientSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+
+    // 连接到服务器
+    sockaddr_in serverAddr;
+    serverAddr.sin_family = AF_INET;
+    serverAddr.sin_port = htons(8080);
+    serverAddr.sin_addr.S_un.S_addr = inet_addr("127.0.0.1");
+    connect(clientSocket, (sockaddr*)&serverAddr, sizeof(serverAddr));
+
+    std::cout << "Connected to server at 127.0.0.1:8080" << std::endl;
+
+    // 发送数据给服务器
+    const char* msg = "Hello, server!";
+    send(clientSocket, msg, strlen(msg), 0);
+
+    // 接收服务器发送的数据
+    char buffer[1024];
+    int recvSize = recv(clientSocket, buffer, sizeof(buffer), 0);
+
+    std::cout << "Received " << recvSize << " bytes from server: " << buffer << std::endl;
+
+    // 关闭 socket
+    closesocket(clientSocket);
+    WSACleanup();
+
+    return 0;
+}
+
+```
+
+### 4. 普通实现，实用版（windows）
+
++ 引入动态链接库的第二种方法
+  + ![3](./src/3.png)
++ 示例代码
+
+```c++
+#define WIN32_LEAN_AND_MEAN  // 添加此处宏定义，或者切换WinSock2.h ，windows.h先后位置
+#include<WinSock2.h>
+#include<windows.h>
+
+//动态链接库
+//#pragma comment(lib,"ws2_32.lib") 只支持windos
+
+
+using namespace std;
+int main()
+{
+	WORD ver = MAKEWORD(2, 2);
+	WSADATA dat;
+	WSAStartup(ver,&dat);
+	///
+	///编写socket代码
+	///
+	WSACleanup();
+	return 0;
+}
+```
+
+### 5.  用socket API建立服务端和客户端
+
++ 用socket api建立简易tcp服务端
+  1. 建立一个socket
+  2. 绑定接受客户端连接的端口bind
+  3. 监听网络端口listen
+  4. 等待接受客户端连接 accept
+  5. 向客户端发送一条数据send
+  6. 关闭socket closesocket
+
+```c++
+#define WIN32_LEAN_AND_MEAN  // 添加此处宏定义，或者切换WinSock2.h ，windows.h先后位置
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#include<WinSock2.h>
+#include<windows.h>
+#include<stdio.h>
+
+//动态链接库
+//#pragma comment(lib,"ws2_32.lib") 只支持windos
+
+
+using namespace std;
+int main()
+{
+	WORD ver = MAKEWORD(2, 2);
+	WSADATA dat;
+	WSAStartup(ver, &dat);
+	//
+		/*1. 建立一个socket
+		2. 绑定接受客户端连接的端口bind
+		3. 监听网络端口listen
+		4. 等待接受客户端连接 accept
+		5. 向客户端发送一条数据send
+		6. 关闭socket closesocket*/
+	//
+	//1. 建立一个socket
+	SOCKET _sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	// 2. 绑定接受客户端连接的端口bind
+	sockaddr_in _sin = {};
+	_sin.sin_family = AF_INET;
+	_sin.sin_port = htons(4567);//host to net unsigned short
+	_sin.sin_addr.S_un.S_addr = INADDR_ANY;// inet_addr("127.0.0.1")
+	if (SOCKET_ERROR == bind(_sock, (sockaddr*)&_sin, sizeof(_sin)))
+	{
+		printf("ERROR,绑定用于接受客户端连接的网络端口失败\n");
+	}
+	else
+	{
+		printf("绑定网络端口成功 \n");
+	}
+	//3. 监听网络端口listen
+	if (SOCKET_ERROR == listen(_sock, 5))
+	{
+		printf("ERROR,监听网络端口失败\n");
+	}
+	else
+	{
+		printf("监听网络端口成功 \n");
+	}
+	//4. 等待接受客户端连接 accept
+	sockaddr_in clientAddr = {};
+	int nAddrLen = sizeof(sockaddr_in);
+	SOCKET _cSock = INVALID_SOCKET;
+	char msgBuf[] = "hello, i'm server";
+	while (true)
+	{
+		_cSock = accept(_sock, (sockaddr*)&clientAddr, &nAddrLen);
+		if (INVALID_SOCKET == _cSock)
+		{
+			printf("无效\n");
+		}
+		printf("新客户端加入:IP = %s \n",inet_ntoa(clientAddr.sin_addr));
+		//5. 向客户端发送一条数据send
+		send(_cSock, msgBuf, strlen(msgBuf) + 1, 0);
+	}
+	
+	//	6. 关闭socket closesocket
+	closesocket(_sock);
+
+
+	WSACleanup();
+	return 0;
+}
+
+```
+
++ 用socket  api建立简易tcp客户端
+  1. 建立一个socket
+  2. 连接服务端connect
+  3. 接受服务器信息 recv
+  4. 关闭socket closesocket
+
+```c++
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#include<stdio.h>
+#include<WinSock2.h>
+#include<windows.h>
+
+
+//动态链接库
+#pragma comment(lib,"ws2_32.lib") //只支持windos
+
+
+using namespace std;
+int main()
+{
+	WORD ver = MAKEWORD(2, 2);
+	WSADATA dat;
+	WSAStartup(ver, &dat);
+	/*1. 建立一个socket
+	2. 连接服务端connect
+	3. 接受服务器信息 recv
+	4. 关闭socket closesocket*/
+
+	//1. 建立一个socket
+	SOCKET _sock = socket(AF_INET, SOCK_STREAM, 0);
+	if (INVALID_SOCKET == _sock)
+	{
+		printf("失败");
+	}
+	else
+	{
+		printf("success");
+	}
+	//2. 连接服务端connect
+	sockaddr_in _sin = {};
+	_sin.sin_family = AF_INET;
+	_sin.sin_port = htons(4567);
+	_sin.sin_addr.S_un.S_addr = inet_addr("127.0.0.1");
+	if (SOCKET_ERROR == connect(_sock, (sockaddr*)&_sin, sizeof(sockaddr_in)))
+	{
+		printf("connect失败");
+	}
+	else
+	{
+		printf("connect  success");
+	}
+	//3.接受服务器信息 recv
+	char recvBuf[256] = {};
+	if (recv(_sock, recvBuf, 256, 0) > 0)
+	{
+		printf("接受到数据：%s", recvBuf);
+	}
+	//4. 关闭socket closesocket
+	closesocket(_sock);
+	WSACleanup();
+	return 0;
+}
+```
+
+<<<<<<< HEAD
+## 建立能持续处理请求的C/S网络程序
+
+![4](./src/4.png)
+
+### 1. 服务端代码改造
+
+```c++
+#define WIN32_LEAN_AND_MEAN  // 添加此处宏定义，或者切换WinSock2.h ，windows.h先后位置
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#include<WinSock2.h>
+#include<windows.h>
+#include<stdio.h>
+
+//动态链接库
+#pragma comment(lib,"ws2_32.lib") //只支持windos
+
+
+using namespace std;
+int main()
+{
+	WORD ver = MAKEWORD(2, 2);
+	WSADATA dat;
+	WSAStartup(ver, &dat);
+	//
+		/*1. 建立一个socket
+		2. 绑定接受客户端连接的端口bind
+		3. 监听网络端口listen
+		4. 等待接受客户端连接 accept
+		5. 向客户端发送一条数据send
+		6. 关闭socket closesocket*/
+	//
+	//1. 建立一个socket
+	SOCKET _sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	// 2. 绑定接受客户端连接的端口bind
+	sockaddr_in _sin = {};
+	_sin.sin_family = AF_INET;
+	_sin.sin_port = htons(4567);//host to net unsigned short
+	_sin.sin_addr.S_un.S_addr = INADDR_ANY;// inet_addr("127.0.0.1")
+	if (SOCKET_ERROR == bind(_sock, (sockaddr*)&_sin, sizeof(_sin)))
+	{
+		printf("ERROR,绑定用于接受客户端连接的网络端口失败\n");
+	}
+	else
+	{
+		printf("绑定网络端口成功 \n");
+	}
+	//3. 监听网络端口listen
+	if (SOCKET_ERROR == listen(_sock, 5))
+	{
+		printf("ERROR,监听网络端口失败\n");
+	}
+	else
+	{
+		printf("监听网络端口成功 \n");
+	}
+	//4. 等待接受客户端连接 accept
+	sockaddr_in clientAddr = {};
+	int nAddrLen = sizeof(sockaddr_in);
+	SOCKET _cSock = INVALID_SOCKET;
+	char msgBuf[] = "hello, i'm server";
+	_cSock = accept(_sock, (sockaddr*)&clientAddr, &nAddrLen);
+	if (INVALID_SOCKET == _cSock)
+	{
+		printf("无效\n");
+	}
+	printf("新客户端加入:Socket = %d，IP = %s \n",(int)_cSock, inet_ntoa(clientAddr.sin_addr));
+	char _recvBuf[128] = {};
+	while (true)
+	{
+		// 5. 接受客户端数据
+		int nLen = recv(_cSock, _recvBuf,128,0);
+		if (nLen <= 0) {
+			printf("客户端已退出，任务结束");
+			break;
+		}
+		// 6. 处理请求
+		printf("%s \n", _recvBuf);
+		if (0 == strcmp(_recvBuf, "getName"))
+		{
+			//7. 向客户端发送一条数据send
+			char msgBuf[] = "Xiao Qiang";
+			send(_cSock, msgBuf, strlen(msgBuf) + 1, 0);
+		}
+		else if (0 == strcmp(_recvBuf, "getAge"))
+		{
+			char msgBuf[] = "21";
+			//7. 向客户端发送一条数据send
+			send(_cSock, msgBuf, strlen(msgBuf) + 1, 0);
+		}
+		else 
+		{
+			char msgBuf[] = "???";
+			//7. 向客户端发送一条数据send
+			send(_cSock, msgBuf, strlen(msgBuf) + 1, 0);
+		}
+		//7. 向客户端发送一条数据send
+		send(_cSock, msgBuf, strlen(msgBuf) + 1, 0);
+	}
+	
+	//	6. 关闭socket closesocket
+	closesocket(_sock);
+	WSACleanup();
+	printf("退出。任务结束");
+	getchar();
+	return 0;
+}
+
+```
+
+### 2. 客户端代码改造
+
+```C++
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#include<stdio.h>
+#include<WinSock2.h>
+#include<windows.h>
+
+
+//动态链接库
+#pragma comment(lib,"ws2_32.lib") //只支持windos
+
+
+using namespace std;
+int main()
+{
+	WORD ver = MAKEWORD(2, 2);
+	WSADATA dat;
+	WSAStartup(ver, &dat);
+	/*1. 建立一个socket
+	2. 连接服务端connect
+	3. 接受服务器信息 recv
+	4. 关闭socket closesocket*/
+
+	//1. 建立一个socket
+	SOCKET _sock = socket(AF_INET, SOCK_STREAM, 0);
+	if (INVALID_SOCKET == _sock)
+	{
+		printf("失败");
+	}
+	else
+	{
+		printf("success");
+	}
+	//2. 连接服务端connect
+	sockaddr_in _sin = {};
+	_sin.sin_family = AF_INET;
+	_sin.sin_port = htons(4567);
+	_sin.sin_addr.S_un.S_addr = inet_addr("127.0.0.1");
+	if (SOCKET_ERROR == connect(_sock, (sockaddr*)&_sin, sizeof(sockaddr_in)))
+	{
+		printf("connect失败");
+	}
+	else
+	{
+		printf("connect  success");
+	}
+	char cmdBuf[128] = {};
+	while (true)
+	{
+		// 3. 输入请求命令
+		scanf("%s", cmdBuf);
+		// 4. 处理请求
+		if (0 == strcmp(cmdBuf, "exit")) 
+		{
+			printf("收到退出命令。任务结束");
+			break;
+		}
+		else
+		{
+			// 5. 向服务器发送请求命令
+			send(_sock, cmdBuf, strlen(cmdBuf) + 1, 0);
+		}
+		//6.接受服务器信息 recv
+		char recvBuf[128] = {};
+		if (recv(_sock, recvBuf, 128, 0) > 0)
+		{
+			printf("接受到数据：%s", recvBuf);
+		}  
+	}
+	
+	//7. 关闭socket closesocket
+	closesocket(_sock);
+	WSACleanup();
+	printf("退出。任务结束");
+	getchar();
+	return 0;
+}
+```
+
+## 发送结构化的网络消息数据
+
+![5](./src/5.png)
+
+### 1. 服务端代码改造
+
+```c++
+#define WIN32_LEAN_AND_MEAN  // 添加此处宏定义，或者切换WinSock2.h ，windows.h先后位置
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#include<WinSock2.h>
+#include<windows.h>
+#include<stdio.h>
+
+//动态链接库
+#pragma comment(lib,"ws2_32.lib") //只支持windos
+
+struct DataPackage
+{
+	int age;
+	char name[32];
+};
+int main()
+{
+	WORD ver = MAKEWORD(2, 2);
+	WSADATA dat;
+	WSAStartup(ver, &dat);
+	//
+		/*1. 建立一个socket
+		2. 绑定接受客户端连接的端口bind
+		3. 监听网络端口listen
+		4. 等待接受客户端连接 accept
+		5. 向客户端发送一条数据send
+		6. 关闭socket closesocket*/
+	//
+	//1. 建立一个socket
+	SOCKET _sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	// 2. 绑定接受客户端连接的端口bind
+	sockaddr_in _sin = {};
+	_sin.sin_family = AF_INET;
+	_sin.sin_port = htons(4567);//host to net unsigned short
+	_sin.sin_addr.S_un.S_addr = INADDR_ANY;// inet_addr("127.0.0.1")
+	if (SOCKET_ERROR == bind(_sock, (sockaddr*)&_sin, sizeof(_sin)))
+	{
+		printf("ERROR,绑定用于接受客户端连接的网络端口失败\n");
+	}
+	else
+	{
+		printf("绑定网络端口成功 \n");
+	}
+	//3. 监听网络端口listen
+	if (SOCKET_ERROR == listen(_sock, 5))
+	{
+		printf("ERROR,监听网络端口失败\n");
+	}
+	else
+	{
+		printf("监听网络端口成功 \n");
+	}
+	//4. 等待接受客户端连接 accept
+	sockaddr_in clientAddr = {};
+	int nAddrLen = sizeof(sockaddr_in);
+	SOCKET _cSock = INVALID_SOCKET;
+	char msgBuf[] = "hello, i'm server";
+	_cSock = accept(_sock, (sockaddr*)&clientAddr, &nAddrLen);
+	if (INVALID_SOCKET == _cSock)
+	{
+		printf("无效\n");
+	}
+	printf("新客户端加入:Socket = %d，IP = %s \n",(int)_cSock, inet_ntoa(clientAddr.sin_addr));
+	char _recvBuf[128] = {};
+	while (true)
+	{
+		// 5. 接受客户端数据
+		int nLen = recv(_cSock, _recvBuf,128,0);
+		if (nLen <= 0) {
+			printf("客户端已退出，任务结束");
+			break;
+		}
+		// 6. 处理请求
+		printf("%s \n", _recvBuf);
+		if (0 == strcmp(_recvBuf, "getInfo"))
+		{
+			DataPackage dp = {80,"pbxhx"};
+			send(_cSock, (const char *) & dp, sizeof(DataPackage), 0);
+		}
+		else if (0 == strcmp(_recvBuf, "getAge"))
+		{
+			char msgBuf[] = "21";
+			//7. 向客户端发送一条数据send
+			send(_cSock, msgBuf, strlen(msgBuf) + 1, 0);
+		}
+		else 
+		{
+			char msgBuf[] = "???";
+			//7. 向客户端发送一条数据send
+			send(_cSock, msgBuf, strlen(msgBuf) + 1, 0);
+		}
+		//7. 向客户端发送一条数据send
+		send(_cSock, msgBuf, strlen(msgBuf) + 1, 0);
+	}
+	
+	//	8. 关闭socket closesocket
+	closesocket(_sock);
+	WSACleanup();
+	printf("退出。任务结束");
+	getchar();
+	return 0;
+}
+```
+
+### 2. 客户端代码改造
+
+```C++
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#include<stdio.h>
+#include<WinSock2.h>
+#include<windows.h>
+
+
+//动态链接库
+#pragma comment(lib,"ws2_32.lib") //只支持windos
+struct DataPackage
+{
+	int age;
+	char name[32];
+};
+int main()
+{
+	WORD ver = MAKEWORD(2, 2);
+	WSADATA dat;
+	WSAStartup(ver, &dat);
+	/*1. 建立一个socket
+	2. 连接服务端connect
+	3. 接受服务器信息 recv
+	4. 关闭socket closesocket*/
+
+	//1. 建立一个socket
+	SOCKET _sock = socket(AF_INET, SOCK_STREAM, 0);
+	if (INVALID_SOCKET == _sock)
+	{
+		printf("失败");
+	}
+	else
+	{
+		printf("success");
+	}
+	//2. 连接服务端connect
+	sockaddr_in _sin = {};
+	_sin.sin_family = AF_INET;
+	_sin.sin_port = htons(4567);
+	_sin.sin_addr.S_un.S_addr = inet_addr("127.0.0.1");
+	if (SOCKET_ERROR == connect(_sock, (sockaddr*)&_sin, sizeof(sockaddr_in)))
+	{
+		printf("connect失败");
+	}
+	else
+	{
+		printf("connect  success");
+	}
+	char cmdBuf[128] = {};
+	while (true)
+	{
+		// 3. 输入请求命令
+		scanf("%s", cmdBuf);
+		// 4. 处理请求
+		if (0 == strcmp(cmdBuf, "exit")) 
+		{
+			printf("收到退出命令。任务结束");
+			break;
+		}
+		else
+		{
+			// 5. 向服务器发送请求命令
+			send(_sock, cmdBuf, strlen(cmdBuf) + 1, 0);
+		}
+		//6.接受服务器信息 recv
+		char recvBuf[128] = {};
+		if (recv(_sock, recvBuf, 128, 0) > 0)
+		{
+			DataPackage* dp = (DataPackage*)recvBuf;
+			printf("接受到数据：年龄= %d, 姓名= %s \n", dp->age,dp->name);
+		}
+	}
+	
+	//7. 关闭socket closesocket
+	closesocket(_sock);
+	WSACleanup();
+	printf("退出。任务结束");
+	getchar();
+	return 0;
+}
+```
+
+### 3. 网络数据报文的格式定义
+
++ 报文有两个部分，包头和包体，是网络消息的基本单元
++ 包头：描述本次消息包的大小，描述数据的作用
++ 包体：数据
+=======
+>>>>>>> 31d7427 (socketDemo)
