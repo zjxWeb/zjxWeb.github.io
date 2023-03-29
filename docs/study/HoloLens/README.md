@@ -40,3 +40,29 @@
 + 然后在`设置-开发者-配对--会弹出PIN码`，此时在`Visual Studio`下按动`F5`，接着在pc端会弹出一个框框，填上HoloLens上面的PIN码，就ok了，等待，导入，复制就可以了，看你项目的大小时间不固定。
 
 + 恭喜你，完成了！哦耶！
+
+### 2. unity 打包应用安装到Hololens2设备
+
++ 下载MRTK包的工具，并导入到项目的unity中。
+  + [下载网址](https://github.com/Microsoft/MixedRealityToolkit-Unity/releases)
+  + 打开网址下载如下的包就好了。
+  + ![11](./src/11.png)
++ 下载好了之后接着就是，将这些包导进去了，看如下操作。
+  + 用unity打开你的项目，然后依次在文件夹中点击这些包，就会自动弹出，import导包的界面，这时候选择import就可以了。
++ Build Settings界面配置如下
+  + ![12](./src/12.png)
++ 接下来就是mrtk的一系列操作了
+  + `Mixed Readlity` -> `ToolKit`->`Utilities`->`Build Windows`
+  + ![13](./src/13.png)
++ 接下来就是要配置Hololens了
+  + 连接Hololens
+    + **确保Hololens和你的电脑处于同一局域网**
+    + 然后在你电脑浏览器上输入Hololens的IP就ok了。Hololens的ip怎么找那
+      + 设置、网络、wifi的高级属性、往下滑就看到了
+    + 此时会弹出一个输入账号和密码的界面，如果不知道，就连续输入错的，然后就会弹出，重置，此时，重置就好了。
+    + ![14](./src/14.png)
+    + 然后回进入如下图的页面
+      + ![15](./src/15.png)
+    + 将如下图的文件导入即可哦
+      + ![16](./src/16.png)
+  + 完成了，只需等待就可以在Hololens中看到了，点击打开就好了。
