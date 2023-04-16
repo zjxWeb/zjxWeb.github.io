@@ -990,8 +990,199 @@ int main()
 
 ### 4. 将多次收发报文数据升级为一次收发
 
+#### 关于recv函数接受网络消息的疑问
+
+```c++
+struct DataHeader
+{
+	short dataLength;
+    short cmd;
+};
+```
+
+> 固长数据，变长数据、粘包/拆包、少包/组包
+
 #### 服务端代码
 
 ```C++
+#define WIN32_LEAN_AND_MEAN  // 添加此处宏定义，或者切换WinSock2.h ，windows.h先后位置
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#include<WinSock2.h>
+#include<windows.h>
+#include<stdio.h>
+
+//动态链接库
+#pragma comment(lib,"ws2_32.lib") //只支持windos
+
+enum CMD
+{
+	CMD_LOGIN,
+	CMD_LOGIN_RESULT,
+	CMD_LOGINOUT,
+	CMD_LOGINOUT_RESULT,
+	CMD_ERROR
+};
+
+struct DataHeader
+{
+	short dataLength;
+	short cmd;
+};
+//DataPackage
+struct Login : public DataHeader
+{
+	Login()
+	{
+		dataLength = sizeof(Login);
+		cmd = CMD_LOGIN;
+	}
+	char userName[32];
+	char PassWord[32];
+};
+struct LoginResult :public DataHeader
+{
+	LoginResult()
+	{
+		dataLength = sizeof(LoginResult);
+		cmd = CMD_LOGIN_RESULT;
+		result = 0;
+	}
+	int result;
+};
+
+struct LoginOut : public DataHeader
+{
+	LoginOut()
+	{
+		dataLength = sizeof(LoginOut);
+		cmd = CMD_LOGINOUT;
+	}
+	char userName[32];
+};
+
+struct LoginOutResult : public DataHeader
+{
+	LoginOutResult()
+	{
+		dataLength = sizeof(LoginOutResult);
+		cmd = CMD_LOGINOUT_RESULT;
+		result = 0;
+	}
+	int result;
+};
+int main()
+{
+	WORD ver = MAKEWORD(2, 2);
+	WSADATA dat;
+	WSAStartup(ver, &dat);
+	//
+		/*1. 建立一个socket
+		2. 绑定接受客户端连接的端口bind
+		3. 监听网络端口listen
+		4. 等待接受客户端连接 accept
+		5. 向客户端发送一条数据send
+		6. 关闭socket closesocket*/
+	//
+	//1. 建立一个socket
+	SOCKET _sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	// 2. 绑定接受客户端连接的端口bind
+	sockaddr_in _sin = {};
+	_sin.sin_family = AF_INET;
+	_sin.sin_port = htons(4567);//host to net unsigned short
+	_sin.sin_addr.S_un.S_addr = INADDR_ANY;// inet_addr("127.0.0.1")
+	if (SOCKET_ERROR == bind(_sock, (sockaddr*)&_sin, sizeof(_sin)))
+	{
+		printf("ERROR,绑定用于接受客户端连接的网络端口失败\n");
+	}
+	else
+	{
+		printf("绑定网络端口成功 \n");
+	}
+	//3. 监听网络端口listen
+	if (SOCKET_ERROR == listen(_sock, 5))
+	{
+		printf("ERROR,监听网络端口失败\n");
+	}
+	else
+	{
+		printf("监听网络端口成功 \n");
+	}
+	//4. 等待接受客户端连接 accept
+	sockaddr_in clientAddr = {};
+	int nAddrLen = sizeof(sockaddr_in);
+	SOCKET _cSock = INVALID_SOCKET;
+	char msgBuf[] = "hello, i'm server";
+	_cSock = accept(_sock, (sockaddr*)&clientAddr, &nAddrLen);
+	if (INVALID_SOCKET == _cSock)
+	{
+		printf("无效\n");
+	}
+	printf("新客户端加入:Socket = %d，IP = %s \n",(int)_cSock, inet_ntoa(clientAddr.sin_addr));
+	char _recvBuf[128] = {};
+	while (true)
+	{
+		DataHeader header = {};
+		// 5. 接受客户端数据
+		int nLen = recv(_cSock, (char*)&header, sizeof(DataHeader), 0);
+		if (nLen <= 0) {
+			printf("客户端已退出，任务结束");
+			break;
+		}
+		switch (header.cmd)
+		{
+			case CMD_LOGIN:
+			{
+				Login login = {};
+				recv(_cSock, (char*)&login, sizeof(login), 0);
+				printf("收到命令：CMD_LOGIN   数据长度  %d   userName = %s  passwrod = %s\n",  login.dataLength, login.userName, login.PassWord);
+				// 忽略判断用户密码是否正确的过程
+				LoginResult ret;
+				send(_cSock, (char*)&ret, sizeof(LoginResult), 0);
+			}
+			break;
+			case CMD_LOGINOUT:
+			{
+				LoginOut logout = {};
+				recv(_cSock, (char*)&logout, sizeof(logout), 0);
+				printf("收到命令：CMD_LOGIN   数据长度  %d   userName = %s \n", logout.dataLength, logout.userName);
+				// 忽略判断用户密码是否正确的过程
+				LoginOutResult ret;
+				send(_cSock, (char*)&ret, sizeof(LoginOutResult), 0);
+			}
+			break;
+			default:
+				header.cmd = CMD_ERROR;
+				header.dataLength = 0;
+				send(_cSock, (char*)&header, sizeof(header), 0);
+				break;
+		}
+		//if (0 == strcmp(_recvBuf, "getInfo"))
+		//{
+		//	DataPackage dp = {80,"pbxhx"};
+		//	send(_cSock, (const char *) & dp, sizeof(DataPackage), 0);
+		//}
+		//else if (0 == strcmp(_recvBuf, "getAge"))
+		//{
+		//	char msgBuf[] = "21";
+		//	//7. 向客户端发送一条数据send
+		//	send(_cSock, msgBuf, strlen(msgBuf) + 1, 0);
+		//}
+		//else 
+		//{
+		//	char msgBuf[] = "???";
+		//	//7. 向客户端发送一条数据send
+		//	send(_cSock, msgBuf, strlen(msgBuf) + 1, 0);
+		//}
+		////7. 向客户端发送一条数据send
+		//send(_cSock, msgBuf, strlen(msgBuf) + 1, 0);
+	}
+	
+	//	6. 关闭socket closesocket
+	closesocket(_sock);
+	WSACleanup();
+	printf("退出。任务结束");
+	getchar();
+	return 0;
+}
 ```
 

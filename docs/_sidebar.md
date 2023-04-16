@@ -7,6 +7,8 @@
   * [java](study/java/)
     * [多线程](study/java/Multithreading/)
   * [linux](study/linux/)
+    * [GDB](study/linux/gdb/)
+    * [MAKEFILE](study/linux/makefile/)
   * [数据库](study/dataBase/)
   * [算法](study/arithmetic/)
   * [web开发](study/web/)

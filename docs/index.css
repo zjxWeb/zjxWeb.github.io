@@ -27,3 +27,6 @@ body:not(.ready) .app-nav, body:not(.ready)>nav, body:not(.ready) [data-cloak]{
     display: block;
     color: aliceblue;
 }
+.L-Affiliate-Tagged{
+    color: azure !important;
+}
