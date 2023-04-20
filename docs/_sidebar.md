@@ -22,6 +22,6 @@
   * [docsify](tips/docsify/)
   * [Hubilder连接nox](tips/noxHubilder/)
 * [项目实战](projectPractice)
-  * [C++Project](projectPractice/CPPProject/)
-    * [机房预约系统](projectPractice/CPPProject/computerOrder/)
+  * [C++Project](projectPractice/cppproject/)
+    * [机房预约系统](projectPractice/cppproject/computerOrder/)
 * [个人联系方式](onself)
