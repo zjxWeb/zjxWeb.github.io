@@ -21,4 +21,7 @@
 * [好东西tips](tips)
   * [docsify](tips/docsify/)
   * [Hubilder连接nox](tips/noxHubilder/)
+* [项目实战](projectPractice)
+  * [C++Project](projectPractice/C++Project/)
+    * [机房预约系统](projectPractice/C++Project/computerOrder/)
 * [个人联系方式](onself)
