@@ -82,6 +82,8 @@
 
 ## 4.Hololens2环境配置（基于openXR）
 
+[参考博客地址](https://blog.csdn.net/quailchivalrous/article/details/125066855)
+
 ### 一. 环境配置
 
 1.unity相关下载
