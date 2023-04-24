@@ -10,7 +10,7 @@
 6. ssh -p port22 user@remote 连接远程计算机
 7. scp -P port22 user@remote  拷贝文件到远程服务器 加上-r 是拷贝文件夹 scp  -r ~/Desktop zjx:Desktop/demo
 8. 配置别名 ssh zjx 即可
-    
+   
 	```
 		建立 ~/.ssh/config 文件
 		 Host 别名
@@ -134,3 +134,81 @@
 		`sl，htop更加漂亮的显示`
 26. gedit 编写文件 
 	+ 安装 `apt-get install gedit`
+
+## shell操作相关快捷键
+
+### 1. shell相关概念
+
++ shell 就是 **命令解析器**
++ 命令解析器的作用：对用户输入到终端的命令进行解析，调用对应的执行程序
++ ![1](./src/1.png)
++ 用户在终端输入命令，由shell命令解释器对命令进行解析(按照$PATH环境变量搜索命令)，解析成内核能够识别的指令，然后由内核执行命令，最后由终端显示命令执行的结果给用户.
+
+> 注意: shell在寻找命令的时候是按照$PATH环境变量去查找的，如果找到了就执行对应的命令，若找不到就报错，执行**echo $PATH**可以查看PATH环境变量的值.
+
++ 
++ ![2](./src/2.png)
++ 常用的命令解析器
+  + shell --Bourne Shell
+    + /bin/sh
+  + bash -- Bourne Again Shell
+    + /bin/bash
+  + 当前系统所使用的shell
+    + echo $SHELL
+  + 当前系统下有哪些shell
+    + cat /etc/shells
+
+### 2. Linux下常用的快捷键
+#### 2.1 tab键的使用
+
+  + 补齐命令
+    + 如:在终端输入 his然后按tab键，会补齐history命令;如:输入l然后按tab键，会显示所有以l开头的命令.
+  + 补齐文件(包括目录和文件)
+    + 例如:如果在执行ls，然后按tab键，会显示当前目录下所有的文件
+
+  > 使用tab键的优点:减少用户输入，加快输入速度减少出错的机会.
+
+#### 2.2 主键盘快捷键
+
++ 遍历输入的命令
+
+  + 从当前位置向上遍历:ctrl+p (↑)
+  + 从当前位置向下遍历:ctrl +n(↓)
+
+  > 注意:使用history命令可以显示用户输入的所有命令。
+
++ 光标位置移动
+
+  + 光标左移:ctrl+ b (←)
+  + 坐标右移:ctrl +f (→)
+  + 移动到头部:ctrl+ a (home)
+  + 移动到尾部:ctIr +e (end)
+
++ 字符删除
+
+  + 删除光标前边的字符:ctrl+h(Backspace)
+  + 删除光标后边的字符:ctrl+d
+    + 光标后边的字符即光标覆盖的字符
+  + 删除光标前所有内容:ctrl+u
+  + 删除光标后所有内容: ctrl+ k
+
+### 3. Linux下的目录结构
+
+#### 3.1 linux系统的目录结构
+
++ Linux系统的目录结构是一个倒立的树状结构，根目录用`/`表示，对比windows目录结构理解linux,的目录结构。
++ ![3](./src/3.png)
+
+#### 3.2 Linux下主要目录介绍
+
++ `/bin: binary`，二进制文件，可执行程序，`shell`命令
+  + 如: `ls` , `rm` , `mv`, `cp`等常用命令
++ `/sbin`: s是Super User的意思，这里存放的是系统管理员使用的系统管理程序。
+  + 如`ifconfig`, `halt`, `shutdown`, `reboot`等系统命令
++ `/dev: device`，在 linux 下一切皆文件
+  + 硬盘，显卡，显示器
+  + 字符设备文件、块设备文件
+    + 如:在input目录下执行: `sudo cat mouse0`，移动鼠标会显示有输入.
++ `/lib: linux`运行的时候需要加载的一些动态库
+  + 如: `libc.so`、`libpthread.so`等
++ 
