@@ -1,6 +1,8 @@
 * [**返回主页**](/)
 * [学习笔记](guide)
   * [c++](study/c++/)
+  * [Machine Learning](study/machineLearning/)
+    * [pytorch](study/machineLearning/pytorch/)
   * [QT](study/QT/)
   * [socket](study/socket/)
   * [Python](study/python/)
