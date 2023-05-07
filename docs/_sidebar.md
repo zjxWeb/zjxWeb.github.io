@@ -3,6 +3,7 @@
   * [c++](study/c++/)
   * [Machine Learning](study/machineLearning/)
     * [pytorch](study/machineLearning/pytorch/)
+    * [yolo](study/machineLearning/yolo/)
   * [QT](study/QT/)
   * [socket](study/socket/)
   * [Python](study/python/)
