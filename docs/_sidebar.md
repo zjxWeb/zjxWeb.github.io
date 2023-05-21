@@ -1,6 +1,7 @@
 * [**返回主页**](/)
 * [学习笔记](guide)
   * [c++](study/c++/)
+    * [OpenSSL](study/c++/OpenSSL/)
   * [Machine Learning](study/machineLearning/)
     * [pytorch](study/machineLearning/pytorch/)
     * [yolo](study/machineLearning/yolo/)
