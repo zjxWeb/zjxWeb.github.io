@@ -22,6 +22,7 @@
   * [数字孪生](techBlog/digitalTwins/)
   * [服务端](techBlog/server/)
   * [vim](techBlog/vim/)
+  * [vmware](techBlog/vmware/)
 * [好东西tips](tips)
   * [docsify](tips/docsify/)
   * [Hubilder连接nox](tips/noxHubilder/)
