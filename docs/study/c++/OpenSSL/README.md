@@ -11,9 +11,7 @@
 >
 > [opensslGitHub仓库](https://github.com/openssl/openssl)
 
-## 2. 对称算法
-
-### 2.1 哈希
+## 2. 哈希
 
 + 特点
   + 不可逆
@@ -23,7 +21,7 @@
   + 通过哈希函数将原始数据进行计算， **得到的哈希值长度是固定的**
   + 原始的哈希值是一个定长的 `二进制`字符串
 
-#### 2.1.1 哈希算法：
+### 2.1 哈希算法：
 
 + `md5`
   + 散列值： `16byte`
@@ -113,7 +111,7 @@ unsigned char *MD5(const unsigned char *d, size_t n, unsigned char *md);
 
 ```
 
-#### 2.1.2 `SHA1`算法调用
+### 2.2 `SHA1`算法调用
 
 + 新建项目
 + ![1](./src/1.png)
@@ -169,7 +167,7 @@ unsigned char *MD5(const unsigned char *d, size_t n, unsigned char *md);
     ```
 
 
-#### 2.1.3 封装
+### 2.3 封装
 
 + 封装思路
 
@@ -224,7 +222,7 @@ unsigned char *MD5(const unsigned char *d, size_t n, unsigned char *md);
   }
 ```
 
-## 3. 对称加密
+## 3. 非对称加密
 
 > `RSA` 算法密钥长度越长，安全性越好，加密解密所需时间越长。
 
@@ -419,7 +417,9 @@ int RSA_verify(int type, const unsigned char *m, unsigned int m_length,
   }
 ```
 
-### 3.4 `AES`
+## 4. 对称算法 
+
+### 4.1`AES`
 
 ```shell
 分组加密: 每组长度 -> 16byte, 128bit
@@ -481,7 +481,7 @@ int RSA_verify(int type, const unsigned char *m, unsigned int m_length,
    			- # define AES_DECRYPT     0 -> 解密
    
    ```
-###  3.5 其他
+##  5. 其他
 
 - `OPENSSL_Uplink no OPENSSL_Applink` 错误
 
@@ -522,9 +522,9 @@ sudo ldconfig
 
 + 解决方法看： **`其他`**  
 
-## 4.  安装
+## 6.  安装
 
-### 4.1 windows下安装openssl
+### 6.1 windows下安装openssl
 
 > 下载地址: http://slproweb.com/products/Win32OpenSSL.html
 
@@ -546,7 +546,7 @@ sudo ldconfig
 
 ![15](./src/15.png)
 
-### 4.2 Linux下安装OpenSSL
+### 6.2 Linux下安装OpenSSL
 
 1. 下载安装包, 下载地址:  <https://www.openssl.org/source/>
 
@@ -590,7 +590,7 @@ sudo ldconfig
    Seeding source: os-specific
    ```
 
-### 4.3 VS中使用openssl
+### 6.3 VS中使用openssl
 
 > 打开VS, 创建一个空的控制台应用程序
 
@@ -618,9 +618,9 @@ sudo ldconfig
 
 ![22](./src/22.png)
 
-### 4.4. 测试
+### 6.4. 测试
 
-#### 4.4.1 VS中的相关设置
+#### 6.4.1 VS中的相关设置
 
 > 打开项目属性窗口, 添加openssl相关的库到项目中
 >
@@ -672,7 +672,7 @@ int main()
 `md5 value: 33b3bc8e05b4fcc16bd531dd9adac166`
 ```
 
-#### 4.4.2 Linux下的使用和测试
+#### 6.4.2 Linux下的使用和测试
 
 1. 编程应用程序,  测试代码如上, 文件名为  `md5_test.c`
 
@@ -687,9 +687,9 @@ int main()
    ```
 
 
-## 5. protobuf的安装
+## 7. protobuf的安装
 
-### 5.1 windows 平台 （vs2017）
+### 7.1 windows 平台 （vs2017）
 
 - 安装protobuf
   - 下载protobuf的C++版本的源代码，地址：https://github.com/google/protobuf/releases 
@@ -718,7 +718,7 @@ int main()
 
 
 
-### 5.2 在linux下的安装
+### 7.2 在linux下的安装
 
 参考资料: <https://github.com/protocolbuffers/protobuf/tree/master/src>
 
