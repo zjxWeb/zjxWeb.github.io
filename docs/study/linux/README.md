@@ -214,4 +214,109 @@
     + 如:在input目录下执行: `sudo cat mouse0`，移动鼠标会显示有输入.
 + `/lib: linux`运行的时候需要加载的一些动态库
   + 如: `libc.so`、`libpthread.so`等
-+ 
+
+## 三. `CentOS`安装软件
+
+### 1. 切换镜像源
+
+在`CentOS`中，要切换全局镜像，可以使用以下步骤：
+
+1. 备份yum源文件：在进行任何更改之前，应该备份现有的yum源文件，以便恢复到原始配置。可以使用以下命令对现有的yum源文件进行备份：
+
+   ```
+   sudo mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
+   ```
+
+2. 下载更新的yum源文件：可以在网络上找到更快的yum源，例如阿里云或清华大学yum镜像源。可以使用以下命令下载适合自己的yum源文件：
+
+   `CentOS 7:`
+
+   ```
+   sudo curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+   ```
+
+   `CentOS 8:`
+
+   ```
+   sudo curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-8.repo
+   ```
+
+3. 更新yum缓存：一旦您已经更改了repo文件，您需要重新生成yum缓存。可以使用以下命令来更新yum缓存：
+
+   ```
+   sudo yum makecache
+   ```
+
+   这会将新的源文件添加到缓存中。
+
+4. 验证新的镜像源：您可以运行以下命令以测试您的新`CentOS`镜像源：
+
+   ```
+   sudo yum clean all
+   sudo yum list
+   ```
+
+这些步骤可以帮助您在`CentOS`中切换全局镜像。使用较快的yum源可以加快软件包的下载速度，并优化`CentOS`系统的性能。
+
+## 2. 安装`NodeJS`
+
+在`CentOS`中安装`Node.js`，可以遵循以下步骤：
+
+1. 安装`epel`仓库：在`CentOS`中，`Node.js`可以通过`epel`仓库进行安装。如果您的系统尚未安装`epel`仓库，可以执行以下命令进行安装：
+
+   ```
+   sudo yum install epel-release
+   ```
+
+> `EPEL`（Extra Packages for Enterprise Linux）是一个由Fedora项目支持的社区驱动的扩展仓库，位于`CentOS`官方软件仓库之外。`EPEL`仓库提供由社区维护的关键软件包和库，可用于Red Hat Enterprise Linux和`CentOS`等企业Linux发行版。
+>
+> `EPEL`仓库提供了一些常见和流行的软件，这些软件不在Red Hat Core和Red Hat Extras上提供。`EPEL`仓库包括一些由Fedora项目打包和维护的软件包，它们往往在企业Linux系统中很有用，例如`Docker、Node.js、MySQL`等等。
+>
+> 在`CentOS`中启用`EPEL`仓库很容易，只需要安装`“epel-release`”软件包即可。安装后，您可以使用yum命令安装来自`EPEL`仓库的软件包。
+>
+> `EPEL`不是Red Hat出版物，也不是Red Hat支持的产品，许多来自`EPEL`的软件包没有得到Red Hat的测试、核准、支持或保修。`EPEL`在不断更新，因此，每个软件包的可靠性和维护性都各不相同。
+>
+> 总之，`EPEL`为`CentOS`增加了额外的软件包和库，使其更加适应企业环境中的需求。如果需要安装`EPEL`仓库提供的软件包，可以在`CentOS`中启用`EPEL`仓库，并使用yum安装相关软件。
+
+1. 安装`Node.js`：一旦您的系统已经安装了`epel`仓库，您就可以通过yum命令来安装`Node.js`。可以使用以下命令来安装：
+
+   ```
+   sudo yum install nodejs
+   ```
+
+2. 验证`Node.js`安装：在安装后，您可以验证`Node.js`是否正确安装。可以使用以下命令验证`Node.js`和`npm`的版本：
+
+   ```
+   node -v
+   npm -v
+   ```
+
+成功安装后，将输出`Node.js`和npm的版本号。
+
+如果您想安装特定版本的`Node.js`，则可以使用`Node.js`官方源进行安装。这需要执行以下步骤：
+
+1. 安装`Node.js`官方源：下载并运行`Node.js`官方安装脚本以添加`Node.js`官方源，执行以下命令：
+
+   ```
+   curl -sL https://rpm.nodesource.com/setup_14.x | sudo bash -
+   ```
+
+2. 安装`Node.js`：一旦您已将`Node.js`官方源添加到系统中，您就可以使用yum命令来安装`Node.js`。可以使用以下命令来安装：
+
+   ```
+   sudo yum install nodejs
+   ```
+
+3. 验证`Node.js`安装：在安装后，您可以验证`Node.js`是否正确安装。可以使用以下命令验证`Node.js`和npm的版本：
+
+   ```
+   node -v
+   npm -v
+   ```
+
+成功安装后，将输出`Node.js`和`npm`的版本号。
+
+> 如果安装完之后 ，输入 `npm -v`提示，命令不存在，可以使用 `yum -y install npm` 进行二次安装，随后即可完成。
+
+这些是在`CentOS`中安装`Node.js`的基本步骤，您可以根据需要使用不同的选项来安装不同版本的`Node.js`。
+
