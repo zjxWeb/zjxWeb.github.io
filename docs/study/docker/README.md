@@ -93,22 +93,97 @@
 
 + 以下是Docker常用操作：
 
-1. 检查Docker版本：`docker version`
-2. 查找Docker镜像：`docker search image_name`
-3. 下载Docker镜像：`docker pull image_name:tag`
-4. 列出本地的Docker镜像：`docker images`
-5. 删除本地的Docker镜像：`docker rmi image_name:tag`
-6. 运行Docker容器：`docker run [OPTIONS] image_name:tag [COMMAND] [ARG...]` （例如：`docker run -it ubuntu:latest /bin/bash`）
-7. 列出正在运行的Docker容器：`docker ps`，列出所有Docker容器：`docker ps -a`
-8. 停止Docker容器：`docker stop container_id/container_name`
-9. 启动Docker容器：`docker start container_id/container_name`
-10. 重启Docker容器：`docker restart container_id/container_name`
-11. 进入Docker容器内部：`docker exec -it container_id/container_name /bin/bash`
-12. 删除已停止的Docker容器：`docker rm container_id/container_name`
-13. 查看Docker容器日志：`docker logs container_id/container_name`
-14. 查看Docker容器统计信息：`docker stats container_id/container_name`
-15. 导入/导出Docker镜像：`docker save -o image_name.tar image_name:tag` 和 `docker load -i image_name.tar`
-16. 在终端中运行以下命令以列出您的容器: `docker ps`
+1. 检查Docker版本：
+
+   + ```
+     docker version
+     ```
+
+2. 查找Docker镜像：
+
+   + ```
+     docker search image_name
+     ```
+
+3. 下载Docker镜像：
+
+   + ```
+     docker pull image_name:tag
+     ```
+
+4. 列出本地的Docker镜像：
+
+   + ```
+     docker images
+     ```
+
+5. 删除本地的Docker镜像：
+
+   + ```
+     docker rmi image_name:tag
+     ```
+
+6. 运行Docker容器：
+
+   + ```
+     docker run [OPTIONS] image_name:tag [COMMAND] [ARG...] （例如：docker run -it ubuntu:latest /bin/bash）
+     ```
+
+7. 列出正在运行的Docker容器：
+
+   + ```
+     docker ps，列出所有Docker容器：docker ps -a
+     ```
+
+8. 停止Docker容器：
+
+   + ```
+     docker stop container_id/container_name
+     ```
+
+9. 启动Docker容器：
+
+   + ```
+     docker start container_id/container_name
+     ```
+
+10. 重启Docker容器：
+
+    + ```
+      docker restart container_id/container_name
+      ```
+
+11. 进入Docker容器内部：
+
+    + ```
+      docker exec -it container_id/container_name /bin/bash
+      ```
+
+12. 删除已停止的Docker容器：
+
+    + ```
+      docker rm container_id/container_name
+      ```
+
+13. 查看Docker容器日志：
+
+    + ```
+      docker logs container_id/container_name
+      ```
+
+14. 查看Docker容器统计信息：
+
+    + ```
+      docker stats container_id/container_name
+      ```
+
+15. 导入/导出Docker镜像：
+
+    + ```
+      docker save -o image_name.tar image_name:tag 和 docker load -i image_name.tar
+      ```
+
+16. 在终端中运行以下命令以列出您的容器: docker ps
 
 >  以上是Docker常用操作，通过这些命令可以方便地运行和管理Docker容器，并操作Docker镜像。
 
