@@ -80,5 +80,44 @@
    + 最大的公开仓库是 [Docker Hub](https://hub.docker.com/)，
    + 存放了数量庞大的镜像供用户下载。国内的公开仓库包括阿里云、网易云等
 
+### 2.2 安装过程
 
++ `yum -y install docker-io`
++ 可使用以下命令，查看 Docker 是否安装成功：
+  + `docker version`
++ 若输出了 Docker 的版本号，则说明安装成功了，可通过以下命令启动 Docker 服务：
+  + `service docker start`
++ 一旦 Docker 服务启动完毕，我们下面就可以开始使用 Docker 了。
 
+## 3. Docker常用操作
+
++ 以下是Docker常用操作：
+
+1. 检查Docker版本：`docker version`
+2. 查找Docker镜像：`docker search image_name`
+3. 下载Docker镜像：`docker pull image_name:tag`
+4. 列出本地的Docker镜像：`docker images`
+5. 删除本地的Docker镜像：`docker rmi image_name:tag`
+6. 运行Docker容器：`docker run [OPTIONS] image_name:tag [COMMAND] [ARG...]` （例如：`docker run -it ubuntu:latest /bin/bash`）
+7. 列出正在运行的Docker容器：`docker ps`，列出所有Docker容器：`docker ps -a`
+8. 停止Docker容器：`docker stop container_id/container_name`
+9. 启动Docker容器：`docker start container_id/container_name`
+10. 重启Docker容器：`docker restart container_id/container_name`
+11. 进入Docker容器内部：`docker exec -it container_id/container_name /bin/bash`
+12. 删除已停止的Docker容器：`docker rm container_id/container_name`
+13. 查看Docker容器日志：`docker logs container_id/container_name`
+14. 查看Docker容器统计信息：`docker stats container_id/container_name`
+15. 导入/导出Docker镜像：`docker save -o image_name.tar image_name:tag` 和 `docker load -i image_name.tar`
+
+>  以上是Docker常用操作，通过这些命令可以方便地运行和管理Docker容器，并操作Docker镜像。
+
+## 4. Docker 进阶操作
+
+1. 构建自己的镜像：可以使用Dockerfile编写自己的镜像构建文件，然后使用`docker build`命令构建镜像。例如：`docker build -t image_name:tag .`
+2. 用Docker Compose管理应用：Docker Compose是Docker提供的一个工具，允许用户在单个文件中定义将运行的多个容器。可以使用Docker Compose创建、启动、停止、重启多个容器。例如：`docker-compose up`。
+3. Docker网络管理：可以使用Docker的网络功能来创建和管理网络，允许容器之间进行通信。例如：`docker network create network_name`。
+4. Docker数据卷：Docker的数据卷可以实现在容器之间共享数据，通过共享文件来实现容器间通信，且数据卷的数据可持久化保存。例如：`docker run -v host_dir:container_dir image_name`。
+5. Docker Swarm集群：Docker Swarm是Docker提供的一个工具，提供自己的容器编排功能，可以在多台主机上执行标准Docker容器的镜像，创建分布式应用。例如：`docker swarm init`。
+6. Docker安装和使用应用程序：在Docker容器内安装和使用应用程序，类似于在主机上安装和使用应用程序。例如：`docker run -it --rm -v $PWD:/app -w /app node:latest npm install`。
+
+>  以上是Docker的一些高级操作，可以方便地构建、管理和部署多个容器，实现分布式系统的管理和应用程序集成。
