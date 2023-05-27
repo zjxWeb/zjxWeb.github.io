@@ -98,9 +98,82 @@
     + 此处不做展示，自己查看即可
 
 + 下面就到码云或者github上配置，这里以gitee（码云）为例
-![请添加图片描述](./src/3.png)
-![请添加图片描述](./src/4.png)
-![请添加图片描述](./src/5.png)
+  ![请添加图片描述](./src/3.png)
+  ![请添加图片描述](./src/4.png)
+  ![请添加图片描述](./src/5.png)
+
+### 大文件下载（1K）
+
+> 问题描述：在之前我们通过 ` git lfs`进行大文件上传，但是我们在本地进行 `clone`的时候，就会发现使用 `git clone + url` 克隆下来的压缩包只有 `只有 1K的大小`，如果要下载源文件我们就必须继续使用  `lfs`
+
+#### 怎么检查是否已正确配置`Git LFS`
+
+要检查是否已正确配置Git LFS，您可以使用以下命令：
+
+1. 检查是否已安装Git LFS：
+
+   ```
+   git lfs version
+   ```
+
+   如果已成功安装Git LFS，则应该显示LFS版本和Git LFS指针锁定器版本。
+
+2. 查看已跟踪大文件列表：
+
+   ```
+   git lfs track
+   ```
+
+   这将列出所有当前被Git LFS跟踪的大文件。此命令列出的所有大文件都应该在上传时使用Git LFS指针锁定器上传。
+
+3. 检查LFS文件的指针：
+
+   ```
+   git cat-file -p HEAD~1:path/to/largefile.dat
+   ```
+
+   这将显示大文件的Git LFS指针。如果该文件已成功上传到Git LFS，应该会显示锁定器文件的OID和文件大小等信息。
+
+4. 检查文件是否正确下载：
+
+   ```
+   git lfs fetch --all
+   git lfs checkout
+   ```
+
+   这将确保在正确配置Git LFS且已正确上传文件到Git LFS时，文件可以正确地下载回来。
+
+如果您在执行上述步骤时遇到任何错误，建议检查是否已在GIT配置文件中正确定义了LFS存储库，例如：
+
+```
+$ cat ~/.gitconfig
+[user]
+    name = Your name
+    email = your@mail.com
+[filter "lfs"]
+    required = true
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+```
+
+#### 已安装 `git lfs`操作
+
++ 在本地已经克隆的根目录下面执行如下命令
+
++ ```
+  cd 项目目录
+  ```
+
++ ```
+   git lfs fetch --all
+  ```
+
++ ```
+  git lfs checkout
+  ```
+
++ ![19](./src/19.png)
 
 # (二)怎么访问云服务器上的图片
 
