@@ -32,5 +32,5 @@
   * [C++Project](projectPractice/cppProject/)
     * [机房预约系统](projectPractice/cppProject/computerOrder/)
   * [数字孪生实例](projectPractice/digitalTwins/)
-    * [智慧城市数字孪生平台](projectPractice/cppProject/computerOrder/)
+    * [智慧城市数字孪生平台](projectPractice/cppProject/smartCity/)
 * [个人联系方式](onself)
