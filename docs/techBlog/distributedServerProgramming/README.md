@@ -395,6 +395,51 @@
 4. 安装 **make install** (需要管理员权限)
    - 将第三步生成的动态库/动态库/可执行程序拷贝到对应的系统目录
 
+## 6. 复习
+
+1. fastDFS
+
+   - 是什么?
+
+     - 分布式文件系统
+
+   - 干什么?
+
+     - 提供文件上传
+     - 提供文件下载
+
+   - 怎么使用?
+
+     - 根据主机的角色 -> 修改对应的配置文件
+
+     - 启动各个角色
+
+       ```shell
+       fdfs_trackerd /etc/fdfs/tracker.conf
+       fdfs_storaged /etc/fdfs/storage.conf
+       ```
+
+
+     客户端编写
+    
+     ![1531272014374](./src/1531272014374.png)
+    
+     - 操作步骤
+    
+       1. 创建管道 - pipe
+       2. 创建子进程
+       3. 子进程干什么?
+    
+          - 写管道, 关闭读端
+            - 将标准输出 -> 管道的写端
+          - 重定向
+          - 执行execl命令, 调用另外的进程fdfs_upload_file
+          - 子进程退出
+       4. 父进程？
+          - 读管道， 关闭写端
+          - 释放子进程资源 - pcb
+            - wait()/ waitpid()
+
 
 # 二. 数据库概述及Redis
 ## 1. 数据库类型
@@ -781,52 +826,6 @@ appendfsync everysec
      void freeReplyObject(void *reply);
      void redisFree(redisContext *c);
      ```
-
-
-## 4. 复习
-
-1. fastDFS
-
-   - 是什么?
-
-     - 分布式文件系统
-
-   - 干什么?
-
-     - 提供文件上传
-     - 提供文件下载
-
-   - 怎么使用?
-
-     - 根据主机的角色 -> 修改对应的配置文件
-
-     - 启动各个角色
-
-       ```shell
-       fdfs_trackerd /etc/fdfs/tracker.conf
-       fdfs_storaged /etc/fdfs/storage.conf
-       ```
-
-
-     客户端编写
-
-     ![1531272014374](./src/1531272014374.png)
-
-     - 操作步骤
-
-       1. 创建管道 - pipe
-       2. 创建子进程
-       3. 子进程干什么?
-
-          - 写管道, 关闭读端
-            - 将标准输出 -> 管道的写端
-          - 重定向
-          - 执行execl命令, 调用另外的进程fdfs_upload_file
-          - 子进程退出
-       4. 父进程？
-          - 读管道， 关闭写端
-          - 释放子进程资源 - pcb
-            - wait()/ waitpid()
 
 # 三. Nginx初试牛刀
 
@@ -1426,7 +1425,6 @@ appendfsync everysec
 
       - 需要使用以下函数接口
       - 官方地址 - > 客户端 -> 选择语言
-
 
 
 
