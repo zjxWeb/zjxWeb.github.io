@@ -442,8 +442,147 @@
           - 释放子进程资源 - pcb
             - wait()/ waitpid()
 
+> `fdfs_upload_file.c`
+
+```c++
+  1 #include <stdio.h> 
+  2 #include <stdlib.h> 
+  3 #include <string.h> 
+  4 #include <string.h> 
+  5 #include <errno.h> 
+  6 #include <sys/types.h> 
+  7 #include <sys/stat.h> 
+  8 #include <fcntl.h> 
+  9 #include <sys/wait.h>  
+ 10 #include "fdfs_client.h" 
+ 11 #include "logger.h" 
+ 12         
+ 13 int upload_file1(const char* confFile, const char* myFile,char* fileID) 
+ 14 { 
+ 15   char group_name[FDFS_GROUP_NAME_MAX_LEN + 1]; 
+ 16   ConnectionInfo *pTrackerServer; 
+ 17   int result; 
+ 18   int store_path_index; 
+ 19   ConnectionInfo storageServer; 
+ 20   char file_id[128]; 
+ 21  
+ 22   if ((result=fdfs_client_init(confFile)) != 0) 
+ 23   { 
+ 24     return result; 
+ 25   } 
+ 26  
+ 27   pTrackerServer = tracker_get_connection(); 
+ 28   if (pTrackerServer == NULL) 
+ 29   { 
+ 30     fdfs_client_destroy(); 
+ 31     return errno != 0 ? errno : ECONNREFUSED; 
+ 32   } 
+ 33  
+ 34   *group_name = '\0'; 
+ 35   if ((result=tracker_query_storage_store(pTrackerServer, \ 
+ 36                   &storageServer, group_name, &store_path_index)) != 0) 
+ 37   { 
+ 38     fdfs_client_destroy(); 
+ 39     fprintf(stderr, "tracker_query_storage fail, " \ 
+ 40       "error no: %d, error info: %s\n", \ 
+ 41       result, STRERROR(result)); 
+ 42     return result; 
+ 43   } 
+ 44  
+ 45   result = storage_upload_by_filename1(pTrackerServer, \ 
+ 46       &storageServer, store_path_index, \ 
+ 47       myFile, NULL, \ 
+ 48       NULL, 0, group_name, fileID); 
+ 49   if (result == 0) 
+ 50   { 
+ 51     printf("%s\n", fileID); 
+ 52   } 
+ 53   else 
+ 54   { 
+ 55     fprintf(stderr, "upload file fail, " \ 
+ 56       "error no: %d, error info: %s\n", \ 
+ 57       result, STRERROR(result)); 
+ 58   } 
+ 59  
+ 60   tracker_disconnect_server_ex(pTrackerServer, true); 
+ 61   fdfs_client_destroy(); 
+ 62  
+ 63   return result; 
+ 64 } 
+ 65  
+ 66 // 使用多进程的方式实现 
+ 67 int upload_file2(const char* confFile, const char* uploadFile, char* fileID,int size) 
+ 68 { 
+ 69   // 1. 创建匿名管道 
+ 70   int fd[2]; 
+ 71   int ret = pipe(fd); 
+ 72   if(ret == -1) 
+ 73   { 
+ 74     perror("pipe error"); 
+ 75     exit(0); 
+ 76   } 
+ 77   // 2. 创建子进程 
+ 78   pid_t pid = fork(); 
+ 79   // 如果是子进程 
+ 80   if(pid  == 0) 
+ 81   { 
+ 82     // 3. 标准输出重定向 --》 管道的写端 
+ 83     dup2(fd[1], STDOUT_FILENO); 
+ 84     // 4. 关闭读端 
+ 85     close(fd[0]); 
+ 86     // 5. 执行execlp命令 
+ 87     execlp("fdfs_upload_file","xxx", confFile, uploadFile, NULL); 
+ 88     perror("execlp error"); 
+ 89   } 
+ 90   else 
+ 91   { 
+ 92     // 父进程，读管道 
+ 93     // 关闭写端 
+ 94     close(fd[1]); 
+ 95     read(fd[0],fileID, size); 
+ 96     // 回收pcd -》 子进程 
+ 97     wait(NULL); 
+ 98   } 
+ 99 }
+
+```
+
+>  `fdfs_upload_file.h`
+
+```C++
+1 #ifndef _FDFS_UPLOAD_FILE_H
+  2 #define _FDFS_UOLOAD_FILE_H
+  3 
+  4 int upload_file1(const char* confFile, const char* localFile, char* fileID);
+  5 int upload_file2(const char * contFile, const char* localFile, char* fileID, int bufLen);
+  6 
+  7 #endif
+```
+
+> `main.c`
+
+```C++
+1 #include <stdio.h>
+  2 #include <unistd.h>
+  3 #include <stdlib.h>
+  4 #include <sys/types.h>
+  5 #include <sys/stat.h>
+  6 #include <string.h>
+  7 #include "fdfs_upload_file.h"
+  8 int main(int argc,const char* argv[])
+  9 {
+ 10   char fileID[1024] = {0};
+ 11   upload_file1("etc/fdfs/client.conf", "main.c", fileID);
+ 12   printf("fileID:%s\n", fileID);
+ 13   printf("========\n ");
+ 14   upload_file2("/etc/fdfs/c1ient.conf","main.c", fileID, sizeof(fileID));
+ 15   printf("fileID:%s\n",fileID);
+ 16   return 0;
+ 17  }
+```
 
 # 二. 数据库概述及Redis
+
 ## 1. 数据库类型
 
 ### 1.1 基本概念
