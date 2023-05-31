@@ -1,5 +1,5 @@
 # 分布式服务器编程
-
+# 一. 项目概述及FastDFS
 ## 1. 项目架构图
 
 ### 1.1 一些概念
@@ -396,7 +396,1036 @@
    - 将第三步生成的动态库/动态库/可执行程序拷贝到对应的系统目录
 
 
+# 二. 数据库概述及Redis
+## 1. 数据库类型
 
+### 1.1 基本概念
+
+1. 关系型数据库 - sql
+   - 操作数据必须要使用sql语句
+   - 数据存储在磁盘
+   - 存储的数据量大
+   - 举例:
+     - mysql
+     - oracle
+     - sqlite - 文件数据库
+     - sql server
+2. 非关系数据库 - nosql
+   - 操作不使用sql语句
+     - 命令
+   - 数据默认存储在内存
+     - 速度快, 效率高
+     - 存储的数据量小
+   - 不需要数据库表
+     - 以键值对的方式存储的
+
+### 1.2 关系/非关系型数据库搭配使用
+
+![](./src/1.png)
+
+> ==RDBMS: Relational Database Management System==
+>
+> 1. 所有的数据默认存储在关系型数据库中
+> 2. 客户端访问服务器, 有一些数据, 服务器需要频繁的查询数据
+>    - 服务器首先将数据从关系型数据库中读出 -> 第一次
+>      - 将数据写入到redis中
+>    - 客户端第二次包含以后访问服务器
+>      - 服务器从redis中直接读数据
+
+## 2. Redis
+
+> 1. 知道redis是什么?
+>    - 非关系型数据库 也可以叫 内存数据库
+> 2. 能干什么?
+>    - 存储访问频率高的数据
+>    - 共享内存
+>      - 服务器端 -> redis
+> 3. 怎么使用?
+>    - 常用的操作命令
+>      - 各种数据类型 -> 会查
+>    - redis的配置文件
+>    - redis的数据持久化
+>    - 写程序的时候如何对redis进行操作
+>      - 客户端 -> 服务器
+
+### 2.1 基本知识点
+
+1. 安装包下载
+   - 英文官方： <https://redis.io/>
+   - 中文官方： <http://redis.cn/>
+
+2. Redis安装
+
+   - make
+   - make install
+
+3. redis中的两个角色
+
+   ```shell
+   # 服务器 - 启动
+   redis-server	# 默认启动
+   redis-server confFileName # 根据配置文件的设置启动
+   # 客户端
+   redis-cli	# 默认连接本地, 绑定了6379默认端口的服务器
+   redis-cli -p 端口号
+   redis-cli -h IP地址 -p 端口 # 连接远程主机的指定端口的redis
+   # 通过客户端关闭服务器
+   shutdown
+   # 客户端的测试命令
+   ping [MSG]
+   ```
+
+4. redis中数据的组织格式
+
+   - 键值对
+     - key: 必须是字符串 - "hello"
+     - value: 可选的
+       - String类型
+       - List类型
+       - Set类型
+       - SortedSet类型
+       - Hash类型
+
+5. redis中常用数据类型
+   - String类型
+     - 字符串
+   - List类型
+     - 存储多个string字符串的
+   - Set类型
+     - 集合
+       - stl集合
+         - 默认是排序的, 元素不重复
+       - redis集合
+         - 元素不重复, 数据是无序的
+   - SortedSet类型
+     - 排序集合, 集合中的每个元素分为两部分
+       - [分数, 成员] -> [66, ''tom'']
+   - Hash类型
+     - 跟map数据组织方式一样: key:value
+       - Qt -> QHash, QMap
+       - Map -> 红黑树
+       - hash -> 数组
+         - a[index] = xx
+
+### 2.2 redis常用命令
+
+- String类型
+
+  ```shell
+  key -> string
+  value -> string
+  # 设置一个键值对->string:string
+  SET key value
+  # 通过key得到value
+  GET key
+  # 同时设置一个或多个 key-value 对
+  MSET key value [key value ...]
+  # 同时查看过个key
+  MGET key [key ...]
+  # 如果 key 已经存在并且是一个字符串， APPEND 命令将 value 追加到 key 原来的值的末尾
+  # key: hello, value: world, append: 12345
+  APPEND key value
+  # 返回 key 所储存的字符串值的长度
+  STRLEN key
+  # 将 key 中储存的数字值减一。
+  # 前提, value必须是数字字符串 -"12345"
+  DECR key
+  ```
+
+- List类型 - 存储多个字符串
+
+  ```shell
+  key -> string
+  value -> list
+  # 将一个或多个值 value 插入到列表 key 的表头
+  LPUSH key value [value ...]
+  # 将一个或多个值 value 插入到列表 key 的表尾 (最右边)。
+  RPUSH key value [value ...]
+  # list中删除元素
+  LPOP key # 删除最左侧元素
+  RPOP key # 删除最右侧元素
+  # 遍历
+  LRANGE key start stop
+  	start: 起始位置, 0
+  	stop: 结束位置, -1
+  # 通过下标得到对应位置的字符串
+  LINDEX key index
+  # list中字符串的个数
+  LLEN key
+  ```
+
+- Set类型
+
+  ```shell
+  key -> string
+  value -> set类型 ("string", "string1")
+  # 添加元素
+  # 将一个或多个 member 元素加入到集合 key 当中，已经存在于集合的 member 元素将被忽略
+  SADD key member [member ...]
+  # 遍历
+  SMEMBERS key
+  # 差集
+  SDIFF key [key ...]
+  # 交集
+  SINTER key [key ...]
+  # 并集
+  SUNION key [key ...]
+  ```
+
+- SortedSet 类型
+
+  ```shell
+  key -> string
+  value -> sorted ([socre, member], [socre, member], ...)
+  # 添加元素
+  ZADD key score member [[score member] [score member] ...]
+  # 遍历
+  ZRANGE key start stop [WITHSCORES] # -> 升序集合
+  ZREVRANGE key start stop [WITHSCORES] # -> 降序集合
+  # 指定分数区间内元素的个数
+  ZCOUNT key min max
+  ```
+
+- Hash类型
+
+  ![](./src/2.png)
+
+  ```shell
+  key ->string
+  value -> hash ([key:value], [key:value], [key:value], ...)
+  # 添加数据
+  HSET key field value
+  # 取数据
+  HGET key field
+  # 批量插入键值对
+  HMSET key field value [field value ...]
+  # 批量取数据
+  HMGET key field [field ...]
+  # 删除键值对
+  HDEL key field [field ...]
+  ```
+
+- Key 相关的命令
+
+  ```shell
+  # 删除键值对
+  DEL key [key ...]
+  # 查看key值
+  KEYS pattern
+  查找所有符合给定模式 pattern 的 key 。
+  KEYS * 匹配数据库中所有 key 。
+  KEYS h?llo 匹配 hello ， hallo 和 hxllo 等。
+  KEYS h*llo 匹配 hllo 和 heeeeello 等。
+  KEYS h[ae]llo 匹配 hello 和 hallo ，但不匹配 hillo
+  # 给key设置生存时长
+  EXPIRE key seconds
+  # 取消生存时长
+  PERSIST key
+  # key对应的valued类型
+  TYPE key
+  ```
+
+
+### 2.3 redis配置文件
+
+> 配置文件是给**redis服务器**使用 的
+
+1. 配置文件位置
+
+   - 从源码安装目录中找 -> redis.conf
+
+2. 配置文件配置项
+
+   ```shell
+   # redis服务器绑定谁之后, 谁就能访问redis服务器
+   # 任何客户端都能访问服务器, 需要注释该选项
+   bind 127.0.0.1 192.168.1.100 
+   # 保护模式, 如果要远程客户端访问服务器, 该模式要关闭
+   protected-mode yes
+   # reids服务器启动时候绑定的端口, 默认为6379
+   port 6379
+   # 超时时长, 0位关闭该选项, >0则开启
+   timeout 0
+   # 服务器启动之后不是守护进程
+   daemonize no
+   # 如果服务器是守护进程, 就会生成一个pid文件
+   # ./ -> reids服务器启动时候对应的目录
+   pidfile ./redis.pid
+   # 日志级别
+    loglevel notice
+   # 如果服务器是守护进程, 才会写日志文件
+    logfile "" -> 这是没写
+    logfile ./redis.log
+    # redis中数据库的个数
+    databases 16 
+    	- 切换 select dbID [dbID == 0 ~ 16-1]
+   ```
+
+### 2.4 redis数据持久化
+
+> 持久化: 数据从内存到磁盘的过程
+
+持久化的两种方式:
+
+- rdb方式
+  - 这是一种默认的持久化方式, 默认打开
+  - 磁盘的持久化文件xxx.rdb
+  - 将内存数据以二进制的方式直接写入磁盘文件
+  - 文件比较小, 恢复时间短, 效率高
+  - 以用户设定的频率 -> 容易丢失数据
+  - 数据完整性相对较低
+- aof方式
+  - 默认是关闭的
+  - 磁盘的持久化文件xxx.aof
+  - 直接将生成数据的命令写入磁盘文件
+  - 文件比较大, 恢复时间长, 效率低
+  - 以某种频率 -> 1sec
+  - 数据完整性高
+
+```shell
+# rdb的同步频率, 任意一个满足都可以
+save 900 1
+save 300 10
+save 60 10000
+# rdb文件的名字
+dbfilename dump.rdb
+# 生成的持久化文件保存的那个目录下, rdb和aof
+dir ./ 
+# 是不是要打开aof模式
+appendonly no
+ -> 打开: yes
+# 设置aof文件的名字
+appendfilename "appendonly.aof"
+# aof更新的频率
+# appendfsync always
+appendfsync everysec
+# appendfsync no
+```
+
+1. aof和rdb能不能同时打开?
+
+   - 可以
+
+2. aof和rdb能不能同时关闭?
+
+   - 可以
+
+   - rdb如何关闭?
+
+     ```shell
+     save ""
+     ```
+
+3. 两种模式同时开启, 如果要进行数据恢复, 如何选择?
+
+   - 效率上考虑:  rdb模式
+   - 数据的完整性: aof模式
+
+## 3 hiredis的使用
+
+1. hiredis的安装
+
+   - 下载地址: <http://redis.cn/clients.html#c> 
+   - 安装
+     - make
+     - make 
+
+2. hiredis API接口的使用
+
+   - 连接数据库
+
+     ```c
+     // 连接数据库
+     redisContext *redisConnect(const char *ip, int port);
+     redisContext *redisConnectWithTimeout(const char *ip, 
+                                           int port, const struct timeval tv);
+     ```
+
+   - 执行redis命令函数
+
+     ```c
+     // 执行redis命令
+     void *redisCommand(redisContext *c, const char *format, ...);
+     // redisCommand 函数实际的返回值类型
+     typedef struct redisReply {
+         /* 命令执行结果的返回类型 */
+         int type; 
+         /* 存储执行结果返回为整数 */
+         long long integer;
+         /* str变量的字符串值长度 */
+         size_t len;
+         /* 存储命令执行结果返回是字符串, 或者错误信息 */
+         char *str;
+         /* 返回结果是数组, 代表数据的大小 */
+         size_t elements;
+         /* 存储执行结果返回是数组*/
+         struct redisReply **element;
+     } redisReply;
+     redisReply a[100];
+     element[i]->str
+     ```
+
+     | 状态表示                 | 含义                                                         |
+     | ------------------------ | ------------------------------------------------------------ |
+     | REDIS_REPLY_STRING==1    | 返回值是字符串,字符串储存在redis->str当中,字符串长度为redi   |
+     | REDIS_REPLY_ARRAY== 2    | 返回值是数组，数组大小存在redis->elements里面，数组值存储在redis->element[i]里面。数组里面存储的是指向redisReply的指针，数组里面的返回值可以通过redis->element[i]->str来访问，数组的结果里全是type==REDIS_REPLY_STRING的redisReply对象指针。 |
+     | REDIS_REPLY_INTEGER == 3 | 返回整数long long，从integer字段获取值                       |
+     | REDIS_REPLY_NIL==4       | 返回值为空表示执行结果为空                                   |
+     | REDIS_REPLY_STATUS ==5   | 返回命令执行的状态，比如set foo bar 返回的状态为OK，存储在str当中 reply->str == "OK" 。 |
+     | REDIS_REPLY_ERROR ==6    | 命令执行错误,错误信息存放在 reply->str当中。                 |
+
+   - 释放资源
+
+     ```c
+     // 释放资源
+     void freeReplyObject(void *reply);
+     void redisFree(redisContext *c);
+     ```
+
+
+## 4. 复习
+
+1. fastDFS
+
+   - 是什么?
+
+     - 分布式文件系统
+
+   - 干什么?
+
+     - 提供文件上传
+     - 提供文件下载
+
+   - 怎么使用?
+
+     - 根据主机的角色 -> 修改对应的配置文件
+
+     - 启动各个角色
+
+       ```shell
+       fdfs_trackerd /etc/fdfs/tracker.conf
+       fdfs_storaged /etc/fdfs/storage.conf
+       ```
+
+
+     客户端编写
+
+     ![1531272014374](./src/1531272014374.png)
+
+     - 操作步骤
+
+       1. 创建管道 - pipe
+       2. 创建子进程
+       3. 子进程干什么?
+
+          - 写管道, 关闭读端
+            - 将标准输出 -> 管道的写端
+          - 重定向
+          - 执行execl命令, 调用另外的进程fdfs_upload_file
+          - 子进程退出
+       4. 父进程？
+          - 读管道， 关闭写端
+          - 释放子进程资源 - pcb
+            - wait()/ waitpid()
+
+# 三. Nginx初试牛刀
+
+## 1. 一些基本概念
+
+###1.1 Nginx初步认识
+
+1. Nginx介绍
+
+   - engine x
+
+   - 俄罗斯
+   - 开源的框架
+   - c语言
+   - Tengine - 淘宝基于nginx修改的
+
+2. Nginx能干什么?
+
+   - 作为web服务器
+     - 解析http协议
+   - 反向代理服务器
+     - 了解反向代理的概念
+   - 邮件服务器
+     - 解析邮件相关的协议: pop3/smtp/imap
+
+3. Nginx的优势?
+
+   > - 更快
+   >
+   >   - 高峰期(数以万计的并发时)nginx可以比其它web服务器更快的响应请求
+   >
+   > - 高扩展
+   >
+   >   - **低耦合**设计的模块组成,丰富的第三方模块支持
+   >
+   > - 高可靠
+   >
+   >   - 经过大批网站检验
+   >     - www.sina.com.cn
+   >     - www.xunlei.com
+   >     - www.163.com
+   >   - 每个worker进程相对独立, 出错之后可以快速开启新的worker
+   >     - worker进程的个数是可以控制的
+   >     - 在后台干活的进程
+   >
+   > - 低内存消耗
+   >
+   >   - 一般情况下,10000个非活跃的HTTP  Keep-Alive连接在nginx中仅消耗 2.5M内存
+   >
+   > - 单机支持10万以上的并发连接
+   >
+   >   - 取决于内存,10万远未封顶
+   >
+   > - 热部署
+   >
+   >   - master和worker的分离设计,可实现7x24小时不间断服务的前提下升级nginx可执行文件
+   >
+   > - 最自由的BSD许可协议
+   >
+   >   - BSD许可协议允许用户免费使用nginx, 修改nginx源码,然后再发布
+   >     - 淘宝: tengine
+   >
+
+### 1.2 正向/反向代理
+
+1. 正向代理
+
+   > 正向代理是位于客户端和原始服务器之间的服务器，为了能够从原始服务器获取请求的内容，客户端需要将请求发送给代理服务器，然后再由代理服务器将请求转发给原始服务器，原始服务器接受到代理服务器的请求并处理，然后将处理好的数据转发给代理服务器，之后再由代理服务器转发发给客户端，完成整个请求过程。 
+   >
+   > ==**正向代理的典型用途就是为在防火墙内的局域网客户端提供访问Internet的途径**==, 比如: 
+   >
+   > - 学校的局域网
+   > - 单位局域网访问外部资源 
+
+![](./src/051157002507977.jpg)
+
+正向代理服务器是为用户服务的
+
+2. 反向代理
+
+   > 反向代理方式是指代理原始服务器来接受来自Internet的链接请求，然后将请求转发给内部网络上的原始服务器，并将从原始服务器上得到的结果转发给Internet上请求数据的客户端。那么顾名思义，反向代理就是位于Internet和原始服务器之间的服务器，对于客户端来说就表现为一台服务器，客户端所发送的请求都是直接发送给反向代理服务器，然后由反向代理服务器统一调配。 
+
+   ![](./src/1.png)
+
+   ![](./src/2.png)
+
+   ![](./src/3.png)
+
+
+
+   ![](./src/4.png)
+
+1. 客户端给服务器发送请求, 连接服务器, 用户不知道服务器地址, 只有反向代理服务器的地址是公开的
+2. 请求直接发给反向代理服务器
+3. 反向代理服务器将请求转发给后边的web服务器
+   - web服务器 N 台
+   - 反向代理服务器转发请求会轮询进行
+4. web服务器收到请求进行处理, 得到结果
+5. web服务器将处理结果发送给反向代理服务器
+6. 反向代理服务器将拿到的结果转发给客户端
+
+### 1.3 域名和IP
+
+1. 什么是域名？
+   - www.baidu.com
+   - jd.com
+   - taobao.com
+2. 什么是IP地址？
+   - 点分十进制的字符串
+     - 11.22.34.45
+3. 域名和IP地址的关系？
+   - 域名绑定IP
+     - 一个域名只能绑定一个IP
+     - 一个IP地址被多个域名绑定
+
+## 2. Nginx 安装和配置
+
+###2.1 安装
+
+1. 下载
+
+   > 1. 官方地址: <http://nginx.org/>
+   > 2. Nginx相关依赖:
+   >    - OpenSSL: <http://www.openssl.org/> 
+   >      - 密码库
+   >      - 使用https进行通信的时候使用
+   >    - ZLib下载: <http://www.zlib.net/> 
+   >      - 数据压缩
+   >      - 安装:
+   >        - ./configure
+   >        - make
+   >        - sudo make install
+   >    - PCRE下载:  <http://www.pcre.org/> 
+   >      - 解析正则表达式
+   >      - 安装
+   >        - ./configure
+   >        - make
+   >        - sudo make install
+   >
+
+2. 安装
+
+   - nginx的安装
+
+     ```shell
+     # nginx工作时候需要依赖三个库
+     # 三个参数=这三个库对应的源码安装目录
+     # 根据自己的电脑的库安装包的位置进行指定
+     ./configure --with-openssl=../openssl-1.0.1t --with-pcre=../pcre-8.40 --with-zlib=../zlib-1.2.11
+     make
+     sudo make install
+     ```
+
+
+   ![1539658551107](./src/1539658551107.png)
+
+3. Nginx 相关的指令
+
+   - Nginx的默认安装目录
+
+     ```shell
+     /usr/local/nginx
+      conf -> 存储配置文件的目录
+      html -> 默认的存储网站(服务器)静态资源的目录 [图片, html, js, css]
+      logs -> 存储log日志
+      sbin -> 启动nginx的可执行程序
+     ```
+
+   - Nginx可执行程序的路径
+
+     ```shell
+     /usr/local/nginx/sbin/nginx
+     # 快速启动的方式
+     # 1. 将/usr/local/nginx/sbin/添加到环境变量PATH中
+     # 2. /usr/local/nginx/sbin/nginx创建软连接, 放到PATH对应的路径中, 比如: /usr/bin
+     ln -s /usr/local/nginx/sbin/nginx /usr/bin/nginx
+     ```
+
+   - 启动Nginx - 需要管理器权限
+
+     ```shell
+     # 假设软连接已经创建完毕
+     sudo nginx # 启动
+     ```
+
+   - 关闭Nginx
+
+     ```shell
+     # 第一种, 马上关闭
+     sudo nginx -s stop
+     # 第二种, 等nginx作为当前操作之后关闭
+     sudo nginx -s quit
+     ```
+
+   - 重新加载Nginx
+
+     ```shell
+     sudo nginx -s reload  # 修改了nginx的配置文件之后, 需要执行该命令
+     ```
+
+   - 测试是否安装成功
+
+     - 知道nginx对应的主机的IP地址 - > 192.168.1.100
+     - 在浏览器中访问该IP地址
+       - 看到一个welcom nginx的欢迎界面
+
+
+### 2.2 配置
+
+1. Nginx配置文件的位置
+
+   ```shell
+   /usr/local/nginx/conf/nginx.conf
+   ```
+
+2. Nginx配置文件的组织格式
+
+   ![](./src/5.png)
+
+   - http -> 模块, http相关的通信设置
+     - server模块 -> 每个server对应的是一台web服务器
+       - location 模块
+         - 处理的是客户端的请求
+   - mail -> 模块, 处理邮件相关的动作
+
+3. 常用配置项介绍
+
+   ```nginx
+   user  nobody; # 启动之后的worker进程属于谁
+   	- 错误提示: nginx操作xxx文件时候失败, 原因: Permission denied  
+   	- 将nobody -> root
+   worker_processes  1; # 设置worker进程的个数, 最大 == cpu的核数 (推荐)
+   error_log  logs/error.log; # 错误日志, /usr/local/nginx
+   pid        logs/nginx.pid; # pid文件, 里边是nginx的进程ID
+   # nginx的事件处理
+   events {
+    	use epoll;	# 多路IO转接模型使用epoll
+    	worker_connections  1024;	// 每个工作的进程的最大连接数
+   }
+   http->server -> 每个server模块可以看做一台web服务器
+   server{
+   	listen       80;  # web服务器监听的端口, http协议的默认端口
+       server_name  localhost; # 对应一个域名, 客户端通过该域名访问服务器
+       charset utf8; 	# 字符串编码
+       location {	// 模块, 处理客户端的请求
+   }
+   
+   # 客户端 (浏览器), 请求:
+     http://192.168.10.100:80/login.html
+   # 服务器处理客户端的请求
+     服务器要处理的指令如何从url中提取?
+     - 去掉协议: http
+     - 去掉IP/域名+端口: 192.168.10.100:80
+     - 最后如果是文件名, 去掉该名字: login.html
+     - 剩下的: /
+     服务器要处理的location指令: 
+     location /
+     {
+           处理动作
+     }
+   ```
+
+## 3. Nginx的使用
+
+### 3.1 部署静态网页
+
+1. 静态网页存储目录
+
+   - 默认的存储目录: 
+
+     ```shell
+     /usr/local/nginx/html
+     ```
+
+   - 自己创建新的目录:
+
+     ```shell
+     应该在 /usr/local/nginx/
+     mkdir /usr/local/nginx/mydir
+     ```
+
+2. 练习
+
+   > 在Nginx服务器上进行网页部署, 实现如下访问:
+   >
+   > 在/usr/local/nginx/创建新的目录, yundisk用来存储静态网页
+   >
+
+   - 访问地址: <http://192.168.80.254/login.html> 
+
+     - login.html放到什么位置?
+
+       ```shell
+       / -> 服务器的资源根目录, /usr/local/nginx/yundisk
+       login.htm-> 放到yundisk中
+       ```
+
+     - 服务器要处理的动作
+
+       ```nginx
+       # 对应这个请求服务器要添加一个location
+       location 指令(/)
+       {
+           # 找一个静态网页
+           root yundisk;  # 相对于/usr/local/nginx/来找
+           # 客户端的请求是一个目录, nginx需要找一默认显示的网页
+           index index.html index.htm;
+       }
+       # 配置之后重启nginx
+       sudo nginx -s reload
+       ```
+
+   - 访问地址: <http://192.168.80.254/hello/reg.html> 
+
+     - hello是什么?
+
+       - 目录
+
+     - reg.html放到哪儿?
+
+       - hello目录中
+
+     - 如何添加location
+
+       ```nginx
+       location /hello/
+       {
+           root yundisk;
+           index xx.html;
+       }
+       ```
+
+   - 访问地址: <http://192.168.80.254/upload/> 浏览器显示upload.html 
+
+     - 直接访问一个目录, 得到一默认网页
+
+       - upload是一个目录, uplaod.html应该再upload目录中
+
+         ```nginx
+         location /upload/
+         {
+             root yundisk;
+             index upload.html;
+         }
+         ```
+
+### 3.2 反向代理和负载均衡
+
+> 反向代理和负载均衡是两码事儿
+>
+
+![1527415078314](./src/8.png)
+
+准备工作:
+
+> 1. 需要客户端 - 1个
+>    - Window中的浏览器作为客户端 
+> 2. 反向代理服务器 -> 1个
+>    - window作为反向代理服务器
+> 3. web服务器 -> 2个
+>    - ubuntu - robin: 192.168.247.135
+>    - ubuntu - luffy : 192.168.26.250
+
+1. 反向代理设置
+
+   ![1539680213601](./src/1539680213601.png)
+
+   ```nginx
+   找window上对应的nginx的配置文件
+   	- conf/nginx.conf
+   # 代理几台服务器就需要几个server模块
+       # 客户端访问的url: http://192.168.1.100/login.html
+       server {
+           listen       80;        # 客户端访问反向代理服务器, 代理服务器监听的端口
+           server_name  ubuntu.com; # 客户端访问反向代理服务器, 需要一个域名
+           location / {
+               # 反向代理服务器转发指令, http:// 固定
+               proxy_pass http://robin.test.com;
+           }
+   
+       }
+       # 添加一个代理模块
+       upstream robin.test.com
+       {
+           server 192.168.247.135:80;
+       }
+       # luffy
+       server {
+           listen       80;        # 客户端访问反向代理服务器, 代理服务器监听的端口
+           server_name  hello.com; # 客户端访问反向代理服务器, 需要一个域名
+           location / {
+               # 反向代理服务器转发指令, http:// 固定
+               proxy_pass http://luffy.test.com;
+           }
+   
+       }
+       # 添加一个代理模块
+       upstream luffy.test.com
+       {
+           server 192.168.26.250:80;
+       }
+   }
+   
+   ```
+
+2. 负载均衡设置
+
+   ![1539681085862](./src/1539681085862.png)
+
+   ```nginx
+       server {
+           listen       80;         # 客户端访问反向代理服务器, 代理服务器监听的端口
+           server_name  localhost; # 客户端访问反向代理服务器, 需要一个域名
+           location / {
+               # 反向代理服务器转发指令, http:// 固定的头
+               proxy_pass http://linux.com;
+           }
+           location /hello/ {
+               # 反向代理服务器转发指令, http:// 固定的头
+               proxy_pass http://linux.com;
+           }
+       	location /upload/ {
+               # 反向代理服务器转发指令, http:// 固定的头
+               proxy_pass http://linux.com;
+           }
+   
+       }
+       # 添加一个代理模块
+       upstream linux.com
+       {
+           server 192.168.247.135:80 weight=1;
+           server 192.168.26.250:80 weight=3;
+       }
+   
+   ## =====================================
+   web服务器需要做什么?
+   # 192.168.247.135
+   location /
+   {
+       root xxx;
+       index xxx;
+   }
+   location /hello/ 
+   {
+       root xx;
+       index xxx;
+   }
+   location /upload/ 
+   {
+       root xxx;
+       index xx;
+   }
+   # 192.168.26.250
+   location /
+   {
+       root xxx;
+       index xxx;
+   }
+   location /hello/ 
+   {
+       root xx;
+       index xxx;
+   }
+   location /upload/ 
+   {
+       root xxx;
+       index xx;
+   }
+   ```
+
+
+## 课外知识导读
+
+### 1. URL和URI
+
+<img src="6.png" width="50%">
+
+   1. 概念:
+
+      > - URL（Uniform Resource  Locator）: 统一资源定位符
+      >
+      > - 表示资源位置的字符串
+      >   - 基本格式: "==协议://IP地址/路径和文件名=="
+      >      - <ftp://ftp.is.co.za/rfc/rfc1808.txt>
+      >      - <http://www.ietf.org/rfc/rfc2396.txt>
+      >      - <telnet://192.0.2.16:80/>
+      >
+      > - URN（Uniform Resource  Name）: 统一资源名称
+      >   - P2P下载中使用的磁力链接
+      >
+      > - URI（Uniform Resource  Identifier）: 统一资源标识符
+      >   - 是一个紧凑的字符串用来标示抽象或物理资源, ==**URL是URI的一种**== 
+      >   - 让URI能成为URL的当然就是那个“访问机制”，“网络位置”。e.g. `http://` or `ftp://`。
+      >     - files.hp.com 
+      >     - <tel:+1-816-555-1212>
+      >     - <ftp://ftp.is.co.za/rfc/rfc1808.txt>               （also a URL）
+      >     - <http://www.ietf.org/rfc/rfc2396.txt>         （also a URL）
+      >     - <telnet://192.0.2.16:80/>                              （also a URL）
+      >
+
+   2. 经验式理解:
+
+      ![](./src/7.png)
+
+      从包含关系上说: URI包含URL
+
+      字符串长度上说: URL包含URI
+
+      	UIRI可以没有协议, 没有地址(IP/域名)
+
+| URL  | 红色字体部分+绿色字体部分 |
+| ---- | ------------------------- |
+| URI  | 绿色字体部分              |
+
+### 2. DNS解析过程
+
+![wps_clip_image-14256](./src/2033581_1370929843HFAO.png)
+
+1. DNS解析的过程
+
+    > 1. 在浏览器中输入www.magedu.com域名，操作系统会先检查自己本地的hosts文件是否有这个网址映射关系，如果有，就先调用这个IP地址映射，完成域名解析。
+    > 2. 如果hosts里没有这个域名的映射，则查找本地DNS解析器缓存，是否有这个网址映射关系，如果有，直接返回，完成域名解析。
+    >    - Windows和Linux系统都会在本地缓存dns解析的记录，提高速度。 
+    > 3. 如果hosts与本地DNS解析器缓存都没有相应的网址映射关系，首先会找`TCP/IP`参数中设置的首选DNS服务器，在此我们叫它本地DNS服务器，此服务器收到查询时，如果要查询的域名，包含在本地配置区域资源中，则返回解析结果给客户机，完成域名解析，此解析具有权威性。
+    > 4. 如果要查询的域名，不由本地DNS服务器区域解析，但该DNS服务器已缓存了此网址映射关系，则调用这个IP地址映射，完成域名解析，此解析不具有权威性。
+    > 5. 如果本地DNS服务器本地区域文件与缓存解析都失效，则根据本地DNS服务器的设置（没有设置转发器）进行查询，如果未用转发模式，本地DNS就把请求发至13台根DNS，根DNS服务器收到请求后会判断这个域名(.com)是谁来授权管理，并会返回一个负责该顶级域名服务器的一个IP。本地DNS服务器收到IP信息后，将会联系负责 .com域的这台服务器。这台负责 .com域的服务器收到请求后，如果自己无法解析，它就会找一个管理 .com域的下一级DNS服务器地址(magedu.com)给本地DNS服务器。当本地DNS服务器收到这个地址后，就会找magedu.com域服务器，重复上面的动作进行查询，直至找到www.magedu.com主机。
+    > 6. 如果用的是转发模式（设置转发器），此DNS服务器就会把请求转发至上一级ISP DNS服务器，由上一级服务器进行解析，上一级服务器如果不能解析，或找根DNS或把转请求转至上上级，以此循环。不管是本地DNS服务器用是是转发，还是根提示，最后都是把结果返回给本地DNS服务器，由此DNS服务器再返回给客户机。
+
+2. 域名解析服务器
+
+   > - Pod DNS+:
+   >   - 首选：119.29.29.29
+   >   - 备选：182.254.116.116 
+   >
+   > - 114DNS:
+   >
+   >   - 首选：114.114.114.114
+   >   - 备选：114.114.114.115
+   >
+   > - 阿里 AliDNS:
+   >
+   >   - 首选：223.5.5.5
+   >
+   >   - 备选：223.6.6.6
+
+3. hosts文件
+
+   ```shell
+   # 存储的是域名和IP的对应关系
+   -windows目录: "C:\Windows\System32\drivers\etc\hosts"
+   ```
+
+   ## 复习
+
+   redis
+
+   1. 是什么?
+
+      - 非关系型数据库 - nosql
+        - 数据存储在内存里边
+
+   2. 能干什么?
+
+      - 提高程序效率
+      - 程序中频繁访问的数据, 可以存储到redis中
+
+   3. 我们需要干什么?
+
+      - 会安装
+
+      - 掌握启动redis服务器和客户端的启动命令
+
+        ```shell
+        # 服务器
+        redis-server (配置文件名)
+        # 客户端
+        redis-cli (-h redis服务器IP -p 端口)
+        ```
+
+      - redis中支持的数据类型 - value
+
+        - 键值对方式存储数据
+
+          - key - 字符串
+          - value
+            - 字符串 - string
+            - 列表 - list
+            - 集合 - set
+            - 排序集合 - sortedSet
+            - 哈希 - hash
+        - 关于服务器使用的配置文件的修改
+        - redis中持久化
+          - rdb
+          - aof
+
+   4. 能够在程序中操作redis服务器
+
+      - 需要使用以下函数接口
+      - 官方地址 - > 客户端 -> 选择语言
 
 
 
