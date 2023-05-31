@@ -1,4 +1,5 @@
 # 分布式服务器编程
+![项目设计的所以安装包及相关手册](https://github.com/zjxWeb/zjxWeb.github.io/tree/main/docs/techBlog/distributedServerProgramming/software/)
 # 一. 项目概述及FastDFS
 ## 1. 项目架构图
 
