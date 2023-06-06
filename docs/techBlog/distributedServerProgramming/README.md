@@ -968,13 +968,54 @@ appendfsync everysec
      void redisFree(redisContext *c);
      ```
 
-# 三. Nginx初试牛刀
+```c
+#include<stdio.h>
+#include<hiredis.h>
+
+int main()
+{
+  //1. 连接redis服务器
+  redisContext* c = redisConnect("127.0.0.1",6379);
+  if(c->err != 0)
+  {
+    return -1;
+  }
+  // 2. 执行redis命令
+  void *prt = redisCommand(c,"hmset user username zhang3 passwd 123456 age 10 sex man");
+  redisReply* ply = (redisReply*)prt;
+  if(ply->type  ==5)
+  {
+    // 状态输出
+    printf("状态：%s\n",ply->str);
+  }
+  freeReplyObject(ply);
+  // 3, 从数据库中读数据
+  prt = redisCommand(c, "hgetall user");
+  ply = (redisReply*)prt;
+  if(ply->type == 2)
+  {
+    // 遍历
+    int i = 0;
+    for(i; i<ply->elements; i+=2)
+    {
+      printf("key:%s,value:%s\n",ply->element[i]->str ,ply->element[i+1]->str);
+    }
+  }
+  freeReplyObject(ply);
+  redisFree(c);
+  return 0;
+}
+```
+
+`gcc *.c -I/usr/local/include/hiredis/ -lhiredis`
+
+# 三. `Nginx`初试牛刀
 
 ## 1. 一些基本概念
 
-###1.1 Nginx初步认识
+### 1.1 `Nginx`初步认识
 
-1. Nginx介绍
+1. `Nginx`介绍
 
    - engine x
 
@@ -983,14 +1024,14 @@ appendfsync everysec
    - c语言
    - Tengine - 淘宝基于nginx修改的
 
-2. Nginx能干什么?
+2. `Nginx`能干什么?
 
    - 作为web服务器
-     - 解析http协议
+     - 解析`http`协议
    - 反向代理服务器
      - 了解反向代理的概念
    - 邮件服务器
-     - 解析邮件相关的协议: pop3/smtp/imap
+     - 解析邮件相关的协议: `pop3/smtp/imap`
 
 3. Nginx的优势?
 
@@ -1068,38 +1109,38 @@ appendfsync everysec
 5. web服务器将处理结果发送给反向代理服务器
 6. 反向代理服务器将拿到的结果转发给客户端
 
-### 1.3 域名和IP
+### 1.3 域名和`IP`
 
 1. 什么是域名？
    - www.baidu.com
-   - jd.com
+   - `jd.com`
    - taobao.com
-2. 什么是IP地址？
+2. 什么是`IP`地址？
    - 点分十进制的字符串
      - 11.22.34.45
-3. 域名和IP地址的关系？
-   - 域名绑定IP
-     - 一个域名只能绑定一个IP
-     - 一个IP地址被多个域名绑定
+3. 域名和`IP`地址的关系？
+   - 域名绑定`IP`
+     - 一个域名只能绑定一个`IP`
+     - 一个`IP`地址被多个域名绑定
 
-## 2. Nginx 安装和配置
+## 2. `Nginx` 安装和配置
 
-###2.1 安装
+### 2.1 安装
 
 1. 下载
 
    > 1. 官方地址: <http://nginx.org/>
-   > 2. Nginx相关依赖:
-   >    - OpenSSL: <http://www.openssl.org/> 
+   > 2. `Nginx`相关依赖:
+   >    - `OpenSSL`: <http://www.openssl.org/> 
    >      - 密码库
    >      - 使用https进行通信的时候使用
-   >    - ZLib下载: <http://www.zlib.net/> 
+   >    - `ZLib`下载: <http://www.zlib.net/> 
    >      - 数据压缩
    >      - 安装:
    >        - ./configure
    >        - make
    >        - sudo make install
-   >    - PCRE下载:  <http://www.pcre.org/> 
+   >    - `PCRE`下载:  <http://www.pcre.org/> 
    >      - 解析正则表达式
    >      - 安装
    >        - ./configure
@@ -1109,7 +1150,7 @@ appendfsync everysec
 
 2. 安装
 
-   - nginx的安装
+   - `nginx`的安装
 
      ```shell
      # nginx工作时候需要依赖三个库
@@ -1123,9 +1164,9 @@ appendfsync everysec
 
    ![1539658551107](./src/1539658551107.png)
 
-3. Nginx 相关的指令
+3. `Nginx` 相关的指令
 
-   - Nginx的默认安装目录
+   - `Nginx`的默认安装目录
 
      ```shell
      /usr/local/nginx
@@ -1135,7 +1176,7 @@ appendfsync everysec
       sbin -> 启动nginx的可执行程序
      ```
 
-   - Nginx可执行程序的路径
+   - `Nginx`可执行程序的路径
 
      ```shell
      /usr/local/nginx/sbin/nginx
@@ -1145,14 +1186,14 @@ appendfsync everysec
      ln -s /usr/local/nginx/sbin/nginx /usr/bin/nginx
      ```
 
-   - 启动Nginx - 需要管理器权限
+   - 启动`Nginx` - 需要管理器权限
 
      ```shell
      # 假设软连接已经创建完毕
      sudo nginx # 启动
      ```
 
-   - 关闭Nginx
+   - 关闭`Nginx`
 
      ```shell
      # 第一种, 马上关闭
@@ -1161,7 +1202,7 @@ appendfsync everysec
      sudo nginx -s quit
      ```
 
-   - 重新加载Nginx
+   - 重新加载`Nginx`
 
      ```shell
      sudo nginx -s reload  # 修改了nginx的配置文件之后, 需要执行该命令
@@ -1169,20 +1210,20 @@ appendfsync everysec
 
    - 测试是否安装成功
 
-     - 知道nginx对应的主机的IP地址 - > 192.168.1.100
-     - 在浏览器中访问该IP地址
-       - 看到一个welcom nginx的欢迎界面
+     - 知道`nginx`对应的主机的`IP`地址 - > 192.168.1.100
+     - 在浏览器中访问该`IP`地址
+       - 看到一个`welcom nginx`的欢迎界面
 
 
 ### 2.2 配置
 
-1. Nginx配置文件的位置
+1. `Nginx`配置文件的位置
 
    ```shell
    /usr/local/nginx/conf/nginx.conf
    ```
 
-2. Nginx配置文件的组织格式
+2. `Nginx`配置文件的组织格式
 
    ![](./src/5.png)
 
@@ -1229,7 +1270,7 @@ appendfsync everysec
      }
    ```
 
-## 3. Nginx的使用
+## 3. `Nginx`的使用
 
 ### 3.1 部署静态网页
 
@@ -1250,7 +1291,7 @@ appendfsync everysec
 
 2. 练习
 
-   > 在Nginx服务器上进行网页部署, 实现如下访问:
+   > 在`Nginx`服务器上进行网页部署, 实现如下访问:
    >
    > 在/usr/local/nginx/创建新的目录, yundisk用来存储静态网页
    >
@@ -1442,20 +1483,20 @@ appendfsync everysec
 
 ### 1. URL和URI
 
-<img src="6.png" width="50%">
+<img src="./src/6.png" width="50%">
 
    1. 概念:
 
-      > - URL（Uniform Resource  Locator）: 统一资源定位符
+      > - `URL（Uniform Resource  Locator）`: 统一资源定位符
       >
       > - 表示资源位置的字符串
-      >   - 基本格式: "==协议://IP地址/路径和文件名=="
+      >   - 基本格式: "==协议://`IP`地址/路径和文件名=="
       >      - <ftp://ftp.is.co.za/rfc/rfc1808.txt>
       >      - <http://www.ietf.org/rfc/rfc2396.txt>
       >      - <telnet://192.0.2.16:80/>
       >
       > - URN（Uniform Resource  Name）: 统一资源名称
-      >   - P2P下载中使用的磁力链接
+      >   - `P2P`下载中使用的磁力链接
       >
       > - URI（Uniform Resource  Identifier）: 统一资源标识符
       >   - 是一个紧凑的字符串用来标示抽象或物理资源, ==**URL是URI的一种**== 
@@ -1481,37 +1522,36 @@ appendfsync everysec
 | ---- | ------------------------- |
 | URI  | 绿色字体部分              |
 
-### 2. DNS解析过程
+### 2. `DNS`解析过程
 
 ![wps_clip_image-14256](./src/2033581_1370929843HFAO.png)
 
-1. DNS解析的过程
+1. `DNS`解析的过程
 
-    > 1. 在浏览器中输入www.magedu.com域名，操作系统会先检查自己本地的hosts文件是否有这个网址映射关系，如果有，就先调用这个IP地址映射，完成域名解析。
-    > 2. 如果hosts里没有这个域名的映射，则查找本地DNS解析器缓存，是否有这个网址映射关系，如果有，直接返回，完成域名解析。
-    >    - Windows和Linux系统都会在本地缓存dns解析的记录，提高速度。 
-    > 3. 如果hosts与本地DNS解析器缓存都没有相应的网址映射关系，首先会找`TCP/IP`参数中设置的首选DNS服务器，在此我们叫它本地DNS服务器，此服务器收到查询时，如果要查询的域名，包含在本地配置区域资源中，则返回解析结果给客户机，完成域名解析，此解析具有权威性。
-    > 4. 如果要查询的域名，不由本地DNS服务器区域解析，但该DNS服务器已缓存了此网址映射关系，则调用这个IP地址映射，完成域名解析，此解析不具有权威性。
-    > 5. 如果本地DNS服务器本地区域文件与缓存解析都失效，则根据本地DNS服务器的设置（没有设置转发器）进行查询，如果未用转发模式，本地DNS就把请求发至13台根DNS，根DNS服务器收到请求后会判断这个域名(.com)是谁来授权管理，并会返回一个负责该顶级域名服务器的一个IP。本地DNS服务器收到IP信息后，将会联系负责 .com域的这台服务器。这台负责 .com域的服务器收到请求后，如果自己无法解析，它就会找一个管理 .com域的下一级DNS服务器地址(magedu.com)给本地DNS服务器。当本地DNS服务器收到这个地址后，就会找magedu.com域服务器，重复上面的动作进行查询，直至找到www.magedu.com主机。
-    > 6. 如果用的是转发模式（设置转发器），此DNS服务器就会把请求转发至上一级ISP DNS服务器，由上一级服务器进行解析，上一级服务器如果不能解析，或找根DNS或把转请求转至上上级，以此循环。不管是本地DNS服务器用是是转发，还是根提示，最后都是把结果返回给本地DNS服务器，由此DNS服务器再返回给客户机。
+    > 1. 在浏览器中输入www.magedu.com域名，操作系统会先检查自己本地的hosts文件是否有这个网址映射关系，如果有，就先调用这个`IP`地址映射，完成域名解析。
+    > 2. 如果hosts里没有这个域名的映射，则查找本地`DNS`解析器缓存，是否有这个网址映射关系，如果有，直接返回，完成域名解析。
+    >    - Windows和Linux系统都会在本地缓存`dns`解析的记录，提高速度。 
+    > 3. 如果hosts与本地`DNS`解析器缓存都没有相应的网址映射关系，首先会找`TCP/IP`参数中设置的首选`DNS`服务器，在此我们叫它本地`DNS`服务器，此服务器收到查询时，如果要查询的域名，包含在本地配置区域资源中，则返回解析结果给客户机，完成域名解析，此解析具有权威性。
+    > 4. 如果要查询的域名，不由本地`DNS`服务器区域解析，但该`DNS`服务器已缓存了此网址映射关系，则调用这个`IP`地址映射，完成域名解析，此解析不具有权威性。
+    > 5. 如果本地`DNS`服务器本地区域文件与缓存解析都失效，则根据本地`DNS`服务器的设置（没有设置转发器）进行查询，如果未用转发模式，本地`DNS`就把请求发至13台根`DNS`，根`DNS`服务器收到请求后会判断这个域名(.com)是谁来授权管理，并会返回一个负责该顶级域名服务器的一个`IP`。本地`DNS`服务器收到`IP`信息后，将会联系负责 .com域的这台服务器。这台负责 .com域的服务器收到请求后，如果自己无法解析，它就会找一个管理 .com域的下一级`DNS`服务器地址`(magedu.com)`给本地`DNS`服务器。当本地`DNS`服务器收到这个地址后，就会找`magedu.com`域服务器，重复上面的动作进行查询，直至找到www.magedu.com主机。
+    > 6. 如果用的是转发模式（设置转发器），此`DNS`服务器就会把请求转发至上一级`ISP DNS`服务器，由上一级服务器进行解析，上一级服务器如果不能解析，或找根`DNS`或把转请求转至上上级，以此循环。不管是本地`DNS`服务器用是是转发，还是根提示，最后都是把结果返回给本地`DNS`服务器，由此`DNS`服务器再返回给客户机。
 
 2. 域名解析服务器
 
-   > - Pod DNS+:
+   > - Pod `DNS`+:
    >   - 首选：119.29.29.29
    >   - 备选：182.254.116.116 
    >
-   > - 114DNS:
-   >
-   >   - 首选：114.114.114.114
+   > - `114DNS`:
+   >  - 首选：114.114.114.114
    >   - 备选：114.114.114.115
-   >
-   > - 阿里 AliDNS:
-   >
-   >   - 首选：223.5.5.5
-   >
-   >   - 备选：223.6.6.6
-
+   >   
+   >- 阿里 `AliDNS`:
+   > 
+   >  - 首选：223.5.5.5
+   > 
+   >  - 备选：223.6.6.6
+   
 3. hosts文件
 
    ```shell
@@ -1559,8 +1599,8 @@ appendfsync everysec
             - 哈希 - hash
         - 关于服务器使用的配置文件的修改
         - redis中持久化
-          - rdb
-          - aof
+          - `rdb`
+          - `aof`
 
    4. 能够在程序中操作redis服务器
 
