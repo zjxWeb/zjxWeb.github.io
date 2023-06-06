@@ -1009,6 +1009,22 @@ int main()
 
 `gcc *.c -I/usr/local/include/hiredis/ -lhiredis`
 
++ **报错**
+
+  + `./a.out: error while loading shared libraries: libhiredis.so.1.0.1-dev: cannot open shared object file: No such file or directory`
+
+  + 创建文件`/etc/ld.so.conf.d/usr-libs.conf`， 内容如下：
+
+    + ```tex
+      /usr/local/lib
+      ```
+
+  + 然后执行
+
+    + ```
+      /sbin/ldconfig
+      ```
+
 # 三. `Nginx`初试牛刀
 
 ## 1. 一些基本概念
