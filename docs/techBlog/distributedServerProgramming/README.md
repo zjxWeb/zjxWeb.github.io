@@ -1499,7 +1499,7 @@ int main()
 
 ### 1. URL和URI
 
-<img src="./src/6.png" width="50%">
+>   <img src="./src/6.png" width="50%">
 
    1. 概念:
 
