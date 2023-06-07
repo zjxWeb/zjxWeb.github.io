@@ -1146,22 +1146,37 @@ int main()
 1. 下载
 
    > 1. 官方地址: <http://nginx.org/>
+   >
    > 2. `Nginx`相关依赖:
    >    - `OpenSSL`: <http://www.openssl.org/> 
    >      - 密码库
    >      - 使用https进行通信的时候使用
+   >      
    >    - `ZLib`下载: <http://www.zlib.net/> 
    >      - 数据压缩
    >      - 安装:
    >        - ./configure
    >        - make
    >        - sudo make install
+   >      
    >    - `PCRE`下载:  <http://www.pcre.org/> 
+   >      
    >      - 解析正则表达式
+   >      
    >      - 安装
    >        - ./configure
    >        - make
    >        - sudo make install
+   >        
+   >      - 安装如果有这个报错
+   >      
+   >        - `**make: \**\* No targets specified and no makefile found. stop**`
+   >      
+   >      - 执行如下命令在进行安装操作
+   >      
+   >        - ```
+   >          yum install -y gcc gcc-c++
+   >          ```
    >
 
 2. 安装
@@ -1178,7 +1193,7 @@ int main()
      ```
 
 
-   ![1539658551107](./src/1539658551107.png)
+   ![	](./src/1539658551107.png)
 
 3. `Nginx` 相关的指令
 
