@@ -1233,14 +1233,24 @@ int main()
      sudo nginx -s quit
      ```
 
-   - 重新加载`Nginx`
+     > 执行 `sudo nginx -s stop`报错
 
+     + `nginx: [error] open() "/usr/local/nginx/logs/nginx.pid" failed (2: No such file or directory)`
+     + 解决方法
+   
+     ```shell
+     #启动文件nginx在sbin目录中，配置文件在conf目录中
+     /usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf
+     ```
+   
+   - 重新加载`Nginx`
+   
      ```shell
      sudo nginx -s reload  # 修改了nginx的配置文件之后, 需要执行该命令
      ```
-
+   
    - 测试是否安装成功
-
+   
      - 知道`nginx`对应的主机的`IP`地址 - > 192.168.1.100
      - 在浏览器中访问该`IP`地址
        - 看到一个`welcom nginx`的欢迎界面
