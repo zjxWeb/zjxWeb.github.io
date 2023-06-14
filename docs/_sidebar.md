@@ -25,6 +25,7 @@
   * [vim](techBlog/vim/)
   * [vmware](techBlog/vmware/)
   * [分布式服务器编程](techBlog/distributedServerProgramming/)
+  * [hadoop安装及数组查重](techBlog/hadoop/)
 * [好东西tips](tips)
   * [docsify](tips/docsify/)
   * [Hubilder连接nox](tips/noxHubilder/)
