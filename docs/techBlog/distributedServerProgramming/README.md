@@ -1151,32 +1151,50 @@ int main()
    >    - `OpenSSL`: <http://www.openssl.org/> 
    >      - 密码库
    >      - 使用https进行通信的时候使用
-   >      
+   >
    >    - `ZLib`下载: <http://www.zlib.net/> 
    >      - 数据压缩
    >      - 安装:
    >        - ./configure
    >        - make
    >        - sudo make install
-   >      
+   >
    >    - `PCRE`下载:  <http://www.pcre.org/> 
-   >      
+   >
    >      - 解析正则表达式
-   >      
+   >
    >      - 安装
    >        - ./configure
    >        - make
    >        - sudo make install
-   >        
+   >
    >      - 安装如果有这个报错
-   >      
+   >
    >        - `**make: \**\* No targets specified and no makefile found. stop**`
-   >      
+   >
    >      - 执行如下命令在进行安装操作
-   >      
+   >
    >        - ```
    >          yum install -y gcc gcc-c++
    >          ```
+   >        
+   >      - 安装如果有这个报错
+   >      
+   >        - ```shell
+   >          tar (child): bzip2: Cannot exec: No such file or directory
+   >          tar (child): Error is not recoverable: exiting now
+   >          tar: Child returned status 2
+   >          tar: Error is not recoverable: exiting now
+   >          ```
+   >      
+   >        - 解决方案：
+   >      
+   >          - ```shell
+   >            Centos系统 命令行输入：
+   >            yum -y install bzip2
+   >            ubuntu系统 命令行输入：
+   >            sudo apt-get install bzip2
+   >            ```
    >
 
 2. 安装
@@ -1192,8 +1210,33 @@ int main()
      sudo make install
      ```
 
-
    ![	](./src/1539658551107.png)
+
+> 如果报很多莫名其妙的错误可以这样尝试这样安装
+>
+> ```shell
+> ./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-openssl=../openssl-1.0.1t  --with-zlib=../zlib-1.2.11  --with-pcre=../pcre-8.40
+> ```
+>
+> 现象：
+>
+>         安装 nginx 或 启动 nginx 时报错：
+>     
+>          nginx: [emerg] getpwnam("www") failed
+>
+> 原因：        
+>
+>         没有配置 www 这个用户名。
+>
+> 解法（2种）：
+>
+>         1、在 nginx.conf 中 把 user nobody 的注释去掉。        
+>     
+>         2、在服务器系统中添加 用户组www 和 用户www，命令如下：
+> ```shell
+> /usr/sbin/groupadd -f www
+> /usr/sbin/useradd -g www www
+> ```
 
 3. `Nginx` 相关的指令
 
