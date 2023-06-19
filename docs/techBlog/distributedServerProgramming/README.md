@@ -1221,7 +1221,7 @@ int main()
 > 现象：
 >
 >         安装 nginx 或 启动 nginx 时报错：
->         
+>             
 >          nginx: [emerg] getpwnam("www") failed
 >
 > 原因：        
@@ -1231,7 +1231,7 @@ int main()
 > 解法（2种）：
 >
 >         1、在 nginx.conf 中 把 user nobody 的注释去掉。        
->         
+>             
 >         2、在服务器系统中添加 用户组www 和 用户www，命令如下：
 > ```shell
 > /usr/sbin/groupadd -f www
@@ -1691,7 +1691,93 @@ int main()
       - 需要使用以下函数接口
       - 官方地址 - > 客户端 -> 选择语言
 
-[TOC]
+### 复习
+
++ nginx
+
+  1. 是什么
+
+     + 开源的框架
+       + 库：一套`API`（`openssl`）
+       + 框架：（可以）有一套`API`，有一套时间处理机制（`libevent`）
+
+  2. 能干什么？
+
+     + web服务器
+       + `http`协议
+     + 反向代理
+       + 实现web服务器的负载均衡
+     + 邮件服务器
+       + `pop3协议`
+
+  3. 怎么干事？
+
+     + web服务器
+
+       ```nginx
+       # 部署静态网页
+       1. 制作出来，并且部署到对应的资源目录中
+       2. 根据客户端的请求，在服务器端添加对应的 location处理指令
+       3. 重新加载nginx.conf配置文件
+       # 客户端请求的URL：http://xxx.com/hello/login.html
+       	— 去掉协议:http
+       	- 去掉域名：ip
+       	- 去掉端口
+       	- 去掉尾部的文件名
+       ```
+
+     + 反向代理服务器
+
+       ```nginx
+       1．找到反向代理服务器的配置文件: nginx.conf
+       2．找模块http -> server
+       server{
+       	listen: 80;# 客户端访问反向代理服务器的时候使用的端口
+           server_name: localhost; #域名，客户端访问反向代理服务器时候，使用的地址
+           #配置如何转发，根据客户端的请求的ur1找到对应的转发指令
+           location /
+           {
+               #设置转发地址
+               proxy_pass http : / /test.com;
+           }
+           location / login{
+               #设置转发地址
+               proxy pass http : / / test.com;
+           }
+       }
+       #设置代理
+       upstream test.com
+       {
+           #web服务器的地址信息
+           server 192.168.1 .108:80;
+           server 192 .168.1.101:88;
+       }
+       # 192.168.1. 100 web服务器
+       http->server
+       server{
+       location /
+           {
+          	 	#设置转发地址
+               root xxX;
+           }
+       location /login
+          {
+       		#设置转发地址
+            	XXX×;
+       	}
+       }
+       # 192.168.1.101[Tweb服务器
+       http->server
+       server{
+           location /
+           {
+           	#设置转发地址
+               root xx×;
+           }
+       
+       ```
+
+       
 
 ## Nginx作为web服务器处理请求
 
