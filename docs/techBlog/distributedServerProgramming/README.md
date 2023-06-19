@@ -1221,7 +1221,7 @@ int main()
 > 现象：
 >
 >         安装 nginx 或 启动 nginx 时报错：
->             
+>                 
 >          nginx: [emerg] getpwnam("www") failed
 >
 > 原因：        
@@ -1231,7 +1231,7 @@ int main()
 > 解法（2种）：
 >
 >         1、在 nginx.conf 中 把 user nobody 的注释去掉。        
->             
+>                 
 >         2、在服务器系统中添加 用户组www 和 用户www，命令如下：
 > ```shell
 > /usr/sbin/groupadd -f www
@@ -1923,7 +1923,7 @@ int main()
 
 # 四. fastCGI
 
-### 1. CGI
+## 1. CGI
 
 > **通用网关接口**（**C**ommon **G**ateway **I**nterface/**CGI**）**描述了客户端和服务器程序之间传输数据的一种标准**，可以让一个客户端，从网页浏览器向执行在网络服务器上的程序请求数据。CGI 独立于任何语言的，CGI 程序可以用任何[脚本语言](http://zh.wikipedia.org/wiki/%E8%84%9A%E6%9C%AC%E8%AF%AD%E8%A8%80)或者是完全独立[编程语言](http://zh.wikipedia.org/wiki/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80)实现，只要这个语言可以在这个系统上运行。
 
@@ -1949,11 +1949,11 @@ int main()
 >
 > - 服务器开销大, 效率低
 
-### 2. fastCGI
+## 2. fastCGI
 
 > 快速通用网关接口（Fast Common Gateway Interface／FastCGI）是[通用网关接口](http://zh.wikipedia.org/wiki/%E9%80%9A%E7%94%A8%E7%BD%91%E5%85%B3%E6%8E%A5%E5%8F%A3)（CGI）的改进，描述了客户端和服务器程序之间传输数据的一种标准。==FastCGI致力于减少Web服务器**与**[**CGI**](http://zh.wikipedia.org/wiki/CGI)[**程式**](http://zh.wikipedia.org/wiki/%E7%A8%8B%E5%BC%8F)**之间互动的开销，从而使**[**服务器**](http://zh.wikipedia.org/wiki/%E4%BC%BA%E6%9C%8D%E5%99%A8)**可以同时处理更多的Web**请求==。与为每个请求创建一个新的进程不同，FastCGI使用持续的进程来处理一连串的请求。这些进程由FastCGI进程管理器管理，而不是web服务器。 
 
-**fastCGI与CGI的区别:**
+## **fastCGI与CGI的区别:**
 
 > CGI 就是所谓的短生存期应用程序，FastCGI 就是所谓的长生存期应用程序。FastCGI像是一个常驻(long-live)型的CGI，它可以一直执行着，不会每次都要花费时间去fork一次
 
@@ -1980,7 +1980,7 @@ int main()
 >    - 没有请求 -> 阻塞
 >6. 服务器将fastCGI的处理结果发送给客户端
 
-### 3. fastCGI和spawn-fcgi安装
+## 3. fastCGI和spawn-fcgi安装
 
 1. 安装fastCGI
 
@@ -2005,7 +2005,7 @@ int main()
      sudo make install
      ```
 
-### 4. nginx && fastcgi
+## 4. nginx && fastcgi
 
 > nginx 不能像apache那样直接执行外部可执行程序，但nginx可以作为代理服务器，将请求转发给后端服务器，这也是nginx的主要作用之一。其中nginx就支持FastCGI代理，接收客户端的请求，然后将请求转发给后端fastcgi进程。下面介绍如何使用C/C++编写cgi/fastcgi，并部署到nginx中。 
 >
@@ -2095,102 +2095,6 @@ int main()
    ![1539853347025](./src/1539853347025.png)
 
    ![1539853472802](./src/1539853472802.png)
-
-##复习
-
-Nginx
-
-1. 是什么?
-
-   - 开源的框架
-     - 库: 一套API
-     - 框架: (可以)有一套API, 有一套事件处理机制
-
-2. 能干什么?
-
-   - web服务器
-     - http协议
-   - 反向代理
-     - 实现web服务器的负载均衡
-   - 邮件服务器
-     - pop3
-
-3. 怎么干事儿?
-
-   - web服务器
-
-     ```nginx
-     # 部署静态网页
-     1. 制作出来, 并且部署到对应的资源目录中
-     2. 根据客户端的请求, 在服务器端添加对应的 location处理指令 - nginx.conf
-     3. 重新加载nginx.conf配置文件
-     客户端请求的url: http://xxxx.com/hello/login.html
-     	- 去掉协议: http
-     	- 去掉域名/IP:
-     	- 去掉端口
-     	- 去掉尾部的文件名
-     ```
-
-   - 反向代理服务器
-
-     ```nginx
-     1. 找到反向代理服务器 的配置文件: nginx.conf
-     2. 找模块 http -> server
-     server{
-         listen: 80; # 客户端访问反向代理服务器的时候使用的端口
-         server_name: localhost; # 域名, 客户端访问反向代理服务器时候, 使用的地址
-         # 配置如何转发, 根据客户端的请求的url找到对应的转发指令
-         location /
-         {
-          	# 设置转发地址
-             proxy_pass http://test.com;
-         }    
-          location /login
-         {
-          	# 设置转发地址
-             proxy_pass http://test.com;
-         } 
-     }
-     # 设置代理
-     upstream test.com
-     {
-         # web服务器的地址信息
-         server 192.168.1.100:80;
-         server 192.168.1.101:80;
-     }
-     
-     # 192.168.1.100 web服务器
-     http->server
-     server{
-             location /
-         {
-          	# 设置转发地址
-             root xxx;
-         }    
-          location /login
-         {
-          	# 设置转发地址
-             xxxx;
-         } 
-     }
-     # 192.168.1.101 web服务器
-     http->server
-     server{
-             location /
-         {
-          	# 设置转发地址
-             root xxx;
-         }    
-          location /login
-         {
-          	# 设置转发地址
-             xxxx;
-         } 
-     }
-     ```
-
-
-
 ## 其他知识点
 
 1. fastCGI环境变量 - fastcgi.conf
