@@ -1221,7 +1221,7 @@ int main()
 > 现象：
 >
 >         安装 nginx 或 启动 nginx 时报错：
->                             
+>                                 
 >          nginx: [emerg] getpwnam("www") failed
 >
 > 原因：        
@@ -1231,7 +1231,7 @@ int main()
 > 解法（2种）：
 >
 >         1、在 nginx.conf 中 把 user nobody 的注释去掉。        
->                             
+>                                 
 >         2、在服务器系统中添加 用户组www 和 用户www，命令如下：
 > ```shell
 > /usr/sbin/groupadd -f www
