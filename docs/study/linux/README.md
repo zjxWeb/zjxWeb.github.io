@@ -257,6 +257,20 @@ sudo iptables-restore < /etc/sysconfig/iptables
 2. 验证连接：使用`nmcli d`命令验证已激活的连接。你应该能够看到有线连接已经处于活动状态。
 3. 测试连接：使用`ping <hostname or IP address>`测试到目标主机或IP地址的连接。如果连接正常，你应该能够成功发送和接收数据包。
 
+### 6. shell封装成命令
+
++ 要创建一个封装shell脚本并使其成为Linux命令，可以按照以下步骤进行操作：
+
+1. 创建一个新的shell脚本文件，例如"mycommand.sh"。
+2. 在文件的第一行添加"#!/bin/bash"来指定使用Bash shell来执行该脚本。
+3. 在脚本文件中编写你的命令代码，例如："echo 'Hello, world!'"。
+4. 保存并退出脚本文件。
+5. 将脚本文件设置为可执行权限，可以使用chmod命令，例如："chmod +x mycommand.sh"。
+6. 将脚本文件放置在Linux系统的可执行路径中，例如"/usr/local/bin"。
+7. 现在可以在终端中运行该命令，例如："mycommand"（假设你已经将脚本文件重命名为"mycommand"）。
+
+>  总之，封装shell脚本成为Linux命令的过程就是将脚本文件放置在可执行路径中，并设置其可执行权限，这样就可以在终端中直接运行该命令了。
+
 ## 三. `CentOS`安装软件
 
 ### 1. 切换镜像源
