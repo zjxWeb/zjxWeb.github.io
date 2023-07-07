@@ -35,5 +35,7 @@
     * [机房预约系统](projectPractice/cppProject/computerOrder/)
   * [数字孪生实例](projectPractice/digitalTwinsProject/)
     * [智慧城市数字孪生平台](projectPractice/digitalTwinsProject/smartCity/)
+  * [APP项目](projectPractice/App/)
+    * [菜谱APP(可改任意APP)](projectPractice/App/healthApp/)
 * [**个人联系方式**](onself)
 * [**赞赏**](pay)
