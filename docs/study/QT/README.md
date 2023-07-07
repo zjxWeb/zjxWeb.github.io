@@ -1457,7 +1457,19 @@ Widget::~Widget()
 
 ## 14. QT 注册实例
 
+> 首先要在 `.pro文件中添加  network`
+>
+> ```qt
+> QT       += core gui network
+> ```
+
 ```qt
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QJsonArray>
 void Login::on_regButton_clicked()
 {
     // 处理的动作
