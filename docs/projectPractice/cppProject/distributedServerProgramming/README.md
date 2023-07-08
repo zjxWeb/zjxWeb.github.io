@@ -1220,7 +1220,7 @@ int main()
 > 现象：
 >
 >         安装 nginx 或 启动 nginx 时报错：
->                                                         
+>                                                             
 >          nginx: [emerg] getpwnam("www") failed
 >
 > 原因：        
@@ -1230,7 +1230,7 @@ int main()
 > 解法（2种）：
 >
 >         1、在 nginx.conf 中 把 user nobody 的注释去掉。        
->                                                         
+>                                                             
 >         2、在服务器系统中添加 用户组www 和 用户www，命令如下：
 > ```shell
 > /usr/sbin/groupadd -f www
@@ -2685,7 +2685,7 @@ http://tool.oschina.net/
              // 6. 有冲突 - 注册失败, 通知客户端
              // 7. 没有冲突 - 用户数据插入到数据库中
              // 8. 成功-> 通知客户端 -> {"code":"002"}
-             // 9. 通知客户端回传的字符串的格式
+             // 9. 通知客户端回传的字符串的格式 
              printf("content-type: application/json\r\n");
              printf("{\"code\":\"002\"}");
          }
@@ -2933,3 +2933,10 @@ Qt中处理json
 2. 磁盘中的json字符串 -> 内存
 
    ![1540197755128](./src/1540197755128.png)
+   
+   ```qt
+   public:
+       explicit Login(QWidget *parent = 0);  // explicit 添加之后不能进行隐式类型转换，只能进行显示类型转换
+   ```
+   
+   
