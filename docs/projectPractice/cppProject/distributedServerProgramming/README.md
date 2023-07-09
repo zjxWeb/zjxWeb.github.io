@@ -1220,7 +1220,7 @@ int main()
 > 现象：
 >
 >         安装 nginx 或 启动 nginx 时报错：
->                                                                 
+>                                                                     
 >          nginx: [emerg] getpwnam("www") failed
 >
 > 原因：        
@@ -1230,7 +1230,7 @@ int main()
 > 解法（2种）：
 >
 >         1、在 nginx.conf 中 把 user nobody 的注释去掉。        
->                                                                 
+>                                                                     
 >         2、在服务器系统中添加 用户组www 和 用户www，命令如下：
 > ```shell
 > /usr/sbin/groupadd -f www
@@ -3167,6 +3167,18 @@ QPushButton#loginBtn:hover
 QPushButton#loginBtn:pressed
 {
 	border-image: url(:/images/balckButton2.png); /* 默认显示的图片 */
+}
+```
++ 对样式设置进行函数封装
+
+```qt
+void ChangeSkin::changeSkin(QString qss)
+{
+    QFile file(qss);
+    file.open(QFile::ReadOnly);
+    QByteArray style = file.readAll();
+    qApp->setStyleSheet(style);
+    file.close();
 }
 ```
 
