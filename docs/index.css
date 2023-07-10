@@ -1,3 +1,8 @@
+.cover,.show{
+    background: linear-gradient(to bottom right, #5489ba, #2073c2 60%, #dff6ff)!important;
+    /* color: antiquewhite; */
+}
+
 /* logo 图片设置 */
 .cover-main p img {
     width        : 150px;
@@ -13,3 +18,7 @@
    
 }
 
+.markdown-section ul li img{
+    width: 70%;
+    margin-left: 10%;
+}
