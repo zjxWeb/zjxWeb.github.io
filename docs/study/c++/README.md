@@ -3746,7 +3746,7 @@ int main()
 
 #### 3.5.1 stack基本概念
 
-**概念：**stack **是一只先进先出**（First Last OUT，FILO）的数据结构，它只有一个出口
+**概念：**stack **是一只先进后出**（First Last OUT，FILO）的数据结构，它只有一个出口
 
 ![19](./src/19.png)
 

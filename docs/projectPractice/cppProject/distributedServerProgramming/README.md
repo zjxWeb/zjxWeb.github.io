@@ -1220,7 +1220,7 @@ int main()
 > 现象：
 >
 >         安装 nginx 或 启动 nginx 时报错：
->                                                                     
+>                                                                                 
 >          nginx: [emerg] getpwnam("www") failed
 >
 > 原因：        
@@ -1230,7 +1230,7 @@ int main()
 > 解法（2种）：
 >
 >         1、在 nginx.conf 中 把 user nobody 的注释去掉。        
->                                                                     
+>                                                                                 
 >         2、在服务器系统中添加 用户组www 和 用户www，命令如下：
 > ```shell
 > /usr/sbin/groupadd -f www
@@ -3274,6 +3274,45 @@ void ChangeSkin::changeSkin(QString qss)
      }
      ```
 
+### 客户端上传多个文件
+
+   ```c
+   // 1. 上传多个文件，文件是一个一个处理的，处理第一个的时候其余的文件应该保存起来
+   /*
+   	1. 需要一块内存 stl，队列queue，vector/list（首选）
+   	2. 将数据存储队列，先进先出
+   	操作：
+   		1. 往队列中放
+   		2. 从队列中取
+   		3. 将元素从队列中删除
+   		4. 判断是否为空
+   		5. 清空队列
+   */
+   class uploadTask
+   {
+   public:
+   	void push(FileInfo info);
+       FileInfo getItem();
+       void delItem(QString md5);
+       void delItem(FileInfo info);
+       bool isEmptty();
+       void cleanQueue();
+   private:
+       uploadTask();
+       uploadTask(const uploadTask &t);
+       queue<FileInfo> myqueue;
+   }
+   
+   // 任务队列中每一个任务类型
+   struct FileInfo
+   {
+       QString filename;
+       long fileSize;
+       QString user;// 文件所有者
+       QString md5;
+   }
+   ```
+
    - 服务器
 
      ```nginx
@@ -3290,7 +3329,7 @@ void ChangeSkin::changeSkin(QString qss)
      |       秒传成功：       | {"code":"006"} |
      |       秒传失败：       | {"code":"007"} |
 
-   fastCGI程序编写
+   `fastCGI`程序编写
 
    ```c
    int main()
@@ -3388,6 +3427,14 @@ void ChangeSkin::changeSkin(QString qss)
    - 服务器端fastCGI 部分 代码
 
      ```c
+     #include <stdio.h>
+     #include <stdlib.h>
+     #include <string.h>
+     // #include "fcgi_stdio.h"
+     #include <fcntl.h>
+     #include <unistd.h>
+     #include <fcgi_stdio.h>
+     
      // 取出 Content-Disposition 中的键值对的值, 并得到文件内容, 并将内容写入文件
      int recv_save_file(char *user, char *filename, char *md5, long *p_size)
      {
@@ -3520,9 +3567,46 @@ void ChangeSkin::changeSkin(QString qss)
          
          // 将文件内容抠出来
          // 文件内容写如本地磁盘文件
+         int fd = open(filename,O_CREAT | O_WRONLY,0664);
+     	write(fd, begin,len);
+         // 1. 文件已经读完了
+         // 2. 文件还没读完
+         if(*p_size > len)
+         {
+             // 读文件 -》 接受post数据
+             // fread  read  返回值 >  0  _ 实际读出的字节数  = 0 读完了  -1 error
+             while( (len = fread(file_buf,1,4096,stdin)) > 0)
+             {
+                 //读出的数据写文件
+                 write(fd, file_buf, len);
+     		}
+         }
+         // 3. 将写入到文件中的分界线删除
+         ftruncate(fd,*p_size);
+         close(fd);
      
          free(file_buf);
          return ret;
+     }
+     
+     int main()
+     {
+       while(FCGI_ACCEPT() >= 0)
+       {
+         char user[24];
+         char fileName[32];
+         char md5[64];
+         long size;
+         // int recv_save_file(char *user, char *filename, char *md5, long *p_size)
+         recv_save_file(user, fileName, md5, &size);
+         // filename 对应的文件上传到fastdfs
+         // 上传得到的文件ID需要写数据库
+         // 给客户端发送响应数据
+         printf("Content-type: text/plain\r\n\r\n");
+         printf("用户名：%s\n",user);
+         printf("文件名：%, md5: %s, size: %ld\n",fileName,md5,size);
+         printf("客户端处理数据完毕");
+       }
      }
      ```
 
@@ -3604,3 +3688,269 @@ void QNetworkReply::uploadProgress(qint64 bytesSent, qint64 bytesTotal)
        - 参数method: 使用的哈希算法 
        - 返回值: 得到的哈希值
    ```
+
+## 11. 服务器
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "fcgi_stdio.h"
+
+int main()
+{
+  while(FCGI_ACCEPT() >= 0)
+  {
+    // 处理流程
+    //1. 读一次数据 - buf，保证能够将分界线和两头装进去
+    char buf[4096];
+    // len - 实际读出的字节数
+    int len = fread(buf,1,4096,stdin);
+    // 2. 跳过第一行的分界线
+    len = len - 第一行的长度；
+    // 3. 将第二行的user，fileName，md5，size的值读出到内存
+    len = len - 第二行的长度；
+    // 4. 跳过第三行
+    len = len - 第三行的长度；
+    // 5. 跳过空行
+    len = len - 空行的长度；
+    // 6. 现在得到的位置就是传输的真正数据的正文开始
+    // 7. 循环的将剩余的内容读出，有必要就写磁盘
+    // 8. 读完了，将最后的分界线剔除
+    // 9. 以上8步处理完毕，文件内容就被扣出来了
+  }
+}
+```
+
++ 完整程序
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "fcgi_stdio.h"
+#include <fcntl.h>
+#include <unistd.h>
+
+// 取出 Content-Disposition 中的键值对的值, 并得到文件内容, 并将内容写入文件
+int recv_save_file(char *user, char *filename, char *md5, long *p_size)
+{
+    int ret = 0;
+    char *file_buf = NULL;
+    char *begin = NULL;
+    char *p, *q, *k;
+
+    char content_text[512] = {0}; //文件头部信息
+    char boundary[512] = {0};     //分界线信息
+
+    //==========> 开辟存放文件的 内存 <===========
+    file_buf = (char *)malloc(4096);
+    if (file_buf == NULL)
+    {
+        return -1;
+    }
+
+    //从标准输入(web服务器)读取内容
+    int len = fread(file_buf, 1, 4096, stdin); 
+    if(len == 0)
+    {
+        ret = -1;
+        free(file_buf);
+        return ret;
+    }
+
+    //===========> 开始处理前端发送过来的post数据格式 <============
+    begin = file_buf;    //内存起点
+    p = begin;
+
+    /*
+       ------WebKitFormBoundary88asdgewtgewx\r\n
+       Content-Disposition: form-data; user="mike"; filename="xxx.jpg"; md5="xxxx"; size=10240\r\n
+       Content-Type: application/octet-stream\r\n
+       ------WebKitFormBoundary88asdgewtgewx--
+    */
+
+    //get boundary 得到分界线, ------WebKitFormBoundary88asdgewtgewx
+    p = strstr(begin, "\r\n");
+    if (p == NULL)
+    {
+        ret = -1;
+        free(file_buf);
+        return ret;
+    }
+
+    //拷贝分界线
+    strncpy(boundary, begin, p-begin);
+    boundary[p-begin] = '\0';   //字符串结束符
+    p += 2; //\r\n
+    //已经处理了p-begin的长度
+    len -= (p-begin);
+    //get content text head
+    begin = p;
+
+    //Content-Disposition: form-data; user="mike"; filename="xxx.jpg"; md5="xxxx"; size=10240\r\n
+    p = strstr(begin, "\r\n");
+    if(p == NULL)
+    {
+        ret = -1;
+        free(file_buf);
+        return ret;
+    }
+    strncpy(content_text, begin, p-begin);
+    content_text[p-begin] = '\0';
+
+    p += 2;//\r\n
+    len -= (p-begin);
+
+    //========================================获取文件上传者
+    //Content-Disposition: form-data; user="mike"; filename="xxx.jpg"; md5="xxxx"; size=10240\r\n
+    q = begin;
+    q = strstr(begin, "user=");
+    q += strlen("user=");
+    q++;    //跳过第一个"
+    k = strchr(q, '"');
+    strncpy(user, q, k-q);  //拷贝用户名
+    user[k-q] = '\0';
+
+    //========================================获取文件名字
+    //"; filename="xxx.jpg"; md5="xxxx"; size=10240\r\n
+    begin = k;
+    q = begin;
+    q = strstr(begin, "filename=");
+    q += strlen("filename=");
+    q++;    //跳过第一个"
+    k = strchr(q, '"');
+    strncpy(filename, q, k-q);  //拷贝文件名
+    filename[k-q] = '\0';
+
+    //========================================获取文件MD5码
+    //"; md5="xxxx"; size=10240\r\n
+    begin = k;
+    q = begin;
+    q = strstr(begin, "md5=");
+    q += strlen("md5=");
+    q++;    //跳过第一个"
+    k = strchr(q, '"');
+    strncpy(md5, q, k-q);   //拷贝文件名
+    md5[k-q] = '\0';
+
+    //========================================获取文件大小
+    //"; size=10240\r\n
+    begin = k;
+    q = begin;
+    q = strstr(begin, "size=");
+    q += strlen("size=");
+    k = strstr(q, "\r\n");
+    char tmp[256] = {0};
+    strncpy(tmp, q, k-q);   //内容
+    tmp[k-q] = '\0';
+    *p_size = strtol(tmp, NULL, 10); //字符串转long
+
+    begin = p;
+    p = strstr(begin, "\r\n");
+    p += 2; //\r\n
+    len -= (p-begin);
+
+    //下面才是文件的真正内容
+    /*
+       ------WebKitFormBoundary88asdgewtgewx\r\n
+       Content-Disposition: form-data; user="mike"; filename="xxx.jpg"; md5="xxxx"; size=10240\r\n
+       Content-Type: application/octet-stream\r\n
+       真正的文件内容\r\n
+       ------WebKitFormBoundary88asdgewtgewx--
+    */
+    // begin指向正文首地址
+    begin = p;
+    
+    // 将文件内容抠出来
+    // 文件内容写如本地磁盘文件
+    int fd = open(filename,O_CREAT | O_WRONLY,0664);
+	write(fd, begin,len);
+    // 1. 文件已经读完了
+    // 2. 文件还没读完
+    if(*p_size > len)
+    {
+        // 读文件 -》 接受post数据
+        // fread  read  返回值 >  0  _ 实际读出的字节数  = 0 读完了  -1 error
+        while( (len = fread(file_buf,1,4096,stdin)) > 0)
+        {
+            //读出的数据写文件
+            write(fd, file_buf, len);
+		}
+    }
+    // 3. 将写入到文件中的分界线删除
+    ftruncate(fd,*p_size);
+    close(fd);
+
+    free(file_buf);
+    return ret;
+}
+
+int main()
+{
+  while(FCGI_Accept() >= 0)
+  {
+    char user[24];
+    char fileName[32];
+    char md5[64];
+    long size;
+    // int recv_save_file(char *user, char *filename, char *md5, long *p_size)
+    recv_save_file(user, fileName, md5, &size);
+    // filename 对应的文件上传到fastdfs
+    // 上传得到的文件ID需要写数据库
+    // 给客户端发送响应数据
+    printf("Content-type: text/plain\r\n\r\n");
+    printf("用户名：%s\n",user);
+    printf("文件名：%s, md5: %s, size: %ld\n",fileName,md5,size);
+    printf("客户端处理数据完毕");
+  }
+}
+```
+
++ 会报错，报缺少动态库
+
+```gcc
+gcc upload.c -lfcgi
+```
+
+### linux下启动fastcgi报错libfcgi.so.0 =＞ not found
+
+1、首先搜索 libfcgi.so 库所在的路径
+
+```shell
+root@Ubuntu64:/usr/local/app# find / -name "libfcgi.so"
+find: ‘/run/user/1000/gvfs’: Permission denied
+/usr/local/lib/libfcgi.so
+/usr/local/package/fastcgi/fcgi-2.4.1-SNAP-0910052249/libfcgi/.libs/libfcgi.so
+```
+
+2. 将 /usr/local/lib 路径放入 /etc/ld.so.conf 文件中
+
+```shell
+root@Ubuntu64:/usr/local/app# vi /etc/ld.so.conf
+然后将路径 /usr/local/lib 添加到文件中
+```
+
+3.  `sudo ldconfig`
+
+4.  `ldd 1.out` 查看多链接的库是否都在
+
+5.  运行
+
+```shell
+spawn-fcgi -a 127.0.0.1 -p 10002 -f ~/upload/a.out
+```
+
+### 上传报413错误
+
+![11](./src/11.png)
+
++ 解决方法，修改`nginx.conf`文件
++ [解决方法](/projectPractice/cppProject/distributedServerProgramming/?id=_9-上传大文件nginx设置)
+
+> 放到`http`下面范围太大，当`server`也太大的时候，可以精确到某一个 `location`
+>
+> 
+
+
+
