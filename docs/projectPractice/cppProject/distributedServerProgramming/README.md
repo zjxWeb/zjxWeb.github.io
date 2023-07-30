@@ -1223,7 +1223,7 @@ int main()
 > 现象：
 >
 >         安装 nginx 或 启动 nginx 时报错：
->                                                                                                 
+>                                                                                                                         
 >          nginx: [emerg] getpwnam("www") failed
 >
 > 原因：        
@@ -1233,7 +1233,7 @@ int main()
 > 解法（2种）：
 >
 >         1、在 nginx.conf 中 把 user nobody 的注释去掉。        
->                                                                                                 
+>                                                                                                                         
 >         2、在服务器系统中添加 用户组www 和 用户www，命令如下：
 > ```shell
 > /usr/sbin/groupadd -f www
@@ -4209,10 +4209,6 @@ spawn-fcgi -a 127.0.0.1 -p 10002 -f ~/upload/a.out
 
   - 服务器
 
-    ```nginx
-    
-    ```
-
     | 成功 | 文件列表json      |
     | ---- | ----------------- |
     | 失败 | {"code":   "015"} |
@@ -4446,9 +4442,9 @@ spawn-fcgi -a 127.0.0.1 -p 10002 -f ~/upload/a.out
 
 
 
-##1. Location语法
+## 1. Location语法
 
-1. 语法规则
+### 1. 语法规则
 
    ```nginx
    location [=|~|~*|^~] /uri/ 
@@ -4458,6 +4454,120 @@ spawn-fcgi -a 127.0.0.1 -p 10002 -f ~/upload/a.out
    正则表达式中的特殊字符:
    - . () {} [] * + ?
    ```
+
+### 2. Location优先级说明
+
+   - 在nginx的location和配置中location的顺序没有太大关系。
+   - 与location表达式的类型有关。
+   - **相同类型的表达式，字符串长的会优先匹配**。
+
+### 3. location表达式类型
+
+   - ~ 表示执行一个正则匹配，区分大小写
+
+   - ~* 表示执行一个正则匹配，不区分大小写
+   - ^~  表示普通字符匹配。使用前缀匹配。如果匹配成功，则不再匹配其他location。
+   - = 进行普通字符精确匹配。也就是完全匹配。
+
+### 4. 匹配模式及优先级顺序(高 -> 低):
+
+| `location = /uri`                                 | =开头表示精确匹配，只有完全匹配上才能生效。   一旦匹配成功，则不再查找其他匹配项。 |
+| ------------------------------------------------- | ------------------------------------------------------------ |
+| `location ^~ /uri`                                | ^~ 开头对URL路径进行前缀匹配，并且在正则之前。   一旦匹配成功，则不再查找其他匹配项。   需要考虑先后顺序, 如:       <http://localhost/helloworld/test/a.html> |
+| `location   ~   pattern`   `location  ~* pattern` | ~  开头表示区分大小写的正则匹配。   ~*开头表示不区分大小写的正则匹配。 |
+| `location /uri`                                   | 不带任何修饰符，也表示前缀匹配，但是在正则匹配之后。         |
+| `location   /`                                    | 通用匹配，任何未匹配到其它location的请求都会匹配到，相当于switch中的default。 |
+
+  ```nginx
+    
+    客户端: http://localhost/helloworld/test/a.html
+    客户端: http://localhost/helloworld/test/
+    /helloworld/test/a.html
+    /helloworld/test/
+    
+    location /
+    {
+    }
+    location /helloworld/
+    {
+    }
+    location /helloworld/test/
+    {
+    }
+
+
+    
+    location =/helloworld/test/
+    {
+        root xxx;
+    }
+
+
+    
+    http://localhost/helloworld/test/a.html
+    location ^~ /helloworld/test/
+    {
+    }
+
+
+    
+    location ^~ /login/
+    {
+    }
+    http://localhost/helloworld/test/a.JPG
+    location ~* \.[jpg|png]
+    {
+    }
+    
+    http://192.168.1.100/login/hello/world/login.html
+    /login/hello/world/login.html
+    location /
+    {
+    }
+    location /login/
+    {
+    }
+    location /login/hello/
+    {
+    }
+    location /login/hello/world/
+    {
+    }
+    location ~ /group[1-9]/M0[0-9]
+    {
+    }
+  ```
+
+### 5. 练习题
+
+    ![1532312595449](./src/1532312595449.png)
+    
+    匹配示例:
+    
+    - / -> configuration 
+    - /index.html -> configuration 
+    - /documents/document.html ->      configuration C
+      - /documents/
+      - /
+    - /images/1.gif -> configuration  D
+      - /images/
+      - /
+    - /documents/1.jpg ->      configuration  E
+
+# 八. 项目总结
+
+## 1. Location语法
+
+### 1. 语法规则
+
+```nginx
+location [=|~|~*|^~] /uri/
+{
+	…
+}
+正则表达式中的特殊字符:
+- . () {} [] * + ?
+```
 
 2. Location优先级说明
 
@@ -4555,7 +4665,9 @@ spawn-fcgi -a 127.0.0.1 -p 10002 -f ~/upload/a.out
       - /
     - /documents/1.jpg ->      configuration  E
 
-# 八. 项目总结
+## 2. 项目总结
+
+
 
 ![1532331759370](./src/1532331759370.png)
 
