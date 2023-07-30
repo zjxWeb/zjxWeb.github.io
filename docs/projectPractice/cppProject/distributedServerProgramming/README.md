@@ -1,4 +1,7 @@
-# 分布式服务器系统
+# 分布式服务器系统——仿百度网盘
+
+[项目整个源代码](https://gitee.com/chuangdu/uploadDownload)
+
 [项目设计的所以安装包及相关手册](https://github.com/zjxWeb/zjxWeb.github.io/tree/main/docs/techBlog/distributedServerProgramming/software/)
 
 # 一. 项目概述及FastDFS
@@ -1220,7 +1223,7 @@ int main()
 > 现象：
 >
 >         安装 nginx 或 启动 nginx 时报错：
->                                                                                     
+>                                                                                                 
 >          nginx: [emerg] getpwnam("www") failed
 >
 > 原因：        
@@ -1230,7 +1233,7 @@ int main()
 > 解法（2种）：
 >
 >         1、在 nginx.conf 中 把 user nobody 的注释去掉。        
->                                                                                     
+>                                                                                                 
 >         2、在服务器系统中添加 用户组www 和 用户www，命令如下：
 > ```shell
 > /usr/sbin/groupadd -f www
@@ -3276,6 +3279,18 @@ void ChangeSkin::changeSkin(QString qss)
 
 ### 客户端上传多个文件
 
++ 单线程
+  + 上传的时候
+    + 使用定时器
+    + 上传文件过程中无法处理其它请求
++ 多线程
+  + 客户端有多个线程
+    + 主线程（UI线程）
+      + 能够操作UI界面
+    + 子线程
+      +  不能够操作ui界面
+      + 逻辑运算  
+
    ```c
    // 1. 上传多个文件，文件是一个一个处理的，处理第一个的时候其余的文件应该保存起来
    /*
@@ -3689,7 +3704,7 @@ void QNetworkReply::uploadProgress(qint64 bytesSent, qint64 bytesTotal)
        - 返回值: 得到的哈希值
    ```
 
-## 11. 服务器
+## 11. 服务器程序 
 
 ```c
 #include <stdio.h>
@@ -4138,15 +4153,49 @@ spawn-fcgi -a 127.0.0.1 -p 10002 -f ~/upload/a.out
 
    - 服务器:
 
-     ```json
+     ```nginx
+     // 服务器添加的nginx指令
+     location /myfiles
      {
-     	"num":"270",
-     	"code":"110"     // token验证
+         fastcgi_pass localhost:10005;
+         include fastcgi.conf;
      }
-     § token验证
-         ® token验证成功：{"token":"110"}
-         ® token验证失败：{"token":"111"}
      ```
+     
+     ```c
+     // fastcgi程序
+     int main()
+     {
+         whuile(FCGI_Accept() >= 0)
+         {
+             // 接收数据
+             // 将url ？后边的内容取出
+             // cmd=normal;cmd=count;
+             char * type = getenv("QUERY_STRING")
+             // 将 = 后的内容取出，保存在数组cmd中
+             if(strcmp(cmd,"count") == 0)
+             {
+              	// 解析数据 user token
+                 // token认证
+                 // 认证成功  查询数据库   
+             }
+             else if
+             {
+                 
+             }
+         }
+     }
+     ```
+       ```json
+         // 服务器回发给客户端的数据
+         {
+            "num":"270", 	// 文件个数
+            "code":"110"     // token验证
+         }
+         § token验证
+             ® token验证成功：{"token":"110"}
+             ® token验证失败：{"token":"111"}
+       ```
 
 6. 从服务器获取文件信息
 
@@ -4197,8 +4246,37 @@ spawn-fcgi -a 127.0.0.1 -p 10002 -f ~/upload/a.out
     ]
     }
     ```
+    
+    ```c
+    // 客户端如何处理上述数据块？
+    	// 1. 解析这个json格式的字符串
+    	// 2. 最终需要将json数组中的每个对象取出，每个对象中的数据就是一个文件的详细信息
+    struct FileInof
+    {
+        QString user;
+        QString md5;
+        QString fileName;
+        bool isShared;
+        int pv; // 下载量
+        QString url;
+        long size;
+        QString suffic;// 文件后缀
+    }
+    QVector<FileInfo> info;
+    // 有了下载的url之后如何下载
+    QNetworkAccessManager *p = new QNetwordkAccessManager();
+    QNetworkReply* reply = p->get(info[i].url);
+    connect(reply,&QNetworkReply::readyRead,this,[=](){
+       // 接受数据
+        while()
+        {
+         	reply->read();
+            file.write("file");
+        }
+    });
+    ```
 
-7. 下载文件之后, 下载量pv字段的处理
+7. 下载文件之后, 下载量`pv`字段的处理
 
    - 客户端
 
