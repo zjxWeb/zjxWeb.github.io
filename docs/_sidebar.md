@@ -32,7 +32,7 @@
 * [**项目实战**](projectPractice)
   * [C++Project](projectPractice/cppProject/)
     * [机房预约系统](projectPractice/cppProject/computerOrder/)
-    * [分布式服务器编程](projectPractice/cppProject/distributedServerProgramming/)
+    * [仿百度网盘](projectPractice/cppProject/distributedServerProgramming/)
   * [数字孪生实例](projectPractice/digitalTwinsProject/)
     * [智慧城市数字孪生平台](projectPractice/digitalTwinsProject/smartCity/)
   * [APP项目](projectPractice/App/)
