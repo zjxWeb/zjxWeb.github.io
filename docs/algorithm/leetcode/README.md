@@ -176,3 +176,205 @@ int main()
 }
 ```
 
+## 203. 移除链表元素【简单】【链表】
+
+### 题目
+
+给你一个链表的头节点 `head` 和一个整数 `val` ，请你删除链表中所有满足 `Node.val == val` 的节点，并返回 **新的头节点** 。
+
+ 
+
+**示例 1：**
+
+![2](./src/2.jpg)
+
+```
+输入：head = [1,2,6,3,4,5,6], val = 6
+输出：[1,2,3,4,5]
+```
+
+**示例 2：**
+
+```
+输入：head = [], val = 1
+输出：[]
+```
+
+**示例 3：**
+
+```
+输入：head = [7,7,7,7], val = 7
+输出：[]
+```
+
+**提示：**
+
+- 列表中的节点数目在范围 `[0, 104]` 内
+- `1 <= Node.val <= 50`
+- `0 <= val <= 50`
+
+### 题解
+
+```C++
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* removeElements(ListNode* head, int val) {
+        ListNode* dum = new ListNode(0); // 设置一个虚头节点
+        dum->next = head;
+        ListNode* cure = dum; // 当前元素
+        while (cure->next!= NULL) {
+            if (cure->next->val == val)
+            {
+                ListNode* temp = cure->next;
+                cure->next = cure->next->next;
+                delete temp;
+            }
+            else {
+                cure = cure->next;
+            }
+        }
+        head = dum->next;
+        delete dum;
+        return head;
+    }
+};         
+```
+
+### 707. 设计链表【中等】【链表】
+
+### 题目
+
+你可以选择使用单链表或者双链表，设计并实现自己的链表。
+
+单链表中的节点应该具备两个属性：`val` 和 `next` 。`val` 是当前节点的值，`next` 是指向下一个节点的指针/引用。
+
+如果是双向链表，则还需要属性 `prev` 以指示链表中的上一个节点。假设链表中的所有节点下标从 **0** 开始。
+
+实现 `MyLinkedList` 类：
+
+- `MyLinkedList()` 初始化 `MyLinkedList` 对象。
+- `int get(int index)` 获取链表中下标为 `index` 的节点的值。如果下标无效，则返回 `-1` 。
+- `void addAtHead(int val)` 将一个值为 `val` 的节点插入到链表中第一个元素之前。在插入完成后，新节点会成为链表的第一个节点。
+- `void addAtTail(int val)` 将一个值为 `val` 的节点追加到链表中作为链表的最后一个元素。
+- `void addAtIndex(int index, int val)` 将一个值为 `val` 的节点插入到链表中下标为 `index` 的节点之前。如果 `index` 等于链表的长度，那么该节点会被追加到链表的末尾。如果 `index` 比长度更大，该节点将 **不会插入** 到链表中。
+- `void deleteAtIndex(int index)` 如果下标有效，则删除链表中下标为 `index` 的节点。
+
+**示例：**
+
+```
+输入
+["MyLinkedList", "addAtHead", "addAtTail", "addAtIndex", "get", "deleteAtIndex", "get"]
+[[], [1], [3], [1, 2], [1], [1], [1]]
+输出
+[null, null, null, null, 2, null, 3]
+
+解释
+MyLinkedList myLinkedList = new MyLinkedList();
+myLinkedList.addAtHead(1);
+myLinkedList.addAtTail(3);
+myLinkedList.addAtIndex(1, 2);    // 链表变为 1->2->3
+myLinkedList.get(1);              // 返回 2
+myLinkedList.deleteAtIndex(1);    // 现在，链表变为 1->3
+myLinkedList.get(1);              // 返回 3
+```
+
+**提示：**
+
+- `0 <= index, val <= 1000`
+- 请不要使用内置的 `LinkedList` 库。
+- 调用 `get`、`addAtHead`、`addAtTail`、`addAtIndex` 和 `deleteAtIndex` 的次数不超过 `2000` 。
+
+### 题解
+
+```C++
+class MyLinkedList {
+public:
+    struct ListNode {
+        int val;
+        ListNode* next;
+        ListNode() : val(0), next(nullptr) {}
+        ListNode(int x) : val(x), next(nullptr) {}
+        ListNode(int x, ListNode* next) : val(x), next(next) {}
+    };
+    MyLinkedList() {
+        this->size = 0;
+        this->head = new ListNode(0);
+    }
+
+    int get(int index) {
+        if (index < 0 || index >= size)
+        {
+            return -1;
+        }
+        ListNode* cur = head;
+        for (int i = 0; i <= index; i++) {
+            cur = cur->next;
+        }
+        return cur->val;
+    }
+
+    void addAtHead(int val) {
+        addAtIndex(0, val);
+    }
+
+    void addAtTail(int val) {
+        addAtIndex(size, val);
+    }
+
+    void addAtIndex(int index, int val) {
+        if (index > size)
+            return;
+        ListNode* p = head;
+        index = max(0, index);
+        size++;// 增加了一个结点，所以要自加
+        // 找到index对应的结点
+        for (int i = 0; i < index; i++) {
+            p = p->next;
+        }
+        ListNode* s = new ListNode(val);// 要插入的元素
+        s->next = p->next;
+        p->next = s;
+    }
+
+    void deleteAtIndex(int index) {
+        if (index < 0 || index >= size)
+        {
+            return;
+        }
+        size--;// 删除了一个结点所以要减去一个
+        ListNode* p = head;
+        // 找到index对应的结点
+        for (int i = 0; i < index; i++) {
+            p = p->next;
+        }
+        ListNode* q = p->next;
+        p->next = p->next->next;
+        delete q;
+    }
+private:
+    int size = 0;
+    ListNode* head;
+};
+
+/**
+ * Your MyLinkedList object will be instantiated and called as such:
+ * MyLinkedList* obj = new MyLinkedList();
+ * int param_1 = obj->get(index);
+ * obj->addAtHead(val);
+ * obj->addAtTail(val);
+ * obj->addAtIndex(index,val);
+ * obj->deleteAtIndex(index);
+ */
+
+```
+
