@@ -623,12 +623,13 @@ private:
 class Solution {
 public:
     ListNode* reverseList(ListNode* head) {
-        ListNode* p = head;// 当前结点
         ListNode* q = nullptr;// 上一个结点
+         ListNode* p = head;// 当前结点
         while (p)
         {
             ListNode* t = p->next;// 记录下一个结点
             p->next = q;
+            //p和q结点都前进一位
             q = p;
             p = t;
         }
@@ -637,5 +638,23 @@ public:
 };
 ```
 
-## 
+#### 采用递归的方式
+
+```C++
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        if(head== nullptr || head->next == nullptr)
+        {
+            return head;
+        }
+        ListNode * newP = reverseList(head->next);
+        head->next->next = head;
+        head->next = nullptr;
+        return newP;
+    }
+};
+```
+
+
 
