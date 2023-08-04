@@ -13,7 +13,6 @@
     * [MAKEFILE](study/linux/makefile/)
   * [docker](study/docker/)
   * [数据库](study/dataBase/)
-  * [算法](study/arithmetic/)
   * [设计模式](study/designPattern/)
   * [java](study/java/)
     * [多线程](study/java/Multithreading/)
