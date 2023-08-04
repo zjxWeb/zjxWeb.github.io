@@ -2,8 +2,6 @@
 
 [项目整个源代码](https://gitee.com/chuangdu/uploadDownload)
 
-[项目设计的所以安装包及相关手册](https://github.com/zjxWeb/zjxWeb.github.io/tree/main/docs/techBlog/distributedServerProgramming/software/)
-
 # 一. 项目概述及FastDFS
 ## 1. 项目架构图
 
@@ -1223,7 +1221,7 @@ int main()
 > 现象：
 >
 >         安装 nginx 或 启动 nginx 时报错：
->                                                                                                                                                     
+>                                                                                                                                                         
 >          nginx: [emerg] getpwnam("www") failed
 >
 > 原因：        
@@ -1233,7 +1231,7 @@ int main()
 > 解法（2种）：
 >
 >         1、在 nginx.conf 中 把 user nobody 的注释去掉。        
->                                                                                                                                                     
+>                                                                                                                                                         
 >         2、在服务器系统中添加 用户组www 和 用户www，命令如下：
 > ```shell
 > /usr/sbin/groupadd -f www
