@@ -36,7 +36,7 @@
     * [智慧城市数字孪生平台](projectPractice/digitalTwinsProject/smartCity/)
   * [APP项目](projectPractice/App/)
     * [菜谱APP(可改任意APP)](projectPractice/App/healthApp/)
-* [**算法**](algorithm)
+* [**算法(ASCII)**](algorithm)
   * [LeetCode](algorithm/leetcode/)
 * [**个人联系方式**](onself)
 * [**赞赏**](pay)
