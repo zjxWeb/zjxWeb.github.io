@@ -888,7 +888,7 @@ public:
 };
 ```
 
-## 面试题 02.07. 链表相交
+## 面试题 02.07. 链表相交【简单】【链表】
 
 ### 题目
 
@@ -1002,7 +1002,7 @@ public:
 };
 ```
 
-## 142. 环形链表 II
+## 142. 环形链表 II【中等 】【链表】
 
 ### 题目
 
@@ -1074,7 +1074,7 @@ public:
 };
 ```
 
-## 242. 有效的字母异位词
+## 242. 有效的字母异位词【简单】【哈希表】
 
 ### 题目
 
@@ -1117,6 +1117,220 @@ public:
         sort(s.begin(), s.end());
         sort(t.begin(), t.end());
         return s == t;
+    }
+};
+```
+
+## `1002. 查找共用字符`【简单】【哈希表】
+
+### 题目
+
+给你一个字符串数组 `words` ，请你找出所有在 `words` 的每个字符串中都出现的共用字符（ **包括重复字符**），并以数组形式返回。你可以按 **任意顺序** 返回答案。 
+
+**示例 1：**
+
+```
+输入：words = ["bella","label","roller"]
+输出：["e","l","l"]
+```
+
+**示例 2：**
+
+```
+输入：words = ["cool","lock","cook"]
+输出：["c","o"]
+```
+
+**提示：**
+
+- `1 <= words.length <= 100`
+- `1 <= words[i].length <= 100`
+- `words[i]` 由小写英文字母组成
+
+### 题解
+
+```c++
+#include<iostream>
+#include<vector>
+#include<set>
+using namespace std;
+//
+class Solution {
+public:
+    vector<string> commonChars(vector<string>& words) {
+        //minfreq存储字符在所有字符中出现次数的最小值
+        vector<int> minfreq(26, INT_MAX);
+        // freq 判断每个字符串中出现  字符 次数
+        vector<int> freq(26);
+        for (const string& word : words) {
+            fill(freq.begin(), freq.end(), 0); // 给freq元素赋值为0
+            for (char ch : word) { // 遍历完第一个单词
+                ++freq[ch - 'a'];
+            }
+            // 每次取最小值，来确定那个字符在三个字符串都出现，并统计了各个出现的次数
+            for (int i = 0; i < 26; ++i) {
+                minfreq[i] = min(minfreq[i], freq[i]);
+            }
+        }
+
+        vector<string> ans;
+        // 循环判断0-25，j < minfreq[i]   ，还原成 字母
+        for (int i = 0; i < 26; ++i) {
+            for (int j = 0; j < minfreq[i]; ++j) {
+                ans.emplace_back(1, i + 'a');
+            }
+        }
+        return ans;
+    }
+};
+
+int main()
+{
+    vector<string>st;
+    st.push_back("bella");
+    st.push_back("label");
+    st.push_back("roller");
+    Solution s;
+    vector<string>s1;
+    s1 = s.commonChars(st);
+    for (vector<string>::iterator it = s1.begin(); it != s1.end(); it++)
+    {
+        cout << *it << endl;
+    }
+}
+```
+
+## 349. 两个数组的交集【简单】【哈希表】
+
+### 题目
+
+给定两个数组 `nums1` 和 `nums2` ，返回 *它们的交集* 。输出结果中的每个元素一定是 **唯一** 的。我们可以 **不考虑输出结果的顺序** 。
+
+**示例 1：**
+
+```
+输入：nums1 = [1,2,2,1], nums2 = [2,2]
+输出：[2]
+```
+
+**示例 2：**
+
+```
+输入：nums1 = [4,9,5], nums2 = [9,4,9,8,4]
+输出：[9,4]
+解释：[4,9] 也是可通过的
+```
+
+**提示：**
+
+- `1 <= nums1.length, nums2.length <= 1000`
+- `0 <= nums1[i], nums2[i] <= 1000`
+
+### 题解
+
+```C++
+#include<iostream>
+#include<vector>
+#include<unordered_set>
+
+using namespace std;
+
+class Solution {
+public:
+    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+        unordered_set<int>n1(nums1.begin(),nums1.end());
+        unordered_set<int>n2(nums2.begin(), nums2.end());
+        vector<int>res;
+        for (auto it = n1.begin(); it != n1.end(); ++it) {
+            for (auto ite = n2.begin(); ite != n2.end(); ++ite) {
+                if (*it == *ite)
+                {
+                    res.push_back(*it);
+                }
+            }
+        }
+        return res;
+    }
+};
+
+
+int main()
+{
+    vector<int>n1 = { 1,2,2,1 };
+    vector<int>n2 = { 2,2 };
+    Solution s;
+    for (int elem : s.intersection(n1, n2))
+    {
+        cout << elem << endl;
+    }
+}
+```
+
+## 202. 快乐数
+
+### 题目
+
+编写一个算法来判断一个数 `n` 是不是快乐数。
+
+**「快乐数」** 定义为：
+
+- 对于一个正整数，每一次将该数替换为它每个位置上的数字的平方和。
+- 然后重复这个过程直到这个数变为 1，也可能是 **无限循环** 但始终变不到 1。
+- 如果这个过程 **结果为** 1，那么这个数就是快乐数。
+
+如果 `n` 是 *快乐数* 就返回 `true` ；不是，则返回 `false` 。
+
+**示例 1：**
+
+```
+输入：n = 19
+输出：true
+解释：
+12 + 92 = 82
+82 + 22 = 68
+62 + 82 = 100
+12 + 02 + 02 = 1
+```
+
+**示例 2：**
+
+```
+输入：n = 2
+输出：false
+```
+
+**提示：**
+
+- `1 <= n <= 231 - 1`
+
+### 题解
+
+```c++
+// 快慢指针
+class Solution {
+public:
+    // 求平方和函数
+    int squareSum(int num)
+    {
+        int sum = 0;
+        while(num > 0)
+        {
+            int g = num % 10; // 取出个位
+            sum += g * g;
+            num = num / 10; //下一位求平方
+        }
+        return sum;
+    }
+    bool isHappy(int n) {
+        // 采用快慢指针的方法完成
+        int slow=n,fast=n;
+        do{
+            slow = squareSum(slow);
+            fast = squareSum(fast);
+            fast = squareSum(fast);
+        }while(slow != fast);
+        // 当快慢指针相遇了就要考虑
+        return slow == 1;
     }
 };
 ```
