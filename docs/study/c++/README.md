@@ -5033,9 +5033,11 @@ int main()
   + 把普通指针交给智能指针对象。
   + 智能指针对象过期时，调用析构函数释放普通指针的内存。
 
-### 6.1 智能指针 unique_ptr
+### 6.1 智能指针 unique_ptr(独享指针)
 
-+ `unique_ptr` 独享它指向的对象，也就是说，同时只有一个`unique_ptr` 指向同一个对象，当这个`unique_ptr`被销毁时，指向的对象也随即被销毁。
+> 没有多余的内存开销，性能好。
+
++ `unique_ptr` 独享它指向的对象，也就是说，同时只有一个`unique_ptr` 指向同一个对象，当这个`unique_ptr`被销毁时，指向的对   象也随即被销毁。
 
 + 初始化
 
@@ -5084,22 +5086,95 @@ int main()
     + 传引用（不能传值，因为`unique_ptr`没有拷贝构造函数)。
     + 裸指针。
   
-  +  不支持指针的运算`（+、-、++、-)` 
+  + 不支持指针的运算`（+、-、++、-)` 
   
-+ 更多技巧
+  + reset()；   reset(new Ball{});
+  
+  + 转移
+  
+    + ```c++
+      unique_ptr<int> p1 = make_unique<int>(100);
+      unique_ptr<int> p2(p1.release());
+      // 也可以使用move来完成此效果
+      unique_ptr<int> p2 = move(p1);
+      ```
+  
+  + ![24](./src/24.png)
 
-  + 将一个`unique_ptr`赋给另一个时，如果源`unique_ptr`是一个临时右值，编译器允许这样做;如果源`unique_ptr`将存在一段时间，编译器禁止这样做一般用于函数的返回值。
-    ```C++
-    unique_ptr<AA> p0;
-    p0 = unique_ptr<AA>(new AA("西瓜"));
+> **函数间传递unique_ptr**
+
+![24](./src/25.png)
+
+![28](./src/28.png)
+
+![29](./src/29.png)
+
+![26](./src/26.png)
+
+![27](./src/27.png)
+
+### 6.2 智能指针share_ptr（共享指针）
+
+>  **共享指针会记录有多少个共享指针指向同一个物体。当这个记录的数字为0的时候就会自动delete释放。**
+
++ 定义
+
+  + ```c++
+    //第一种
+    shared_ptr<int> p;
+    p = make_shareed<int>(100);
+    //推荐使用： shared_ptr<int> p{make_shareed<int>(100)}
+    // 第二种
+    shared_ptr<int> p {new  int(100)};
     ```
-  + 用`nullptr`给`unique_ptr`赋值将释放对象，空的`unique_ptr==nullptr`。
-  + `release()`释放对指针的控制权，将`unique_ptr`置为空，返回裸指针。(可用于把`unique_ptr`传递给子函数，并且在子函数中释放对象)
-  + `std::move()`可以转移对原始指针的控制权。(可用于把`unique_ptr` 传递给子函数，子函数形参也是`unique_ptr`) 
-  + 
 
++ 自动管理内存的释放
 
-# C++ 
+  + ```C++
+    int main()
+    {
+        shared_ptr<Ball> p = make_shared<Ball>();
+        cout << p.use_count()<< endl;
+        shared_ptr<Ball> p2 = p;
+        cout << p.use_count() << " " << p2.use_count() <<endl;
+        shared_ptr<Ball> p3 = p;
+        cout << p.use_count() << " " << p2.use_count() <<p3.use_count() << endl;
+        p.reset(); // 会被重置指向  delete p
+        p2.reset();
+        p3.reset();
+    }
+    ```
+
+  + ![23](./src/23.png)
+
+  + reset()   reset(new ball)
+
+  + 起别名
+
+    + ```c++
+      struct Bar {int i = 123;};
+      struct Foo { Bar bar;};
+      int main() {
+          shared_ptr<Foo> f = make_shared<Foo>();
+          cout << f.use_count() << endl;// 1
+          shared_ptr<Bar> b( f，&(f->bar));
+          cout < f.use_coun() << endl; //2
+          cout << b-> i << endl;// 123
+      }
+      
+      ```
+
+  + share_ptr 智能指针因为存在引用，所以会造成额外的性能开销。
+
+### 6.3 智能指针 weak_ptr（弱指针）
+
+>  没有资源的管理权限，对资源是非拥有式的。不能控制资源的释放，需要配合 share_ptr使用。可以检查资源是否存在。
+
++ share_ptr 在**环形依赖**的时候会造成内存泄漏。
+
+![30](./src/30.png)
+
+> lock() 方法会返回一个 share pointer
 
 ## C++在 vs中的常用调试方法
 

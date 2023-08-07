@@ -1266,7 +1266,7 @@ int main()
 }
 ```
 
-## 202. 快乐数
+## 202. 快乐数【简单】【哈希表】
 
 ### 题目
 
@@ -1490,5 +1490,198 @@ public:
         return count;
     }
 };  
+```
+
+## 383. 赎金信【简单】【哈希表】
+
+### 题目
+
+给你两个字符串：`ransomNote` 和 `magazine` ，判断 `ransomNote` 能不能由 `magazine` 里面的字符构成。
+
+如果可以，返回 `true` ；否则返回 `false` 。
+
+`magazine` 中的每个字符只能在 `ransomNote` 中使用一次。
+
+**示例 1：**
+
+```
+输入：ransomNote = "a", magazine = "b"
+输出：false
+```
+
+**示例 2：**
+
+```
+输入：ransomNote = "aa", magazine = "ab"
+输出：false
+```
+
+**示例 3：**
+
+```
+输入：ransomNote = "aa", magazine = "aab"
+输出：true
+```
+
+**提示：**
+
+- `1 <= ransomNote.length, magazine.length <= 105`
+- `ransomNote` 和 `magazine` 由小写英文字母组成
+
+### 题解
+
+```C++
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+class Solution {
+public:
+    bool canConstruct(string ransomNote, string magazine) {
+        if (ransomNote.size() > magazine.size())
+            return false;
+        vector<int>count(26);
+        for (auto& el : magazine)
+        {
+            count[el - 'a']++;
+        }
+        for (auto& el : ransomNote)
+        {
+            count[el - 'a']--;
+            if (count[el - 'a'] < 0) {// 小于0的话就代表没有这个字符，一定是要大的先进入
+                return false;
+            }
+        }
+        return true;
+    }
+};
+
+int main()
+{
+    string ransomNote = "ab";
+    string magazine = "aab";
+    Solution s;
+    cout << s.canConstruct(ransomNote, magazine);
+}
+```
+
+## 15. 三数之和【中等】【哈希表】
+
+### 题目
+
+给你一个整数数组 `nums` ，判断是否存在三元组 `[nums[i], nums[j], nums[k]]` 满足 `i != j`、`i != k` 且 `j != k` ，同时还满足 `nums[i] + nums[j] + nums[k] == 0` 。请
+
+你返回所有和为 `0` 且不重复的三元组。
+
+**注意：**答案中不可以包含重复的三元组。
+
+**示例 1：**
+
+```
+输入：nums = [-1,0,1,2,-1,-4]
+输出：[[-1,-1,2],[-1,0,1]]
+解释：
+nums[0] + nums[1] + nums[2] = (-1) + 0 + 1 = 0 。
+nums[1] + nums[2] + nums[4] = 0 + 1 + (-1) = 0 。
+nums[0] + nums[3] + nums[4] = (-1) + 2 + (-1) = 0 。
+不同的三元组是 [-1,0,1] 和 [-1,-1,2] 。
+注意，输出的顺序和三元组的顺序并不重要。
+```
+
+**示例 2：**
+
+```
+输入：nums = [0,1,1]
+输出：[]
+解释：唯一可能的三元组和不为 0 。
+```
+
+**示例 3：**
+
+```
+输入：nums = [0,0,0]
+输出：[[0,0,0]]
+解释：唯一可能的三元组和为 0 。
+```
+
+**提示：**
+
+- `3 <= nums.length <= 3000`
+- `-105 <= nums[i] <= 105`
+
+### 题解
+
+```c++
+#include<iostream>
+#include<vector>
+#include<unordered_set>
+#include<algorithm>
+using namespace std;
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        vector<vector<int>> result;
+        sort(nums.begin(), nums.end());
+        // 找出a + b + c = 0
+        // a = nums[i], b = nums[left], c = nums[right]
+        int target = 0;
+        int n = nums.size();
+        result.reserve(n > 256 ? 256 : n);
+        for (int i = 0; i < n; i++) {
+            // 排序之后如果第一个元素已经大于零，那么无论如何组合都不可能凑成三元组，直接返回结果就可以了
+            if (nums[i] > 0) {
+                return result;
+            }
+            // 错误去重a方法，将会漏掉-1,-1,2 这种情况
+            /*
+            if (nums[i] == nums[i + 1]) {
+                continue;
+            }
+            */
+            // 正确去重a方法
+            if (i > 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+            int left = i + 1;
+            int right = n - 1;
+            while (right > left) {
+                // 去重复逻辑如果放在这里，0，0，0 的情况，可能直接导致 right<=left 了，从而漏掉了 0,0,0 这种三元组
+                /*
+                while (right > left && nums[right] == nums[right - 1]) right--;
+                while (right > left && nums[left] == nums[left + 1]) left++;
+                */
+                target = nums[i] + nums[left] + nums[right];
+                if (target  > 0) right--;
+                else if (target < 0) left++;
+                else {
+                    result.push_back(vector<int>{nums[i], nums[left], nums[right]});
+                    // 去重逻辑应该放在找到一个三元组之后，对b 和 c去重  去掉值相等的情况
+                    while (right > left && nums[right] == nums[right - 1]) right--;
+                    while (right > left && nums[left] == nums[left + 1]) left++;
+
+                    // 找到答案时，双指针同时收缩
+                    right--;
+                    left++;
+                }
+            }
+
+        }
+        return result;
+    }
+};
+
+int main()
+{
+    vector<int>nums = { -1,0,1,2,-1,-4 };
+    Solution s;
+    for (auto& el : s.threeSum(nums))
+    {
+        for (auto& e : el)
+        {
+            cout << e << endl;
+        }
+    }
+}
 ```
 
