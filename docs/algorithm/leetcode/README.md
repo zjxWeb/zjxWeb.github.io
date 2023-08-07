@@ -1685,3 +1685,106 @@ int main()
 }
 ```
 
+## 18. 四树之和【中等】【哈希表】
+
+### 题目
+
+给你一个由 `n` 个整数组成的数组 `nums` ，和一个目标值 `target` 。请你找出并返回满足下述全部条件且**不重复**的四元组 `[nums[a], nums[b], nums[c], nums[d]]` （若两个四元组元素一一对应，则认为两个四元组重复）：
+
+- `0 <= a, b, c, d < n`
+- `a`、`b`、`c` 和 `d` **互不相同**
+- `nums[a] + nums[b] + nums[c] + nums[d] == target`
+
+你可以按 **任意顺序** 返回答案 。
+
+**示例 1：**
+
+```
+输入：nums = [1,0,-1,0,-2,2], target = 0
+输出：[[-2,-1,1,2],[-2,0,0,2],[-1,0,0,1]]
+```
+
+**示例 2：**
+
+```
+输入：nums = [2,2,2,2,2], target = 8
+输出：[[2,2,2,2]]
+```
+
+**提示：**
+
+- `1 <= nums.length <= 200`
+- `-109 <= nums[i] <= 109`
+- `-109 <= target <= 109`
+
+### 题解（双指针）
+
+```c++
+#include<iostream>
+#include<vector>
+#include<algorithm>
+
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+        vector<vector<int>> res;
+        sort(nums.begin(), nums.end());
+        int n = nums.size();
+        int left = 0;// 左指针
+        int right = 0;// 右指针
+        res.reserve(n > 256 ? 256 : n);
+        long tar = 0;
+        for (int i = 0; i < n; i++)
+        {
+            // 排除首个元素一定不成立的元素
+            if (nums[i] > target && nums[i] >= 0)
+                break;
+            // 去重
+            if (i > 0 && nums[i] == nums[i - 1])
+                continue;
+            for (int j = i + 1; j < n; j++)
+            {
+                if (nums[i] + nums[j] > target && nums[i] + nums[j] >= 0)
+                    break;
+                if (j > i + 1 && nums[j] == nums[j - 1])
+                    continue;
+                left = j + 1;
+                right = n - 1;
+                while (right > left)
+                {
+                    tar = (long)nums[i] + nums[j] + nums[left] + nums[right];
+
+                    if (tar > target)right--;
+                    else if (tar < target)left++;
+                    else {
+                        res.push_back(vector<int>{nums[i], nums[j], nums[left], nums[right]});
+                        while (right > left && nums[right] == nums[right - 1]) right--;
+                        while (right > left && nums[left] == nums[left + 1]) left++;
+                        right--;
+                        left++;
+                    }
+                }
+            }
+        }
+        return res;
+    }
+};
+
+
+int main()
+{
+    vector<int>nums = { 1,0,-1,0,-2,2 };
+    int target = 0;
+    Solution s;
+    for (auto& el : s.fourSum(nums,target))
+    {
+        for (auto& e : el)
+        {
+            cout << e << endl;
+        }
+    }
+}
+```
+
