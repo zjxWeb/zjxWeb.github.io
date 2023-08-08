@@ -1788,3 +1788,107 @@ int main()
 }
 ```
 
+## 344 反转字符串【简单】【字符串】
+
+### 题目
+
+编写一个函数，其作用是将输入的字符串反转过来。输入字符串以字符数组 `s` 的形式给出。
+
+不要给另外的数组分配额外的空间，你必须**[原地](https://baike.baidu.com/item/原地算法)修改输入数组**、使用 O(1) 的额外空间解决这一问题。
+
+**示例 1：**
+
+```
+输入：s = ["h","e","l","l","o"]
+输出：["o","l","l","e","h"]
+```
+
+**示例 2：**
+
+```
+输入：s = ["H","a","n","n","a","h"]
+输出：["h","a","n","n","a","H"]
+```
+
+**提示：**
+
+- `1 <= s.length <= 105`
+- `s[i]` 都是 [ASCII](https://baike.baidu.com/item/ASCII) 码表中的可打印字符
+
+### 题解（双指针）
+
+```C++
+class Solution {
+public:
+    void reverseString(vector<char>& s) {
+        int n = s.size();
+        int l = 0;
+        int r = n - 1;
+        s.reserve( n > 128 ? 128 :n);
+        for(l,r; l < r;l++,r--)
+        {
+            swap(s[l],s[r]);
+        }
+    }
+};
+```
+
+## 541. 反转字符串【简单】【字符串】
+
+### 题目
+
+给定一个字符串 `s` 和一个整数 `k`，从字符串开头算起，每计数至 `2k` 个字符，就反转这 `2k` 字符中的前 `k` 个字符。
+
+- 如果剩余字符少于 `k` 个，则将剩余字符全部反转。
+- 如果剩余字符小于 `2k` 但大于或等于 `k` 个，则反转前 `k` 个字符，其余字符保持原样。
+
+**示例 1：**
+
+```
+输入：s = "abcdefg", k = 2
+输出："bacdfeg"
+```
+
+**示例 2：**
+
+```
+输入：s = "abcd", k = 2
+输出："bacd"
+```
+
+**提示：**
+
+- `1 <= s.length <= 104`
+- `s` 仅由小写英文组成
+- `1 <= k <= 104`
+
+### 题解
+
+```c++
+#include<iostream>
+#include<string>
+using namespace std;
+
+class Solution {
+public:
+    //反转每个下标从 2k2k2k 的倍数开始的，长度为 kkk 的子串。若该子串长度不足 kkk，则反转整个子串。
+    string reverseStr(string s, int k) {
+        int n = s.length();
+        for (int i = 0; i < n; i += 2 * k) {
+            cout << *s.begin() << endl;
+            reverse(s.begin() + i, s.begin() + min(i + k, n)); // 每次操作前k个字符 左闭右开
+        }
+        return s;
+    }
+};
+
+int main()
+{
+    string s = "abcdefg";
+    int k = 2;
+    Solution so;
+    cout << so.reverseStr(s, k);
+
+}
+```
+
