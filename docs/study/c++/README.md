@@ -5211,5 +5211,686 @@ int main()
 
 
 
+# C++ 多线程编程
 
+
+
+## 1. 线程库的基本使用
+
+### **创建线程**
+
+要创建线程，我们需要一个可调用的函数或函数对象，作为线程的入口点。在C++11中，我们可以使用函数指针、函数对象或lambda表达式来实现。创建线程的基本语法如下：
+
+```c++
+#include <thread>
+std::thread t(function_name, args...);
+```
+
+`function_name`是线程入口点的函数或可调用对象
+
+`args...`是传递给函数的参数
+
+创建线程后，我们可以使用`t.join()`等待线程完成，或者使用`t.detach()`分离线程，让它在后台运行。
+
+例如，下面的代码创建了一个线程，输出一条消息：
+
+```c++
+#include <iostream>
+#include <thread>
+void print_message() {    
+    std::cout << "Hello, world!" << std::endl;
+}
+int main() {    
+    std::thread t(print_message);    
+    t.join();    
+    return 0;
+}
+```
+
+在这个例子中，我们定义了一个名为`print_message`的函数，它输出一条消息。然后，我们创建了一个名为`t`的线程，将`print_message`函数作为入口点。最后，我们使用`t.join()`等待线程完成。
+
+### **传递参数**
+
+我们可以使用多种方式向线程传递参数，例如使用函数参数、全局变量、引用等。如：
+
+```c++
+#include <iostream>
+#include <thread>
+void print_message(const std::string& message) {
+	std::cout << message << std::endl;
+}
+void increment(int& x) {    
+    ++x;
+}
+int main() {    
+    std::string message = "Hello, world!";    
+    std::thread t(print_message, message);    
+    t.join();    
+    int x = 0;    
+    std::thread t2(increment, std::ref(x));    
+    t2.join();    
+    std::cout << x << std::endl;    
+    return 0;
+}
+```
+
+在第一个例子中，我们使用了一个字符串作为函数参数，传递给线程。在第二个例子中，我们使用了一个引用来传递一个整数变量。需要注意的是，当我们使用引用传递参数时，我们需要使用`std::ref`来包装引用，否则编译器会报错。
+
+### **等待线程完成**
+
+当我们创建一个线程后，我们可能需要等待它完成，以便获取线程的执行结果或执行清理操作。我们可以使用`t.join()`方法来等待线程完成。例如，下面的代码创建了两个线程，等待它们完成后输出一条消息：
+
+```c++
+#include <iostream>
+#include <thread>
+void print_message(const std::string& message) {    
+    std::cout << message << std::endl;
+}
+int main() {    
+    std::thread t1(print_message, "Thread 1");    
+    std::thread t2(print_message, "Thread 2");    
+    t1.join();    
+    t2.join();    
+    std::cout << "All threads joined" << std::endl;    
+    return 0;
+}
+```
+
+在这个例子中，我们创建了两个线程`t1`和`t2`，它们都调用`print_message`函数输出一条消息。然后，我们使用`t1.join()`和`t2.join()`等待它们完成。最后，我们输出一条消息，表示所有线程都已经完成。
+
+### **分离线程**
+
+有时候我们可能不需要等待线程完成，而是希望它在后台运行。这时候我们可以使用`t.detach()`方法来分离线程。例如，下面的代码创建了一个线程，分离它后输出一条消息：
+
+```c++
+#include <iostream>
+#include <thread>
+void print_message(const std::string& message) {    
+    std::cout << message << std::endl;
+}
+int main() {    
+    std::thread t(print_message, "Thread 1");    
+    t.detach();    
+    std::cout << "Thread detached" << std::endl;    
+    return 0;
+}
+```
+
+在这个例子中，我们创建了一个名为`t`的线程，调用`print_message`函数输出一条消息。然后，我们使用`t.detach()`方法分离线程，让它在后台运行。最后，我们输出一条消息，表示线程已经被分离。
+
+需要注意的是，一旦线程被分离，就不能再使用`t.join()`方法等待它完成。而且，我们需要确保线程不会在主线程结束前退出，否则可能会导致未定义行为。
+
+### **joinable()**
+
+joinable()方法返回一个布尔值，如果线程可以被join()或detach()，则返回true，否则返回false。如果我们试图对一个不可加入的线程调用join()或detach()，则会抛出一个std::system_error异常。
+
+下面是一个使用joinable()方法的例子：
+
+```c++
+#include <iostream>
+#include <thread>
+void foo() {
+    std::cout << "Thread started" << std::endl;
+}
+int main() {
+    std::thread t(foo);
+    if (t.joinable()) {
+        t.join();
+    }
+    std::cout << "Thread joined" << std::endl;
+    return 0;
+}
+```
+
+**常见错误（将在后续文章中详解以下错误的****解决方案）**
+
+在使用C++11线程库时，有一些常见的错误需要注意。例如：
+
++  忘记等待线程完成或分离线程：如果我们创建了一个线程，但没有等待它完成或分离它，那么在主线程结束时，可能会导致未定义行为。
+
++ 访问共享数据时没有同步：如果我们在多个线程中访问共享数据，但没有使用同步机制，那么可能会导致数据竞争、死锁等问题。
+
++  异常传递问题：如果在线程中发生了异常，但没有处理它，那么可能会导致程序崩溃。因此，我们应该在线程中使用try-catch块来捕获异常，并在适当的地方处理它。
+
+```C++
+#include<iostream>
+#include<thread>
+#include<string>
+
+using namespace std;
+
+void printHello(string msg)
+{
+	cout << msg;
+}
+
+int main()
+{
+	// 1. 创建线程
+	thread thread1(printHello,"hello thread");
+
+	// 因为主程序在执行的时候，是不会等待线程执行完毕，再去执行剩下的主程序，所以没有join()会报错
+	// 主程序等待线程执行完毕 join() join函数值阻塞的
+	//thread1.join();
+
+	// 分离线程 detach()   (分离主线程和子线程)(子线程在后台继续运行)
+	//thread1.detach();
+
+	// 判断这个线程能否调用 join() 或者 detach() 返回一个bool值
+	bool isJon  = thread1.joinable();
+	if (isJon)
+	{
+		thread1.join();
+	}
+	return 0;
+}
+```
+
+## 2. 线程函数中的数据未定义的错误
+
+### 1. 传递临时变量的问题：
+
+```c++
+#include <iostream>
+#include <thread>
+void foo(int& x) {
+    x += 1;
+}
+int main() {
+    std::thread t(foo, 1); // 传递临时变量
+    t.join();
+    return 0;
+}
+```
+
++ 在这个例子中，我们定义了一个名为`foo`的函数，它接受一个整数引用作为参数，并将该引用加1。然后，我们创建了一个名为`t`的线程，将`foo`函数以及一个临时变量`1`作为参数传递给它。这样会导致在线程函数执行时，临时变量`1`被销毁，从而导致未定义行为。
+
++ 解决方案是将变量复制到一个持久的对象中，然后将该对象传递给线程。例如，我们可以将`1`复制到一个`int`类型的变量中，然后将该变量的引用传递给线程。
+
+```c++
+#include <iostream>
+#include <thread>
+void foo(int& x) {
+    x += 1;
+}
+int main() {
+    int x = 1; // 将变量复制到一个持久的对象中
+    std::thread t(foo, std::ref(x)); // 将变量的引用传递给线程
+    t.join();
+    return 0;
+}
+```
+
+### 2. 传递指针或引用指向局部变量的问题：
+
+```c++
+#include <iostream>
+#include <thread>
+void foo(int* ptr) {
+    std::cout << *ptr << std::endl; // 访问已经被销毁的指针
+}
+int main() {
+    int x = 1;
+    std::thread t(foo, &x); // 传递指向局部变量的指针
+    t.join();
+    return 0;
+}
+```
+
++ 在这个例子中，我们定义了一个名为`foo`的函数，它接受一个整型指针作为参数，并输出该指针所指向的整数值。然后，我们创建了一个名为`t`的线程，将`foo`函数以及指向局部变量`x`的指针作为参数传递给它。这样会导致在线程函数执行时，指向局部变量`x`的指针已经被销毁，从而导致未定义行为。
+
++ 解决方案是将指针或引用指向堆上的变量，或使用`std::shared_ptr`等智能指针来管理对象的生命周期。例如，我们可以使用`new`运算符在堆上分配一个整数变量，并将指针指向该变量。
+
+```c++
+#include <iostream>
+#include <thread>
+void foo(int* ptr) {
+    std::cout << *ptr << std::endl;
+    delete ptr; // 在使用完指针后，需要手动释放内存
+}
+int main() {
+    int* ptr = new int(1); // 在堆上分配一个整数变量
+    std::thread t(foo, ptr); // 将指针传递给线程
+    t.join();
+    return 0;
+}
+```
+
+### 3. 传递指针或引用指向已释放的内存的问题：
+
+```c++
+#include <iostream>
+#include <thread>
+void foo(int& x) {
+    std::cout << x << std::endl; // 访问已经被释放的内存
+}
+int main() {
+    int* ptr = new int(1);
+    std::thread t(foo, *ptr); // 传递已经释放的内存
+    delete ptr;
+    t.join();
+    return 0;
+}
+```
+
++ 在这个例子中，我们定义了一个名为`foo`的函数，它接受一个整数引用作为参数，并输出该引用的值。然后，我们创建了一个名为`t`的线程，将`foo`函数以及一个已经被释放的指针所指向的整数值作为参数传递给它解决方案是确保在线程函数执行期间，被传递的对象的生命周期是有效的。例如，在主线程中创建并初始化对象，然后将对象的引用传递给线程。
+
+```c++
+#include <iostream>
+#include <thread>
+void foo(int& x) {
+    std::cout << x << std::endl;
+}
+int main() {
+    int x = 1;
+    std::thread t(foo, std::ref(x)); // 将变量的引用传递给线程
+    t.join();
+    return 0;
+}
+```
+
++ 在这个例子中，我们创建了一个名为`x`的整数变量，并初始化为`1`。然后，我们创建了一个名为`t`的线程，将`foo`函数以及变量`x`的引用作为参数传递给它。这样可以确保在线程函数执行期间，变量`x`的生命周期是有效的。
+
+
+
+### 4. 类成员函数作为入口函数，类对象被提前释放
+
+错误示例：
+
+```c++
+#include <iostream>
+#include <thread>
+
+class MyClass {
+public:
+    void func() {
+        std::cout << "Thread " << std::this_thread::get_id() 
+        << " started" << std::endl;
+        // do some work
+        std::cout << "Thread " << std::this_thread::get_id() 
+        << " finished" << std::endl;
+    }
+};
+
+int main() {
+    MyClass obj;
+    std::thread t(&MyClass::func, &obj);
+    // obj 被提前销毁了，会导致未定义的行为
+    return 0;
+}
+```
+
++ 上面的代码中，在创建线程之后，obj 对象立即被销毁了，这会导致在线程执行时无法访问 obj 对象，可能会导致程序崩溃或者产生未定义的行为。
+
++ 为了避免这个问题，可以使用 std::shared_ptr 来管理类对象的生命周期，确保在线程执行期间对象不会被销毁。具体来说，可以在创建线程之前，将类对象的指针封装在一个 std::shared_ptr 对象中，并将其作为参数传递给线程。这样，在线程执行期间，即使类对象的所有者释放了其所有权，std::shared_ptr 仍然会保持对象的生命周期，直到线程结束。
+
++ 以下是使用 std::shared_ptr 修复上面错误的示例：
+
+```c++
+#include <iostream>
+#include <thread>
+#include <memory>
+
+class MyClass {
+public:
+    void func() {
+        std::cout << "Thread " << std::this_thread::get_id() 
+        << " started" << std::endl;
+        // do some work
+        std::cout << "Thread " << std::this_thread::get_id() 
+        << " finished" << std::endl;
+    }
+};
+
+int main() {
+    std::shared_ptr<MyClass> obj = std::make_shared<MyClass>();
+    std::thread t(&MyClass::func, obj);
+    t.join();
+    return 0;
+}
+```
+
++ 上面的代码中，使用 std::make_shared 创建了一个 MyClass 类对象，并将其封装在一个 std::shared_ptr 对象中。然后，将 std::shared_ptr 对象作为参数传递给线程。这样，在线程执行期间，即使 obj 对象的所有者释放了其所有权，std::shared_ptr 仍然会保持对象的生命周期，直到线程结束。
+
+### 5.入口函数为类的私有成员函数
+
+```c++
+#include <iostream>
+#include <thread>
+
+class MyClass {
+private:
+friend void myThreadFunc(MyClass* obj);
+void privateFunc(){
+std::cout << "Thread " 
+<< std::this_thread::get_id() << " privateFunc" << std::endl;
+}
+};
+
+void myThreadFunc(MyClass* obj) {
+obj->privateFunc();
+}
+
+int main() {
+MyClass obj;
+std::thread thread_1(myThreadFunc, &obj);
+thread_1.join();
+return 0;
+}
+```
+
++ 上面的代码中，将 `myThreadFunc` 定义为 `MyClass` 类的友元函数，并在函数中调用 `privateFunc` 函数。在创建线程时，需要将类对象的指针作为参数传递给线程。
+
+## 3. 互斥量解决多线程数据共享问题
+
+### 数据共享问题分析
+
+>  在多个线程中共享数据时，需要注意线程安全问题。如果多个线程同时访问同一个变量，并且其中至少有一个线程对该变量进行了写操作，那么就会出现**数据竞争问题**。数据竞争可能会导致程序崩溃、产生未定义的结果，或者得到错误的结果。
+
++ 为了避免数据竞争问题，需要使用同步机制来确保多个线程之间对共享数据的访问是安全的。常见的**同步机制包括互斥量、条件变量、原子操作**等。
+
++ 以下是一个简单的数据共享问题的示例代码
+
+```c++
+#include <iostream>
+#include <thread>
+int shared_data = 0;
+void func() {
+    for (int i = 0; i < 100000; ++i) {
+        shared_data++;
+    }
+}
+int main() {
+    std::thread t1(func);
+    std::thread t2(func);
+    t1.join();
+    t2.join();
+    std::cout << "shared_data = " << shared_data << std::endl;    
+    return 0;
+}
+```
+
++ 上面的代码中，定义了一个名为 `shared_data` 的全局变量，并在两个线程中对其进行累加操作。在 `main` 函数中，创建了两个线程，并分别调用了 `func` 函数。在 `func` 函数中，对 `shared_data` 变量进行了累加操作。
+
++ 由于 `shared_data` 变量是全局变量，因此在两个线程中共享。对于这种共享的情况，需要使用互斥量等同步机制来确保多个线程之间对共享数据的访问是安全的。如果不使用同步机制，就会出现数据竞争问题，导致得到错误的结果。
+
+***如果多线程程序每一次的运行结果和单线程运行的结果始终是一样的，那么你的线程就是安全的***
+
+### 互斥量概念
+
++ 互斥量（`mutex`）是一种用于实现多线程同步的机制，用于确保多个线程之间对共享资源的访问互斥。互斥量通常用于保护共享数据的访问，以避免多个线程同时访问同一个变量或者数据结构而导致的数据竞争问题。
+
++ 互斥量提供了两个基本操作：`lock()` 和 `unlock()`。当一个线程调用 `lock()` 函数时，如果互斥量当前没有被其他线程占用，则该线程获得该互斥量的所有权，可以对共享资源进行访问。如果互斥量当前已经被其他线程占用，则调用 `lock()` 函数的线程会被阻塞，直到该互斥量被释放为止。
+
++ 上面的代码中，使用互斥量 `mtx` 来确保多个线程对 `shared_data` 变量的访问是安全的。在 `func` 函数中，先调用 `mtx.lock()` 来获取互斥量的所有权，然后对 `shared_data` 变量进行累加操作，最后再调用 `mtx.unlock()` 来释放互斥量的所有权。这样就可以确保多个线程之间对 `shared_data` 变量的访问是安全的。
+
+### 案例代码
+
++ 以下是一个综合了创建多个线程和数据共享问题解决方案的示例代码：
+
+```c++
+#include <iostream>
+#include <thread>
+#include <mutex>
+int shared_data = 0;
+std::mutex mtx;
+void func(int n) {
+    for (int i = 0; i < 100000; ++i) {
+        mtx.lock();
+        shared_data++;        
+        std::cout << "Thread " << n 
+        << " increment shared_data to " << shared_data << std::endl;
+        mtx.unlock();
+    }
+}
+int main() {
+    std::thread t1(func, 1);
+    std::thread t2(func, 2);
+
+    t1.join();
+    t2.join();    
+    std::cout << "Final shared_data = " << shared_data << std::endl;    
+    return 0;
+}
+```
+
++ 上面的代码中，定义了一个名为 `shared_data` 的全局变量，并使用互斥量 `mtx` 来确保多个线程对其进行访问时的线程安全。在两个线程中，分别调用了 `func` 函数，并传递了不同的参数。在 `func` 函数中，先获取互斥量的所有权，然后对 `shared_data` 变量进行累加操作，并输出变量的当前值。最后再释放互斥量的所有权。
+
+## 4. 互斥量死锁
+
++ 假设有两个线程 T1 和 T2，它们需要对两个互斥量 mtx1 和 mtx2 进行访问，而且需要按照以下顺序获取互斥量的所有权：
+
+> T1 先获取 mtx1 的所有权，再获取 mtx2 的所有权。
+
+>  T2 先获取 mtx2 的所有权，再获取 mtx1 的所有权。
+
++ 如果两个线程同时执行，就会出现死锁问题。因为 T1 获取了 mtx1 的所有权，但是无法获取 mtx2 的所有权，而 T2 获取了 mtx2 的所有权，但是无法获取 mtx1 的所有权，两个线程互相等待对方释放互斥量，导致死锁。
+
++ 为了解决这个问题，可以让两个线程按照相同的顺序获取互斥量的所有权。例如，都先获取 mtx1 的所有权，再获取 mtx2 的所有权，或者都先获取 mtx2 的所有权，再获取 mtx1 的所有权。这样就可以避免死锁问题。
+
+以下是按照第二种方案修改后的代码：
+
+```c++
+#include <iostream>
+#include <thread>
+#include <mutex>
+std::mutex mtx1, mtx2;
+void func1() {    
+    mtx2.lock();    
+    std::cout << "Thread 1 locked mutex 2" << std::endl;    
+    mtx1.lock();    
+    std::cout << "Thread 1 locked mutex 1" << std::endl;    
+    mtx1.unlock();    
+    std::cout << "Thread 1 unlocked mutex 1" << std::endl;    
+    mtx2.unlock();    
+    std::cout << "Thread 1 unlocked mutex 2" << std::endl;
+}
+void func2() {    
+    mtx2.lock();    
+    std::cout << "Thread 2 locked mutex 2" << std::endl;    
+    mtx1.lock();    
+    std::cout << "Thread 2 locked mutex 1" << std::endl;    
+    mtx1.unlock();    
+    std::cout << "Thread 2 unlocked mutex 1" << std::endl;    
+    mtx2.unlock();    
+    std::cout << "Thread 2 unlocked mutex 2" << std::endl;
+}
+int main() {    
+    std::thread t1(func1);    
+    std::thread t2(func2);    
+    t1.join();    
+    t2.join();    
+    return 0;
+}
+```
+
+> 在上面的代码中，T1 先获取 mtx2 的所有权，再获取 mtx1 的所有权，而 T2 也是先获取 mtx2 的所有权，再获取 mtx1 的所有权，这样就避免了死锁问题。
+
+## 5.lock_guard 与 std::unique_lock
+
+### **`lock_guard`**
+
+`std::lock_guard` 是 C++ 标准库中的一种互斥量封装类，用于保护共享数据，防止多个线程同时访问同一资源而导致的数据竞争问题。
+
+`std::lock_guard` 的特点如下：
+
+- 当构造函数被调用时，该互斥量会被自动锁定。
+- 当析构函数被调用时，该互斥量会被自动解锁。
+- `std::lock_guard` 对象不能复制或移动，因此它只能在局部作用域中使用。
+
+### **std::unique_lock**
+
+`std::unique_lock` 是 C++ 标准库中提供的一个互斥量封装类，用于在多线程程序中对互斥量进行加锁和解锁操作。它的主要特点是可以对互斥量进行更加灵活的管理，包括延迟加锁、条件变量、超时等。
+
+`std::unique_lock` 提供了以下几个成员函数：
+
+- `lock()`：尝试对互斥量进行加锁操作，如果当前互斥量已经被其他线程持有，则当前线程会被阻塞，直到互斥量被成功加锁。
+- `try_lock()`：尝试对互斥量进行加锁操作，如果当前互斥量已经被其他线程持有，则函数立即返回 `false`，否则返回 `true`。
+- `try_lock_for(const std::chrono::duration<Rep, Period>& rel_time)`：尝试对互斥量进行加锁操作，如果当前互斥量已经被其他线程持有，则当前线程会被阻塞，直到互斥量被成功加锁，或者超过了指定的时间。
+- `try_lock_until(const std::chrono::time_point<Clock, Duration>& abs_time)`：尝试对互斥量进行加锁操作，如果当前互斥量已经被其他线程持有，则当前线程会被阻塞，直到互斥量被成功加锁，或者超过了指定的时间点。
+- `unlock()`：对互斥量进行解锁操作。
+
+除了上述成员函数外，`std::unique_lock` 还提供了以下几个构造函数：
+
+- `unique_lock() noexcept = default`：默认构造函数，创建一个未关联任何互斥量的 `std::unique_lock` 对象。
+- `explicit unique_lock(mutex_type& m)`：构造函数，使用给定的互斥量 `m` 进行初始化，并对该互斥量进行加锁操作。
+- `unique_lock(mutex_type& m, defer_lock_t) noexcept`：构造函数，使用给定的互斥量 `m` 进行初始化，但不对该互斥量进行加锁操作。
+- `unique_lock(mutex_type& m, try_to_lock_t) noexcept`：构造函数，使用给定的互斥量 `m` 进行初始化，并尝试对该互斥量进行加锁操作。如果加锁失败，则创建的 `std::unique_lock` 对象不与任何互斥量关联。
+- `unique_lock(mutex_type& m, adopt_lock_t) noexcept`：构造函数，使用给定的互斥量 `m` 进行初始化，并假设该互斥量已经被当前线程成功加锁。
+
+`std::unique_lock` 使用非常灵活方便，上述操作的使用方式将会在课程视频中作详细介绍。
+
+```C++
+#include <iostream>
+#include <thread>
+#include <mutex>
+int shared_data = 0;
+//std::mutex mtx;
+std::timed_mutex mtx;
+void func(int n) {
+    for (int i = 0; i < 2; ++i) {
+        //std::lock_guard < std::mutex > lg(mtx);
+        std::unique_lock < std::timed_mutex > lg(mtx, std:: defer_lock);
+        if (lg.try_lock_for(std::chrono::seconds(2))) {
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+            shared_data++;
+        }
+        
+    }
+}
+int main() {
+    std::thread t1(func, 1);
+    std::thread t2(func, 2);
+
+    t1.join();
+    t2.join();
+    std::cout << "Final shared_data = " << shared_data << std::endl;
+    return 0;
+}
+```
+
+## 6.std::call_once与其使用场景
+
+> 单例设计模式是一种常见的设计模式，用于确保某个类只能创建一个实例。由于单例实例是全局唯一的，因此在多线程环境中使用单例模式时，需要考虑线程安全的问题。
+
+下面是一个简单的单例模式的实现：
+
+```c++
+class Singleton {
+public:
+    static Singleton& getInstance() {
+         static Singleton instance;
+         return instance;
+    }    
+    void setData(int data) {
+         m_data = data;
+    }    
+    int getData() const {
+         return m_data;
+    }private:
+    Singleton() {}
+    Singleton(const Singleton&) = delete;
+    Singleton& operator=(const Singleton&) = delete;    
+    int m_data = 0;
+};
+```
+
++ 在这个单例类中，我们使用了一个静态成员函数 `getInstance()` 来获取单例实例，该函数使用了一个静态局部变量 `instance` 来存储单例实例。由于静态局部变量只会被初始化一次，因此该实现可以确保单例实例只会被创建一次。
+
+>  但是，该实现并不是线程安全的。如果多个线程同时调用 `getInstance()` 函数，可能会导致多个对象被创建，从而违反了单例模式的要求。此外，如果多个线程同时调用 `setData()` 函数来修改单例对象的数据成员 `m_data`，可能会导致数据不一致或不正确的结果。
+
++ 为了解决这些问题，我们可以使用 `std::call_once` 来实现一次性初始化，从而确保单例实例只会被创建一次。下面是一个使用 `std::call_once` 的单例实现：
+
+```c++
+class Singleton {
+public:
+    static Singleton& getInstance() {
+            std::call_once(m_onceFlag, &Singleton::init);
+            return *m_instance;
+    }    
+    void setData(int data) {
+        m_data = data;
+    }    
+    int getData() const {        
+    return m_data;
+    }
+private:
+    Singleton() {}
+    Singleton(const Singleton&) = delete;
+    Singleton& operator=(const Singleton&) = delete;    
+    static void init() {
+        m_instance.reset(new Singleton);
+    }    
+    static std::unique_ptr<Singleton> m_instance;    
+    static std::once_flag m_onceFlag;    
+    int m_data = 0;
+};
+std::unique_ptr<Singleton> Singleton::m_instance;
+std::once_flag Singleton::m_onceFlag;
+```
+
++ 在这个实现中，我们使用了一个静态成员变量 `m_instance` 来存储单例实例，使用了一个静态成员变量 `m_onceFlag` 来标记初始化是否已经完成。在 `getInstance()` 函数中，我们使用 `std::call_once` 来调用 `init()` 函数，确保单例实例只会被创建一次。在 `init()` 函数中，我们使用了 `std::unique_ptr` 来创建单例实例。
+
++ 使用 `std::call_once` 可以确保单例实例只会被创建一次，从而避免了多个对象被创建的问题。此外，使用 `std::unique_ptr` 可以确保单例实例被正确地释放，避免了内存泄漏的问题。
+
++ `std::call_once` 是 C++11 标准库中的一个函数，用于确保某个函数只会被调用一次。其函数原型如下
+
+```c++
+template<class Callable, class... Args>
+
+void call_once(std::once_flag& flag, Callable&& func, Args&&... args);
+```
+
+>  其中，`flag` 是一个 `std::once_flag` 类型的对象，用于标记函数是否已经被调用；`func` 是需要被调用的函数或可调用对象；`args` 是函数或可调用对象的参数。
+
++ `std::call_once` 的作用是，确保在多个线程中同时调用 `call_once` 时，只有一个线程能够成功执行 `func` 函数，而其他线程则会等待该函数执行完成。
+
++ 使用 `std::call_once` 的过程中，需要注意以下几点：
+
+1. `flag` 参数必须是一个 `std::once_flag` 类型的对象，并且在多次调用 `call_once` 函数时需要使用同一个 `flag` 对象。
+
+2. `func` 参数是需要被调用的函数或可调用对象。该函数只会被调用一次，因此应该确保该函数是幂等的。
+
+3. `args` 参数是 `func` 函数或可调用对象的参数。如果 `func` 函数没有参数，则该参数可以省略。
+
+4. `std::call_once` 函数会抛出 `std::system_error` 异常，如果在调用 `func` 函数时发生了异常，则该异常会被传递给调用者。
+
+>  使用 `std::call_once` 可以在多线程环境中实现一次性初始化，避免了多个线程同时初始化的问题。例如，在单例模式中，可以使用 `std::call_once` 来保证单例实例只会被创建一次。
+
+### 单
+
+```C++
+#include <iostream>
+#include <thread>
+#include <mutex>
+#include<string>
+
+using namespace std;
+
+class Log {
+public:
+    Log() { };
+    Log(const Log& log) = delete;
+    Log& operator=(const Log& log) = delete;
+
+    static Log& GetInstance() {
+        //static Log log; // 懒汉模式
+        //return log;
+
+        // 饿汉模式  提前不声明对象，需要的时候在new
+        static Log* log = nullptr;
+        if (!log) log = new Log;
+        return *log;
+    }
+    void PrintfLog(string msg)
+    {
+        cout << __TIME__ << "\t" << msg << endl;
+    }
+};
+
+int main() {
+    Log::GetInstance().PrintfLog("error");
+    return 0;
+}
+```
 

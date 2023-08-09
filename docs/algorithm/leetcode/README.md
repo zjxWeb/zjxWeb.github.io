@@ -1892,3 +1892,151 @@ int main()
 }
 ```
 
+## 剑指offer 05. 替换空格【简单】【字符串】
+
+### 题目
+
+请实现一个函数，把字符串 `s` 中的每个空格替换成"%20"。
+
+**示例 1：**
+
+```
+输入：s = "We are happy."
+输出："We%20are%20happy."
+```
+
+**限制：**
+
+```
+0 <= s 的长度 <= 10000
+```
+
+### 题解（双指针）
+
+```c++
+#include<iostream>
+#include<string>
+
+using namespace std;
+
+class Solution {
+public:
+    string replaceSpace(string s) {
+        int count = 0;// 统计空格
+        int osize = s.size();
+        for (int i = 0; i < osize; i++)
+        {
+            if (s[i] == ' ')
+            {
+                count++;
+            }
+        }
+        s.resize(osize+count*2);
+        int nsize = s.size();
+        for (int optr = osize - 1, nptr = nsize - 1; optr < nptr; optr--, nptr--) {
+            if (s[optr] != ' ')
+            {
+                s[nptr] = s[optr];
+            }
+            else {
+                s[nptr] = '0';
+                s[nptr-1] = '2';
+                s[nptr-2] = '%';
+                nptr -= 2;
+            }
+        }
+        return s;
+    }
+};
+
+int main() {
+    string s = "We are h";
+    Solution ss;
+    string res = ss.replaceSpace(s);
+    cout << res;
+}
+```
+
+## 151. 反转字符串中的单词
+
+### 题目
+
+给你一个字符串 `s` ，请你反转字符串中 **单词** 的顺序。
+
+**单词** 是由非空格字符组成的字符串。`s` 中使用至少一个空格将字符串中的 **单词** 分隔开。
+
+返回 **单词** 顺序颠倒且 **单词** 之间用单个空格连接的结果字符串。
+
+**注意：**输入字符串 `s`中可能会存在前导空格、尾随空格或者单词间的多个空格。返回的结果字符串中，单词间应当仅用单个空格分隔，且不包含任何额外的空格。
+
+**示例 1：**
+
+```
+输入：s = "the sky is blue"
+输出："blue is sky the"
+```
+
+**示例 2：**
+
+```
+输入：s = "  hello world  "
+输出："world hello"
+解释：反转后的字符串中不能存在前导空格和尾随空格。
+```
+
+**示例 3：**
+
+```
+输入：s = "a good   example"
+输出："example good a"
+解释：如果两个单词间有多余的空格，反转后的字符串需要将单词间的空格减少到仅有一个。
+```
+
+**提示：**
+
+- `1 <= s.length <= 104`
+- `s` 包含英文大小写字母、数字和空格 `' '`
+- `s` 中 **至少存在一个** 单词
+
+**进阶：**如果字符串在你使用的编程语言中是一种可变数据类型，请尝试使用 `O(1)` 额外空间复杂度的 **原地** 解法。
+
+### 题解
+
+```c++
+
+class Solution {
+public:
+    void reverse(string& s, int start, int end) { //翻转，区间写法：左闭右闭 []
+        for (int i = start, j = end; i < j; i++, j--) {
+            swap(s[i], s[j]);
+        }
+    }
+    //删除空格
+    void clearSpace(string& s) {//去除所有空格并在相邻单词之间添加空格, 快慢指针。
+        int slow = 0;  
+        int fast = 0;
+        for ( fast; fast < s.size(); ++fast) { //
+            if (s[fast] != ' ') { //遇到非空格就处理，即删除所有空格。
+                if (slow != 0) s[slow++] = ' '; //手动控制空格，给单词之间添加空格。slow != 0说明不是第一个单词，需要在单词前添加空格。
+                while (fast < s.size() && s[fast] != ' ') { //补上该单词，遇到空格说明单词结束。
+                    s[slow++] = s[fast++];
+                }
+            }
+        }
+        s.resize(slow); //slow的大小即为去除多余空格后的大小。
+    }
+    string reverseWords(string s) {
+        clearSpace(s);
+        reverse(s, 0, s.size() - 1);
+        int start = 0; //removeExtraSpaces后保证第一个单词的开始下标一定是0。
+        for (int i = 0; i <= s.size(); ++i) {
+            if (i == s.size() || s[i] == ' ') { //到达空格或者串尾，说明一个单词结束。进行翻转。
+                reverse(s, start, i - 1); //翻转，注意是左闭右闭 []的翻转。
+                start = i + 1; //更新下一个单词的开始下标start
+            }
+        }
+        return s;
+    }
+};
+```
+
