@@ -5182,6 +5182,90 @@ int main()
 
 + 定义方式 `R"xxx(原始字符串)xxx"`，其中（）两边的字符串可以省略，原始字面量R可以直接表示字符串的实际含义，而不需要额外对字符串做转义或连接等操作。
 
+### 2. 函数对象包装器
+
++ 为了函数提供一种容器（封装）
+
+#### function与bind
+
+```c++
+#include <iostream>
+#include<functional>
+
+using namespace std;
+
+int test(int n) {
+	cout << n << endl;
+	return n;
+}
+
+class CTest
+{
+public:
+	CTest(){  }
+
+	int Mytest(int n) {
+		cout << n << endl;
+		return n;
+	}
+	// 仿函数 
+	int operator()(int n)
+	{
+		cout << n << endl;
+		return n;
+	}
+private:
+
+};
+
+void test1(int a,int b,int c) {
+	cout << a << b << c << endl;
+}
+
+int main()
+{
+	// 支持四种函数的封装
+		//1. 普通函数
+		// 2. 匿名函数	
+		// 3. 类的成员函数
+		// 4. 仿函数 （重载了() 运算符的函数）
+	// <返回值(参数列表)>
+	//普通函数
+	function<int(int)> f = test; // 把函数当对象使用
+	//f(123);
+
+	//  匿名函数	
+	// [ capture ] ( params ) opt -> ret { body; };
+		// 其中 capture 是捕获列表，params 是参数表，opt 是函数选项，ret 是返回值类型，body是函数体。
+	function<int(int)> f1 = [](int n) -> int {
+		cout << n << endl;
+		return n;
+	};
+	// f1(123);
+
+	//类的成员函数 
+	function<int(CTest*, int)> f2 = &CTest::Mytest;
+	CTest t;
+	//f2(&t, 123);
+
+	//仿函数的调用 （重载了() 运算符的函数）
+	//t(123);
+	function<int(CTest*, int)> f3 = &CTest::operator();
+	//f3(&t, 123);
+
+
+	// bind机制
+	auto a = bind(test1, 1, 2, 3);
+	a();
+
+
+	// placeholders::_1相当于占位符
+	auto foo2 = bind(test1, 1, placeholders::_1, placeholders::_2);
+	foo2(1,4);
+	return 0;
+}
+```
+
 ## C++在 vs中的常用调试方法
 
 1. 打印数据来调试程序
@@ -5720,13 +5804,13 @@ int main() {
 
 ### **std::unique_lock**
 
-`std::unique_lock` 是 C++ 标准库中提供的一个互斥量封装类，用于在多线程程序中对互斥量进行加锁和解锁操作。它的主要特点是可以对互斥量进行更加灵活的管理，包括延迟加锁、条件变量、超时等。
+`std::unique_lock` 是 C++ 标准库中提供的一个互斥量封装类，用于在多线程程序中对互斥量进行加锁和解锁操作。**它的主要特点是可以对互斥量进行更加灵活的管理，包括延迟加锁、条件变量、超时等。**
 
 `std::unique_lock` 提供了以下几个成员函数：
 
 - `lock()`：尝试对互斥量进行加锁操作，如果当前互斥量已经被其他线程持有，则当前线程会被阻塞，直到互斥量被成功加锁。
 - `try_lock()`：尝试对互斥量进行加锁操作，如果当前互斥量已经被其他线程持有，则函数立即返回 `false`，否则返回 `true`。
-- `try_lock_for(const std::chrono::duration<Rep, Period>& rel_time)`：尝试对互斥量进行加锁操作，如果当前互斥量已经被其他线程持有，则当前线程会被阻塞，直到互斥量被成功加锁，或者超过了指定的时间。
+- `try_lock_for(const std::chrono::duration<Rep, Period>& rel_time)`：**尝试对互斥量进行加锁操作，如果当前互斥量已经被其他线程持有，则当前线程会被阻塞，直到互斥量被成功加锁，或者超过了指定的时间。**
 - `try_lock_until(const std::chrono::time_point<Clock, Duration>& abs_time)`：尝试对互斥量进行加锁操作，如果当前互斥量已经被其他线程持有，则当前线程会被阻塞，直到互斥量被成功加锁，或者超过了指定的时间点。
 - `unlock()`：对互斥量进行解锁操作。
 
@@ -5772,6 +5856,8 @@ int main() {
 ## 6.std::call_once与其使用场景
 
 > 单例设计模式是一种常见的设计模式，用于确保某个类只能创建一个实例。由于单例实例是全局唯一的，因此在多线程环境中使用单例模式时，需要考虑线程安全的问题。
+
+***call_once 只能在线程函数中使用***
 
 下面是一个简单的单例模式的实现：
 
@@ -5857,8 +5943,6 @@ void call_once(std::once_flag& flag, Callable&& func, Args&&... args);
 
 >  使用 `std::call_once` 可以在多线程环境中实现一次性初始化，避免了多个线程同时初始化的问题。例如，在单例模式中，可以使用 `std::call_once` 来保证单例实例只会被创建一次。
 
-### 单
-
 ```C++
 #include <iostream>
 #include <thread>
@@ -5894,3 +5978,218 @@ int main() {
 }
 ```
 
+call_once
+
+```C++
+#include <iostream>
+#include <thread>
+#include <mutex>
+#include<string>
+
+using namespace std;
+static once_flag once;
+static Log* log = nullptr;
+class Log {
+public:
+    Log() { };
+    Log(const Log& log) = delete;
+    Log& operator=(const Log& log) = delete;
+    static Log& GetInstance() {
+        //static Log log; // 懒汉模式
+        //return log;
+
+        // 饿汉模式  提前不声明对象，需要的时候在new
+        if (!log) log = new Log;
+        call_once(once, init);
+        return *log;
+    }
+
+    static void init() {
+        if (!log) log = new Log;
+    }
+    void PrintfLog(string msg)
+    {
+        cout << __TIME__ << "\t" << msg << endl;
+    }
+};
+void print_error() {
+    Log::GetInstance().PrintfLog("error");
+}
+int main() {
+    //因为t1和t2是并行的状态，会new两次log——解决方法：call_once
+    thread t1(print_error);
+    thread t2(print_error);
+    t1.join();
+    t2.join();
+    return 0;
+}
+```
+
+## 7.condition_variable 与其使用场景
+
+`std::condition_variable` 的步骤如下：
+
+1. 创建一个 `std::condition_variable` 对象。
+
+2. 创建一个互斥锁 `std::mutex` 对象，用来保护共享资源的访问。
+
+3. 在需要等待条件变量的地方
+
+   使用 `std::unique_lock<std::mutex>` 对象锁定互斥锁
+
+   并调用 `std::condition_variable::wait()`、`std::condition_variable::wait_for()` 或 `std::condition_variable::wait_until()` 函数等待条件变量。
+
+4. 在其他线程中需要通知等待的线程时，调用 `std::condition_variable::notify_one()` 或 `std::condition_variable::notify_all()` 函数通知等待的线程。
+
+### **生产者与消费者模型**
+
+![31](./src/31.png)
+
++ 下面是一个简单的生产者-消费者模型的案例，其中使用了 `std::condition_variable` 来实现线程的等待和通知机制：
+
+```c++
+#include <iostream>
+#include <thread>
+#include <mutex>
+#include<string>
+#include<condition_variable>
+#include<queue>
+
+using namespace std;
+
+queue<int> g_queue;
+condition_variable g_cv;
+mutex mtx;
+void Producer() {
+	for (int i = 0; i < 10; i++){
+		{
+			unique_lock<mutex> lock(mtx);
+			g_queue.push(i);
+			// 通知消费者来取任务
+			g_cv.notify_one();
+			cout << "Producer: " << i << endl;
+		}
+		this_thread::sleep_for(chrono::microseconds(100));
+	}
+}
+
+void Consumer() {
+	while (1)
+	{
+		unique_lock<mutex> lock(mtx);
+		// 如果队列为空  就要等待
+		g_cv.wait(lock, []() {return !g_queue.empty(); });
+		int value = g_queue.front();
+		g_queue.pop();
+		cout << "Consumer: " << value << endl;
+	}
+}
+
+int main()
+{
+	thread producer_thread(Producer);
+	thread consumer_thread(Consumer);
+	producer_thread.join();
+	consumer_thread.join();
+	return 0;
+}
+```
+
+> 使用 `std::condition_variable` 可以实现线程的等待和通知机制，从而在多线程环境中实现同步操作。在生产者-消费者模型中，使用 `std::condition_variable` 可以让消费者线程等待生产者线程生产数据后再进行消费，避免了数据丢失或者数据不一致的问题。
+
+## 8. C++11 跨平台线程池
+
+### **跨平台线程池实现**
+
+![32](./src/32.png)
+
+>  它使用 C++11 标准库中的 std::thread、std::mutex、std::condition_variable、std::function 和 std::queue 等组件实现。
+
+```c++
+#include <iostream>
+#include <thread>
+#include <mutex>
+#include<string>
+#include<condition_variable>
+#include<queue>
+#include<vector>
+#include<functional>
+
+using namespace std;
+
+class ThreadPool
+{
+public:
+	ThreadPool(int numThreads) :stop(false) {
+		for (int i = 0; i < numThreads; i++)
+		{
+			threads.emplace_back([this] {
+				while (true)
+				{
+					unique_lock<mutex> lock(mtx);
+					condition.wait(lock, [this] {
+						return !tasks.empty() || stop;
+						});
+					if (stop && tasks.empty()) {
+						return;
+					}
+					// move移动语义
+					function<void()> task(move(tasks.front())); // queue最左边的值
+					tasks.pop();
+					lock.unlock();
+					task();
+				}
+				});
+		}
+	}
+	~ThreadPool() {
+		{
+			unique_lock<mutex> lock(mtx);
+			stop = true;
+		}
+		condition.notify_all();
+		for (auto& t : threads) {
+			t.join();
+		}
+	}
+	template<class F,class... Args>
+	// && 右值引用  &左值引用
+	// 在函数模板加 && 是万能引用
+	void enqueue(F &&f,Args&&... args) {
+		// bind函数适配器(函数和参数绑定到一起)
+		// forward 完美转发
+		function<void()>task = bind(forward<F>(f), forward<Args>(args)...);
+		{
+			unique_lock<mutex> local(mtx);
+			tasks.emplace(move(task));
+		}
+		condition.notify_one();
+	}
+private: 
+	vector<thread> threads;
+	queue<function<void()>> tasks;
+
+	mutex mtx;
+	condition_variable condition;
+
+	bool stop;
+};
+
+int main()
+{
+	ThreadPool pool(4);
+	for (int i = 0; i < 10; i++)
+	{
+		pool.enqueue([i] {
+			cout << "task: " << i << " is running" << endl;
+			this_thread::sleep_for(chrono::seconds(1));
+			cout << "task: " << i << " is done" << endl;
+			});
+	}
+	return 0;
+}
+```
+
++ 在这个示例中，我们同样定义了一个 ThreadPool 类，并且在构造函数中创建了指定数目的线程。在每个线程中，我们不断地从任务队列中获取任务并执行，直到线程池被停止。在 enqueue() 函数中，我们将任务封装成一个 std::function 对象，并将它添加到任务队列中。在 ThreadPool 的析构函数中，我们等待所有线程执行完成后再停止所有线程。
+
+>  在主函数中，我们创建了一个 ThreadPool 对象，并向任务队列中添加了 8 个任务。每个任务会输出一些信息，并且在执行完后等待 1 秒钟。由于线程池中有 4 个线程，因此这 8 个任务会被分配到不同的线程中执行。在任务执行完成后，程序会退出。
