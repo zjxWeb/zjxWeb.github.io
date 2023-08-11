@@ -17,4 +17,47 @@
     font-size: 25px;
    
 }
+:root {
+    /* Tab blocks */
+    --docsifytabs-border-color          : #ededed;
+    --docsifytabs-border-px             : 1px;
+    --docsifytabs-border-radius-px      : ;
+    --docsifytabs-margin                : 1.5em 0;
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+    /* Tabs */
+    --docsifytabs-tab-background        : #f8f8f8;
+    --docsifytabs-tab-background--active: var(--docsifytabs-content-background);
+    --docsifytabs-tab-color             : #999;
+    --docsifytabs-tab-color--active     : inherit;
+    --docsifytabs-tab-highlight-px      : 3px;
+    --docsifytabs-tab-highlight-color   : var(--theme-color, currentColor);
+    --docsifytabs-tab-padding           : 0.6em 1em;
+
+    /* Tab content */
+    --docsifytabs-content-background    : inherit;
+    --docsifytabs-content-padding       : 1.5rem;
+=======
+.markdown-section ul li img{
+    width: 70%;
+    margin-left: 10%;
+>>>>>>> parent of e76529e (style)
+=======
+.markdown-section ul li img{
+    width: 70%;
+    margin-left: 10%;
+>>>>>>> parent of e76529e (style)
+=======
+.markdown-section ul li img{
+    width: 70%;
+    margin-left: 10%;
+>>>>>>> parent of e76529e (style)
+=======
+.markdown-section ul li img{
+    width: 70%;
+    margin-left: 10%;
+>>>>>>> parent of e76529e (style)
+}
