@@ -3,8 +3,11 @@
 # 谢谢！各位大佬！谢谢！各位大佬！谢谢！各位大佬！
 + 如果对你帮助，给个小小的鼓励
 
-![zfb）](./_media/zfbpay.jpg)
 
-+ 如果对你帮助，给个小小的鼓励
-
-![wx](./_media/wxpay.jpg)
+<div style="
+    width:100%;
+    text-align:center;"
+    >
+    <img style="width:20vw;" src="./_media/zfbpay.jpg">
+    <img style="width:20vw;margin-left:10vw;" src="./_media/wxpay.jpg"/>
+</div>
