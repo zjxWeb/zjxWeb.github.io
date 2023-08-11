@@ -1,6 +1,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 <!-- tabs:start -->
 #### **微信联系**
 <img style="width:20vw;" src="./_media/wx.jpg">
@@ -11,6 +12,8 @@
 
 <!-- tabs:end -->
 =======
+=======
+>>>>>>> parent of e76529e (style)
 =======
 >>>>>>> parent of e76529e (style)
 =======
@@ -35,6 +38,9 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> parent of e76529e (style)
+=======
 >>>>>>> parent of e76529e (style)
 =======
 >>>>>>> parent of e76529e (style)
