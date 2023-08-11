@@ -5,6 +5,7 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 <!-- tabs:start -->
 #### **支付宝打赏**
 <img style="width:20vw;" src="./_media/zfbpay.jpg">
@@ -13,6 +14,13 @@
  <img style="width:20vw;margin-left:10vw;" src="./_media/wxpay.jpg"/>
 
 <!-- tabs:end -->
+=======
+![zfb）](./_media/zfbpay.jpg)
+
++ 如果对你帮助，给个小小的鼓励
+
+![wx](./_media/wxpay.jpg)
+>>>>>>> parent of e76529e (style)
 =======
 ![zfb）](./_media/zfbpay.jpg)
 
