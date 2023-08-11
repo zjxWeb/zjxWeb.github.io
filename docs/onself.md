@@ -1,3 +1,26 @@
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<!-- tabs:start -->
+#### **微信联系**
+<img style="width:20vw;" src="./_media/wx.jpg">
+
+#### **QQ联系**
+
+ <img style="width:20vw;margin-left:10vw;" src="./_media/qq.png"/>
+
+<!-- tabs:end -->
+=======
+=======
+>>>>>>> parent of e76529e (style)
+=======
+>>>>>>> parent of e76529e (style)
+=======
+>>>>>>> parent of e76529e (style)
+>>>>>>> 6818630212ec39fe8eade630d689e7b7d20ea5d5
 # 个人联系方式
 
 + 个人微信
@@ -16,3 +39,16 @@
 
 ![wx](./_media/wxpay.jpg)
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> parent of e76529e (style)
+=======
+>>>>>>> parent of e76529e (style)
+=======
+>>>>>>> parent of e76529e (style)
+=======
+>>>>>>> parent of e76529e (style)
+>>>>>>> 6818630212ec39fe8eade630d689e7b7d20ea5d5
