@@ -25,6 +25,7 @@
     --docsifytabs-margin                : 1.5em 0;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     /* Tabs */
     --docsifytabs-tab-background        : #f8f8f8;
     --docsifytabs-tab-background--active: var(--docsifytabs-content-background);
@@ -37,6 +38,11 @@
     /* Tab content */
     --docsifytabs-content-background    : inherit;
     --docsifytabs-content-padding       : 1.5rem;
+=======
+.markdown-section ul li img{
+    width: 70%;
+    margin-left: 10%;
+>>>>>>> parent of e76529e (style)
 =======
 .markdown-section ul li img{
     width: 70%;
