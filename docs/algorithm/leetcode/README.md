@@ -1,6 +1,6 @@
 # `LeetCode`
 
-## [代码随想录](https://github.com/youngyangyang04/leetcode-master/tree/master)
+## [代码随想录](https://programmercarl.com/)
 
 ## 704.二分查找【简单】【数组】
 
