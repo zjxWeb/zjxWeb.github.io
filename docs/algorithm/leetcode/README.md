@@ -3,8 +3,8 @@
 ## [代码随想录](https://programmercarl.com/)
 
 ## 704.二分查找【简单】【数组】
-
-### 题目
+<!-- tabs:start -->
+#### **题目**
 
 给定一个 `n` 个元素有序的（升序）整型数组 `nums` 和一个目标值 `target` ，写一个函数搜索 `nums` 中的 `target`，如果目标值存在返回下标，否则返回 `-1`。
 **示例 1:**
@@ -29,7 +29,7 @@
 2. `n` 将在 `[1, 10000]`之间。
 3. `nums` 的每个元素都将在 `[-9999, 9999]`之间。
 
-### 题解
+#### **题解**
 
 ```C++
 class Solution {
@@ -51,10 +51,10 @@ public:
     }
 };
 ```
-
+<!-- tabs:end -->
 ## 27. 移除元素
-
-### 题目
+<!-- tabs:start -->
+#### **题目**
 
 给你一个数组 `nums` 和一个值 `val`，你需要 **[原地](https://baike.baidu.com/item/原地算法)** 移除所有数值等于 `val` 的元素，并返回移除后数组的新长度。
 
@@ -103,7 +103,7 @@ for (int i = 0; i < len; i++) {
 - `0 <= nums[i] <= 50`
 - `0 <= val <= 100`
 
-### 题解
+#### **题解**
 
 ```C++
 using namespace std;
@@ -127,10 +127,11 @@ public:
     }
 };
 ```
+<!-- tabs:end -->
 
 ## 977. 有序数组平方
-
-### 题目
+<!-- tabs:start -->
+#### **题目**
 
 给你一个按 **非递减顺序** 排序的整数数组 `nums`，返回 **每个数字的平方** 组成的新数组，要求也按 **非递减顺序** 排序。
 
@@ -156,7 +157,7 @@ public:
 - `-104 <= nums[i] <= 104`
 - `nums` 已按 **非递减顺序** 排序
 
-### 题解
+#### **题解**
 
 ```C++
 class Solution {
@@ -171,10 +172,10 @@ public:
     }
 };
 ```
-
+<!-- tabs:end -->
 ## 209. 长度最小的子数组【中等】【数组】
-
-### 题目
+<!-- tabs:start -->
+#### **题目**
 
 给定一个含有 `n` 个正整数的数组和一个正整数 `target` **。**
 
@@ -212,7 +213,7 @@ public:
 
 - 如果你已经实现 `O(n)` 时间复杂度的解法, 请尝试设计一个 `O(n log(n))` 时间复杂度的解法。
 
-### 题解
+#### **题解**
 
 ```c++
 // 长度最小的子数组
@@ -256,10 +257,10 @@ int main()
     cout << res;
 }
 ```
-
+<!-- tabs:end -->
 ## 59. 螺旋矩阵 II 【中等】【数组】
-
-### 题目
+<!-- tabs:start -->
+#### **题目**
 
 给你一个正整数 `n` ，生成一个包含 `1` 到 `n2` 所有元素，且元素按顺时针顺序螺旋排列的 `n x n` 正方形矩阵 `matrix` 。
 
@@ -283,7 +284,7 @@ int main()
 
 - `1 <= n <= 20`
 
-### 题解
+#### **题解**
 
 ```C++
 #include <iostream>
@@ -347,117 +348,10 @@ int main()
     }
 }
 ```
-
-## 链表测试模板
-
-```C++
-#include <iostream>
-
-using namespace std;
-
-struct ListNode {
-    int val;
-    ListNode* next;
-    ListNode() : val(0), next(nullptr) {}
-    ListNode(int x) : val(x), next(nullptr) {}
-    ListNode(int x, ListNode* next1) : val(x), next(next1) {}
-};
-ostream& operator<<(ostream& os, ListNode* lp) {
-    ListNode* cur = lp;
-    while (cur != nullptr) {
-        os << cur->val << " -> ";
-        cur = cur->next;
-    }
-    os << "∅";
-    return os << endl;
-}
-/**
-* 24.两两交换链表中的节点【中等】【链表】
-*/
-//class Solution {
-//public:
-//    ListNode* swapPairs(ListNode* head) {
-//        ListNode* fHead = new ListNode(0);
-//        fHead->next = head;
-//        ListNode* cur = fHead; // 记录当前节点
-//        while (cur->next != nullptr && cur->next->next != nullptr)
-//        {
-//            ListNode* t1 = cur->next;
-//            ListNode* t2 = cur->next->next;
-//            ListNode* t3 = cur->next->next->next;
-//            cur->next = t2;
-//            cur->next->next = t1;
-//            cur->next->next->next = t3;
-//
-//            // 移动cur准备下一次交换，
-//            cur = cur->next->next;
-//        }
-//        return fHead->next;
-//    }
-//};
-
-/**
-* 19. 删除链表的倒数第 N 个结点
-*/
-class Solution {
-public:
-    ListNode* removeNthFromEnd(ListNode* head, int n) {
-        ListNode * pHead = new ListNode(0);
-        pHead->next = head;
-        ListNode * cur = pHead;
-        ListNode * lenHead = pHead;
-        int count = 0;
-        int len = 0;
-        while (lenHead->next != nullptr)
-        {
-            lenHead = lenHead->next;
-            len++;
-        }
-        while (cur->next != nullptr)
-        {
-            count++;
-            if (len-n+1 == count)
-            {
-                ListNode* temp = cur->next;
-                cur->next = cur->next->next;
-                delete temp;
-            }
-            else
-            {
-                cur = cur->next;
-            }
-        }
-        head = pHead->next;
-        delete pHead;
-        return head;
-    }
-};
-int main(int argc, char* argv[]) {
-    ListNode* head = new ListNode(1);
-    ListNode* cur = head;
-    for (auto& i : { 2, 3, 4 ,5}) {
-        cur->next = new ListNode(i);
-        cur = cur->next;
-    }
-    cout << head;
-    // 这里就是题目中函数的调用了, 下面是一个示例(24题)
-    /*
-    Solution s;
-    cout << s.swapPairs(head);
-    */
-    // 别忘了释放内存(虽然系统会帮我们释放)
-    Solution s;
-    int n = 2;
-    cout << s.removeNthFromEnd(head,n);
-    delete head;
-    return 0;
-}
-
-```
-
+<!-- tabs:end -->
 ## 203. 移除链表元素【简单】【链表】
-
-### 题目
+<!-- tabs:start -->
+#### **题目**
 
 给你一个链表的头节点 `head` 和一个整数 `val` ，请你删除链表中所有满足 `Node.val == val` 的节点，并返回 **新的头节点** 。
 
@@ -492,7 +386,7 @@ int main(int argc, char* argv[]) {
 - `1 <= Node.val <= 50`
 - `0 <= val <= 50`
 
-### 题解
+#### **题解**
 
 ```C++
 /**
@@ -528,10 +422,10 @@ public:
     }
 };         
 ```
-
+<!-- tabs:end -->
 ## 707. 设计链表【中等】【链表】
-
-### 题目
+<!-- tabs:start -->
+#### **题目**
 
 你可以选择使用单链表或者双链表，设计并实现自己的链表。
 
@@ -573,7 +467,7 @@ myLinkedList.get(1);              // 返回 3
 - 请不要使用内置的 `LinkedList` 库。
 - 调用 `get`、`addAtHead`、`addAtTail`、`addAtIndex` 和 `deleteAtIndex` 的次数不超过 `2000` 。
 
-### 题解
+#### **题解**
 
 ```C++
 class MyLinkedList {
@@ -656,10 +550,10 @@ private:
  */
 
 ```
-
+<!-- tabs:end -->
 ## 206. 反转链表【简单】【链表】
-
-### 题目
+<!-- tabs:start -->
+#### **题目**
 
 给你单链表的头节点 `head` ，请你反转链表，并返回反转后的链表。
 
@@ -693,7 +587,7 @@ private:
 - 链表中节点的数目范围是 `[0, 5000]`
 - `-5000 <= Node.val <= 5000`
 
-### 题解
+#### **题解**
 
 ```C++
 /**
@@ -724,7 +618,7 @@ public:
 };
 ```
 
-#### 采用递归的方式
+#### **采用递归的方式**
 
 ```C++
 class Solution {
@@ -741,10 +635,10 @@ public:
     }
 };
 ```
-
+<!-- tabs:end -->
 ## 24. 两两交换链表中的节点【中等】【链表】
-
-### 题目
+<!-- tabs:start -->
+#### **题目**
 
 给你一个链表，两两交换其中相邻的节点，并返回交换后链表的头节点。你必须在不修改节点内部的值的情况下完成本题（即，只能进行节点交换）。
 
@@ -776,7 +670,7 @@ public:
 - 链表中节点的数目在范围 `[0, 100]` 内
 - `0 <= Node.val <= 100`
 
-### 题解
+#### **题解**
 
 ![1](./src/1.png)
 
@@ -813,10 +707,10 @@ public:
     }
 };
 ```
-
+<!-- tabs:end -->
 ## 19. 删除链表的倒数第N个结点【中等】【链表】
-
-### 题目
+<!-- tabs:start -->
+#### **题目**
 
 给你一个链表，删除链表的倒数第 `n` 个结点，并且返回链表的头结点。
 
@@ -850,7 +744,7 @@ public:
 - `0 <= Node.val <= 100`
 - `1 <= n <= sz`
 
-### 题解
+#### **题解**
 
 ```C++
 class Solution {
@@ -887,10 +781,10 @@ public:
     }
 };
 ```
-
+<!-- tabs:end -->
 ## 面试题 02.07. 链表相交【简单】【链表】
-
-### 题目
+<!-- tabs:start -->
+#### **题目**
 
 给你两个单链表的头节点 `headA` 和 `headB` ，请你找出并返回两个单链表相交的起始节点。如果两个链表没有交点，返回 `null` 。
 
@@ -951,9 +845,7 @@ public:
 - 如果 `listA` 和 `listB` 没有交点，`intersectVal` 为 `0`
 - 如果 `listA` 和 `listB` 有交点，`intersectVal == listA[skipA + 1] == listB[skipB + 1]`
 
-### 题解：
-
-#### 双指针
+#### **题解1:双指针**
 
 ```C++
 class Solution {
@@ -977,7 +869,7 @@ public:
 };
 ```
 
-#### 哈希集合
+#### **题解2:哈希集合**
 
 ```C++
 // 官方答案
@@ -1001,10 +893,10 @@ public:
     }
 };
 ```
-
+<!-- tabs:end -->
 ## 142. 环形链表 II【中等 】【链表】
-
-### 题目
+<!-- tabs:start -->
+#### **题目**
 
 给定一个链表的头节点  `head` ，返回链表开始入环的第一个节点。 *如果链表无环，则返回 `null`。*
 
@@ -1050,7 +942,7 @@ public:
 
 **进阶：**你是否可以使用 `O(1)` 空间解决此题？
 
-### 题解
+#### **题解**
 
 > 不要被pos干扰，实际链表中存在环或者直接没有环，pos只是标记环的位置
 
@@ -1073,10 +965,10 @@ public:
     }
 };
 ```
-
+<!-- tabs:end -->
 ## 242. 有效的字母异位词【简单】【哈希表】
-
-### 题目
+<!-- tabs:start -->
+#### **题目**
 
 给定两个字符串 `*s*` 和 `*t*` ，编写一个函数来判断 `*t*` 是否是 `*s*` 的字母异位词。
 
@@ -1105,7 +997,7 @@ public:
 
 **进阶:** 如果输入字符串包含 `unicode` 字符怎么办？你能否调整你的解法来应对这种情况？
 
-### 题解
+#### **题解**
 
 ```C++
 class Solution {
@@ -1120,10 +1012,10 @@ public:
     }
 };
 ```
-
+<!-- tabs:end -->
 ## `1002. 查找共用字符`【简单】【哈希表】
-
-### 题目
+<!-- tabs:start -->
+#### **题目**
 
 给你一个字符串数组 `words` ，请你找出所有在 `words` 的每个字符串中都出现的共用字符（ **包括重复字符**），并以数组形式返回。你可以按 **任意顺序** 返回答案。 
 
@@ -1147,7 +1039,7 @@ public:
 - `1 <= words[i].length <= 100`
 - `words[i]` 由小写英文字母组成
 
-### 题解
+#### **题解**
 
 ```c++
 #include<iostream>
@@ -1199,10 +1091,10 @@ int main()
     }
 }
 ```
-
+<!-- tabs:end -->
 ## 349. 两个数组的交集【简单】【哈希表】
-
-### 题目
+<!-- tabs:start -->
+#### **题目**
 
 给定两个数组 `nums1` 和 `nums2` ，返回 *它们的交集* 。输出结果中的每个元素一定是 **唯一** 的。我们可以 **不考虑输出结果的顺序** 。
 
@@ -1226,7 +1118,7 @@ int main()
 - `1 <= nums1.length, nums2.length <= 1000`
 - `0 <= nums1[i], nums2[i] <= 1000`
 
-### 题解
+#### **题解**
 
 ```C++
 #include<iostream>
@@ -1265,10 +1157,10 @@ int main()
     }
 }
 ```
-
+<!-- tabs:end -->
 ## 202. 快乐数【简单】【哈希表】
-
-### 题目
+<!-- tabs:start -->
+#### **题目**
 
 编写一个算法来判断一个数 `n` 是不是快乐数。
 
@@ -1303,7 +1195,7 @@ int main()
 
 - `1 <= n <= 231 - 1`
 
-### 题解
+#### **题解**
 
 ```c++
 // 快慢指针
@@ -1334,10 +1226,10 @@ public:
     }
 };
 ```
-
+<!-- tabs:end -->
 ## 1. 两数之和【简单】【哈希表】
-
-### 题目
+<!-- tabs:start -->
+#### **题目**
 
 给定一个整数数组 `nums` 和一个整数目标值 `target`，请你在该数组中找出 **和为目标值** *`target`* 的那 **两个** 整数，并返回它们的数组下标。
 
@@ -1376,7 +1268,7 @@ public:
 
 **进阶：**你可以想出一个时间复杂度小于 `O(n2)` 的算法吗？
 
-### 题解
+#### **题解**
 
 ```C++
 class Solution {
@@ -1420,10 +1312,10 @@ public:
     }
 };
 ```
-
+<!-- tabs:end -->
 ## 454. 四数相加Ⅱ【中等】【哈希表】
-
-### 题目
+<!-- tabs:start -->
+#### **题目**
 
 给你四个整数数组 `nums1`、`nums2`、`nums3` 和 `nums4` ，数组长度都是 `n` ，请你计算有多少个元组 `(i, j, k, l)` 能满足：
 
@@ -1457,7 +1349,7 @@ public:
 - `1 <= n <= 200`
 - `-228 <= nums1[i], nums2[i], nums3[i], nums4[i] <= 228`
 
-### 题解
+#### **题解**
 
 ```c++
 // for循环遍历会超出内存
@@ -1491,10 +1383,10 @@ public:
     }
 };  
 ```
-
+<!-- tabs:end -->
 ## 383. 赎金信【简单】【哈希表】
-
-### 题目
+<!-- tabs:start -->
+#### **题目**
 
 给你两个字符串：`ransomNote` 和 `magazine` ，判断 `ransomNote` 能不能由 `magazine` 里面的字符构成。
 
@@ -1528,7 +1420,7 @@ public:
 - `1 <= ransomNote.length, magazine.length <= 105`
 - `ransomNote` 和 `magazine` 由小写英文字母组成
 
-### 题解
+#### **题解**
 
 ```C++
 #include<iostream>
@@ -1565,10 +1457,10 @@ int main()
     cout << s.canConstruct(ransomNote, magazine);
 }
 ```
-
+<!-- tabs:end -->
 ## 15. 三数之和【中等】【哈希表】
-
-### 题目
+<!-- tabs:start -->
+#### **题目**
 
 给你一个整数数组 `nums` ，判断是否存在三元组 `[nums[i], nums[j], nums[k]]` 满足 `i != j`、`i != k` 且 `j != k` ，同时还满足 `nums[i] + nums[j] + nums[k] == 0` 。请
 
@@ -1610,7 +1502,7 @@ nums[0] + nums[3] + nums[4] = (-1) + 2 + (-1) = 0 。
 - `3 <= nums.length <= 3000`
 - `-105 <= nums[i] <= 105`
 
-### 题解
+#### **题解**
 
 ```c++
 #include<iostream>
@@ -1684,10 +1576,10 @@ int main()
     }
 }
 ```
-
+<!-- tabs:end -->
 ## 18. 四树之和【中等】【哈希表】
-
-### 题目
+<!-- tabs:start -->
+#### **题目**
 
 给你一个由 `n` 个整数组成的数组 `nums` ，和一个目标值 `target` 。请你找出并返回满足下述全部条件且**不重复**的四元组 `[nums[a], nums[b], nums[c], nums[d]]` （若两个四元组元素一一对应，则认为两个四元组重复）：
 
@@ -1717,7 +1609,7 @@ int main()
 - `-109 <= nums[i] <= 109`
 - `-109 <= target <= 109`
 
-### 题解（双指针）
+#### **题解（双指针）**
 
 ```c++
 #include<iostream>
@@ -1787,10 +1679,10 @@ int main()
     }
 }
 ```
-
+<!-- tabs:end -->
 ## 344 反转字符串【简单】【字符串】
-
-### 题目
+<!-- tabs:start -->
+#### **题目**
 
 编写一个函数，其作用是将输入的字符串反转过来。输入字符串以字符数组 `s` 的形式给出。
 
@@ -1815,7 +1707,7 @@ int main()
 - `1 <= s.length <= 105`
 - `s[i]` 都是 [ASCII](https://baike.baidu.com/item/ASCII) 码表中的可打印字符
 
-### 题解（双指针）
+#### **题解（双指针）**
 
 ```C++
 class Solution {
@@ -1832,10 +1724,10 @@ public:
     }
 };
 ```
-
+<!-- tabs:end -->
 ## 541. 反转字符串【简单】【字符串】
-
-### 题目
+<!-- tabs:start -->
+#### **题目**
 
 给定一个字符串 `s` 和一个整数 `k`，从字符串开头算起，每计数至 `2k` 个字符，就反转这 `2k` 字符中的前 `k` 个字符。
 
@@ -1862,7 +1754,7 @@ public:
 - `s` 仅由小写英文组成
 - `1 <= k <= 104`
 
-### 题解
+#### **题解**
 
 ```c++
 #include<iostream>
@@ -1891,10 +1783,10 @@ int main()
 
 }
 ```
-
+<!-- tabs:end -->
 ## 剑指offer 05. 替换空格【简单】【字符串】
-
-### 题目
+<!-- tabs:start -->
+#### **题目**
 
 请实现一个函数，把字符串 `s` 中的每个空格替换成"%20"。
 
@@ -1911,7 +1803,7 @@ int main()
 0 <= s 的长度 <= 10000
 ```
 
-### 题解（双指针）
+#### **题解（双指针）**
 
 ```c++
 #include<iostream>
@@ -1956,10 +1848,10 @@ int main() {
     cout << res;
 }
 ```
-
+<!-- tabs:end -->
 ## 151. 反转字符串中的单词
-
-### 题目
+<!-- tabs:start -->
+#### **题目**
 
 给你一个字符串 `s` ，请你反转字符串中 **单词** 的顺序。
 
@@ -2000,7 +1892,7 @@ int main() {
 
 **进阶：**如果字符串在你使用的编程语言中是一种可变数据类型，请尝试使用 `O(1)` 额外空间复杂度的 **原地** 解法。
 
-### 题解
+#### **题解**
 
 ```c++
 
@@ -2039,10 +1931,10 @@ public:
     }
 };
 ```
-
+<!-- tabs:end -->
 ## 剑指 Offer 58 - II. 左旋转字符串
-
-### 题目
+<!-- tabs:start -->
+#### **题目**
 
 + 字符串的左旋转操作是把字符串前面的若干个字符转移到字符串的尾部。请定义一个函数实现字符串左旋转操作的功能。比如，输入字符串`"abcdefg"`和数字`2`，该函数将返回左旋转两位得到的结果`"cdefgab"。`
 
@@ -2064,7 +1956,7 @@ public:
 
 - `1 <= k < s.length <= 10000`
 
-### 题解
+#### **题解**
 
 ```C++
 class Solution {
@@ -2081,10 +1973,10 @@ public:
     }
 };
 ```
-
+<!-- tabs:end -->
 ## 28. 找出字符串中第一个匹配项的下标【简单】【字符串】
-
-### 题目
+<!-- tabs:start -->
+#### **题目**
 
 给你两个字符串 `haystack` 和 `needle` ，请你在 `haystack` 字符串中找出 `needle` 字符串的第一个匹配项的下标（下标从 0 开始）。如果 `needle` 不是 `haystack` 的一部分，则返回 `-1` 。
 
@@ -2110,7 +2002,7 @@ public:
 - `1 <= haystack.length, needle.length <= 104`
 - `haystack` 和 `needle` 仅由小写英文字符组成
 
-### 题解
+#### **题解**
 
 ```c++
 // i——后缀末尾位置
@@ -2157,5 +2049,5 @@ public:
 
 ```
 
-
+<!-- tabs:end -->
 
