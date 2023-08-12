@@ -2051,3 +2051,97 @@ public:
 
 <!-- tabs:end -->
 
+
+## 459. 重复的子字符串
+<!-- tabs:start -->
+#### **题目**
+
+给定一个非空的字符串 `s` ，检查是否可以通过由它的一个子串重复多次构成。
+
+**示例 1:**
+
+```
+输入: s = "abab"
+输出: true
+解释: 可由子串 "ab" 重复两次构成。
+```
+
+**示例 2:**
+
+```
+输入: s = "aba"
+输出: false
+```
+
+**示例 3:**
+
+```
+输入: s = "abcabcabcabc"
+输出: true
+解释: 可由子串 "abc" 重复四次构成。 (或子串 "abcabc" 重复两次构成。)
+```
+
+**提示：**
+
+- `1 <= s.length <= 104`
+- `s` 由小写英文字母组成
+
+#### **题解1：移动匹配**
+
+```C++
+class Solution {
+public:
+    // 移动匹配
+    // 既然前面有相同的子串，后面有相同的子串，
+    // 用 s + s，这样组成的字符串中，后面的子串做前串，前后的子串做后串，就一定还能组成一个s
+    bool repeatedSubstringPattern(string s) {
+        string str = s + s;
+        str.erase(str.begin());
+        str.erase(str.end()-1);
+        if (str.find(s) != string::npos) return true;
+        return false;
+    }
+};
+
+/*
+* 不过这种解法还有一个问题，就是 我们最终还是要
+ 判断 一个字符串（s + s）是否出现过 s 的过程，可能直接用contains，
+ find 之类的库函数。 却忽略了实现这些函数的时间复杂度
+（暴力解法是m * n，一般库函数实现为 O(m + n)）。
+*/
+```
+
+#### **题解2:KMP**
+
+```c++
+class Solution {
+public:
+    void getNext (int* next, const string& s){
+        next[0] = -1;
+        int j = -1;
+        for(int i = 1;i < s.size(); i++){
+            while(j >= 0 && s[i] != s[j + 1]) {
+                j = next[j];
+            }
+            if(s[i] == s[j + 1]) {
+                j++;
+            }
+            next[i] = j;
+        }
+    }
+    bool repeatedSubstringPattern (string s) {
+        if (s.size() == 0) {
+            return false;
+        }
+        int next[s.size()];
+        getNext(next, s);
+        int len = s.size();
+        if (next[len - 1] != -1 && len % (len - (next[len - 1] + 1)) == 0) {
+            return true;
+        }
+        return false;
+    }
+};
+```
+
+<!-- tabs:end -->
