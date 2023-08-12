@@ -20,6 +20,7 @@
     <a href="https://github.com/zjxWeb/digitalTwins-short">数字孪生demo简化版</a>
     <a href="https://blog.csdn.net/qq_44891434">CSDN博客地址</a>
     <a href="#/">微信公众号(拼搏的小浣熊)</a>
+    <!-- <a href="#/zh-cn/">中文</a> -->
   </nav>
   <div id="app"></div>
   <script>
@@ -34,20 +35,20 @@
       loadNavbar: true,
       search: 'auto', // seach默认值
       //字数统计
-      // count:{
-      //   countable:true,
-      //   fontsize:'0.9em',
-      //   color:'rgb(90,90,90)',
-      //   language:'chinese'
-      // },
+      count:{
+        countable:true,
+        fontsize:'0.9em',
+        color:'rgb(90,90,90)',
+        language:'chinese'
+      },
       // tab
-      // tabs: {
-      //   persist    : false,      // default // 默认打开一个
-      //   sync       : false,      // default确定选项卡选择是否将在具有匹配标签的选项卡之间同步。
-      //   theme      : 'classic', // default
-      //   tabComments: true,      // default
-      //   tabHeadings: true       // default
-      // },
+      tabs: {
+        persist    : false,      // default // 默认打开一个
+        sync       : false,      // default确定选项卡选择是否将在具有匹配标签的选项卡之间同步。
+        theme      : 'classic', // default
+        tabComments: true,      // default
+        tabHeadings: true       // default
+      },
       //脚注
       plugins: [
         function (hook) {
@@ -115,14 +116,14 @@
   <script src="./src/js/docsify.min.js"></script>
   <script src="./src/js/search.min.js"></script> 
   <!-- 字数统计 -->
-  <!-- <script src="./src/js/countable.js"></script> -->
+  <script src="./src/js/countable.js"></script>
   <!-- docsify-tabs (latest v1.x.x) -->
-  <!-- <script src="./src/js/docsify-tabs@1.js"></script> -->
+  <script src="./src/js/docsify-tabs@1.js"></script>
   <!-- 复制到剪贴板 -->
-  <!-- <script src="./src/js/docsify-copy-code.min.js"></script> -->
+  <script src="./src/js/docsify-copy-code.min.js"></script>
   <!-- 谷歌统计 -->
-  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-9ERSCJXVMS"></script>
-  <script src="./src/js/analysis.js"></script> -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9ERSCJXVMS"></script>
+  <script src="./src/js/analysis.js"></script>
   <!-- 粒子背景效果1  -->
   <!-- <script type='text/javascript' color='66,133,244' zIndex='-1' opacity='0.5'
    count='99' src='//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js'></script> -->
