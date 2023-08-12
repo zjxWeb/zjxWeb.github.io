@@ -1,5 +1,3 @@
-# 学习笔记
-
 | [c++](study/c++/)  |  [QT](study/QT/)  | [Python](study/python/) | [java](study/java/) | [linux](study/linux/) | [数据库](study/dataBase/) | [web开发](study/web/) |
 | :--: | :--: | :----: | :---: | :----: | :-----: | :-----: |
 |   [c++核心编程](study/c++/?id=c核心编程（ctrkc-注释-ctrku-解注释）)   | [入门介绍](study/QT/?id=_1-入门介绍) | [基础语法及用法](study/python/?id=基础语法及用法) | [多线程](/study/java/Multithreading/) | [基础命令和使用](study/linux/?id=study/linux/?id=linux基础命令和使用) | [MySQL](study/dataBase/?id=mysql) | [前端基础知识](study/web/?id=前端基础知识) |

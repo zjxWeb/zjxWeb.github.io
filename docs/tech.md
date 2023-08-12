@@ -1,5 +1,3 @@
-# 技术博客
-
 | [web](techBlog/web/)  | [digitalTwins](techBlog/digitalTwins/) | [server](techBlog/server/) | [vim](techBlog/vim/)  |
 | :--: | :----------: | :----: | :--: |
 | [uni-app头像上传](techBlog/web/?id=一-uni-app头像上传（完善个人信息功能），后端nodejsmysql) | [数字孪生技术学习](techBlog/digitalTwins/?id=数字孪生技术学习) | [git大文件操作](techBlog/server/?id=一git的基本操作，大文件上传（码云和github）和出现error处理) | [末行模式的命令](techBlog/vim/?id=末行模式的命令) |

@@ -18,6 +18,7 @@
   * [java](study/java/)
     * [多线程](study/java/Multithreading/)
   * [web开发](study/web/)
+    * [web面试](study/web/web_interview/)
     * [WebPack](study/web/webpack/)
       * [WebPack基础](study/web/webpack/webpack5_base/)
       * [WebPack提高](study/web/webpack/webpack5_senior/)
