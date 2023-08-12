@@ -37,6 +37,13 @@
       loadNavbar: true,
       loadNavbar: true,
       search: 'auto', // seach默认值
+      //字数统计
+      count:{
+        countable:true,
+        fontsize:'0.9em',
+        color:'rgb(90,90,90)',
+        language:'chinese'
+      },
       //脚注
       plugins: [
         function (hook) {
@@ -103,6 +110,8 @@
   </script>
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/docsify.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script> 
+  <!-- 字数统计 -->
+  <script src="//unpkg.com/docsify-count/dist/countable.js"></script>
   <!-- 粒子背景效果1  -->
   <!-- <script type='text/javascript' color='66,133,244' zIndex='-1' opacity='0.5'
    count='99' src='//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js'></script> -->
