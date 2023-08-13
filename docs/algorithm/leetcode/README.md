@@ -2142,3 +2142,110 @@ public:
 ```
 
 <!-- tabs:end -->
+
+## 232.用栈实现队列
+
+<!-- tabs:start -->
+
+#### **题目**
+
+请你仅使用两个栈实现先入先出队列。队列应当支持一般队列支持的所有操作（`push`、`pop`、`peek`、`empty`）：
+
+实现 `MyQueue` 类：
+
+- `void push(int x)` 将元素 x 推到队列的末尾
+- `int pop()` 从队列的开头移除并返回元素
+- `int peek()` 返回队列开头的元素
+- `boolean empty()` 如果队列为空，返回 `true` ；否则，返回 `false`
+
+**说明：**
+
+- 你 **只能** 使用标准的栈操作 —— 也就是只有 `push to top`, `peek/pop from top`, `size`, 和 `is empty` 操作是合法的。
+- 你所使用的语言也许不支持栈。你可以使用 list 或者 deque（双端队列）来模拟一个栈，只要是标准的栈操作即可。
+
+**示例 1：**
+
+```
+输入：
+["MyQueue", "push", "push", "peek", "pop", "empty"]
+[[], [1], [2], [], [], []]
+输出：
+[null, null, null, 1, 1, false]
+
+解释：
+MyQueue myQueue = new MyQueue();
+myQueue.push(1); // queue is: [1]
+myQueue.push(2); // queue is: [1, 2] (leftmost is front of the queue)
+myQueue.peek(); // return 1
+myQueue.pop(); // return 1, queue is [2]
+myQueue.empty(); // return false
+```
+
+**提示：**
+
+- `1 <= x <= 9`
+- 最多调用 `100` 次 `push`、`pop`、`peek` 和 `empty`
+- 假设所有操作都是有效的 （例如，一个空的队列不会调用 `pop` 或者 `peek` 操作）
+
+**进阶：**
+
+- 你能否实现每个操作均摊时间复杂度为 `O(1)` 的队列？换句话说，执行 `n` 个操作的总时间复杂度为 `O(n)` ，即使其中一个操作可能花费较长时间。
+
+#### **说明**
+
+使用栈来模式队列的行为，如果仅仅用一个栈，是一定不行的，所以需要两个栈**一个输入栈，一个输出栈**，这里要注意输入栈和输出栈的关系。
+
+下面动画模拟以下队列的执行过程：
+
+执行语句：
+queue.push(1);
+queue.push(2);
+queue.pop(); **注意此时的输出栈的操作**
+queue.push(3);
+queue.push(4);
+queue.pop();
+queue.pop();**注意此时的输出栈的操作**
+queue.pop();
+queue.empty();
+
+<img src="./src/1.gif"/>
+
+####  **题解**
+
+```c++
+class MyQueue {
+public:
+    stack<int> in,out;
+    MyQueue() {
+
+    }
+
+    void push(int x) {
+        in.push(x);
+    }
+
+    int pop() {
+        if (out.empty()) {
+            while (!in.empty()) {
+                out.push(in.top());
+                in.pop();
+            }
+        }
+        int res = out.top();
+        out.pop();
+        return res;
+    }
+
+    int peek() { // 返回队列首部的元素。
+        int result = this->pop();
+        out.push(result);
+        return result;
+    }
+
+    bool empty() {
+        return in.empty() && out.empty();
+    }
+};
+```
+
+<!-- tabs:end -->
