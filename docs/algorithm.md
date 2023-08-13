@@ -1,6 +1,6 @@
 <!-- tabs:start -->
 #### **ASCII码表**
-<img src="./_media/ASCII.jpg"/>
+<img src="./src/img/ASCII.jpg"/>
 
 #### **链表测试模板**
 ```C++

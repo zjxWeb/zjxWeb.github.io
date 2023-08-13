@@ -1,6 +1,6 @@
 <!-- _coverpage.md -->
 
-![logo](_media/logo.jpg)
+![logo](./src/img/logo.jpg)
 
 # 拼搏的小浣熊 <small>1.0版本</small>
 

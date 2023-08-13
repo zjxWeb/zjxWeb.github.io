@@ -7,10 +7,10 @@
 
 <!-- tabs:start -->
 #### **支付宝打赏**
-<img style="width:20vw;" src="./_media/zfbpay.jpg">
+<img style="width:20vw;" src="./src/img/zfbpay.jpg">
 
 #### **微信打赏**
- <img style="width:20vw;margin-left:10vw;" src="./_media/wxpay.jpg"/>
+ <img style="width:20vw;margin-left:10vw;" src="./src/img/wxpay.jpg"/>
 
 <!-- tabs:end -->
 
