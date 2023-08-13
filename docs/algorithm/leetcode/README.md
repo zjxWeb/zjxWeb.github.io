@@ -2208,7 +2208,7 @@ queue.pop();**注意此时的输出栈的操作**
 queue.pop();
 queue.empty();
 
-<img src="./src/1.gif"/>
+![1](./src/1.gif)
 
 ####  **题解**
 
