@@ -2398,3 +2398,103 @@ public:
 
 <!-- tabs:end -->
 
+## 20 有效括号【简单】【**栈与队列**】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+给定一个只包括 `'('`，`')'`，`'{'`，`'}'`，`'['`，`']'` 的字符串 `s` ，判断字符串是否有效。
+
+有效字符串需满足：
+
+1. 左括号必须用相同类型的右括号闭合。
+2. 左括号必须以正确的顺序闭合。
+3. 每个右括号都有一个对应的相同类型的左括号。
+
+**示例 1：**
+
+```
+输入：s = "()"
+输出：true
+```
+
+**示例 2：**
+
+```
+输入：s = "()[]{}"
+输出：true
+```
+
+**示例 3：**
+
+```
+输入：s = "(]"
+输出：false
+```
+
+
+
+**提示：**
+
+- `1 <= s.length <= 104`
+- `s` 仅由括号 `'()[]{}'` 组成
+
+#### **题解**
+
+```C++
+#include<iostream>
+#include<string>
+#include<stack>
+#include<unordered_map>
+
+using namespace std;
+
+class Solution {
+public:
+    bool isValid(string s) {
+        // 当我们遇到一个左括号时，我们会期望在后续的遍历中，有一个相同类型的右括号将其闭合。
+        // 由于后遇到的左括号要先闭合，因此我们可以将这个左括号放入栈顶。
+
+        // 当我们遇到一个右括号时，我们需要将一个相同类型的左括号闭合。
+        // 此时，我们可以取出栈顶的左括号并判断它们是否是相同类型的括号。
+        stack<char>c;
+        unordered_map<char, char>symbol = {
+            // 将 })] 作为key
+            {')', '('},
+            {']', '['},
+            {'}', '{'}
+        };
+        if (s.size() == 0)
+            return true;
+        if (s.size() % 2 != 0)
+            return false;
+        for (auto el : s) {
+        // count返回拥有比较等于指定参数 key 的关键的元素数，因为此容器不允许重复故为 1 或 0 。
+            //// 如果c是 })], 则判断， 否则说明是({[ , 直接入栈
+            if (symbol.count(el)) { // 将左括号入栈
+                // c.top()左括号
+                // symbol[el] 左括号
+                if (c.empty() || c.top() != symbol[el])
+                    return false;
+                // 匹配的收 将栈顶移除(先进后出，栈顶是最接近 c 的左括号) 
+                c.pop();
+            }
+            else
+            {
+                c.push(el);
+            }
+        }
+        return c.empty();
+    }
+};
+
+int main() {
+
+    Solution s;
+    string str = "({[]})";
+    cout << s.isValid(str);
+}
+```
+
+<!-- tabs:end -->
