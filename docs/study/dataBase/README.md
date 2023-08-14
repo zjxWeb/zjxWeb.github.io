@@ -855,14 +855,28 @@ commit;
 | `Repeatable Read(默认)` | ×  | ×  | √  |
 | `Serializable` | ×  | ×  | ×  |
 
-- √表示在当前隔离级别下该问题会出现
+>  **√表示在当前隔离级别下该问题会出现**
+
+
+
 - `Serializable` 性能最低；`Read uncommitted` 性能最高，数据安全性最差
 
 > + 查看事务隔离级别：
+>
 >   + `SELECT @@TRANSACTION_ISOLATION;`
+>
 > + 设置事务隔离级别：
+>
 >   + `SET [ SESSION | GLOBAL ] TRANSACTION ISOLATION LEVEL {READ UNCOMMITTED | READ COMMITTED | REPEATABLE READ | SERIALIZABLE };`
 >   + SESSION 是会话级别，表示只针对当前会话有效，GLOBAL 表示对所有会话有效
+>
+>   ```sql
+>   SELECT @@TRANSACTION_ISOLATION;
+>   
+>   set session transaction isolation level read uncommitted ;
+>   
+>   set session transaction isolation level repeatable read ;
+>   ```
 
 <!-- tabs:end -->
 
