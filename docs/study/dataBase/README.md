@@ -775,7 +775,8 @@ select e.*, d.* from (select * from employee where entrydate > '2006-01-01') as 
 
 #### **说明**
 
-+ 事务是一组操作的集合，事务会把所有操作作为一个整体一起向系统提交或撤销操作请求，即这些操作要么同时成功，要么同时失败。
++ `事务`是一组操作的集合，事务会把所有操作作为一个整体一起向系统提交或撤销操作请求，即这些操作`要么同时成功，要么同时失败。`
++ **默认`MySQL`的事务是自动提交的，也就是说，当执行一条`DML`语句，`MySQL`会以及隐式的提交事务**
 
 基本操作：
 
@@ -839,25 +840,28 @@ commit;
 | 不可重复读  | 一个事务先后读取同一条记录，但两次读取的数据不同  |
 | 幻读  | 一个事务按照条件查询数据时，没有对应的数据行，但是再插入数据时，又发现这行数据已经存在  |
 
-> 这三个问题的详细演示：https://www.bilibili.com/video/BV1Kr4y1i7ru?p=55cd 
+![脏读](./src/1.png)
+
+![不可重复读](./src/2.png)
+
+![幻读](./src/3.png)
 
 + 并发事务隔离级别：
 
 | 隔离级别  | 脏读  | 不可重复读  | 幻读  |
 | ------------ | ------------ | ------------ | ------------ |
-| Read uncommitted  | √  | √  | √  |
-| Read committed  | ×  | √  | √  |
-| Repeatable Read(默认)  | ×  | ×  | √  |
-| Serializable  | ×  | ×  | ×  |
+| `Read uncommitted` | √  | √  | √  |
+| `Read committed` | ×  | √  | √  |
+| `Repeatable Read(默认)` | ×  | ×  | √  |
+| `Serializable` | ×  | ×  | ×  |
 
 - √表示在当前隔离级别下该问题会出现
-- Serializable 性能最低；Read uncommitted 性能最高，数据安全性最差
+- `Serializable` 性能最低；`Read uncommitted` 性能最高，数据安全性最差
 
 > + 查看事务隔离级别：
 >   + `SELECT @@TRANSACTION_ISOLATION;`
 > + 设置事务隔离级别：
->   + `SET [ SESSION | GLOBAL ] TRANSACTION ISOLATION LEVEL {READ UNCOMMITTED | READ COMMITTED | 
->   + `REPEATABLE READ | SERIALIZABLE };`
+>   + `SET [ SESSION | GLOBAL ] TRANSACTION ISOLATION LEVEL {READ UNCOMMITTED | READ COMMITTED | REPEATABLE READ | SERIALIZABLE };`
 >   + SESSION 是会话级别，表示只针对当前会话有效，GLOBAL 表示对所有会话有效
 
 <!-- tabs:end -->
