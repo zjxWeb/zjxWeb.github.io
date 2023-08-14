@@ -613,14 +613,14 @@ select e.name, d.name from employee as e inner join dept as d on e.dept = d.id;
 
 #### **外连接查询**
 
-左外连接：
-查询左表所有数据，以及两张表交集部分数据
-`SELECT 字段列表 FROM 表1 LEFT [ OUTER ] JOIN 表2 ON 条件 ...;`
-相当于查询表1的所有数据，包含表1和表2交集部分数据
++ 左外连接：
+  + 查询左表所有数据，以及两张表交集部分数据
+  + `SELECT 字段列表 FROM 表1 LEFT [ OUTER ] JOIN 表2 ON 条件 ...;`
+  + 相当于查询表1的所有数据，包含表1和表2交集部分数据
 
-右外连接：
-查询右表所有数据，以及两张表交集部分数据
-`SELECT 字段列表 FROM 表1 RIGHT [ OUTER ] JOIN 表2 ON 条件 ...;`
++ 右外连接：
+  + 查询右表所有数据，以及两张表交集部分数据
+  + `SELECT 字段列表 FROM 表1 RIGHT [ OUTER ] JOIN 表2 ON 条件 ...;`
 
 例子：
 
@@ -632,16 +632,15 @@ select d.name, e.* from dept d left outer join emp e on e.dept = d.id;  -- 这�
 select d.name, e.* from employee as e right outer join dept as d on e.dept = d.id;
 ```
 
-左连接可以查询到没有dept的employee，右连接可以查询到没有employee的dept
+> 左连接可以查询到没有dept的employee，右连接可以查询到没有employee的dept
 
 #### **自连接查询**
 
-当前表与自身的连接查询，自连接必须使用表别名
++ 当前表与自身的连接查询，自连接必须使用表别名
+  + 语法：
+    + `SELECT 字段列表 FROM 表A 别名A JOIN 表A 别名B ON 条件 ...;`
 
-语法：
-`SELECT 字段列表 FROM 表A 别名A JOIN 表A 别名B ON 条件 ...;`
-
-自连接查询，可以是内连接查询，也可以是外连接查询
++ 自连接查询，可以是内连接查询，也可以是外连接查询
 
 例子：
 
@@ -654,7 +653,7 @@ select a.name, b.name from employee a left join employee b on a.manager = b.id;
 
 #### **联合查询 union, union all**
 
-把多次查询的结果合并，形成一个新的查询集
++ 把多次查询的结果合并，形成一个新的查询集
 
 语法：
 
@@ -669,29 +668,38 @@ SELECT 字段列表 FROM 表B ...
 - UNION ALL 会有重复结果，UNION 不会
 - 联合查询比使用or效率高，不会使索引失效
 
+> ***对于联合查询的多张表的列数必须保持一致，字段类型也需要保持一致***
+
 #### **子查询**
 
-SQL语句中嵌套SELECT语句，称谓嵌套查询，又称子查询。
-`SELECT * FROM t1 WHERE column1 = ( SELECT column1 FROM t2);`
-**子查询外部的语句可以是 INSERT / UPDATE / DELETE / SELECT 的任何一个**
++ SQL语句中嵌套SELECT语句，称谓嵌套查询，又称子查询。
++ `SELECT * FROM t1 WHERE column1 = ( SELECT column1 FROM t2);`
++ **子查询外部的语句可以是 INSERT / UPDATE / DELETE / SELECT 的任何一个**
 
-根据子查询结果可以分为：
++ 根据子查询结果可以分为：
 
-- 标量子查询（子查询结果为单个值）
-- 列子查询（子查询结果为一列）
-- 行子查询（子查询结果为一行）
-- 表子查询（子查询结果为多行多列）
+  - 标量子查询（子查询结果为单个值）
 
-根据子查询位置可分为：
+  - 列子查询（子查询结果为一列）
 
-- WHERE 之后
-- FROM 之后
-- SELECT 之后
+  - 行子查询（子查询结果为一行）
+
+  - 表子查询（子查询结果为多行多列）
+
+
++ 根据子查询位置可分为：
+
+  - WHERE 之后
+
+  - FROM 之后
+
+  - SELECT 之后
+
 
 > 标量子查询
 
-子查询返回的结果是单个值（数字、字符串、日期等）。
-常用操作符：- < > > >= < <=
++ 子查询返回的结果是单个值（数字、字符串、日期等）。
++ 常用操作符：- < > > >= < <=
 
 例子：
 
@@ -709,9 +717,9 @@ select * from employee where entrydate > (select entrydate from employee where n
 
 > 列子查询
 
-返回的结果是一列（可以是多行）。
++ 返回的结果是一列（可以是多行）。
 
-常用操作符：
++ 常用操作符：
 
 | 操作符  | 描述  |
 | ------------ | ------------ |
@@ -734,8 +742,8 @@ select * from employee where salary > any (select salary from employee where dep
 
 > 行子查询
 
-返回的结果是一行（可以是多列）。
-常用操作符：=, <, >, IN, NOT IN
++ 返回的结果是一行（可以是多列）。
++ 常用操作符：`=, <, >, IN, NOT IN`
 
 例子：
 
@@ -747,8 +755,8 @@ select * from employee where (salary, manager) = (select salary, manager from em
 
 > 表子查询
 
-返回的结果是多行多列
-常用操作符：IN
++ 返回的结果是多行多列
++ 常用操作符：IN
 
 例子：
 
@@ -767,7 +775,7 @@ select e.*, d.* from (select * from employee where entrydate > '2006-01-01') as 
 
 #### **说明**
 
-事务是一组操作的集合，事务会把所有操作作为一个整体一起向系统提交或撤销操作请求，即这些操作要么同时成功，要么同时失败。
++ 事务是一组操作的集合，事务会把所有操作作为一个整体一起向系统提交或撤销操作请求，即这些操作要么同时成功，要么同时失败。
 
 基本操作：
 
@@ -799,12 +807,12 @@ commit;
 
 操作方式二：
 
-开启事务：
-`START TRANSACTION 或 BEGIN TRANSACTION;`
-提交事务：
-`COMMIT;`
-回滚事务：
-`ROLLBACK;`
++ 开启事务：
++ `START TRANSACTION 或 BEGIN TRANSACTION;`
++ 提交事务：
++ `COMMIT;`
++ 回滚事务：
++ `ROLLBACK;`
 
 操作实例：
 
@@ -833,7 +841,7 @@ commit;
 
 > 这三个问题的详细演示：https://www.bilibili.com/video/BV1Kr4y1i7ru?p=55cd 
 
-并发事务隔离级别：
++ 并发事务隔离级别：
 
 | 隔离级别  | 脏读  | 不可重复读  | 幻读  |
 | ------------ | ------------ | ------------ | ------------ |
@@ -845,11 +853,12 @@ commit;
 - √表示在当前隔离级别下该问题会出现
 - Serializable 性能最低；Read uncommitted 性能最高，数据安全性最差
 
-查看事务隔离级别：
-`SELECT @@TRANSACTION_ISOLATION;`
-设置事务隔离级别：
-`SET [ SESSION | GLOBAL ] TRANSACTION ISOLATION LEVEL {READ UNCOMMITTED | READ COMMITTED | REPEATABLE READ | SERIALIZABLE };`
-SESSION 是会话级别，表示只针对当前会话有效，GLOBAL 表示对所有会话有效
+> + 查看事务隔离级别：
+>   + `SELECT @@TRANSACTION_ISOLATION;`
+> + 设置事务隔离级别：
+>   + `SET [ SESSION | GLOBAL ] TRANSACTION ISOLATION LEVEL {READ UNCOMMITTED | READ COMMITTED | 
+>   + `REPEATABLE READ | SERIALIZABLE };`
+>   + SESSION 是会话级别，表示只针对当前会话有效，GLOBAL 表示对所有会话有效
 
 <!-- tabs:end -->
 
