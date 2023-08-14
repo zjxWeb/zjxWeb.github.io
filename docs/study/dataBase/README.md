@@ -872,9 +872,9 @@ commit;
 >
 >   ```sql
 >   SELECT @@TRANSACTION_ISOLATION;
->   
+>             
 >   set session transaction isolation level read uncommitted ;
->   
+>             
 >   set session transaction isolation level repeatable read ;
 >   ```
 
@@ -884,9 +884,11 @@ commit;
 
 ## 存储引擎
 
-MySQL体系结构：
+<!-- tabs:start -->
 
-![结构图](https://dhc.pythonanywhere.com/media/editor/MySQL体系结构_20220315034329549927.png "结构图")
+#### **MySQL体系结构：**
+
+![结构图](./src/6.png)
 ![层级描述](https://dhc.pythonanywhere.com/media/editor/MySQL体系结构层级含义_20220315034359342837.png "层级描述")
 
 存储引擎就是存储数据、建立索引、更新/查询数据等技术的实现方式。存储引擎是基于表而不是基于库的，所以存储引擎也可以被称为表引擎。
@@ -905,7 +907,7 @@ CREATE TABLE 表名(
 show engines;
 ```
 
-### InnoDB
+#### **InnoDB**
 
 InnoDB 是一种兼顾高可靠性和高性能的通用存储引擎，在 MySQL 5.5 之后，InnoDB 是默认的 MySQL 引擎。
 
@@ -931,9 +933,9 @@ InnoDB 是一种兼顾高可靠性和高性能的通用存储引擎，在 MySQL 
 `ibd2sdi xxx.ibd`
 
 InnoDB 逻辑存储结构：
-![InnoDB逻辑存储结构](https://dhc.pythonanywhere.com/media/editor/逻辑存储结构_20220316030616590001.png "InnoDB逻辑存储结构")
+![InnoDB逻辑存储结构](./src/7.png)
 
-### MyISAM
+#### **MyISAM**
 
 MyISAM 是 MySQL 早期的默认存储引擎。
 
@@ -949,7 +951,7 @@ MyISAM 是 MySQL 早期的默认存储引擎。
 - xxx.MYD: 存储数据
 - xxx.MYI: 存储索引
 
-### Memory
+#### **Memory**
 
 Memory 引擎的表数据是存储在内存中的，受硬件问题、断电问题的影响，只能将这些表作为临时表或缓存使用。
 
@@ -962,7 +964,7 @@ Memory 引擎的表数据是存储在内存中的，受硬件问题、断电问�
 
 - xxx.sdi: 存储表结构信息
 
-### 存储引擎特点
+#### **存储引擎特点**
 
 | 特点  | InnoDB  | MyISAM  | Memory  |
 | ------------ | ------------ | ------------ | ------------ |
@@ -977,7 +979,7 @@ Memory 引擎的表数据是存储在内存中的，受硬件问题、断电问�
 | 批量插入速度  | 低  | 高  | 高  |
 | 支持外键  | 支持  | -  | -  |
 
-### 存储引擎的选择
+#### **存储引擎的选择**
 
 在选择存储引擎时，应该根据应用系统的特点选择合适的存储引擎。对于复杂的应用系统，还可以根据实际情况选择多种存储引擎进行组合。
 
@@ -987,15 +989,19 @@ Memory 引擎的表数据是存储在内存中的，受硬件问题、断电问�
 
 电商中的足迹和评论适合使用 MyISAM 引擎，缓存适合使用 Memory 引擎。
 
+<!-- tabs:end -->
+
 ## 性能分析
 
-### 查看执行频次
+<!-- tabs:start -->
+
+#### **查看执行频次**
 
 查看当前数据库的 INSERT, UPDATE, DELETE, SELECT 访问频次：
 `SHOW GLOBAL STATUS LIKE 'Com_______';` 或者 `SHOW SESSION STATUS LIKE 'Com_______';`
 例：`show global status like 'Com_______'`
 
-### 慢查询日志
+#### **慢查询日志**
 
 慢查询日志记录了所有执行时间超过指定参数（long_query_time，单位：秒，默认10秒）的所有SQL语句的日志。
 MySQL的慢查询日志默认没有开启，需要在MySQL的配置文件（/etc/my.cnf）中配置如下信息：
@@ -1008,7 +1014,7 @@ MySQL的慢查询日志默认没有开启，需要在MySQL的配置文件（/etc
 查看慢查询日志开关状态：
 `show variables like 'slow_query_log';`
 
-### profile
+#### **profile**
 
 show profile 能在做SQL优化时帮我们了解时间都耗费在哪里。通过 have_profiling 参数，能看到当前 MySQL 是否支持 profile 操作：
 `SELECT @@have_profiling;`
@@ -1021,7 +1027,7 @@ profiling 默认关闭，可以通过set语句在session/global级别开启 prof
 查看指定query_id的SQL语句CPU的使用情况
 `show profile cpu for query query_id;`
 
-### explain
+#### **explain**
 
 EXPLAIN 或者 DESC 命令获取 MySQL 如何执行 SELECT 语句的信息，包括在 SELECT 语句执行过程中表如何连接和连接的顺序。
 语法：
@@ -1039,7 +1045,13 @@ EXPLAIN 各字段含义：
 - rows：MySQL认为必须要执行的行数，在InnoDB引擎的表中，是一个估计值，可能并不总是准确的
 - filtered：表示返回结果的行数占需读取行数的百分比，filtered的值越大越好
 
+<!-- tabs:end -->
+
 ## 索引
+
+<!-- tabs:start -->
+
+#### **说明**
 
 索引是帮助 MySQL **高效获取数据**的**数据结构（有序）**。在数据之外，数据库系统还维护着满足特定查找算法的数据结构，这些数据结构以某种方式引用（指向）数据，这样就可以在这些数据结构上实现高级查询算法，这种数据结构就是索引。
 
@@ -1055,7 +1067,7 @@ EXPLAIN 各字段含义：
 - 索引列也是要占用空间的
 - 索引大大提高了查询效率，但降低了更新的速度，比如 INSERT、UPDATE、DELETE
 
-### 索引结构
+#### **索引结构**
 
 | 索引结构  | 描述  |
 | ------------ | ------------ |
@@ -1071,45 +1083,45 @@ EXPLAIN 各字段含义：
 | R-Tree索引  | 不支持  | 支持  | 不支持  |
 | Full-text  | 5.6版本后支持  | 支持  | 不支持  |
 
-#### B-Tree
+>  **B-Tree**
 
-![二叉树](https://dhc.pythonanywhere.com/media/editor/二叉树_20220316153214227108.png "二叉树")
+![4](./src/4.png)
 
 二叉树的缺点可以用红黑树来解决：
-![红黑树](https://dhc.pythonanywhere.com/media/editor/红黑树_20220316163142686602.png "红黑树")
+![红黑树](./src/5.png)
 红黑树也存在大数据量情况下，层级较深，检索速度慢的问题。
 
 为了解决上述问题，可以使用 B-Tree 结构。
 B-Tree (多路平衡查找树) 以一棵最大度数（max-degree，指一个节点的子节点个数）为5（5阶）的 b-tree 为例（每个节点最多存储4个key，5个指针）
 
-![B-Tree结构](https://dhc.pythonanywhere.com/media/editor/B-Tree结构_20220316163813441163.png "B-Tree结构")
+![B-Tree结构](./src/8.png)
 
 > B-Tree 的数据插入过程动画参照：https://www.bilibili.com/video/BV1Kr4y1i7ru?p=68
 演示地址：https://www.cs.usfca.edu/~galles/visualization/BTree.html
 
-#### B+Tree
+>  B+Tree
 
 结构图：
 
-![B+Tree结构图](https://dhc.pythonanywhere.com/media/editor/B+Tree结构图_20220316170700591277.png "B+Tree结构图")
+![B+Tree结构图](./src/9.png)
 
 > 演示地址：https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html
 
-与 B-Tree 的区别：
+> 与 B-Tree 的区别：
 
 - 所有的数据都会出现在叶子节点
 - 叶子节点形成一个单向链表
 
 MySQL 索引数据结构对经典的 B+Tree 进行了优化。在原 B+Tree 的基础上，增加一个指向相邻叶子节点的链表指针，就形成了带有顺序指针的 B+Tree，提高区间访问的性能。
 
-![MySQL B+Tree 结构图](https://dhc.pythonanywhere.com/media/editor/结构图_20220316171730865611.png "MySQL B+Tree 结构图")
+![MySQL B+Tree 结构图](./src/10.png)
 
-#### Hash
+#### **Hash**
 
 哈希索引就是采用一定的hash算法，将键值换算成新的hash值，映射到对应的槽位上，然后存储在hash表中。
 如果两个（或多个）键值，映射到一个相同的槽位上，他们就产生了hash冲突（也称为hash碰撞），可以通过链表来解决。
 
-![Hash索引原理图](https://dhc.pythonanywhere.com/media/editor/Hash索引原理图_20220317143226150679.png "Hash索引原理图")
+![Hash索引原理图](./src/11.png)
 
 特点：
 
@@ -1122,7 +1134,7 @@ MySQL 索引数据结构对经典的 B+Tree 进行了优化。在原 B+Tree 的�
 - Memory
 - InnoDB: 具有自适应hash功能，hash索引是存储引擎根据 B+Tree 索引在指定条件下自动构建的
 
-#### 面试题
+#### **面试题**
 
 1. 为什么 InnoDB 存储引擎选择使用 B+Tree 索引结构？
 
@@ -1130,7 +1142,7 @@ MySQL 索引数据结构对经典的 B+Tree 进行了优化。在原 B+Tree 的�
 - 对于 B-Tree，无论是叶子节点还是非叶子节点，都会保存数据，这样导致一页中存储的键值减少，指针也跟着减少，要同样保存大量数据，只能增加树的高度，导致性能降低
 - 相对于 Hash 索引，B+Tree 支持范围匹配及排序操作
 
-### 索引分类
+#### **索引分类**
 
 | 分类  | 含义  | 特点  | 关键字  |
 | ------------ | ------------ | ------------ | ------------ |
@@ -1148,8 +1160,8 @@ MySQL 索引数据结构对经典的 B+Tree 进行了优化。在原 B+Tree 的�
 
 演示图：
 
-![大致原理](https://dhc.pythonanywhere.com/media/editor/原理图_20220318194454880073.png "大致原理")
-![演示图](https://dhc.pythonanywhere.com/media/editor/演示图_20220319215403721066.png "演示图")
+![大致原理](./src/12.png)
+![演示图](./src/13.png)
 
 聚集索引选取规则：
 
@@ -1157,7 +1169,7 @@ MySQL 索引数据结构对经典的 B+Tree 进行了优化。在原 B+Tree 的�
 - 如果不存在主键，将使用第一个唯一(UNIQUE)索引作为聚集索引
 - 如果表没有主键或没有合适的唯一索引，则 InnoDB 会自动生成一个 rowid 作为隐藏的聚集索引
 
-#### 思考题
+#### **思考题**
 
 1\. 以下 SQL 语句，哪个执行效率高？为什么？
 
@@ -1179,7 +1191,7 @@ select * from user where name = 'Arm';
 
 另外，如果有成千上万的数据，那么就要考虑分表，涉及运维篇知识。
 
-### 语法
+#### **语法**
 
 创建索引：
 `CREATE [ UNIQUE | FULLTEXT ] INDEX index_name ON table_name (index_col_name, ...);`
@@ -1207,16 +1219,16 @@ create index idx_user_email on tb_user(email);
 drop index idx_user_email on tb_user;
 ```
 
-### 使用规则
+#### **使用规则**
 
-#### 最左前缀法则
+> 最左前缀法则
 
 如果索引关联了多列（联合索引），要遵守最左前缀法则，最左前缀法则指的是查询从索引的最左列开始，并且不跳过索引中的列。
 如果跳跃某一列，索引将部分失效（后面的字段索引失效）。
 
 联合索引中，出现范围查询（<, >），范围查询右侧的列索引失效。可以用>=或者<=来规避索引失效问题。
 
-#### 索引失效情况
+> 索引失效情况
 
 1. 在索引列上进行运算操作，索引将失效。如：`explain select * from tb_user where substring(phone, 10, 2) = '15';`
 2. 字符串类型字段使用时，不加引号，索引将失效。如：`explain select * from tb_user where phone = 17799990015;`，此处phone的值没有加引号
@@ -1224,7 +1236,7 @@ drop index idx_user_email on tb_user;
 4. 用 or 分割开的条件，如果 or 其中一个条件的列没有索引，那么涉及的索引都不会被用到。
 5. 如果 MySQL 评估使用索引比全表更慢，则不使用索引。
 
-#### SQL 提示
+> SQL 提示
 
 是优化数据库的一个重要手段，简单来说，就是在SQL语句中加入一些人为的提示来达到优化操作的目的。
 
@@ -1237,7 +1249,7 @@ drop index idx_user_email on tb_user;
 
 use 是建议，实际使用哪个索引 MySQL 还会自己权衡运行速度去更改，force就是无论如何都强制使用该索引。
 
-#### 覆盖索引&回表查询
+> 覆盖索引&回表查询
 
 尽量使用覆盖索引（查询使用了索引，并且需要返回的列，在该索引中已经全部能找到），减少 select *。
 
@@ -1254,7 +1266,7 @@ explain 中 extra 字段含义：
 
 解：给username和password字段建立联合索引，则不需要回表查询，直接覆盖索引
 
-#### 前缀索引
+> 前缀索引
 
 当字段类型为字符串（varchar, text等）时，有时候需要索引很长的字符串，这会让索引变得很大，查询时，浪费大量的磁盘IO，影响查询效率，此时可以只降字符串的一部分前缀，建立索引，这样可以大大节约索引空间，从而提高索引效率。
 
@@ -1268,7 +1280,7 @@ select count(distinct substring(email, 1, 5)) / count(*) from tb_user;
 
 show index 里面的sub_part可以看到接取的长度
 
-#### 单列索引&联合索引
+> 单列索引&联合索引
 
 单列索引：即一个索引只包含单个列
 联合索引：即一个索引包含了多个列
@@ -1278,11 +1290,11 @@ show index 里面的sub_part可以看到接取的长度
 `explain select id, phone, name from tb_user where phone = '17799990010' and name = '韩信';`
 这句只会用到phone索引字段
 
-##### 注意事项
+> 注意事项
 
 - 多条件联合查询时，MySQL优化器会评估哪个字段的索引效率更高，会选择该索引完成本次查询
 
-### 设计原则
+> 设计原则
 
 1. 针对于数据量较大，且查询比较频繁的表建立索引
 2. 针对于常作为查询条件（where）、排序（order by）、分组（group by）操作的字段建立索引
@@ -1292,9 +1304,13 @@ show index 里面的sub_part可以看到接取的长度
 6. 要控制索引的数量，索引并不是多多益善，索引越多，维护索引结构的代价就越大，会影响增删改的效率
 7. 如果索引列不能存储NULL值，请在创建表时使用NOT NULL约束它。当优化器知道每列是否包含NULL值时，它可以更好地确定哪个索引最有效地用于查询
 
+<!-- tabs:end -->
+
 ## SQL 优化
 
-### 插入数据
+<!-- tabs:start -->
+
+#### **插入数据**
 
 普通插入：
 
@@ -1315,7 +1331,7 @@ select @@local_infile;
 load data local infile '/root/sql1.log' into table 'tb_user' fields terminated by ',' lines terminated by '\n';
 ```
 
-### 主键优化
+####   **主键优化**
 
 数据组织方式：在InnoDB存储引擎中，表数据都是根据主键顺序组织存放的，这种存储方式的表称为索引组织表（Index organized table, IOT）
 
@@ -1333,7 +1349,7 @@ MERGE_THRESHOLD：合并页的阈值，可以自己设置，在创建表或创�
 - 尽量不要使用 UUID 做主键或者是其他的自然主键，如身份证号
 - 业务操作时，避免对主键的修改
 
-### order by优化
+#### **order by优化**
 
 1. Using filesort：通过表的索引或全表扫描，读取满足条件的数据行，然后在排序缓冲区 sort buffer 中完成排序操作，所有不是通过索引直接返回排序结果的排序都叫 FileSort 排序
 2. Using index：通过有序索引顺序扫描直接返回有序数据，这种情况即为 using index，不需要额外排序，操作效率高
@@ -1347,14 +1363,14 @@ MERGE_THRESHOLD：合并页的阈值，可以自己设置，在创建表或创�
 - 多字段排序，一个升序一个降序，此时需要注意联合索引在创建时的规则（ASC/DESC）
 - 如果不可避免出现filesort，大数据量排序时，可以适当增大排序缓冲区大小 sort_buffer_size（默认256k）
 
-### group by优化
+#### **group  by优化**
 
 - 在分组操作时，可以通过索引来提高效率
 - 分组操作时，索引的使用也是满足最左前缀法则的
 
 如索引为`idx_user_pro_age_stat`，则句式可以是`select ... where profession order by age`，这样也符合最左前缀法则
 
-### limit优化
+#### **limit优化**
 
 常见的问题如`limit 2000000, 10`，此时需要 MySQL 排序前2000000条记录，但仅仅返回2000000 - 2000010的记录，其他记录丢弃，查询排序的代价非常大。
 优化方案：一般分页查询时，通过创建覆盖索引能够比较好地提高性能，可以通过覆盖索引加子查询形式进行优化
@@ -1372,7 +1388,7 @@ select id from tb_sku order by id limit 9000000, 10;
 select * from tb_sku as s, (select id from tb_sku order by id limit 9000000, 10) as a where s.id = a.id;
 ```
 
-### count优化
+#### **count优化**
 
 MyISAM 引擎把一个表的总行数存在了磁盘上，因此执行 count(\*) 的时候会直接返回这个数，效率很高（前提是不适用where）；
 InnoDB 在执行 count(\*) 时，需要把数据一行一行地从引擎里面读出来，然后累计计数。
@@ -1393,13 +1409,15 @@ count的几种用法：
 
 按效率排序：count(字段) < count(主键) < count(1) < count(\*)，所以尽量使用 count(\*)
 
-### update优化（避免行锁升级为表锁）
+#### **update优化（避免行锁升级为表锁）**
 
 InnoDB 的行锁是针对索引加的锁，不是针对记录加的锁，并且该索引不能失效，否则会从行锁升级为表锁。
 
 如以下两条语句：
 `update student set no = '123' where id = 1;`，这句由于id有主键索引，所以只会锁这一行；
 `update student set no = '123' where name = 'test';`，这句由于name没有索引，所以会把整张表都锁住进行数据更新，解决方法是给name字段添加索引
+
+<!-- tabs:end -->
 
 # 📃数据类型
 
