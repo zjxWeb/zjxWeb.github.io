@@ -1,11 +1,16 @@
-## **mysql**
-### MySQL操作命令
-#### 1、mysql服务的启动和停止（系统默认启动，通常不需要我们启动）
+## MySQL操作命令
+<!-- tabs:start -->
+
+#### **启动和停止**
+
+>  mysql服务的启动和停止（系统默认启动，通常不需要我们启动）
+
 `net stop mysql`
 
 `net start mysql`
 
-#### 2、登录mysql
+#### **登录mysql**
+
 语法如下： 
 + `mysql -u用户名 -p用户密码`
   
@@ -14,7 +19,9 @@
 
 > 注意：如果是连接到另外的机器上，则需要加入一个参数-h机器IP
 
-#### 3、增加新用户（通常我们用默认的root用户就可以了）
+#### **增加新用户**
+
+> （通常我们用默认的root用户就可以了）
 
 + 格式：`grant 权限 on 数据库.* to 用户名@登录主机 identified by "密码"`
  + 如，增加一个用户user1密码为password1，让其可以在本机上登录， 并对所有数据库有查询、插入、修改、删除的权限。首先用以root用户连入mysql，然后键入以下命令：
@@ -29,40 +36,48 @@
 `grant select,insert,update,delete on mydb.* to user1@localhost identified by "";`
 
 
-#### 4、 操作数据库
+#### **操作数据库**
 
 + 登录到mysql中，然后在mysql的提示符下运行下列命令，每个命令以分号结束。
   
-##### 1、 显示数据库列表。
+
+> 显示数据库列表。
 
 `show databases;`
 
 + 缺省有两个数据库：mysql和test。 mysql库存放着mysql的系统和用户权限信息，我们改密码和新增用户，实际上就是对这个库进行操作。
-  
-##### 2、 显示库中的数据表：
+> 显示库中的数据表：
 
 `use mysql;`
 
 `show tables;`
 
-##### 3、 显示数据表的结构：
+> 显示数据表的结构：
+
 `describe 表名;`
-##### 4、 建库与删库：
+>  建库与删库：
+
 `create database 库名;`
 
 `drop database 库名;`
-##### 5、 建表：
+> 建表：
+
 `use 库名;`
 
 `create table 表名(字段列表);`
 
 `drop table 表名;`
-##### 6、 清空表中记录：
+> 清空表中记录：
+
 `delete from 表名;`
-##### 7、 显示表中的记录：
+>  显示表中的记录：
+
 `select * from 表名;`
 
-#### 5、导出和导入数据（一般我们不用，有能力者研究）
+#### **导出和导入数据**
+
+>  一般我们不用，有能力者研究
+
 + 导出数据：
 `mysqldump --opt test > mysql.test`
 
@@ -79,11 +94,16 @@
 
 `load data local infile "文件名" into table 表名;`
 
+<!-- tabs:end -->
+
 ## SQL server (oracle)语句练习案例
 
 ***！！！练习希望可以按顺序执行！！！***
-1. ### 建表(一)：
-	
+
+<!-- tabs:start -->
+
+#### **建表(一)：**
+
 	```
 	create table Teacher(
 	Tno integer ,
@@ -97,8 +117,8 @@
 	Title char(6),
 	Dept char(10));
 	```
-2. ### 插入数据（一）：
-	
+#### **插入数据（一）：**
+
 	```
 	insert into Teacher
 	values
@@ -116,8 +136,9 @@
 	values
 	(105,'王华英','自动化');
 	```
-3. ### 查询（一）：
-	
+
+#### **查询（一）：**
+
 	```
 	/*select * from teacher;*/
 	/*select * from teacher where dept='通信';*/
@@ -126,8 +147,8 @@
 	/*select count(distinct dept) from teacher;*/
 	/*select * from teacher aa,teacher bb where aa.tno=bb.tno;*/
 	```
-4. ### 建表（二）：
-	
+#### **建表（二）：**
+
 	```
 	create Table Course(
 	Cno integer not null,
@@ -136,8 +157,8 @@
 	credit numeric(3,1) not null,
 	Primary key(cno,tno));
 	```
-5. ### 插入数据（二）：
-	
+#### **插入数据（二）：**
+
 	```
 	insert into Course
 	values(1,101,'数据库',3.5);
@@ -150,8 +171,8 @@
 	insert into Course
 	values(3,103,'操作系统',3);
 	```
-6. ### 查询（二）：
-	
+#### **查询（二）：**
+
 	```
 	select * 
 	from teacher,course;
@@ -160,27 +181,27 @@
 	from teacher,course
 	where teacher.tno=course.tno;
 	```
-7. ### 查询（三）：
-	
+#### **查询（三）：**
+
 	```
 	//select cname from course ;
 	//select distinct cname from course;
 	select * from teacher;
 	```
-8. ### 更新数据：
-	
+#### **更新数据**
+
 	```
 		//update teacher
 		//set dept='通信工程'
 		//where dept='通信';
 	```
-9. ### 删除数据：
-	
+#### **删除数据**
+
 	```
 	//delete from teacher where dept='计算机';
 	```
-10. ### 查询（四）：
-	
+#### **查询（四）：**
+
 	```
 	//select * from course where credit >3;
 	
@@ -205,8 +226,8 @@
 	select * from course aa, course bb
 	where aa.tno=bb.tno;
 	```
-11. ### 查询（五）：
-	
+#### **查询（五）：**
+
 	```
 	//select * from course
 	//    where Tno in ( select Tno 
@@ -222,14 +243,15 @@
 	//    where Tno in ( select Tno 
 	//                    from Teacher
 	//                     where Title='讲师');
-	
-	
-	select * from teacher,course
-	   where (teacher.tno=course.tno) and Title='讲师';
-	
-	```
-12. ### 查询（六）：
-	
+
+
+​	
+​	select * from teacher,course
+​	   where (teacher.tno=course.tno) and Title='讲师';
+​	
+​	```
+#### **查询（六）：**
+
 	```
 	select Distinct Tno from course
 	  where 2<=(select count(*) from Course aa
@@ -239,8 +261,8 @@
 	//                where Tno=102;
 	//
 	```
-13. ### 新建视图：
-	
+#### **新建视图**
+
 	```
 	create view v_t_c
 	   as 
@@ -248,15 +270,15 @@
 	        from Teacher,course
 	          where Teacher.Tno=course.Tno;
 	```
-14. ### 视图查询
-	
+#### **视图查询**
+
 	```
 	Select * from v_t_c;
 	
 	Select * from v_t_c where Tno=101;
 	```
-15. ### 认识NUll：
-	
+#### **认识NUll：**
+
 	```
 	create table Teacher(
 	Tno integer Primary Key,
@@ -280,16 +302,17 @@
 	insert into Teacher
 	values
 	(905,'张大军',null,null);
-	
-	
-	select * from teacher;
-	
-	Select * from teacher where title is null;
-	
-	select * from teacher where dept is not null;
-	```
-16. ### 外键1：
-	
+
+
+​	
+​	select * from teacher;
+​	
+​	Select * from teacher where title is null;
+​	
+​	select * from teacher where dept is not null;
+​	```
+#### **外键1：**
+
 	```
 	create table father_t
 	(Cno integer primary key,
@@ -305,8 +328,8 @@
 	(2,'网络',3);
 	
 	```
-17. ### 外键2：
-	
+#### **外键2：**
+
 	```
 	create table son_t
 	(st_no integer primary key,
@@ -323,8 +346,8 @@
 	values
 	(102,5,78);
 	```
-18. ### 查询（七）：
-	
+#### **查询（七）：**
+
 	```
 	select * from teacher;
 	
@@ -332,8 +355,10 @@
 	
 	select title,count(*) from teacher group by title having count(*)>1;
 	```
-19. ### 触发器（建表）：
-	
+#### **触发器**
+
+> 建表
+
 	```
 	create table Teacher(
 	Tno integer Primary Key,
@@ -356,35 +381,36 @@
 	insert into Teacher(Tno,Tname,Dept)
 	values
 	(105,'王华英','自动化');
-	
-	
-	create Table Course(
-	Cno integer not null,
-	Tno integer not null,
-	Cname char(10) not null,
-	credit numeric(3,1) not null,
-	Primary key(cno,tno));
-	
-	insert into Course
-	values(1,101,'数据库',3.5);
-	insert into Course
-	values(1,103,'数据库',3.5);
-	insert into Course
-	values(2,102,'网络',3);
-	insert into Course
-	values(2,101,'网络',3);
-	insert into Course
-	values(3,103,'操作系统',3);
-	```
-20. ### 触发器（测试）：
-	
+
+
+​	
+​	create Table Course(
+​	Cno integer not null,
+​	Tno integer not null,
+​	Cname char(10) not null,
+​	credit numeric(3,1) not null,
+​	Primary key(cno,tno));
+​	
+​	insert into Course
+​	values(1,101,'数据库',3.5);
+​	insert into Course
+​	values(1,103,'数据库',3.5);
+​	insert into Course
+​	values(2,102,'网络',3);
+​	insert into Course
+​	values(2,101,'网络',3);
+​	insert into Course
+​	values(3,103,'操作系统',3);
+​	```
+> 测试
+
 	```
 	delete from teacher where tno=101; 
 	select * from teacher;
 	select * from course;
 	```
-21. ### 触发器2-oracle
-	
+> 触发器2-oracle
+
 	```
 	create trigger trig_demo1
 	after delete on teacher
@@ -395,8 +421,8 @@
 	end;
 	
 	```
-22. ### 触发器2-SQL Server 2000:
-	
+>  触发器2-SQL Server 2000:
+
 	```
 	create trigger trig_demo1
 	  on teacher
@@ -407,8 +433,8 @@
 	        where course.tno=deleted.tno
 	
 	```
-23. ### 触发器3(测试):
-	
+> 触发器3(测试):
+
 	```
 	select * from teacher;
 	select * from course; 
@@ -418,8 +444,8 @@
 	select * from teacher;
 	select * from course; 
 	```
-24. ### 触发器3-oracle:
-	
+> 触发器3-oracle:
+
 	```
 	create trigger trig_demo2
 	   after update on teacher
@@ -432,8 +458,8 @@
 	   end;
 	
 	```
-25. ### 触发器3-SQL Server 2000
-	
+> 触发器3-SQL Server 2000
+
 	```
 	create trigger trig_demo2
 	   on teacher
@@ -452,8 +478,8 @@
 	   end;
 	
 	```
-26. ### 事务(SQL Server 2000)
-	
+#### **事务(SQL Server 2000)**
+
 	```
 	begin transaction
 	
@@ -469,3 +495,5 @@
 	
 	select * from teacher;
 	```
+
+<!-- tabs:end -->
