@@ -2249,3 +2249,152 @@ public:
 ```
 
 <!-- tabs:end -->
+
+## 225 用队列实现栈【简单】【**栈与队列**】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+请你仅使用两个队列实现一个后入先出（LIFO）的栈，并支持普通栈的全部四种操作（`push`、`top`、`pop` 和 `empty`）。
+
+实现 `MyStack` 类：
+
+- `void push(int x)` 将元素 x 压入栈顶。
+- `int pop()` 移除并返回栈顶元素。
+- `int top()` 返回栈顶元素。
+- `boolean empty()` 如果栈是空的，返回 `true` ；否则，返回 `false` 。
+
+ 
+
+**注意：**
+
+- 你只能使用队列的基本操作 —— 也就是 `push to back`、`peek/pop from front`、`size` 和 `is empty` 这些操作。
+- 你所使用的语言也许不支持队列。 你可以使用 list （列表）或者 deque（双端队列）来模拟一个队列 , 只要是标准的队列操作即可。
+
+**示例：**
+
+```
+输入：
+["MyStack", "push", "push", "top", "pop", "empty"]
+[[], [1], [2], [], [], []]
+输出：
+[null, null, null, 2, 2, false]
+
+解释：
+MyStack myStack = new MyStack();
+myStack.push(1);
+myStack.push(2);
+myStack.top(); // 返回 2
+myStack.pop(); // 返回 2
+myStack.empty(); // 返回 False
+```
+
+**提示：**
+
+- `1 <= x <= 9`
+- 最多调用`100` 次 `push`、`pop`、`top` 和 `empty`
+- 每次调用 `pop` 和 `top` 都保证栈不为空
+
+**进阶：**你能否仅用一个队列来实现栈。
+
+#### **题解一（双队列）**
+
+![2](./src/2.gif)
+
+```C++
+#include<iostream>
+#include<queue>
+
+using namespace std;
+
+
+class MyStack {
+public:
+    queue<int> q1, q2;//q2 用来备份
+    MyStack() { }
+
+    void push(int x) {
+        q1.push(x);
+    }
+
+    int pop() {
+        int size = q1.size();
+        size--;
+        while (size--)/// 将q1 导入q2，但要留下最后一个元素
+        {
+            q2.push(q1.front());
+            q1.pop();
+        }
+        int res = q1.front();// // 留下的最后一个元素就是要返回的值
+        q1.pop();
+        q1 = q2; //再将que2赋值给que1
+        while (!q2.empty())
+        {
+            q2.pop();
+        }
+        return res;
+    }
+
+    int top() {
+        return q1.back();
+    }
+
+    bool empty() {
+        return q1.empty();
+    }
+};
+
+
+int main()
+{
+    MyStack* obj = new MyStack();
+    obj->push(1);
+    obj->push(2);
+    obj->push(3);
+    int param_2 = obj->pop();//3
+    int param_3 = obj->top();//1
+    bool param_4 = obj->empty();
+    cout << param_2 << param_3 << param_4 << endl;
+    return 0;
+}
+```
+
+#### **题解（单队列）**
+
+> **一个队列在模拟栈弹出元素的时候只要将队列头部的元素（除了最后一个元素外） 重新添加到队列尾部，此时再去弹出元素就是栈的顺序了。**
+
+```c++
+class MyStack {
+public:
+    queue<int> q;//q2 用来备份
+    MyStack() { }
+
+    void push(int x) {
+        q.push(x);
+    }
+
+    int pop() {
+       int size = q.size();
+       size--;
+       while(size--){// 将队列头部的元素（除了最后一个元素外） 重新添加到队列尾部
+            q.push(q.front());
+            q.pop();
+       }
+       int res = q.front();//// 此时弹出的元素顺序就是栈的顺序了
+       q.pop();
+       return res;
+    }
+
+    int top() {
+        return q.back();
+    }
+
+    bool empty() {
+        return q.empty();
+    }
+};
+```
+
+<!-- tabs:end -->
+
