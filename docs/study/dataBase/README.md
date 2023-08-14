@@ -9,7 +9,7 @@
 
 <!-- tabs:start -->
 
-####  **DDL（数据定义语言）**
+####  **DDL（数据定义语言）（Data Definition Language）**
 
 数据定义语言
 
@@ -73,7 +73,7 @@ CREATE TABLE 表名(
 删除表，并重新创建该表：
 `TRUNCATE TABLE 表名;`
 
-#### **DML（数据操作语言）**
+#### **DML（数据操作语言）（Data Manipulation Language）**
 
 > 添加数据
 
@@ -101,7 +101,7 @@ CREATE TABLE 表名(
 删除数据：
 `DELETE FROM 表名 [ WHERE 条件 ];`
 
-#### **DQL（数据查询语言）**
+#### **DQL（数据查询语言）（Data Query Language）**
 
 语法：
 ```mysql
@@ -290,7 +290,7 @@ SELECT * FROM employee LIMIT 10, 10;
 
 FROM -> WHERE -> GROUP BY -> SELECT -> ORDER BY -> LIMIT
 
-#### **DCL**
+#### **DCL**（数据控制语言）（Data Control Language）
 
 > 管理用户
 
@@ -871,9 +871,9 @@ commit;
 >
 >   ```sql
 >   SELECT @@TRANSACTION_ISOLATION;
->             
+>               
 >   set session transaction isolation level read uncommitted ;
->             
+>               
 >   set session transaction isolation level repeatable read ;
 >   ```
 
@@ -890,8 +890,9 @@ commit;
 ![结构图](./src/6.png)
 ![层级描述](https://dhc.pythonanywhere.com/media/editor/MySQL体系结构层级含义_20220315034359342837.png "层级描述")
 
-存储引擎就是存储数据、建立索引、更新/查询数据等技术的实现方式。存储引擎是基于表而不是基于库的，所以存储引擎也可以被称为表引擎。
-默认存储引擎是InnoDB。
+>  存储引擎就是存储数据、建立索引、更新/查询数据等技术的实现方式。存储引擎是基于表而不是基于库的，所以存储引擎也可以被称为表引擎。
+
+> 版本5.5以后：**默认存储引擎是`InnoDB`。** 
 
 相关操作：
 
@@ -906,37 +907,40 @@ CREATE TABLE 表名(
 show engines;
 ```
 
-#### **InnoDB**
+#### **`InnoDB`**
 
-InnoDB 是一种兼顾高可靠性和高性能的通用存储引擎，在 MySQL 5.5 之后，InnoDB 是默认的 MySQL 引擎。
+> `InnoDB` 是一种兼顾高可靠性和高性能的通用存储引擎，在 `MySQL 5.5` 之后，`InnoDB` 是默认的 `MySQL` 引擎。
 
-特点：
++ 特点：
 
-- DML 操作遵循 ACID 模型，支持**事务**
-- **行级锁**，提高并发访问性能
-- 支持**外键**约束，保证数据的完整性和正确性
+  - `DML` 操作遵循 ACID 模型，支持**事务**
 
-文件：
+  -  **行级锁**，提高并发访问性能
 
-- xxx.ibd: xxx代表表名，InnoDB 引擎的每张表都会对应这样一个表空间文件，存储该表的表结构（frm、sdi）、数据和索引。
+  - 支持**外键**约束，保证数据的完整性和正确性
+
+
++ 文件：
+  - xxx.ibd: xxx代表表名，`InnoDB` 引擎的每张表都会对应这样一个表空间文件，**存储该表的表结构（frm、sdi）、数据和索引。**
+
 
 参数：innodb_file_per_table，决定多张表共享一个表空间还是每张表对应一个表空间
 
-知识点：
++ 知识点：
 
-查看 Mysql 变量：
-`show variables like 'innodb_file_per_table';`
++ 查看 `Mysql` 变量：
+  `show variables like 'innodb_file_per_table';`
 
-从idb文件提取表结构数据：
-（在cmd运行）
-`ibd2sdi xxx.ibd`
++ 从idb文件提取表结构数据：
+  + （在cmd运行）
+    `ibd2sdi xxx.ibd`
 
-InnoDB 逻辑存储结构：
-![InnoDB逻辑存储结构](./src/7.png)
+> `InnoDB` 逻辑存储结构：
+> ![InnoDB逻辑存储结构](./src/7.png)
 
 #### **MyISAM**
 
-MyISAM 是 MySQL 早期的默认存储引擎。
++ MyISAM 是 MySQL 早期的默认存储引擎。
 
 特点：
 
@@ -952,7 +956,7 @@ MyISAM 是 MySQL 早期的默认存储引擎。
 
 #### **Memory**
 
-Memory 引擎的表数据是存储在内存中的，受硬件问题、断电问题的影响，只能将这些表作为临时表或缓存使用。
++ Memory 引擎的表数据是存储在内存中的，受硬件问题、断电问题的影响，只能将这些表作为临时表或缓存使用。
 
 特点：
 
@@ -964,6 +968,8 @@ Memory 引擎的表数据是存储在内存中的，受硬件问题、断电问�
 - xxx.sdi: 存储表结构信息
 
 #### **存储引擎特点**
+
+> 存储引擎就是存储数据、建立索引、更新/查询数据等技术的实现方式。**存储引擎是基于表的，而不是基于库的**，所以存储引擎也可被称为表类型。
 
 | 特点  | InnoDB  | MyISAM  | Memory  |
 | ------------ | ------------ | ------------ | ------------ |
