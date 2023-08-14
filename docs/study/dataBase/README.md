@@ -403,6 +403,8 @@ SELECT RPAD('01', 5, '-');
 SELECT TRIM(' Hello World ');
 -- 切片（起始索引为1）
 SELECT SUBSTRING('Hello World', 1, 5);
+
+update emp set workno = lpad(workno,5,0);
 ```
 
 #### **数值函数**
