@@ -1,3 +1,4 @@
+// 设置cookie过期时间  7天
 function setCookie(cname, cvalue, exdays) {
     var d = new Date();
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
@@ -29,6 +30,7 @@ if (!x) {
     button.innerText = "提交";
     button.onclick = function () {
         password = input.value;
+        // 主要业务代码
         if (x == "april conns" || password == 'pbdxhx') {
             if (document.cookie != "apri conns") {
                 document.cookie = "april conns";
@@ -46,18 +48,3 @@ if (!x) {
     container.appendChild(button);
     document.body.appendChild(container);
 }
-
-// if(x=="april conns"||password == 'pbdxhx' ) {
-//     if(document.cookie!="apri conns")
-//     {
-//       document.cookie="april conns";
-//       setCookie(" ", "april conns", 7);
-//     }
-//     break;
-
-// } else {
-//   alert("密码不正确,无法进入本站!!");
-// }
-
-
-// }
