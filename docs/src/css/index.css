@@ -40,8 +40,8 @@
 
 
 /* 密码校验 */
-/* 遮罩层样式 */
-.overlay {
+ /* 遮罩层样式 */
+ .overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -56,9 +56,20 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    padding: 90px;
+    width: 80%; /* 设置容器宽度为屏幕宽度的80% */
+    max-width: 400px; /* 设置容器最大宽度为400px */
+    padding: 20px;
     background-color: white;
     border-radius: 10px;
+}
+
+/* 提示文本样式 */
+.password_input p {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    margin-bottom: 10px;
 }
 
 /* 输入框样式 */
@@ -81,9 +92,9 @@
     color: white;
     border: none;
     border-radius: 5px;
-    cursor: pointer;
+    cursor:pointer
 }
 
 .password_input button:hover {
-    background-color: #3E8E41;
+    background-color:#3E8E41
 }

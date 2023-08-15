@@ -17,17 +17,23 @@
 
 <body>
   <div id="app"></div>
+  <!-- 密码进入 -->
   <script src="./src/js/passwd.js"></script>
   <script>
     window.$docsify = {
       el: '#app',
+      auto2top: true,//切换页面后是否自动跳转到页面顶部。
+      mergeNavbar: true,//小屏设备下合并导航栏到侧边栏。
       repo: 'https://github.com/zjxWeb/zjxWeb.github.io',
       loadSidebar: 'sidebar.md',
       coverpage: 'cover.md',
       onlyCover: true,
       autoHeader: true,
+      notFoundPage: true,//在找不到指定页面时加载_404.md
       subMaxLevel: 4,
       search: 'auto', // seach默认值
+      // 谷歌统计
+      ga: 'G-9ERSCJXVMS',
       //字数统计
       count:{
         countable:true,
@@ -117,6 +123,8 @@
   <script src="./src/js/docsify-copy-code.min.js"></script>
   <!-- 图片缩放 -->
   <script src="./src/js/zoom-image.min.js"></script>
+  <!-- 谷歌统计 -->
+  <script src="./src/js/ga.min.js"></script>
   <!-- 粒子背景效果1  -->
   <!-- <script type='text/javascript' color='66,133,244' zIndex='-1' opacity='0.5'
    count='99' src='//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js'></script> -->

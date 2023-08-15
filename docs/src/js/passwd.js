@@ -14,6 +14,8 @@ if (!x) {
     var overlayLayle  = document.createElement("div");
     overlayLayle .className = "overlay ";
     document.body.appendChild(overlayLayle);
+    var title  = document.createElement("p");
+    title.innerText="🐻欢迎来到小浣熊的世界🐻"
     var container = document.createElement("div");
     container.className = "password_input ";
     container.style.position = "absolute";
@@ -23,6 +25,7 @@ if (!x) {
 
     var input = document.createElement("input");
     input.type = "password";
+    input.setAttribute( "placeholder","请输入接头口令");
     input.style.display = "block";
     input.style.marginBottom = "10px";
 
@@ -46,5 +49,6 @@ if (!x) {
     }
     container.appendChild(input);
     container.appendChild(button);
+    container.appendChild(title);
     document.body.appendChild(container);
 }

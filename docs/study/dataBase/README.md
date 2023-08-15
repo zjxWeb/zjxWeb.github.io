@@ -121,6 +121,7 @@ LIMIT
 	分页参数
 ```
 
+
 > 基础查询
 
 查询多个字段：
@@ -1002,53 +1003,62 @@ show engines;
 
 #### **查看执行频次**
 
-查看当前数据库的 INSERT, UPDATE, DELETE, SELECT 访问频次：
-`SHOW GLOBAL STATUS LIKE 'Com_______';` 或者 `SHOW SESSION STATUS LIKE 'Com_______';`
-例：`show global status like 'Com_______'`
++ 查看当前数据库的 INSERT, UPDATE, DELETE, SELECT 访问频次：
++ `SHOW GLOBAL STATUS LIKE 'Com_______';` 或者 `SHOW SESSION STATUS LIKE 'Com_______';`
+  + 例：`show global status like 'Com_______'`
 
 #### **慢查询日志**
 
-慢查询日志记录了所有执行时间超过指定参数（long_query_time，单位：秒，默认10秒）的所有SQL语句的日志。
-MySQL的慢查询日志默认没有开启，需要在MySQL的配置文件（/etc/my.cnf）中配置如下信息：
-	# 开启慢查询日志开关
-	slow_query_log=1
-	# 设置慢查询日志的时间为2秒，SQL语句执行时间超过2秒，就会视为慢查询，记录慢查询日志
-	long_query_time=2
-更改后记得重启MySQL服务，日志文件位置：/var/lib/mysql/localhost-slow.log
++ 慢查询日志记录了所有执行时间超过指定参数（`long_query_time`，单位：秒，默认10秒）的所有`SQL`语句的日志。
++ `MySQL`的慢查询日志默认没有开启，需要在`MySQL`的配置文件`（/etc/my.cnf）`中配置如下信息：
+  +  开启慢查询日志开关
+    + `slow_query_log=1`
+  + 设置慢查询日志的时间为2秒，SQL语句执行时间超过2秒，就会视为慢查询，记录慢查询日志
+    + `long_query_time=2`
+  + 更改后记得重启`MySQL`服务，日志文件位置：`/var/lib/mysql/localhost-slow.log`
 
-查看慢查询日志开关状态：
-`show variables like 'slow_query_log';`
++ 查看慢查询日志开关状态：
+  + `show variables like 'slow_query_log';`
 
 #### **profile**
 
-show profile 能在做SQL优化时帮我们了解时间都耗费在哪里。通过 have_profiling 参数，能看到当前 MySQL 是否支持 profile 操作：
-`SELECT @@have_profiling;`
-profiling 默认关闭，可以通过set语句在session/global级别开启 profiling：
-`SET profiling = 1;`
-查看所有语句的耗时：
-`show profiles;`
-查看指定query_id的SQL语句各个阶段的耗时：
-`show profile for query query_id;`
-查看指定query_id的SQL语句CPU的使用情况
-`show profile cpu for query query_id;`
++ show profile 能在做SQL优化时帮我们了解时间都耗费在哪里。通过 have_profiling 参数，能看到当前 MySQL 是否支持 profile 操作：
+  + `SELECT @@have_profiling;`
++ profiling 默认关闭，可以通过set语句在session/global级别开启 profiling：
+  + `SET profiling = 1;`
++ 查看所有语句的耗时：
+  + `show profiles;`
++ 查看指定query_id的SQL语句各个阶段的耗时：
+  + `show profile for query query_id;`
++ 查看指定query_id的SQL语句CPU的使用情况
+  + `show profile cpu for query query_id;`
 
 #### **explain**
 
-EXPLAIN 或者 DESC 命令获取 MySQL 如何执行 SELECT 语句的信息，包括在 SELECT 语句执行过程中表如何连接和连接的顺序。
-语法：
-	# 直接在select语句之前加上关键字 explain / desc
-	EXPLAIN SELECT 字段列表 FROM 表名 HWERE 条件;
++ `EXPLAIN` 或者 `DESC` 命令获取 `MySQL` 如何执行 `SELECT` 语句的信息，包括在 `SELECT` 语句执行过程中表如何连接和连接的顺序。
+  语法：
+  	
+  +  直接在`select`语句之前加上关键字 `explain / desc`
+  + ​	`EXPLAIN SELECT` 字段列表 FROM 表名 `HWERE` 条件;
 
-EXPLAIN 各字段含义：
++ `EXPLAIN` 各字段含义：
 
-- id：select 查询的序列号，表示查询中执行 select 子句或者操作表的顺序（id相同，执行顺序从上到下；id不同，值越大越先执行）
-- select_type：表示 SELECT 的类型，常见取值有 SIMPLE（简单表，即不适用表连接或者子查询）、PRIMARY（主查询，即外层的查询）、UNION（UNION中的第二个或者后面的查询语句）、SUBQUERY（SELECT/WHERE之后包含了子查询）等
-- type：表示连接类型，性能由好到差的连接类型为 NULL、system、const、eq_ref、ref、range、index、all
-- possible_key：可能应用在这张表上的索引，一个或多个
-- Key：实际使用的索引，如果为 NULL，则没有使用索引
-- Key_len：表示索引中使用的字节数，该值为索引字段最大可能长度，并非实际使用长度，在不损失精确性的前提下，长度越短越好
-- rows：MySQL认为必须要执行的行数，在InnoDB引擎的表中，是一个估计值，可能并不总是准确的
-- filtered：表示返回结果的行数占需读取行数的百分比，filtered的值越大越好
+  - `id：select` 查询的序列号，表示查询中执行 `select` 子句或者操作表的顺序（id相同，执行顺序从上到下；id不同，值越大越先执行）
+
+  - `select_type`：表示 `SELECT` 的类型，常见取值有 SIMPLE（简单表，即不适用表连接或者子查询）、`PRIMARY`（主查询，即外层的查询）、`UNION`（`UNION`中的第二个或者后面的查询语句）、`SUBQUERY`（SELECT/WHERE之后包含了子查询）等
+
+  - `type`：表示连接类型，性能由好到差的连接类型为 `NULL、system、const、eq_ref、ref、range、index、all`
+
+  - `possible_key`：可能应用在这张表上的索引，一个或多个
+
+  - `Key`：实际使用的索引，如果为 `NULL`，则没有使用索引
+
+  - `Key_len`：表示索引中使用的字节数，该值为索引字段最大可能长度，并非实际使用长度，在不损失精确性的前提下，长度越短越好
+
+  - `rows：MySQL`认为必须要执行的行数，在`InnoDB`引擎的表中，是一个估计值，可能并不总是准确的
+
+  - `filtered`：表示返回结果的行数占需读取行数的百分比，`filtered`的值越大越好
+
 
 <!-- tabs:end -->
 
@@ -1189,31 +1199,31 @@ select * from user where name = 'Arm';
 -- 备注：id为主键，name字段创建的有索引
 ```
 
-答：第一条语句，因为第二条需要回表查询，相当于两个步骤。
+>  答：第一条语句，因为第二条需要回表查询，相当于两个步骤。
 
 2\. InnoDB 主键索引的 B+Tree 高度为多少？
 
-答：假设一行数据大小为1k，一页中可以存储16行这样的数据。InnoDB 的指针占用6个字节的空间，主键假设为bigint，占用字节数为8.
-可得公式：`n * 8 + (n + 1) * 6 = 16 * 1024`，其中 8 表示 bigint 占用的字节数，n 表示当前节点存储的key的数量，(n + 1) 表示指针数量（比key多一个）。算出n约为1170。
+> 答：假设一行数据大小为1k，一页中可以存储16行这样的数据。InnoDB 的指针占用6个字节的空间，主键假设为bigint，占用字节数为8.
+> 可得公式：`n * 8 + (n + 1) * 6 = 16 * 1024`，其中 8 表示 bigint 占用的字节数，n 表示当前节点存储的key的数量，(n + 1) 表示指针数量（比key多一个）。算出n约为1170。
 
-如果树的高度为2，那么他能存储的数据量大概为：`1171 * 16 = 18736`；
-如果树的高度为3，那么他能存储的数据量大概为：`1171 * 1171 * 16 = 21939856`。
++ 如果树的高度为2，那么他能存储的数据量大概为：`1171 * 16 = 18736`；
++ 如果树的高度为3，那么他能存储的数据量大概为：`1171 * 1171 * 16 = 21939856`。
 
-另外，如果有成千上万的数据，那么就要考虑分表，涉及运维篇知识。
+> 另外，如果有成千上万的数据，那么就要考虑分表，涉及运维篇知识。
 
 #### **语法**
 
-创建索引：
-`CREATE [ UNIQUE | FULLTEXT ] INDEX index_name ON table_name (index_col_name, ...);`
-如果不加 CREATE 后面不加索引类型参数，则创建的是常规索引
++ 创建索引：
+  + `CREATE [ UNIQUE | FULLTEXT ] INDEX index_name ON table_name (index_col_name, ...);`
+  + 如果不加 CREATE 后面不加索引类型参数，则创建的是常规索引
 
-查看索引：
-`SHOW INDEX FROM table_name;`
++ 查看索引：
+  + `SHOW INDEX FROM table_name;`
 
-删除索引：
-`DROP INDEX index_name ON table_name;`
++ 删除索引：
+  + `DROP INDEX index_name ON table_name;`
 
-案例：
++ 案例：
 
 ```mysql
 -- name字段为姓名字段，该字段的值可能会重复，为该字段创建索引
@@ -1233,10 +1243,10 @@ drop index idx_user_email on tb_user;
 
 > 最左前缀法则
 
-如果索引关联了多列（联合索引），要遵守最左前缀法则，最左前缀法则指的是查询从索引的最左列开始，并且不跳过索引中的列。
-如果跳跃某一列，索引将部分失效（后面的字段索引失效）。
++ 如果索引关联了多列（联合索引），要遵守最左前缀法则，最左前缀法则指的是查询从索引的最左列开始，并且不跳过索引中的列。
+  如果跳跃某一列，索引将部分失效（后面的字段索引失效）。
 
-联合索引中，出现范围查询（<, >），范围查询右侧的列索引失效。可以用>=或者<=来规避索引失效问题。
++ 联合索引中，出现范围查询（<, >），范围查询右侧的列索引失效。可以用>=或者<=来规避索引失效问题。
 
 > 索引失效情况
 
@@ -1248,57 +1258,57 @@ drop index idx_user_email on tb_user;
 
 > SQL 提示
 
-是优化数据库的一个重要手段，简单来说，就是在SQL语句中加入一些人为的提示来达到优化操作的目的。
++ 是优化数据库的一个重要手段，简单来说，就是在SQL语句中加入一些人为的提示来达到优化操作的目的。
 
-例如，使用索引：
-`explain select * from tb_user use index(idx_user_pro) where profession="软件工程";`
-不使用哪个索引：
-`explain select * from tb_user ignore index(idx_user_pro) where profession="软件工程";`
-必须使用哪个索引：
-`explain select * from tb_user force index(idx_user_pro) where profession="软件工程";`
++ 例如，使用索引：
+  + `explain select * from tb_user use index(idx_user_pro) where profession="软件工程";`
++ 不使用哪个索引：
+  + `explain select * from tb_user ignore index(idx_user_pro) where profession="软件工程";`
++ 必须使用哪个索引：
+  + `explain select * from tb_user force index(idx_user_pro) where profession="软件工程";`
 
-use 是建议，实际使用哪个索引 MySQL 还会自己权衡运行速度去更改，force就是无论如何都强制使用该索引。
+- use 是建议，实际使用哪个索引 MySQL 还会自己权衡运行速度去更改，force就是无论如何都强制使用该索引。
 
 > 覆盖索引&回表查询
 
-尽量使用覆盖索引（查询使用了索引，并且需要返回的列，在该索引中已经全部能找到），减少 select *。
++ 尽量使用覆盖索引（查询使用了索引，并且需要返回的列，在该索引中已经全部能找到），减少 `select *`。
 
-explain 中 extra 字段含义：
-`using index condition`：查找使用了索引，但是需要回表查询数据
-`using where; using index;`：查找使用了索引，但是需要的数据都在索引列中能找到，所以不需要回表查询
++ explain 中 extra 字段含义：
+  + `using index condition`：查找使用了索引，但是需要回表查询数据
+  + `using where; using index;`：查找使用了索引，但是需要的数据都在索引列中能找到，所以不需要回表查询
 
-如果在聚集索引中直接能找到对应的行，则直接返回行数据，只需要一次查询，哪怕是select \*；如果在辅助索引中找聚集索引，如`select id, name from xxx where name='xxx';`，也只需要通过辅助索引(name)查找到对应的id，返回name和name索引对应的id即可，只需要一次查询；如果是通过辅助索引查找其他字段，则需要回表查询，如`select id, name, gender from xxx where name='xxx';`
++ 如果在聚集索引中直接能找到对应的行，则直接返回行数据，只需要一次查询，哪怕是select \*；如果在辅助索引中找聚集索引，如`select id, name from xxx where name='xxx';`，也只需要通过辅助索引(name)查找到对应的id，返回name和name索引对应的id即可，只需要一次查询；如果是通过辅助索引查找其他字段，则需要回表查询，如`select id, name, gender from xxx where name='xxx';`
 
-所以尽量不要用`select *`，容易出现回表查询，降低效率，除非有联合索引包含了所有字段
++ 所以尽量不要用`select *`，容易出现回表查询，降低效率，除非有联合索引包含了所有字段
 
-面试题：一张表，有四个字段（id, username, password, status），由于数据量大，需要对以下SQL语句进行优化，该如何进行才是最优方案：
-`select id, username, password from tb_user where username='itcast';`
-
-解：给username和password字段建立联合索引，则不需要回表查询，直接覆盖索引
++ 面试题：一张表，有四个字段（id, username, password, status），由于数据量大，需要对以下SQL语句进行优化，该如何进行才是最优方案：
+  `select id, username, password from tb_user where username='itcast';`
+  + 解：给username和password字段建立联合索引，则不需要回表查询，直接覆盖索引
 
 > 前缀索引
 
-当字段类型为字符串（varchar, text等）时，有时候需要索引很长的字符串，这会让索引变得很大，查询时，浪费大量的磁盘IO，影响查询效率，此时可以只降字符串的一部分前缀，建立索引，这样可以大大节约索引空间，从而提高索引效率。
++ 当字段类型为字符串（varchar, text等）时，有时候需要索引很长的字符串，这会让索引变得很大，查询时，浪费大量的磁盘IO，影响查询效率，此时可以只降字符串的一部分前缀，建立索引，这样可以大大节约索引空间，从而提高索引效率。
 
-语法：`create index idx_xxxx on table_name(columnn(n));`
-前缀长度：可以根据索引的选择性来决定，而选择性是指不重复的索引值（基数）和数据表的记录总数的比值，索引选择性越高则查询效率越高，唯一索引的选择性是1，这是最好的索引选择性，性能也是最好的。
-求选择性公式：
++ 语法：`create index idx_xxxx on table_name(columnn(n));`
++ 前缀长度：可以根据索引的选择性来决定，而选择性是指不重复的索引值（基数）和数据表的记录总数的比值，索引选择性越高则查询效率越高，唯一索引的选择性是1，这是最好的索引选择性，性能也是最好的。
++ 求选择性公式：
+
 ```mysql
 select count(distinct email) / count(*) from tb_user;
 select count(distinct substring(email, 1, 5)) / count(*) from tb_user;
 ```
 
-show index 里面的sub_part可以看到接取的长度
++ show index 里面的sub_part可以看到接取的长度
 
 > 单列索引&联合索引
 
-单列索引：即一个索引只包含单个列
-联合索引：即一个索引包含了多个列
-在业务场景中，如果存在多个查询条件，考虑针对于查询字段建立索引时，建议建立联合索引，而非单列索引。
++ 单列索引：即一个索引只包含单个列
++ 联合索引：即一个索引包含了多个列
++ 在业务场景中，如果存在多个查询条件，考虑针对于查询字段建立索引时，建议建立联合索引，而非单列索引。
 
-单列索引情况：
-`explain select id, phone, name from tb_user where phone = '17799990010' and name = '韩信';`
-这句只会用到phone索引字段
++ 单列索引情况：
+  + `explain select id, phone, name from tb_user where phone = '17799990010' and name = '韩信';`
+  + 这句只会用到phone索引字段
 
 > 注意事项
 
@@ -1328,8 +1338,9 @@ show index 里面的sub_part可以看到接取的长度
 2. 手动提交事务
 3. 主键顺序插入
 
-大批量插入：
-如果一次性需要插入大批量数据，使用insert语句插入性能较低，此时可以使用MySQL数据库提供的load指令插入。
++ 大批量插入：
+
+> 如果一次性需要插入大批量数据 ，使用insert语句插入性能较低，此时可以使用MySQL数据库提供的load指令插入。
 
 ```mysql
 # 客户端连接服务端时，加上参数 --local-infile（这一行在bash/cmd界面输入）
@@ -1343,10 +1354,10 @@ load data local infile '/root/sql1.log' into table 'tb_user' fields terminated b
 
 ####   **主键优化**
 
-数据组织方式：在InnoDB存储引擎中，表数据都是根据主键顺序组织存放的，这种存储方式的表称为索引组织表（Index organized table, IOT）
++ 数据组织方式：在InnoDB存储引擎中，表数据都是根据主键顺序组织存放的，这种存储方式的表称为索引组织表（Index organized table, IOT）
 
-页分裂：页可以为空，也可以填充一般，也可以填充100%，每个页包含了2-N行数据（如果一行数据过大，会行溢出），根据主键排列。
-页合并：当删除一行记录时，实际上记录并没有被物理删除，只是记录被标记（flaged）为删除并且它的空间变得允许被其他记录声明使用。当页中删除的记录到达 MERGE_THRESHOLD（默认为页的50%），InnoDB会开始寻找最靠近的页（前后）看看是否可以将这两个页合并以优化空间使用。
++ 页分裂：页可以为空，也可以填充一般，也可以填充100%，每个页包含了2-N行数据（如果一行数据过大，会行溢出），根据主键排列。
++ 页合并：当删除一行记录时，实际上记录并没有被物理删除，只是记录被标记（flaged）为删除并且它的空间变得允许被其他记录声明使用。当页中删除的记录到达 MERGE_THRESHOLD（默认为页的50%），InnoDB会开始寻找最靠近的页（前后）看看是否可以将这两个页合并以优化空间使用。
 
 MERGE_THRESHOLD：合并页的阈值，可以自己设置，在创建表或创建索引时指定
 
@@ -1364,7 +1375,7 @@ MERGE_THRESHOLD：合并页的阈值，可以自己设置，在创建表或创�
 1. Using filesort：通过表的索引或全表扫描，读取满足条件的数据行，然后在排序缓冲区 sort buffer 中完成排序操作，所有不是通过索引直接返回排序结果的排序都叫 FileSort 排序
 2. Using index：通过有序索引顺序扫描直接返回有序数据，这种情况即为 using index，不需要额外排序，操作效率高
 
-如果order by字段全部使用升序排序或者降序排序，则都会走索引，但是如果一个字段升序排序，另一个字段降序排序，则不会走索引，explain的extra信息显示的是`Using index, Using filesort`，如果要优化掉Using filesort，则需要另外再创建一个索引，如：`create index idx_user_age_phone_ad on tb_user(age asc, phone desc);`，此时使用`select id, age, phone from tb_user order by age asc, phone desc;`会全部走索引
++ 如果order by字段全部使用升序排序或者降序排序，则都会走索引，但是如果一个字段升序排序，另一个字段降序排序，则不会走索引，explain的extra信息显示的是`Using index, Using filesort`，如果要优化掉Using filesort，则需要另外再创建一个索引，如：`create index idx_user_age_phone_ad on tb_user(age asc, phone desc);`，此时使用`select id, age, phone from tb_user order by age asc, phone desc;`会全部走索引
 
 总结：
 
@@ -1382,8 +1393,8 @@ MERGE_THRESHOLD：合并页的阈值，可以自己设置，在创建表或创�
 
 #### **limit优化**
 
-常见的问题如`limit 2000000, 10`，此时需要 MySQL 排序前2000000条记录，但仅仅返回2000000 - 2000010的记录，其他记录丢弃，查询排序的代价非常大。
-优化方案：一般分页查询时，通过创建覆盖索引能够比较好地提高性能，可以通过覆盖索引加子查询形式进行优化
++ 常见的问题如`limit 2000000, 10`，此时需要 MySQL 排序前2000000条记录，但仅仅返回2000000 - 2000010的记录，其他记录丢弃，查询排序的代价非常大。
++ 优化方案：一般分页查询时，通过创建覆盖索引能够比较好地提高性能，可以通过覆盖索引加子查询形式进行优化
 
 例如：
 
@@ -1400,9 +1411,9 @@ select * from tb_sku as s, (select id from tb_sku order by id limit 9000000, 10)
 
 #### **count优化**
 
-MyISAM 引擎把一个表的总行数存在了磁盘上，因此执行 count(\*) 的时候会直接返回这个数，效率很高（前提是不适用where）；
-InnoDB 在执行 count(\*) 时，需要把数据一行一行地从引擎里面读出来，然后累计计数。
-优化方案：自己计数，如创建key-value表存储在内存或硬盘，或者是用redis
+> `MyISAM` 引擎把一个表的总行数存在了磁盘上，因此执行 count(\*) 的时候会直接返回这个数，效率很高（前提是不适用where）；
+> `InnoDB` 在执行 count(\*) 时，需要把数据一行一行地从引擎里面读出来，然后累计计数。
+> 优化方案：自己计数，如创建key-value表存储在内存或硬盘，或者是用redis
 
 count的几种用法：
 
@@ -1417,15 +1428,15 @@ count的几种用法：
 - count(1)：InnoDB 引擎遍历整张表，但不取值。服务层对于返回的每一层，放一个数字 1 进去，直接按行进行累加
 - count(\*)：InnoDB 引擎并不会把全部字段取出来，而是专门做了优化，不取值，服务层直接按行进行累加
 
-按效率排序：count(字段) < count(主键) < count(1) < count(\*)，所以尽量使用 count(\*)
+> 按效率排序：count(字段) < count(主键) < count(1) < count(\*)，所以尽量使用 count(\*)
 
 #### **update优化（避免行锁升级为表锁）**
 
-InnoDB 的行锁是针对索引加的锁，不是针对记录加的锁，并且该索引不能失效，否则会从行锁升级为表锁。
++ InnoDB 的行锁是针对索引加的锁，不是针对记录加的锁，并且该索引不能失效，否则会从行锁升级为表锁。
 
-如以下两条语句：
-`update student set no = '123' where id = 1;`，这句由于id有主键索引，所以只会锁这一行；
-`update student set no = '123' where name = 'test';`，这句由于name没有索引，所以会把整张表都锁住进行数据更新，解决方法是给name字段添加索引
++ 如以下两条语句：
+  + `update student set no = '123' where id = 1;`，这句由于id有主键索引，所以只会锁这一行；
+  + `update student set no = '123' where name = 'test';`，这句由于name没有索引，所以会把整张表都锁住进行数据更新，解决方法是给name字段添加索引
 
 <!-- tabs:end -->
 
