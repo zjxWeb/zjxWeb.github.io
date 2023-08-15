@@ -290,7 +290,7 @@ SELECT * FROM employee LIMIT 10, 10;
 
 FROM -> WHERE -> GROUP BY -> SELECT -> ORDER BY -> LIMIT
 
-#### **DCL**（数据控制语言）（Data Control Language）
+#### **DCL（数据控制语言）（Data Control Language）**
 
 > 管理用户
 
@@ -1094,15 +1094,20 @@ EXPLAIN 各字段含义：
 
 二叉树的缺点可以用红黑树来解决：
 ![红黑树](./src/5.png)
-红黑树也存在大数据量情况下，层级较深，检索速度慢的问题。
 
-为了解决上述问题，可以使用 B-Tree 结构。
-B-Tree (多路平衡查找树) 以一棵最大度数（max-degree，指一个节点的子节点个数）为5（5阶）的 b-tree 为例（每个节点最多存储4个key，5个指针）
++ 红黑树也存在大数据量情况下，层级较深，检索速度慢的问题。
+
++ 为了解决上述问题，可以使用 B-Tree 结构。
+
+  > B-Tree (多路平衡查找树) 以一棵最大度数（max-degree，指一个节点的子节点个数）为5（5阶）的 b-tree 为例（每个节点最多存储4个key，5个指针）
 
 ![B-Tree结构](./src/8.png)
 
-> B-Tree 的数据插入过程动画参照：https://www.bilibili.com/video/BV1Kr4y1i7ru?p=68
-演示地址：https://www.cs.usfca.edu/~galles/visualization/BTree.html
+> + B-Tree 的数据插入过程动画参照：https://www.bilibili.com/video/BV1Kr4y1i7ru?p=68
+>
+>   
+>
+> + 演示地址：https://www.cs.usfca.edu/~galles/visualization/BTree.html
 
 >  B+Tree
 
