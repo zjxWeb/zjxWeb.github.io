@@ -13,39 +13,11 @@
   <!-- <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify/themes/pure.css"> -->
   <!-- <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify/themes/dolphin.css"> -->
   <link rel="stylesheet" href="./src/css/index.css">
-  <script language="JavaScript">
-    function setCookie(cname, cvalue, exdays) {
-    var d = new Date();
-    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-    var expires = "expires=" + d.toUTCString();
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-  }
-
-    while(true) {
-      var password = "";
-      var x = document.cookie;
-      if(!x){
-        password = prompt('请输入密码 (本网站需输入密码才可进入):', '');
-      }
-      if(x=="april conns"||password == 'pbdxhx' ) {
-        if(document.cookie!="apri conns")
-        {
-          document.cookie="april conns";
-          setCookie(" ", "april conns", 7);
-        }
-        break;
-
-      } else {
-        alert("密码不正确,无法进入本站!!");
-      }
-      
-      
-    }
-  </script>
 </head>
 
 <body>
   <div id="app"></div>
+  <script src="./src/js/passwd.js"></script>
   <script>
     window.$docsify = {
       el: '#app',
