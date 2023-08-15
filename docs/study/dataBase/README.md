@@ -872,9 +872,9 @@ commit;
 >
 >   ```sql
 >   SELECT @@TRANSACTION_ISOLATION;
->               
+>                 
 >   set session transaction isolation level read uncommitted ;
->               
+>                 
 >   set session transaction isolation level repeatable read ;
 >   ```
 
@@ -1043,7 +1043,7 @@ show engines;
 
 + `EXPLAIN` 各字段含义：
 
-  - `id：select` 查询的序列号，表示查询中执行 `select` 子句或者操作表的顺序（id相同，执行顺序从上到下；id不同，值越大越先执行）
+  - `id：select` 查询的序列号，表示查询中执行 `select` 子句或者操作表的顺序（**id相同，执行顺序从上到下；id不同，值越大越先执行**）
 
   - `select_type`：表示 `SELECT` 的类型，常见取值有 SIMPLE（简单表，即不适用表连接或者子查询）、`PRIMARY`（主查询，即外层的查询）、`UNION`（`UNION`中的第二个或者后面的查询语句）、`SUBQUERY`（SELECT/WHERE之后包含了子查询）等
 
@@ -1314,7 +1314,7 @@ select count(distinct substring(email, 1, 5)) / count(*) from tb_user;
 
 - 多条件联合查询时，MySQL优化器会评估哪个字段的索引效率更高，会选择该索引完成本次查询
 
-> 设计原则
+#### **设计原则**
 
 1. 针对于数据量较大，且查询比较频繁的表建立索引
 2. 针对于常作为查询条件（where）、排序（order by）、分组（group by）操作的字段建立索引
