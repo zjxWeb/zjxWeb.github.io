@@ -1244,17 +1244,40 @@ drop index idx_user_email on tb_user;
 > 最左前缀法则
 
 + 如果索引关联了多列（联合索引），要遵守最左前缀法则，最左前缀法则指的是查询从索引的最左列开始，并且不跳过索引中的列。
-  如果跳跃某一列，索引将部分失效（后面的字段索引失效）。
+  
++ 如果跳跃某一列，**索引将部分失效（后面的字段索引失效）。**
+  
++ 联合索引中，出现范围查询（<, >），**范围查询右侧的列索引失效**。
 
-+ 联合索引中，出现范围查询（<, >），范围查询右侧的列索引失效。可以用>=或者<=来规避索引失效问题。
+  + 可以用>=或者<=来规避索引失效问题。
+
+  
+
 
 > 索引失效情况
 
-1. 在索引列上进行运算操作，索引将失效。如：`explain select * from tb_user where substring(phone, 10, 2) = '15';`
-2. 字符串类型字段使用时，不加引号，索引将失效。如：`explain select * from tb_user where phone = 17799990015;`，此处phone的值没有加引号
-3. 模糊查询中，如果仅仅是尾部模糊匹配，索引不会是失效；如果是头部模糊匹配，索引失效。如：`explain select * from tb_user where profession like '%工程';`，前后都有 % 也会失效。
-4. 用 or 分割开的条件，如果 or 其中一个条件的列没有索引，那么涉及的索引都不会被用到。
-5. 如果 MySQL 评估使用索引比全表更慢，则不使用索引。
+1. **在索引列上进行运算操作，索引将失效。如：**
+
+   + `explain select * from tb_user where substring(phone, 10, 2) = '15'\G;`
+     + `\G`行显示格式好看一点。
+
+2. **字符串类型字段使用时，不加引号，索引将失效。如：**
+
+   + `explain select * from tb_user where phone = 17799990015;`，此处phone的值没有加引号
+
+3. **模糊查询中，如果仅仅是尾部模糊匹配，索引不会是失效；如果是头部模糊匹配，索引失效。如：**
+
+   + `explain select * from tb_user where profession like '%工程';`，前后都有 % 也会失效。
+
+     
+
+4. **用 or 分割开的条件，如果 or 其中一个条件的列没有索引，那么涉及的索引都不会被用到。**
+
+   
+
+5. **如果 `MySQL` 评估使用索引比全表更慢，则不使用索引。**
+
+
 
 > SQL 提示
 
@@ -1269,13 +1292,15 @@ drop index idx_user_email on tb_user;
 
 - use 是建议，实际使用哪个索引 MySQL 还会自己权衡运行速度去更改，force就是无论如何都强制使用该索引。
 
+
+
 > 覆盖索引&回表查询
 
 + 尽量使用覆盖索引（查询使用了索引，并且需要返回的列，在该索引中已经全部能找到），减少 `select *`。
 
 + explain 中 extra 字段含义：
-  + `using index condition`：查找使用了索引，但是需要回表查询数据
-  + `using where; using index;`：查找使用了索引，但是需要的数据都在索引列中能找到，所以不需要回表查询
+  + `using index condition`：查找使用了索引，但是需要回表查询数据（**性能低**）
+  + `using where; using index;`：查找使用了索引，但是需要的数据都在索引列中能找到，所以不需要回表查询（**性能高**）
 
 + 如果在聚集索引中直接能找到对应的行，则直接返回行数据，只需要一次查询，哪怕是select \*；如果在辅助索引中找聚集索引，如`select id, name from xxx where name='xxx';`，也只需要通过辅助索引(name)查找到对应的id，返回name和name索引对应的id即可，只需要一次查询；如果是通过辅助索引查找其他字段，则需要回表查询，如`select id, name, gender from xxx where name='xxx';`
 
@@ -1284,14 +1309,18 @@ drop index idx_user_email on tb_user;
 + 面试题：一张表，有四个字段（id, username, password, status），由于数据量大，需要对以下SQL语句进行优化，该如何进行才是最优方案：
   `select id, username, password from tb_user where username='itcast';`
   + 解：给username和password字段建立联合索引，则不需要回表查询，直接覆盖索引
+  
+  
 
 > 前缀索引
 
 + 当字段类型为字符串（varchar, text等）时，有时候需要索引很长的字符串，这会让索引变得很大，查询时，浪费大量的磁盘IO，影响查询效率，此时可以只降字符串的一部分前缀，建立索引，这样可以大大节约索引空间，从而提高索引效率。
 
 + 语法：`create index idx_xxxx on table_name(columnn(n));`
+  + `n`的值不同则截取字符不同——截取前n个字符作为索引
+
 + 前缀长度：可以根据索引的选择性来决定，而选择性是指不重复的索引值（基数）和数据表的记录总数的比值，索引选择性越高则查询效率越高，唯一索引的选择性是1，这是最好的索引选择性，性能也是最好的。
-+ 求选择性公式：
++ **求选择性公式：**
 
 ```mysql
 select count(distinct email) / count(*) from tb_user;
@@ -1299,6 +1328,8 @@ select count(distinct substring(email, 1, 5)) / count(*) from tb_user;
 ```
 
 + show index 里面的sub_part可以看到接取的长度
+
+
 
 > 单列索引&联合索引
 
@@ -1316,13 +1347,13 @@ select count(distinct substring(email, 1, 5)) / count(*) from tb_user;
 
 #### **设计原则**
 
-1. 针对于数据量较大，且查询比较频繁的表建立索引
-2. 针对于常作为查询条件（where）、排序（order by）、分组（group by）操作的字段建立索引
-3. 尽量选择区分度高的列作为索引，尽量建立唯一索引，区分度越高，使用索引的效率越高
-4. 如果是字符串类型的字段，字段长度较长，可以针对于字段的特点，建立前缀索引
-5. 尽量使用联合索引，减少单列索引，查询时，联合索引很多时候可以覆盖索引，节省存储空间，避免回表，提高查询效率
+1. 针对于**数据量较大（超百万），且查询比较频繁的表建立索引**
+2. 针对于常作为**查询条件（where）、排序（order by）、分组（group by）操作的字段建立索引**
+3. 尽量选择**区分度高的列作为索引**，**尽量建立唯一索引**，**区分度越高，使用索引的效率越高**
+4. 如果是**字符串类型的字段，字段长度较长，可以针对于字段的特点，建立前缀索引**
+5. 尽量使**用联合索引，减少单列索引**，查询时，联合索引很多时候可以覆盖索引，节省存储空间，避免回表，提高查询效率
 6. 要控制索引的数量，索引并不是多多益善，索引越多，维护索引结构的代价就越大，会影响增删改的效率
-7. 如果索引列不能存储NULL值，请在创建表时使用NOT NULL约束它。当优化器知道每列是否包含NULL值时，它可以更好地确定哪个索引最有效地用于查询
+7. 如果**索引列不能存储NULL值，请在创建表时使用NOT NULL约束它。**当优化器知道每列是否包含NULL值时，它可以更好地确定哪个索引最有效地用于查询
 
 <!-- tabs:end -->
 
@@ -1332,7 +1363,7 @@ select count(distinct substring(email, 1, 5)) / count(*) from tb_user;
 
 #### **插入数据**
 
-普通插入：
++ 普通插入：
 
 1. 采用批量插入（一次插入的数据不建议超过1000条）
 2. 手动提交事务
@@ -1354,10 +1385,10 @@ load data local infile '/root/sql1.log' into table 'tb_user' fields terminated b
 
 ####   **主键优化**
 
-+ 数据组织方式：在InnoDB存储引擎中，表数据都是根据主键顺序组织存放的，这种存储方式的表称为索引组织表（Index organized table, IOT）
++ 数据组织方式：在`InnoDB`存储引擎中，表数据都是根据主键顺序组织存放的，这种存储方式的表称为索引组织表（Index organized table, IOT）
 
 + 页分裂：页可以为空，也可以填充一般，也可以填充100%，每个页包含了2-N行数据（如果一行数据过大，会行溢出），根据主键排列。
-+ 页合并：当删除一行记录时，实际上记录并没有被物理删除，只是记录被标记（flaged）为删除并且它的空间变得允许被其他记录声明使用。当页中删除的记录到达 MERGE_THRESHOLD（默认为页的50%），InnoDB会开始寻找最靠近的页（前后）看看是否可以将这两个页合并以优化空间使用。
++ 页合并：当删除一行记录时，实际上记录并没有被物理删除，只是记录被标记（`flaged`）为删除并且它的空间变得允许被其他记录声明使用。当页中删除的记录到达 MERGE_THRESHOLD（默认为页的50%），`InnoDB`会开始寻找最靠近的页（前后）看看是否可以将这两个页合并以优化空间使用。
 
 MERGE_THRESHOLD：合并页的阈值，可以自己设置，在创建表或创建索引时指定
 
@@ -1372,17 +1403,17 @@ MERGE_THRESHOLD：合并页的阈值，可以自己设置，在创建表或创�
 
 #### **order by优化**
 
-1. Using filesort：通过表的索引或全表扫描，读取满足条件的数据行，然后在排序缓冲区 sort buffer 中完成排序操作，所有不是通过索引直接返回排序结果的排序都叫 FileSort 排序
-2. Using index：通过有序索引顺序扫描直接返回有序数据，这种情况即为 using index，不需要额外排序，操作效率高
+1. `Using filesort`：通过表的索引或全表扫描，读取满足条件的数据行，然后在排序缓冲区 `sort buffer` 中完成排序操作，所有不是通过索引直接返回排序结果的排序都叫 `FileSort` 排序
+2. `Using index`：通过有序索引顺序扫描直接返回有序数据，这种情况即为 `using index`，不需要额外排序，操作效率高
 
-+ 如果order by字段全部使用升序排序或者降序排序，则都会走索引，但是如果一个字段升序排序，另一个字段降序排序，则不会走索引，explain的extra信息显示的是`Using index, Using filesort`，如果要优化掉Using filesort，则需要另外再创建一个索引，如：`create index idx_user_age_phone_ad on tb_user(age asc, phone desc);`，此时使用`select id, age, phone from tb_user order by age asc, phone desc;`会全部走索引
++ 如果`order by`字段全部使用升序排序或者降序排序，则都会走索引，但是如果一个字段升序排序，另一个字段降序排序，则不会走索引，explain的extra信息显示的是`Using index, Using filesort`，如果要优化掉`Using filesort`，则需要另外再创建一个索引，如：`create index idx_user_age_phone_ad on tb_user(age asc, phone desc);`，此时使用`select id, age, phone from tb_user order by age asc, phone desc;`会全部走索引
 
 总结：
 
 - 根据排序字段建立合适的索引，多字段排序时，也遵循最左前缀法则
 - 尽量使用覆盖索引
-- 多字段排序，一个升序一个降序，此时需要注意联合索引在创建时的规则（ASC/DESC）
-- 如果不可避免出现filesort，大数据量排序时，可以适当增大排序缓冲区大小 sort_buffer_size（默认256k）
+- 多字段排序，一个升序一个降序，此时需要注意联合索引在创建时的规则`（ASC/DESC）`
+- 如果不可避免出现`filesort`，大数据量排序时，可以适当增大排序缓冲区大小 sort_buffer_size（默认`256k`）
 
 #### **group  by优化**
 
@@ -1418,21 +1449,21 @@ select * from tb_sku as s, (select id from tb_sku order by id limit 9000000, 10)
 count的几种用法：
 
 - 如果count函数的参数（count里面写的那个字段）不是NULL（字段值不为NULL），累计值就加一，最后返回累计值
-- 用法：count(\*)、count(主键)、count(字段)、count(1)
+- 用法：`count(\*)、count(主键)、count(字段)、count(1)`
 - count(主键)跟count(\*)一样，因为主键不能为空；count(字段)只计算字段值不为NULL的行；count(1)引擎会为每行添加一个1，然后就count这个1，返回结果也跟count(\*)一样；count(null)返回0
 
 各种用法的性能：
 
-- count(主键)：InnoDB引擎会遍历整张表，把每行的主键id值都取出来，返回给服务层，服务层拿到主键后，直接按行进行累加（主键不可能为空）
-- count(字段)：没有not null约束的话，InnoDB引擎会遍历整张表把每一行的字段值都取出来，返回给服务层，服务层判断是否为null，不为null，计数累加；有not null约束的话，InnoDB引擎会遍历整张表把每一行的字段值都取出来，返回给服务层，直接按行进行累加
-- count(1)：InnoDB 引擎遍历整张表，但不取值。服务层对于返回的每一层，放一个数字 1 进去，直接按行进行累加
-- count(\*)：InnoDB 引擎并不会把全部字段取出来，而是专门做了优化，不取值，服务层直接按行进行累加
+- `count(主键)：``InnoDB`引擎会遍历整张表，把每行的主键id值都取出来，返回给服务层，服务层拿到主键后，直接按行进行累加（主键不可能为空）
+- `count(字段)：`没有not null约束的话，`InnoDB`引擎会遍历整张表把每一行的字段值都取出来，返回给服务层，服务层判断是否为null，不为null，计数累加；有not null约束的话，`InnoDB`引擎会遍历整张表把每一行的字段值都取出来，返回给服务层，直接按行进行累加
+- `count(1)：``InnoDB` 引擎遍历整张表，但不取值。服务层对于返回的每一层，放一个数字 1 进去，直接按行进行累加
+- `count(\*)：``InnoDB` 引擎并不会把全部字段取出来，而是专门做了优化，不取值，服务层直接按行进行累加
 
 > 按效率排序：count(字段) < count(主键) < count(1) < count(\*)，所以尽量使用 count(\*)
 
 #### **update优化（避免行锁升级为表锁）**
 
-+ InnoDB 的行锁是针对索引加的锁，不是针对记录加的锁，并且该索引不能失效，否则会从行锁升级为表锁。
++ `InnoDB` 的行锁是针对索引加的锁，不是针对记录加的锁，并且该索引不能失效，否则会从行锁升级为表锁。
 
 + 如以下两条语句：
   + `update student set no = '123' where id = 1;`，这句由于id有主键索引，所以只会锁这一行；
