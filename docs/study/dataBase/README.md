@@ -544,7 +544,7 @@ alter table emp add constraint fk_emp_dept_id foreign key(dept_id) references de
 | RESTRICT  | 当在父表中删除/更新对应记录时，首先检查该记录是否有对应外键，如果有则不允许删除/更新（与NO ACTION一致）  |
 | CASCADE  | 当在父表中删除/更新对应记录时，首先检查该记录是否有对应外键，如果有则也删除/更新外键在子表中的记录  |
 | SET NULL  | 当在父表中删除/更新对应记录时，首先检查该记录是否有对应外键，如果有则设置子表中该外键值为null（要求该外键允许为null）  |
-| SET DEFAULT  | 父表有变更时，子表将外键设为一个默认值（Innodb不支持）  |
+| SET DEFAULT  | 父表有变更时，子表将外键设为一个默认值（`Innodb`不支持） |
 
 更改删除/更新行为：
 `ALTER TABLE 表名 ADD CONSTRAINT 外键名称 FOREIGN KEY (外键字段) REFERENCES 主表名(主表字段名) ON UPDATE 行为 ON DELETE 行为;`
@@ -872,9 +872,9 @@ commit;
 >
 >   ```sql
 >   SELECT @@TRANSACTION_ISOLATION;
->                 
+>                     
 >   set session transaction isolation level read uncommitted ;
->                 
+>                     
 >   set session transaction isolation level repeatable read ;
 >   ```
 
@@ -1387,7 +1387,7 @@ load data local infile '/root/sql1.log' into table 'tb_user' fields terminated b
 
 + 数据组织方式：在`InnoDB`存储引擎中，表数据都是根据主键顺序组织存放的，这种存储方式的表称为索引组织表（Index organized table, IOT）
 
-+ 页分裂：页可以为空，也可以填充一般，也可以填充100%，每个页包含了2-N行数据（如果一行数据过大，会行溢出），根据主键排列。
++ 页分裂(主键分裂)：页可以为空，也可以填充一般，也可以填充100%，每个页包含了2-N行数据（如果一行数据过大，会行溢出），根据主键排列。
 + 页合并：当删除一行记录时，实际上记录并没有被物理删除，只是记录被标记（`flaged`）为删除并且它的空间变得允许被其他记录声明使用。当页中删除的记录到达 MERGE_THRESHOLD（默认为页的50%），`InnoDB`会开始寻找最靠近的页（前后）看看是否可以将这两个页合并以优化空间使用。
 
 MERGE_THRESHOLD：合并页的阈值，可以自己设置，在创建表或创建索引时指定
@@ -1397,8 +1397,8 @@ MERGE_THRESHOLD：合并页的阈值，可以自己设置，在创建表或创�
 主键设计原则：
 
 - 满足业务需求的情况下，尽量降低主键的长度
-- 插入数据时，尽量选择顺序插入，选择使用 AUTO_INCREMENT 自增主键
-- 尽量不要使用 UUID 做主键或者是其他的自然主键，如身份证号
+- 插入数据时，尽量选择顺序插入，选择使用 `AUTO_INCREMENT 自增主键`
+- 尽量不要使用 `UUID` 做主键或者是其他的自然主键，如身份证号
 - 业务操作时，避免对主键的修改
 
 #### **order by优化**
@@ -1418,14 +1418,14 @@ MERGE_THRESHOLD：合并页的阈值，可以自己设置，在创建表或创�
 #### **group  by优化**
 
 - 在分组操作时，可以通过索引来提高效率
-- 分组操作时，索引的使用也是满足最左前缀法则的
+- 分组操作时，索引的使用`也是满足最左前缀法则的`
 
 如索引为`idx_user_pro_age_stat`，则句式可以是`select ... where profession order by age`，这样也符合最左前缀法则
 
 #### **limit优化**
 
 + 常见的问题如`limit 2000000, 10`，此时需要 MySQL 排序前2000000条记录，但仅仅返回2000000 - 2000010的记录，其他记录丢弃，查询排序的代价非常大。
-+ 优化方案：一般分页查询时，通过创建覆盖索引能够比较好地提高性能，可以通过覆盖索引加子查询形式进行优化
++ 优化方案：一般分页查询时，通过创建覆盖索引能够比较好地提高性能，可以通过`覆盖索引加子查询形式进行优化`
 
 例如：
 
@@ -1443,7 +1443,9 @@ select * from tb_sku as s, (select id from tb_sku order by id limit 9000000, 10)
 #### **count优化**
 
 > `MyISAM` 引擎把一个表的总行数存在了磁盘上，因此执行 count(\*) 的时候会直接返回这个数，效率很高（前提是不适用where）；
+>
 > `InnoDB` 在执行 count(\*) 时，需要把数据一行一行地从引擎里面读出来，然后累计计数。
+>
 > 优化方案：自己计数，如创建key-value表存储在内存或硬盘，或者是用redis
 
 count的几种用法：
@@ -1454,10 +1456,19 @@ count的几种用法：
 
 各种用法的性能：
 
-- `count(主键)：``InnoDB`引擎会遍历整张表，把每行的主键id值都取出来，返回给服务层，服务层拿到主键后，直接按行进行累加（主键不可能为空）
-- `count(字段)：`没有not null约束的话，`InnoDB`引擎会遍历整张表把每一行的字段值都取出来，返回给服务层，服务层判断是否为null，不为null，计数累加；有not null约束的话，`InnoDB`引擎会遍历整张表把每一行的字段值都取出来，返回给服务层，直接按行进行累加
-- `count(1)：``InnoDB` 引擎遍历整张表，但不取值。服务层对于返回的每一层，放一个数字 1 进去，直接按行进行累加
-- `count(\*)：``InnoDB` 引擎并不会把全部字段取出来，而是专门做了优化，不取值，服务层直接按行进行累加
+- `count(主键)：`
+  - `InnoDB`引擎会遍历整张表，把每行的主键id值都取出来，返回给服务层，服务层拿到主键后，直接按行进行累加（主键不可能为空）
+
+- `count(字段)：`
+  - 没有not null约束的话，`InnoDB`引擎会遍历整张表把每一行的字段值都取出来，返回给服务层，服务层判断是否为null，不为null，计数累加；
+  - 有not null约束的话，`InnoDB`引擎会遍历整张表把每一行的字段值都取出来，返回给服务层，直接按行进行累加
+
+- `count(1)：`
+  - `InnoDB` 引擎遍历整张表，但不取值。服务层对于返回的每一层，放一个数字 1 进去，直接按行进行累加
+
+- `count(*)：`
+  - `InnoDB` 引擎并不会把全部字段取出来，而是专门做了优化，不取值，服务层直接按行进行累加
+
 
 > 按效率排序：count(字段) < count(主键) < count(1) < count(\*)，所以尽量使用 count(\*)
 
@@ -1470,6 +1481,149 @@ count的几种用法：
   + `update student set no = '123' where name = 'test';`，这句由于name没有索引，所以会把整张表都锁住进行数据更新，解决方法是给name字段添加索引
 
 <!-- tabs:end -->
+
+## 存储对象
+
+### 视图
+
+<!-- tabs:start -->
+
+#### **介绍**
+
++ 视图（view）是一种虚拟存在的表。视图中的数据并不在数据库中实际存在，行和列数据来自定义视图的查询中使用的表，并且实在使用视图时动态生成的。
+
+> 视图只保存了查询的SQL逻辑，不保存查询结果。所以我们在创建视图的时候，主要的工作就落在创建这条SQL查询语句上。
+
+#### **视图的操作语法**
+
++ 创建：
+  ```sql
+    CREATE[OR REPLACE] VIEW 视图名称[(列名列表)] AS SELECT语句[WITH [ CASCADED|LOCAL] CHECK OPTION ]
+    create or replace view stu_v_1 as select id,name from student where  id <= 10;
+  ```
+
++ 查询
+
+  ```sql
+  查看创建视图语句:SHOW CREATE VIEW 视图名称;
+  查看视图数据:SELECT *FROM 视图名称.......;
+  show create view stu_v_1;
+  select * from stu_v_1 where id=1;
+  ```
+
++ 修改
+
+  ```sql
+  方式一: CREATE [OR REPLACE] VIEW视图名称[(列名列表)]AS SELECT语句[WITH [ CASCADED|LOCAL] CHECK OPTION]
+  方式二:ALTER VIEW视图名称[(列名列表)]AS SELECT语句[WITH [ CASCADED|LOCAL] CHECK OPTION]
+  -- 修改
+  create or replace view stu_v_1 as select id,name,no from student where  id <= 10;
+  alter view stu_v_1 as  select id,name from student where  id <= 10;
+  ```
+  
++ 删除
+
+  ```sql
+  DROP VIEW[IF EXISTS]视图名称[视图名称]..
+  drop view if exists stu_v_1;
+  ```
+
+#### **视图检查选项**
+
++ 当使用`WITH CHECK OPTION`子句创建视图时，`MySQL`会通过视图检查正在更改的每个行，例如**插入，更新，删除，以使其符合视图的定义**。`MySQL`允许基于另一个视图创建视图，它还会检`查依赖视图中的规则以保持一致性`。为了确定检查的范围，`mysql`提供了两个选项:`CASCADED`和`LOCAL`，默认值为`CASCADED` 。
+
+  + CASCADED
+
+  ![14](./src/14.png)
+
+  ```sql
+  -- cascaded
+  create or replace view stu_v_1 as select id,name from student where  id <= 20;
+  -- success
+  insert into stu_v_1 values (4,'tom');
+  -- success
+  insert into stu_v_1 values (25,'tom');
+  
+  
+  create or replace view stu_v_2 as select id,name from stu_v_1 where  id >= 10 with cascaded check option ;
+  
+  -- error
+  insert into stu_v_2 values (5,'tom');
+  -- error
+  insert into stu_v_2 values (33,'tom');
+  -- success
+  insert into stu_v_2 values (15,'tom');
+  
+  create or replace view stu_v_3 as select id,name from stu_v_2 where  id <= 15;
+  -- success
+  insert into stu_v_3 values (11,'tom');
+  -- success
+  insert into stu_v_3 values (17,'tom');
+  -- error
+  insert into stu_v_3 values (28,'tom');
+  ```
+
+  + LOCAL
+
+  ![15](./src/15.png)
+
+  ```sql
+  -- local
+  create or replace view stu_v_4 as select id,name from student where  id <=15;
+  -- success
+  insert into stu_v_4 values (4,'tom');
+  -- success
+  insert into stu_v_4 values (16,'tom');
+  
+  
+  create or replace view stu_v_5 as select id,name from stu_v_4 where  id >= 10 with local check option ;
+  
+  -- success
+  insert into stu_v_5 values (13,'tom');
+  -- success
+  insert into stu_v_5 values (17,'tom');
+  
+  create or replace view stu_v_6 as select id,name from stu_v_5 where  id <= 15;
+  -- success
+  insert into stu_v_6 values (14,'tom');
+  ```
+
+> local也会递归，但是对于local来说只有添加了 ` with local check option `才会去检查 `where的条件`否则不检查；而 `cascaded`是会的。
+
+#### **视图的更新**
+
++ 要使视图可更新，**视图中的行与基础表中的行之间必须存在一对一的关系**。`如果视图包含以下任何一项，则该视图不可更新:`
+  1. 聚合函数或窗口函数`（SUM()、MIN()、MAX()、COUNT()等)`
+  2. `DISTINCT`
+  3. `GROUP BY`
+  4. `HAVING`
+  5. `UNION或者UNION ALL`
+
+#### **作用**
+
++ 简单
+  + 视图不仅可以简化用户对数据的理解，也可以简化他们的操作。那些被经常使用的查询可以被定义为视图，从而使得用户不必为以后的操作每次指定全部的条件。
+
++ 安全
+  + 数据库可以授权，但不能授权到数据库特定行和特定的列上。**通过视图用户只能查询和修改他们所能见到的数据**
++ 数据独立
+  + 视图可帮助用户屏蔽真实表结构变化带来的影响。
+
+<!-- tabs:end -->
+
+### 存储过程
+
+#### **介绍**
+
++ 存储过程是事先经过编译并存储在数据库中的一段SQL语句的集合，调用存储过程可以简化应用开发人员的很多工作，减少数据在数据库和应用服务器之间的传输，对于提高数据处理的效率是有好处的。
++ 存储过程思想上很简单，就是数据库SQL语言层面的代码封装与重用
+
++ 特点：
+  + 封装，复用
+  + 可以接收参数，也可以返回数据
+  + 减少网络交互，效率提升
+
+
 
 # 📃数据类型
 
