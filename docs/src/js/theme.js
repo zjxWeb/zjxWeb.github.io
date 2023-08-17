@@ -1,39 +1,42 @@
-let themeLabel = document.createElement("label");
-themeLabel.setAttribute("class","switch");
+// let themeLabel = document.createElement("label");
+// themeLabel.setAttribute("class","switch");
 
-let themeCheck = document.createElement("input");
-themeCheck.setAttribute("type","checkbox");
+// let themeCheck = document.createElement("input");
+// themeCheck.setAttribute("type","checkbox");
 
-let teme  = document.createElement("span");
-teme.setAttribute("class","slider round");
+// let teme  = document.createElement("span");
+// teme.setAttribute("class","slider round");
 
-themeLabel.appendChild(themeCheck);
-themeLabel.appendChild(teme);
-document.body.appendChild(themeLabel);
+// themeLabel.appendChild(themeCheck);
+// themeLabel.appendChild(teme);
+// document.body.appendChild(themeLabel);
 // teme.value = "主题"
-
+let teme  = document.createElement("button");
+teme.setAttribute("class","teme")
+document.body.appendChild(teme);
+teme.innerText = "主题";
 
 document.getElementById("theme-link").setAttribute("href", "./src/css/vue.css");  
 //按钮实现
-// teme.addEventListener("click", function() {    
-//     let theme = document.getElementById("theme-link").getAttribute("href");
-//     if (theme === "./src/css/vue.css") {  
-//         document.getElementById("theme-link").setAttribute("href", "./src/css/dark.css");  
-//     } else {  
-//         document.getElementById("theme-link").setAttribute("href", "./src/css/vue.css");  
-//     }  
-// });
+teme.addEventListener("click", function() {    
+    let theme = document.getElementById("theme-link").getAttribute("href");
+    if (theme === "./src/css/vue.css") {  
+        document.getElementById("theme-link").setAttribute("href", "./src/css/dark.css");  
+    } else {  
+        document.getElementById("theme-link").setAttribute("href", "./src/css/vue.css");  
+    }  
+});
 
 
 // 给复选框添加点击事件监听器
-themeCheck.addEventListener('click', () => {
-    let theme = document.getElementById("theme-link").getAttribute("href");
-    // 判断复选框是否被选中
-    if (themeCheck.checked) {
-        // 如果复选框被选中，则切换为暗黑主题
-        document.getElementById("theme-link").setAttribute("href", "./src/css/dark.css")
-    } else {
-        // 如果复选框未被选中，则切换为明亮主题
-        document.getElementById("theme-link").setAttribute("href", "./src/css/vue.css"); 
-    }
-});
+// themeCheck.addEventListener('click', () => {
+//     let theme = document.getElementById("theme-link").getAttribute("href");
+//     // 判断复选框是否被选中
+//     if (themeCheck.checked) {
+//         // 如果复选框被选中，则切换为暗黑主题
+//         document.getElementById("theme-link").setAttribute("href", "./src/css/dark.css")
+//     } else {
+//         // 如果复选框未被选中，则切换为明亮主题
+//         document.getElementById("theme-link").setAttribute("href", "./src/css/vue.css"); 
+//     }
+// });
