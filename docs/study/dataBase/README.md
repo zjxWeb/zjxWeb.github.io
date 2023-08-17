@@ -1684,6 +1684,23 @@ end$$
 
 #### **变量**
 
++ 系统变量是MySQL服务器提供，不是用户定义的，属于服务器层面。分为全局变量(`GLOBAL`)、会话变量(`SESSION`) 。
++ 查看系统变量
+
+```sql
+SHOW [ SESSION | GLOBAL ]VARIABLES;			--查看所有系统变量
+SHOW [ SESSION | GLOBAL ] VARIABLES LIKE '...';--可以通过LIKE模糊匹配方式查找变量
+SELECT @@[SESSION GLOBAL]系统变量名;				--查看指定变量的值
+
+```
+
++ 设置系统变量
+
+```sql
+SET [SESSION | GLOBAL]系统变量名=值;
+SET @@[SESSION | GLOBAL]系统变量名=值;
+```
+
 
 
 <!-- tabs:end -->
