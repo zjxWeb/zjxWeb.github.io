@@ -102,14 +102,14 @@
 /* 主题 */
 .teme{
     position: fixed;
-    right: 20px;
-    bottom: 20px;
-    width: 40px;
-    height: 23px;
+    right: 40px;
+    bottom: 66px;
+    width: 65px;
+    height: 35px;
     background-color: #29a9e0cf;  
     color: #ffffff;  
     border-radius: 15px;  
-    font-size: 9px;  
+    font-size: 16px;  
     color: rebeccapurple;
     font-weight: 600;
     line-height: 20px;
