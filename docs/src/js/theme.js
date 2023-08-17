@@ -1,16 +1,4 @@
-// let themeLabel = document.createElement("label");
-// themeLabel.setAttribute("class","switch");
-
-// let themeCheck = document.createElement("input");
-// themeCheck.setAttribute("type","checkbox");
-
-// let teme  = document.createElement("span");
-// teme.setAttribute("class","slider round");
-
-// themeLabel.appendChild(themeCheck);
-// themeLabel.appendChild(teme);
-// document.body.appendChild(themeLabel);
-// teme.value = "主题"
+// 按钮的形式
 let teme  = document.createElement("button");
 teme.setAttribute("class","teme")
 document.body.appendChild(teme);
@@ -28,6 +16,20 @@ teme.addEventListener("click", function() {
 });
 
 
+// 滑动的样式
+// let themeLabel = document.createElement("label");
+// themeLabel.setAttribute("class","switch");
+
+// let themeCheck = document.createElement("input");
+// themeCheck.setAttribute("type","checkbox");
+
+// let teme  = document.createElement("span");
+// teme.setAttribute("class","slider round");
+
+// themeLabel.appendChild(themeCheck);
+// themeLabel.appendChild(teme);
+// document.body.appendChild(themeLabel);
+// teme.value = "主题"
 // 给复选框添加点击事件监听器
 // themeCheck.addEventListener('click', () => {
 //     let theme = document.getElementById("theme-link").getAttribute("href");
