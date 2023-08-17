@@ -872,9 +872,9 @@ commit;
 >
 >   ```sql
 >   SELECT @@TRANSACTION_ISOLATION;
->                     
+>                       
 >   set session transaction isolation level read uncommitted ;
->                     
+>                       
 >   set session transaction isolation level repeatable read ;
 >   ```
 
@@ -1613,6 +1613,8 @@ count的几种用法：
 
 ### 存储过程
 
+<!-- tabs:start -->
+
 #### **介绍**
 
 + 存储过程是事先经过编译并存储在数据库中的一段SQL语句的集合，调用存储过程可以简化应用开发人员的很多工作，减少数据在数据库和应用服务器之间的传输，对于提高数据处理的效率是有好处的。
@@ -1623,7 +1625,68 @@ count的几种用法：
   + 可以接收参数，也可以返回数据
   + 减少网络交互，效率提升
 
+#### **操作语法**
 
++ 创建
+
+```sql
+CREATE PROCEDURE 存储过程名称([参数列表])
+BEGIN
+	-- SQL语句
+END;
+```
+
++ 调用
+
+```sql
+CALL 名称([参数]);
+```
+
++ 查看
+
+```sql
+SELECT* FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_SCHEMA='XXX'; --查询指定数据库的存储过程及状态信息
+SHOW CREATE PROCEDURE 存储过程名称;--查询某个存储过程的定义
+```
+
++ 删除
+
+```sql
+DROP PROCEDURE [IF EXISTS]存储过程名称;
+```
+
+  ```sql
+  -- 存储过程基本语法
+  -- 创建
+  create procedure  p1()
+  begin
+      select  count(*) from student;
+  end;
+  
+  -- 调用
+  call p1();
+  -- 查看
+  select * from information_schema.ROUTINES where ROUTINE_SCHEMA = 'zjxweb';
+  show create procedure p1;
+  -- 删除
+  drop procedure if exists p1;
+  ```
+
+> 注意:在命令行中，执行创建存储过程的SQL时，需要通过关键字`delimiter` 指定SQL语句的结束符。
+
+```sql
+delimiter $$
+create procedure  p1()
+begin
+    select  count(*) from student;
+end$$
+```
+
+#### **变量**
+
+
+
+<!-- tabs:end -->
 
 # 📃数据类型
 

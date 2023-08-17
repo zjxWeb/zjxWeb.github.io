@@ -12,7 +12,7 @@ var x = document.cookie;
 
 if (!x) {
     var overlayLayle  = document.createElement("div");
-    overlayLayle .className = "overlay ";
+    overlayLayle.className = "overlay ";
     document.body.appendChild(overlayLayle);
     var title  = document.createElement("p");
     title.innerText="🐻欢迎来到小浣熊的世界🐻"
