@@ -11,3 +11,5 @@
 1. 采用cookie过期，来做长久登录
 2. 当cookie值不正确或者不存在的时候，则需要输入密码进行验证。
 3. 验证通过就会将正确的cookie存入到浏览器cookie中。
+
+![password](./docs/src/img/password.png)
