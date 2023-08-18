@@ -1715,6 +1715,445 @@ set session autocommit  = 1;
 set global autocommit  = 1;
 ```
 
+> 注意:
+>
+> + 如果没有指定`SESSION/GLOBAL`，默认是`SESSION`，会话变量。
+> + `mysql`服务重新启动之后，所设置的全局参数会失效，要想不失效，可以在`/etc/my.cnf` 中配置。
+
++ **用户定义变量**是用户根据需要自己定义的变量，用户变量不用提前声明，在用的时候直接用“@变量名”使用就可以。其作用域为当
+  前连接。
+
+  > @ --- 用户自定义变量
+  >
+  > @@--- 系统变量
+
+  + 赋值
+
+  ```sql
+  SET @var_name = expr [, @var_name = expr ] ... ;
+  SET @var_name := expr [, @var_name := expr] ...;
+  ```
+
+  ```sql
+  SELECT @var_name := expr [, @var_name := expr] ... ;
+  SELECT 字段名 INTO @var_name FROM表名;
+  ```
+
+  + 使用
+
+  ```sql
+  SELECT @var_name ;
+  ```
+
+  ```sql
+  -- 变量：用户自定义变量
+  -- 赋值 推荐使用 :=
+  set @myname = 'zjxweb';
+  set @myid := 10;
+  set @myno := 12345678;
+  
+  select @mycolor := 'red';
+  select count(*) into @mycount from  student;
+  
+  -- 使用
+  select @myname,@myid,@myno;
+  select @mycolor,@mycount;
+  ```
+
+  > 注意:
+  >
+  > + 用户定义的变量无需对其进行声明或初始化，只不过获取到的值为NULL.
+
++ 局部变量是根据需要定义的在局部生效的变量，访问之前，需要`DECLARE`声明。可用作存储过程内的局部变量和输入参数，局部变量的范围是在其内声明的`BEGIN` ... `END`块。
+
+  + 声明
+
+  ```sql
+  DECLARE变量名变量类型[DEFAULT ...];
+  ```
+
+  > 变量类型就是数据库字段类型:`INT`、`BlGINT`、`CHAR`、`VARCHAR`、`DATE`、`TIME`等。
+
+  + 赋值
+
+  ```sql
+  SET变量名=值;
+  SET 变量名:=值;
+  SELECT字段名 INTO变量名 FROM表名...;
+  ```
+
+  ```sql
+  -- 变量：局部变量
+  -- 声明 --declare
+  -- 赋值
+  create procedure p2()
+  begin
+      -- 声明
+      declare stu_count int default 0;
+      -- 赋值
+      set stu_count := 10;
+      select  count(*) into stu_count from student;
+      select stu_count;
+  end;
+  call p2;
+  ```
+
+#### **if**
+
++ 语法
+
+```sql
+IF 条件1 THEN
+	……
+ELSEIF 条件2 THEN  --可选
+	……
+ELSE --可选
+	……
+END IF;
+```
+
+```sql
+-- if
+create procedure p3()
+begin
+    declare score int default 58;
+    declare result varchar(10);
+    if score >= 85 then
+        set result := '优秀';
+    elseif score >= 60 then
+        set result := '及格';
+    else
+        set result := '不及格';
+    end if;
+    select  result;
+end;
+call p3;
+```
+
+#### **参数**
+
+| `类型`  |                    `含义`                    | `备注` |
+| :-----: | :------------------------------------------: | :----: |
+|  `IN`   |   该类参数作为输入，也就是需要调用时传入值   | `默认` |
+|  `OUT`  | 该类参数作为输出，也就是该参数可以作为返回值 |        |
+| `INOUT` |    既可以作为输入参数,也可以作为输出参数     |        |
+
++ 用法
+
+```sql
+CREATE PROCEDURE 存储过程名称([ IN/OUT/INOUT 参数名参数类型)
+BEGIN
+	--SQL语句
+END;
+```
+
+```sql
+-- in/out/inout参数
+-- 根据传入(in)参数score，判定当前分数对应的分数等级，并返回(out)。
+-- score >= 85分，等级为优秀。
+-- score >= 60分且 score < 85分，等级为及格。
+-- score < 60分，等级为不及格。
+create procedure p3(in score int,out result varchar(10))
+begin
+    if score >= 85 then
+        set result := '优秀';
+    elseif score >= 60 then
+        set result := '及格';
+    else
+        set result := '不及格';
+    end if;
+end;
+call p3(68,@result);
+select @result;
+```
+
+```sql
+-- 将传入的 200分制的分数，进行换算，换算成百分制，然后返回----> inout
+create procedure p4(inout score double)
+begin
+    set score := score * 0.5;
+end;
+set @score = 78;
+call p4(@score);
+select  @score;
+```
+
+#### **case**
+
++ 语法一
+
+```sql
+CASE case_value
+	WHEN when_value1 THEN statement_list1
+	[WHEN when_value2 THEN statement_list 2] ...
+	[ELSE statement_list ]
+END CASE;
+```
+
++ 语法二
+
+```sql
+CASE
+	WHEN search_condition1 THEN statement_list1
+	[WHEN search_condition2 THEN statement_list2] ...
+	[ELSE statement_list]
+END CASE;
+```
+
+```sql
+-- case
+-- 根据传入的月份，判定月份所属的季节（要求采用case结构)。
+-- 1-3月份，为第一季度
+-- 4-6月份，为第二季度
+-- 7-9月份，为第三季度
+-- 10-12月份，为第四季度
+create procedure p5(in month int)
+begin
+    declare res varchar(10);
+    case
+        when month >= 1 and month <= 3 then
+            set res := '第一季度';
+        when month >= 4 and month <= 6 then
+            set res := '第2季度';
+        when month >= 7 and month <= 9 then
+            set res := '第3季度';
+        when month >= 10 and month <= 12 then
+            set res := '第4季度';
+        else
+            set res := '非法参数';
+     end case;
+    select concat('您输入的月分为：',month,', ','所属的季度： ',res);
+end;
+call p5(4);
+```
+
+#### **循环结构**
+
+> `while`
+
+
+
+> while循环是有条件的循环控制语句。满足条件后，再**执行循环体中的SQL语句**。具体语法为:
+
+```sql
+#先判定条件，如果条件为true，则执行逻辑，否则，不执行逻辑
+WHILE 条件 DO
+	SQL逻辑...
+END WHILE;
+```
+
+```sql
+-- while
+-- 计算从1累加到hn的值,n为传入的参数值。
+-- A．定义局部变量，记录累加之后的值;
+-- B．每循环一次，就会对n进行减1，如果n减到0，则退出循环
+create procedure p6(in n int)
+begin
+    declare total int default 0;
+    while n>0 do
+        set total := total + n;
+        set n := n - 1;
+    end while;
+    select  total;
+end;
+call p6(1000);
+```
+
+> `repeat`
+
+
+
+> `repeat`是有条件的循环控制语句,当满足条件的时候**退出循环**。具体语法为:(do while)
+
+```sql
+#先执行一次逻辑，然后判定逻辑是否满足，如果满足，则退出。如果不满足，则继续下一次循环
+REPEAT
+	SQL逻辑
+	UNTIL 条件
+END REPEAT;
+```
+
+```sql
+-- repeat
+-- 计算从1累加到hn的值,n为传入的参数值。
+-- A．定义局部变量，记录累加之后的值;
+-- B．每循环一次，就会对n进行减1，如果n减到0，则退出循环
+create procedure p7(in n int)
+begin
+    declare total int default 0;
+    repeat
+        set total := total + n;
+        set n := n - 1;
+    until n <= 0
+    end repeat;
+    select  total;
+end;
+call p7(100);
+```
+
+> **`loop`**
+
+
+
+> `LOOP`实现简单的循环，如果不在sqL逻辑中增加退出循环的条件，可以用其来实现简单的死循环。`LOOP`可以配合一下两个语句使用:.
+>
+> + `LEAVE`:配合循环使用，退出循环。
+> + `ITERATE`:必须用在循环中，作用是跳过当前循环剩下的语句，直接进入下一次循环。
+
+```sql
+[begin_label:] LOOP
+	SQL逻辑...
+END LOOP [end_label];
+```
+
+```sql
+LEAVE label;--退出指定标记的循环体
+ITERATE label;--直接进入下一次循环
+```
+
+```sql
+-- loop计算从1累加到n 的值，n为传入的参数值。
+-- A．定义局部变量，记录累加之后的值;
+-- B．每循环一次，就会对n进行减1，如果n减到0，则退出循环 --->leave XX
+create procedure p8(in n int)
+begin
+    declare total int default 0;
+    sum:loop
+        if n <= 0 then
+            leave sum;
+        end if;
+        set total := total + n;
+        set n := n - 1;
+    end loop sum;
+    select  total;
+end;
+call p8(10);
+```
+
+```sql
+-- 计算从1到n之间的偶数累加的值，n为传入的参数值。
+-- A．定义局部变量，记录累加之后的值;
+-- B．每循环一次，就会对n进行减1，如果n减到0，则退出循环 --->leave XX
+-- C. 如果当次累加的数据是奇数，则直接进入下一次循环. -----> iterate xx
+create procedure p9(in n int)
+begin
+    declare total int default 0;
+    sum:loop
+        if n <= 0 then
+            leave sum;
+        end if;
+        if n%2 = 1 then
+            set n := n - 1;
+            iterate sum;
+        end if;
+        set total := total + n;
+        set n := n - 1;
+    end loop sum;
+    select  total;
+end;
+call p9(10);
+```
+
+#### **游标 `cursor`**
+
+> 游标（CURSOR）是用来存储查询结果集的数据类型，在存储过程和函数中可以使用游标对结果集进行循环的处理。游标的使用包括游标的声明、`OPEN`、`FETCH`和`CLOSE`，其语法分别如下。
+
++ 声明游标
+
+```sql
+DECLARE 游标名称 CURSOR FOR查询语句;
+```
+
++ 打开游标
+
+```sql
+OPEN 游标名称;
+```
+
++ 获取游标记录
+
+```sql
+FETCH 游标名称 INTO 变量[,变量];
+```
+
+> 条件处理程序
+
++ 条件处理程序(`Handler`)可以用来定义在流程控制结构执行过程中遇到问题时相应的处理步骤。具体语法为:
+
+```sql
+DECLARE handler_action HANDLER FOR condition_value [, condition_value]... statement ;
+handler_action
+	CONTINUE:继续执行当前程序
+	EXIT:终止执行当前程序
+condition_value
+	SQLSTATE sqlstate_value:状态码，如02000
+	sQLWARNING:所有以01开头的SQLSTATE代码的简写
+	NOT FOUND:所有以02开头的SQLSTATE代码的简写
+	SQLEXCEPTION:所有没有被SQLWARNING或NOT FOUND捕获的SQLSTATE代码的简写
+```
+
++ [状态码参考官网](https://dev.mysql.com/doc/mysql-errors/8.0/en/server-error-reference.html)
+
+```sql
+-- cursor
+-- 根据传入的参数uage，来查询用户表tb_user中，所有的用户年龄小于等于uage的用户姓名(name）和专业l(profession),
+-- 并将用户的姓名和专业插入到所创建的一张新表(id , name , profession)中。
+
+-- 逻辑:
+-- A．声明游标，存储查询结果集
+-- B.准备:创建表结构
+-- C．开启游标
+-- D．获取游标中的记录
+-- E．插入数据到新表中
+-- F．关闭游标
+create procedure p11(in uage int)
+begin
+    declare uname varchar(100);
+    declare upro varchar(100);
+    -- 先声明普通变量，在声明游标
+    declare u_cursor cursor for select name,profession from tb_user where age <= uage;
+    -- 条件处理程序 在满足条件关闭游标
+    -- declare exit handler for sqlstate '02000' close u_cursor;
+    declare exit handler for not found close u_cursor;
+    drop table if exists tb_user_pro;
+    create table if not exists tb_user_pro(
+        id int primary key auto_increment,
+        name varchar(100),
+        profession varchar(100)
+    );
+    open u_cursor;
+    while true do
+        fetch u_cursor into   uname,upro;
+        insert into tb_user_pro values (null,name,upro);
+    end while;
+    close u_cursor;
+end;
+call p11(40);
+```
+
+#### **存储函数**
+
+> 存储函数是有返回值的存储过程，存储函数的参数只能是IN类型的。具体语法如下:
+
+```sql
+CREATE FUNCTION存储函数名称([参数列表])
+RETURNS type [characteristic ...]
+BEGIN
+	--SQL语句
+	RETURN ...;
+END;
+
+characteristic说明:
+	DETERMINISTIC:相同的输入参数总是产生相同的结果
+	NO SQL:不包含SQL语句。
+	READS SQL DATA:包含读取数据的语句，但不包含写入数据的语句。
+```
+
+```sql
+```
+
+
+
 <!-- tabs:end -->
 
 # 📃数据类型
@@ -1723,13 +2162,13 @@ set global autocommit  = 1;
 
 #### **整型**
 
-| 类型名称      | 取值范围                                  | 大小    |
-| ------------- | ----------------------------------------- | ------- |
-| TINYINT       | -128〜127                                 | 1个字节 |
-| SMALLINT      | -32768〜32767                             | 2个宇节 |
-| MEDIUMINT     | -8388608〜8388607                         | 3个字节 |
-| INT (INTEGHR) | -2147483648〜2147483647                   | 4个字节 |
-| BIGINT        | -9223372036854775808〜9223372036854775807 | 8个字节 |
+| 类型名称        | 取值范围                                  | 大小    |
+| --------------- | ----------------------------------------- | ------- |
+| `TINYINT`       | -128〜127                                 | 1个字节 |
+| `SMALLINT`      | -32768〜32767                             | 2个宇节 |
+| `MEDIUMINT`     | -8388608〜8388607                         | 3个字节 |
+| `INT (INTEGHR)` | -2147483648〜2147483647                   | 4个字节 |
+| `BIGINT`        | -9223372036854775808〜9223372036854775807 | 8个字节 |
 
 无符号在数据类型后加 unsigned 关键字。
 
