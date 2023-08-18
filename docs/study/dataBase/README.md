@@ -872,9 +872,9 @@ commit;
 >
 >   ```sql
 >   SELECT @@TRANSACTION_ISOLATION;
->                         
+>                                   
 >   set session transaction isolation level read uncommitted ;
->                         
+>                                   
 >   set session transaction isolation level repeatable read ;
 >   ```
 
@@ -2150,7 +2150,240 @@ characteristic说明:
 ```
 
 ```sql
+-- 存储函数
+-- 从1到n的累加
+create function fun1(n int)
+returns int deterministic
+begin
+    declare total int default 0;
+    while n>0 do
+        set total := total + n;
+        set n := n - 1;
+    end while;
+    return total;
+end;
+select  fun1(50);
 ```
+
+<!-- tabs:end -->
+
+### 触发器
+
+<!-- tabs:start -->
+
+#### **介绍**
+
+> + 触发器是与表有关的数据库对象，指在insert/update/delete之前或之后，触发并执行触发器中定义的SQL语句集合。触发器的这种特性可以协助应用在数据库端确保`数据的完整性，日志记录，数据校验`等操作。
+> + 使用别名`OLD`和`NEW`来引用触发器中发生变化的记录内容，这与其他的数据库是相似的。现在触发器还**只支持行级触发**，**不支持语句级触发。**
+
+|    触发类型    |                       NEW和OLD                       |
+| :------------: | :--------------------------------------------------: |
+| INSERT型触发器 |            NEW表示将要或者已经新增的数据             |
+| UPDATE型触发器 | OLD表示修改之前的数据，NEW表示将要或已经修改后的数据 |
+| DELETE型触发器 |            OLD表示将要或者已经删除的数据             |
+
+#### **语法**
+
++ 创建
+
+```sql
+CREATE TRIGGER trigger_name
+BEFORE/AFTER INSERT/UPDATE/DELETE
+ON tbl_name FOR EACH ROW  -- 行级触发器
+BEGIN
+	trigger_stmt;
+END;
+```
+
++ 查看
+
+```sql
+SHOW TRIGGERS ;
+```
+
++ 删除
+
+```sql
+DROP TRIGGER[schema name.] trigger_name; -- 如果没有指定schema_name，默认为当前数据库。
+```
+
+```sql
+-- 触发器
+-- 通过触发器记录tb_user表的数据变更日志，将变更日志插入到日志表user_logs中,包含增加,修改，删除;
+-- 日志表：user_logs
+create table user_logs(
+    id int(11) not null auto_increment primary key ,
+    operation varchar(20) not null comment '操作类型, insert/update/delete',
+    operate_time datetime not null comment '操作时间',
+    operate_id int(11) not null comment '操作的ID',
+    operate_params varchar(500) comment '操作参数'
+)engine=innodb default charset=utf8;
+-- 插入触发器
+create trigger tb_user_insert_trigger
+    after insert  on tb_user for each row
+begin
+    insert into  user_logs(id, operation, operate_time, operate_id, operate_params)  values
+    (null,'insert',now(),new.id,concat('插入数据内容为：id=',new.id,'phone=',new.phone));
+end;
+-- 查看触发器
+show triggers ;
+-- 删除
+drop trigger  tb_user_insert_trigger;
+
+-- 插入数据
+insert into tb_user VALUES(25,'二皇子','18809091212' , ' erhuangzi@163.com ' , '软件工程',23,'1', '1 ' , now());
+
+-- 修改触发器
+create trigger tb_user_update_trigger
+    after update  on tb_user for each row
+begin
+    insert into  user_logs(id, operation, operate_time, operate_id, operate_params)  values
+    (null,'update',now(),new.id,
+     concat(
+         '更新之前的数据内容为：id=',old.id,'phone=',old.phone,old.email,old.profession,
+         '更新之后的数据内容为：id=',new.id,'phone=',new.phone,new.email,new.profession
+         ));
+end;
+show triggers ;
+-- 更新数据
+update tb_user set age = 20 where id = 25;
+
+-- 删除数据的触发器
+create trigger tb_user_delete_trigger
+    after delete  on tb_user for each row
+begin
+    insert into  user_logs(id, operation, operate_time, operate_id, operate_params)  values
+    (null,'delete',now(),OLD.id,concat('插入数据内容为：id=',OLD.id,'phone=',OLD.phone));
+end;
+
+show triggers ;
+delete  from tb_user where  id=25;
+```
+
+<!-- tabs:end -->
+
+## 锁
+
+<!-- tabs:start -->
+
+#### **概述**
+
++ 介绍
+  + 锁是计算机协调多个进程或线程并发访问某一资源的机制。在数据库中除传统的计算资源(CPU、RAM、I/O）的争用以外，数据也是一种供许多用户共享的资源。如何保证**数据并发访问的一致性、有效性**是所有数据库必须解决的一个问题，**锁冲突也是影响数据库并发访问性能的一个重要因素**。从这个角度来说，锁对数据库而言显得尤其重要，也更加复杂。
+
++ 分类
+  + `MySQL`中的锁，按照锁的粒度分，分为以下三类:
+    1. 全局锁:锁定数据库中的所有表。
+    2. 表级锁:每次操作锁住整张表。
+    3. 行级锁:每次操作锁住对应的行数据。
+
+#### **全局锁**
+
+> 全局锁就是对整个数据库实例加锁，加锁后整个实例就处于只读状态，后续的`DML`的写语句，`DDL`语句，已经更新操作的事务提交语句都将被阻塞。
+
+> 其典型的使用场景是做全库的逻辑备份，对所有的表进行锁定，从而获取一致性视图，保证数据的完整性。
+
++ 未加锁
+
+![16](./src/16.png)
+
++ 加锁
+
+![17](./src/17.png)
+
+![18](./src/18.png)
+
++ 特点
+
+  + 数据库中加全局锁，是一个比较重的操作，存在以下问题:
+
+  1. 如果在主库上备份，那么在备份期间都不能执行更新，业务基本上就得停摆。
+  2. 如果在从库上备份，那么在备份期间从库不能执行主库同步过来的二进制日志(`binlog`)，会导致主从延迟。
+
+  > 在`InnoDB`引擎中，我们可以在备份时加上参数`--single-transaction`参数来完成不加锁的一致性数据备份。
+  >
+  > ```sql
+  > mysqldump --single-transaction -uroot -p123456 itcast > itcast.sql
+  > ```
+
+#### **表锁-表级锁**
+
++ 介绍
+  + 表级锁，每次操作锁住整张表。锁定粒度大，发生锁冲突的概率最高，并发度最低。应用在`MyISAM`、`InnoDB`、`BDB`等存储引擎中。
+  + 对于表级锁，主要分为以下三类:
+    1. 表锁元
+    2. 数据锁`( meta data lock,MDL)`
+    3. 意向锁
++ 表锁
+  + 对于表锁，分为两类:
+    1. 表共享读锁( read lock )
+    2. 表独占写锁（write lock)
++ 语法:
+  1. 加锁:`lock tables 表名... read/write`。
+  2. 释放锁:`unlock tables / 客户端断开连接`。
++ 读锁
+
+![19](./src/19.png)
+
++ 写锁
+
+![20](./src/20.png)
+
+> `读锁不会阻塞其他客户端的读，但是会阻塞写。写锁既会阻塞其他客户端的读，又会阻塞其他客户端的写。`
+
+
+
+#### **表锁-元数据锁`( meta data lock,MDL)`**
+
++ `MDL`加锁过程是系统自动控制，无需显式使用，在访问一张表的时候会自动加上。`MDL`锁主要作用是维护表元数据的数据一致性，在表上有活动事务的时候，不可以对元数据进行写入操作。`为了避免DML与DDL冲突，保证读写的正确性。`
++ 在`MySQL5.5`中引入了`MDL`，当对一张表进行增删改查的时候，加`MDL`读锁(共享);当对表结构进行变更操作的时候，加`MDL`写锁(排他)。
+
+|                    对应`SQL`                     |                 锁类型                  |                       说明                       |
+| :----------------------------------------------: | :-------------------------------------: | :----------------------------------------------: |
+|          `lock tables xxx read / write`          | SHARED READ_ONLY / SHARED_NO_READ_WRITE |                                                  |
+|    `select 、 select ... lock in share mode`     |               SHARED_READ               | 与SHARED_READ、SHARED_WRITE兼容，与EXCLUSIVE互斥 |
+| `insert . update、delete、select ... for update` |              SHARED_WRITE               | 与SHARED READ、SHARED WRITE兼容，与EXCLUSIVE互斥 |
+|                 `alter table...`                 |           EXCLUSIVE（排他锁）           | 与SHARED READ、SHARED WRITE兼容，与EXCLUSIVE互斥 |
+
+查看元数据锁：
+
+```sql
+select object_type,object_schema,object_name,lock_type,lock_duration from performance_schema.metadata_locks;
+```
+
+![21](./src/21.png)
+
+
+
+#### **表锁-意向锁**
+
++ 为了避免`DML`在执行时，加的行锁与表锁的冲突，在`InnoDB`中引入了意向锁，使得表锁不用检查每行数据是否加锁，使用意向锁来减少表锁的检查。
+
+![22](./src/22.png)
+
+1. 意向共享锁（`lS`):由语句`select ... lock in share mode`添加。
+2. 意向排他锁（`lIX`)∶由`insert、update、delete、select ... for update`添加。
+
++ 兼容性
+  1. 意向共享锁（`IS`)∶与表锁共享锁(`read`）兼容，与表锁排它锁(`write`）互斥。
+  2. 意向排他锁（`IX`)︰与表锁共享锁（`read`)及排它锁（`write`）都互斥。意向锁之间不会互斥。
++ 可以通过以下SQL，查看意向锁及行锁的加锁情况:
+
+```sql
+select object_schema,object_name,index_name,lock_type,lock_mode,lock_data from performance_schema.data_locks;
+```
+
+> 意向共享锁
+
+![23](./src/23.png)
+
+> 意向排他锁
+
+![24](./src/24.png)
+
+
+
+#### **行级锁**
 
 
 
