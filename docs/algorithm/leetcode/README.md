@@ -2936,3 +2936,296 @@ int main()
 ```
 
 <!-- tabs:end -->
+
+## 🐋144.二叉树的前序遍历 【简单】【**二叉树**】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+给你二叉树的根节点 `root` ，返回它节点值的 **前序** 遍历。
+
+**示例 1：**
+
+![img](./src/inorder_1.jpg)
+
+```
+输入：root = [1,null,2,3]
+输出：[1,2,3]
+```
+
+**示例 2：**
+
+```
+输入：root = []
+输出：[]
+```
+
+**示例 3：**
+
+```
+输入：root = [1]
+输出：[1]
+```
+
+**示例 4：**
+
+![img](./src/inorder_5.jpg)
+
+```
+输入：root = [1,2]
+输出：[1,2]
+```
+
+**示例 5：**
+
+![img](./src/inorder_4.jpg)
+
+```
+输入：root = [1,null,2]
+输出：[1,2]
+```
+
+**提示：**
+
+- 树中节点数目在范围 `[0, 100]` 内
+- `-100 <= Node.val <= 100`
+
+#### **题解（递归）**
+
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int>res;
+    vector<int> preorderTraversal(TreeNode* root) {
+        if (root == NULL) return res;
+        res.push_back(root->val);
+        preorderTraversal(root->left);
+        preorderTraversal(root->right);
+        return res;
+    }
+};
+```
+
+#### **题解（迭代）**
+
+```c++
+class Solution {
+public:
+    vector<int> preorderTraversal(TreeNode* root) {
+        stack<TreeNode*>sta;
+        vector<int>res;
+        if (root == NULL) return res;
+        sta.push(root);
+        while (!sta.empty()) {
+            TreeNode* node = sta.top();
+            sta.pop();
+            res.push_back(node->val);
+            if (node->right) sta.push(node->right);
+            if (node->left) sta.push(node->left);
+        }
+        return res;
+    }
+};
+```
+
+<!-- tabs:end -->
+
+## 🐋144.二叉树的中序遍历 【简单】【**二叉树**】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+给定一个二叉树的根节点 `root` ，返回 *它的 **中序** 遍历* 。
+
+ 
+
+**示例 1：**
+
+![img](./src/inorder_1.jpg)
+
+```
+输入：root = [1,null,2,3]
+输出：[1,3,2]
+```
+
+**示例 2：**
+
+```
+输入：root = []
+输出：[]
+```
+
+**示例 3：**
+
+```
+输入：root = [1]
+输出：[1]
+```
+
+**提示：**
+
+- 树中节点数目在范围 `[0, 100]` 内
+- `-100 <= Node.val <= 100`
+
+**进阶:** 递归算法很简单，你可以通过迭代算法完成吗？
+
+#### **题解（递归）**
+
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int>res;
+    vector<int> inorderTraversal(TreeNode* root) {
+        if (root == NULL) return res;
+        inorderTraversal(root->left);
+        res.push_back(root->val);
+        inorderTraversal(root->right);
+        return res;
+    }
+};
+```
+
+#### **题解（迭代）**
+
+```c++
+class Solution {
+public:
+    vector<int> inorderTraversal(TreeNode* root) {
+        stack<TreeNode*>sta;
+        vector<int>res;
+        TreeNode* cur = root;
+        while (cur != NULL || !sta.empty()) {
+            if (cur != NULL) {
+                sta.push(cur);
+                cur = cur->left;
+            }
+            else
+            {
+                cur = sta.top();
+                sta.pop();
+                res.push_back(cur->val);
+                cur = cur->right;
+            }
+        }
+        return res;
+    }
+};
+```
+
+<!-- tabs:end -->
+
+## 🐋144.二叉树的后序遍历 【简单】【**二叉树**】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+给你一棵二叉树的根节点 `root` ，返回其节点值的 **后序遍历** 。 
+
+**示例 1：**
+
+![img](./src/pre1.jpg)
+
+```
+输入：root = [1,null,2,3]
+输出：[3,2,1]
+```
+
+**示例 2：**
+
+```
+输入：root = []
+输出：[]
+```
+
+**示例 3：**
+
+```
+输入：root = [1]
+输出：[1]
+```
+
+**提示：**
+
+- 树中节点的数目在范围 `[0, 100]` 内
+- `-100 <= Node.val <= 100`
+
+**进阶：**递归算法很简单，你可以通过迭代算法完成吗？
+
+#### **题解（递归）**
+
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int>res;
+    vector<int> postorderTraversal(TreeNode* root) {
+        if(root == NULL) return res;
+        postorderTraversal(root->left);
+        postorderTraversal(root->right);
+        res.push_back(root->val);
+        return res;
+    }
+};
+```
+
+#### **题解（迭代）**
+
+```c++
+// 后序遍历(迭代)
+class Solution {
+public:
+    vector<int> postorderTraversal(TreeNode* root) {
+        stack<TreeNode*>sta;
+        vector<int>res;
+        if (root == NULL) return res;
+        sta.push(root);
+        while (!sta.empty()) {
+            TreeNode* node = sta.top();
+            sta.pop();
+            res.push_back(node->val);
+            if (node->left) sta.push(node->left); // 相对于前序遍历，这更改一下入栈顺序 （空节点不入栈）
+            if (node->right) sta.push(node->right); // 空节点不入栈
+        }
+        reverse(res.begin(), res.end());
+        return res;
+    }
+};
+```
+
+<!-- tabs:end -->
+

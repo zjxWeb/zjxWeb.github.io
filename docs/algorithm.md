@@ -107,4 +107,134 @@ int main(int argc, char* argv[]) {
 }
 
 ```
+#### **二叉树遍历完整版**
+
+```c++
+#include<iostream>
+#include<vector>
+#include<stack>
+
+using namespace std;
+
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
+};
+// 前序遍历递归
+//class Solution {
+//public:
+//    vector<int>res;
+//    vector<int> preorderTraversal(TreeNode* root) {
+//        if (root == NULL) return res;
+//        res.push_back(root->val);
+//        preorderTraversal(root->left);
+//        preorderTraversal(root->right);
+//        return res;
+//    }
+//};
+
+//// 前序遍历迭代
+//class Solution {
+//public:
+//    vector<int> preorderTraversal(TreeNode* root) {
+//        stack<TreeNode*>sta;
+//        vector<int>res;
+//        if (root == NULL) return res;
+//        sta.push(root);
+//        while (!sta.empty()) {
+//            TreeNode* node = sta.top();
+//            sta.pop();
+//            res.push_back(node->val);
+//            if (node->right) sta.push(node->right);
+//            if (node->left) sta.push(node->left);
+//        }
+//        return res;
+//    }
+//};
+
+// 中序遍历
+//class Solution {
+//public:
+//    vector<int>res;
+//    vector<int> preorderTraversal(TreeNode* root) {
+//        if (root == NULL) return res;
+//        preorderTraversal(root->left);
+//        res.push_back(root->val);
+//        preorderTraversal(root->right);
+//        return res;
+//    }
+//};
+// 中序遍历迭代
+//class Solution {
+//public:
+//    vector<int> preorderTraversal(TreeNode* root) {
+//        stack<TreeNode*>sta;
+//        vector<int>res;
+//        TreeNode* cur = root;
+//        while (cur != NULL || !sta.empty()) {
+//            if (cur != NULL) {
+//                sta.push(cur);
+//                cur = cur->left;
+//            }
+//            else
+//            {
+//                cur = sta.top();
+//                sta.pop();
+//                res.push_back(cur->val);
+//                cur = cur->right;
+//            }
+//        }
+//        return res;
+//    }
+//};
+// 后序遍历(递归)
+//class Solution {
+//public:
+//    vector<int>res;
+//    vector<int> preorderTraversal(TreeNode* root) {
+//        if (root == NULL) return res;
+//        preorderTraversal(root->left);
+//        preorderTraversal(root->right);
+//        res.push_back(root->val);
+//        return res;
+//    }
+//};
+// 后序遍历(迭代)
+class Solution {
+public:
+    vector<int> preorderTraversal(TreeNode* root) {
+        stack<TreeNode*>sta;
+        vector<int>res;
+        if (root == NULL) return res;
+        sta.push(root);
+        while (!sta.empty()) {
+            TreeNode* node = sta.top();
+            sta.pop();
+            res.push_back(node->val);
+            if (node->left) sta.push(node->left); // 相对于前序遍历，这更改一下入栈顺序 （空节点不入栈）
+            if (node->right) sta.push(node->right); // 空节点不入栈
+        }
+        reverse(res.begin(), res.end());
+        return res;
+    }
+};
+int main()
+{
+    Solution s;
+    TreeNode* root = new TreeNode(1);
+    root->left = new TreeNode(2);
+    root->right = new TreeNode(3);
+    root->left->left = new TreeNode(4);
+    root->left->right = new TreeNode(5);
+    for (auto el : s.preorderTraversal(root)) {
+        cout << el << endl;
+    }
+}
+
+```
+
 <!-- tabs:end -->
