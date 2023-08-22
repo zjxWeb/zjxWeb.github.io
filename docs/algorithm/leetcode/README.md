@@ -3697,3 +3697,92 @@ public:
 
 <!-- tabs:end -->
 
+## 🐋515. 在每个树行中找最大值【中等】【二叉树】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+给定一棵二叉树的根节点 `root` ，请找出该二叉树中每一层的最大值。
+
+**示例1：**
+
+![img](./src/largest_e1.jpg)
+
+```
+输入: root = [1,3,2,5,3,null,9]
+输出: [1,3,9]
+```
+
+**示例2：**
+
+```
+输入: root = [1,2,3]
+输出: [1,3]
+```
+
+**提示：**
+
+- 二叉树的节点个数的范围是 `[0,104]`
+- `-231 <= Node.val <= 231 - 1`
+
+#### **题解**
+
+```c++
+#include<iostream>
+#include<vector>
+#include<queue>
+
+using namespace std;
+
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
+};
+class Solution {
+public:
+    vector<int> largestValues(TreeNode* root) {
+        vector<int>res;
+        queue<TreeNode*>q;
+        if (root != NULL) q.push(root);
+        while (!q.empty()) {
+            int n = q.size();
+            //INT_MAX = 2^31-1，INT_MIN= -2^31.
+            // 注意此处的max赋值千万不能赋值为0
+            int max = INT_MIN;// 取每一层的最大值
+            for (int i = 0; i < n; i++)
+            {
+                TreeNode* node = q.front();
+                q.pop();
+                max = max > node->val ? max : node->val;
+                if (node->left) q.push(node->left);
+                if (node->right) q.push(node->right);
+            }
+            res.push_back(max);
+        }
+        return res;
+    }
+};
+
+int main()
+{
+    Solution s;
+    TreeNode* root = new TreeNode(0);
+    root->left = new TreeNode(-1);
+    /*root->right = new TreeNode(20);
+    root->right->left = new TreeNode(15);
+    root->right->right = new TreeNode(7);*/
+    for (auto el : s.largestValues(root)) {
+        /*for (auto e : el) {
+            cout << e << endl;
+        }*/
+        cout << el << endl;
+    }
+}
+```
+
+<!-- tabs:end -->

@@ -1,5 +1,9 @@
 # 数字孪生实例
 
+[个人博客](https://zjxweb.github.io/#/)
+
+数字孪生实战项目文档地址→https://zjxweb.github.io/#/projectPractice/digitalTwinsProject/smartCity/
+
 ## 1. 项目软件及环境配置
 
 ### 1. gis数据处理相关软件
@@ -7,7 +11,7 @@
    - QGIS 
      - [QGIS下载地址](https://www.osgeo.cn/qgis/site/forusers/download.html)
    - Blender
-     - 	[blender下载地址](https://www.blender.org/download/)
+     - ​	[blender下载地址](https://www.blender.org/download/)
      - Blender的gis插件在素材文件夹中。
    - 后续大家下载C4D和unity就可以了
      - 对于unity的下载在官网即可，有一下注意点
@@ -35,7 +39,7 @@
 
      - 在CMD终端中输入`vue ui`,出现如下界面,就说明安装成功即可创建新的项目。
 
-       - ![1](./src/1.png)
+       - ![1](./img/1.png)
 
    - 小皮面板
 
@@ -54,7 +58,7 @@
 
      - NodeMCU开发版
 
-       ![NodeMCU开发板](./src/NodeMcu开发板.png)
+       ![NodeMCU开发板](./img/NodeMcu开发板.png)
 
      - 还请购买一个继电器，或者发光二极管即可，课程中以继电器为例
 
@@ -66,20 +70,20 @@
 
    1. 第1步需要做的就是下载相应的驱动 。比较简单的方法就是先在电脑下载一个**驱动精灵**类似的驱动软件 ，然后使用数据线将板子连接到电脑上 ，接着使用**驱动精灵**自动检测并安装所需要的驱动，然后进入设备管理器，查看是否安装完成，安装成功的话，结果类似如下所示：
       
-        - ![2](./src/2.png)
+        - ![2](./img/2.png)
           
           2. 依次点击**文件|首选项**， 然后跳转到如下界面，将下面的附加开发版管理器网址设置为http://arduino.esp8266.com/stable/package_esp8266com_index.json：
         
-        - ![3](./src/3.png)
+        - ![3](./img/3.png)
           
           3. 随后点击按钮“**好”**即可。再接着点击工具|开发板|开发板管理器，跳转到如下界面：
         
-        - ![4](./src/4.png)
+        - ![4](./img/4.png)
         - 然后找到如上所示的包， 再点击安装即可，因为我已安装，所以它显示已安装， 如果找不到这个开发包，那就试着检查一下地址有没有弄错，或者 重启Arduino并重新按照上面的步骤添加**附加开发版 管理器地址**。
         - 在下载过程中，如果非常缓慢的话，可以将我提供的这个包替换你的对应路径里面的Arduino15文件，如下所示，Karry是对应我自己的用户名，在替换的时候记得对应的找到你自己的路径。
-        - ![5](./src/5.png)
+        - ![5](./img/5.png)
         - 替换成功后，不出意料的话， 你就可以在开发版中选择NodeMcu了，如下所示
-        - ![6](./src/6.png)
+        - ![6](./img/6.png)
           
           4. 找一个例子跑一下，激动吧！开心吧！
           
@@ -106,7 +110,7 @@
            
            - Arduino的相关功能区如下， 下面将对其一一介绍：
            
-           - ![7](./src/7.png)
+           - ![7](./img/7.png)
            
            - 标题
            
@@ -115,11 +119,11 @@
              - 后面三个功能按钮就比较容易理解了，就不讲了。
              - 把以上代码直接复制到Ardunio中，点击**验证**，如果如下图所示，则成功上传到硬件：
            
-           - ![8](./src/8.png)
+           - ![8](./img/8.png)
            
            - 按照如下操作即可看到打印的信息：
            
-           - ![9](./src/9.gif)
+           - ![9](./img/9.gif)
 
 ### 4. postman工具
 
@@ -396,9 +400,9 @@ C4D安装后打不开
 
 **此目录下面D:\c4d\resource\libs\win64**
 
-	删除mesa文件夹即可
-	
-	**解决安装完成之后不能打开软件的错误**
+​	删除mesa文件夹即可
+
+​	**解决安装完成之后不能打开软件的错误**
 
 ```tex
 C4D软件中文插件素材C4D R23 22 21 支持WIN/MAC远程安装技术服务1.针对以前的版本：Ryzen现在暂不支持mesa所致。
@@ -425,8 +429,1201 @@ R19之前才会有mesa文件夹。。所以装R21这个办法不适用！
 ## 6. unity对模型做进一步处理
 
 + [unity官方手册网址](https://docs.unity.cn/cn/2021.3/Manual/UnityManual.html)
+
 + [UnityWebRequest](https://docs.unity.cn/cn/2021.3/Manual/UnityWebRequest.html)
+  
   + [UnityWebRequest_API](https://docs.unity.cn/cn/2021.3/ScriptReference/Networking.UnityWebRequest.html)
   + 后续做数据交互的根本
+  
 + [unity其他版本下载网址](https://unity.cn/releases/lts/2018)
+  
   + 建议大家选择 `LTS` 长期支持的稳定版本，不太建议选择 `beta` 版本
+  
++ unity建模的相关注意点
+
+  1. 天空盒子，素材中的左右是反的
+
+  2. 光照的自动生成不建议打开，因为浪费性能
+
+    ![10](./img/10.png)
+
+  3. unity中的脚本使用 C# 编写的
+
+    + 这里的相机脚本有两个（再素材包）
+      + CameraFreelook.cs
+      + OrbitCamera.cs
+    + 建议使用第一个
+    + 大家如果其他需求，可以再源代码上进行修改，实现自己的需求
+
+  4. 再导入我们的从c4D生成的模型，之后会出现模型材质消失，此时我们应该选择使用外部材质。
+
+  ![9](./img/9.png)
+
+  
+
+## 7. `web`端编写
+
+  + [echarts官网地址](https://echarts.apache.org/examples/zh/index.html#chart-type-graphic)
+
+  ### 7.1 前端知识总结
+
+  + 三大件：HTML，CSS，JavaScript
+  
+  + HTML一些标签
+  
+    + h1,div,ul,li,p,body
+  
+  + CSS
+  
+  + JS
+  
+    + alert()
+    
+    + function(){}
+    
+    + 使用 **window.alert()** 弹出警告框。
+    
+    + 使用 **document.write()** 方法将内容写到 HTML 文档中。
+    
+    + 使用 **innerHTML** 写入到 HTML 元素。
+    
+    + 使用 **console.log()** 写入到浏览器的控制台。
+    
+    + JavaScript 内置函数 JSON.parse() 将字符串转换为 JavaScript 对象:
+    
+      + ```js
+         var text = '{ "sites" : [' +
+                    '{ "name":"Runoob" , "url":"www.runoob.com" },' +
+                    '{ "name":"Google" , "url":"www.google.com" },' +
+                    '{ "name":"Taobao" , "url":"www.taobao.com" } ]}';
+          
+                obj = JSON.parse(text);
+                console.log(obj.sites[0].name)
+        ```
+    
+    + JSON.stringify() 方法用于将 JavaScript 值转换为 JSON 字符串。
+    
+    + 定时器
+    
+      + ```
+        setTimeout(function () {
+                    console.log("First");
+                }, 1000);
+                setInterval(function (){
+                    console.log(i++);
+                },1000)
+        ```
+    
+      + setTimeout:时间到了就会执行（**只有一次**）
+    
+      + setInterval：我们每隔1s就会执行一次
+    
+        + 我们要给它设置一个条件，去清除我们的定时器
+    
+    ### 7.2 vue页面布局
+    
+    + box-sizing:border-box属性，宽高会加上padding和border的值，需要我们手动去计算，减去padding和border的值，并调整content的值，以免超过给定的宽高
+    + 此时子元素的宽高为500px（content 478px + padding 40px + border 4px）所以就覆盖了父元素的黑色背景，只能看到子元素的灰色背景
+    + title --- height 7 vh
+    + ![image-20230719155749388](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20230719155749388.png)
+    + 满天星：https://blog.csdn.net/qq_44891434/article/details/113363626
+    + 动态时间封装：https://blog.csdn.net/qq_44891434/article/details/115002709
+    + 饼图1：https://blog.csdn.net/qq_44891434/article/details/118789359
+    + 柱状：https://blog.csdn.net/qq_44891434/article/details/114631382
+    + 折现：https://blog.csdn.net/qq_44891434/article/details/114631306
+    + 饼图2：https://blog.csdn.net/qq_44891434/article/details/114631222
+
+## webGL引入
+
+![image-20230726155600161](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20230726155600161.png)
+
+webGL：启动方式（原理都是一样的）
+
++ 后端起的服务
++ Nginx
++ 阿里云
++ http-serve
+
+> *vue-seamless-scroll*  —— 滚动的一个效果
+>
+> echarts 案例地址：https://echarts.apache.org/examples/zh/index.html#chart-type-line
+
+## echarts引入案列
+
+```vue
+<template>
+  <div style="width: 100%; height: 100%" id="barLeft"></div>
+</template>
+
+<script>
+import echarts from "echarts";
+export default {
+  mounted() {
+    this.drawLine();
+  },
+  methods: {
+    drawLine() {
+      let myChart = echarts.init(document.getElementById("barLeft"));
+      var seriesData = [
+        {
+          name: "其他",
+          value: "4208",
+        },
+        {
+          name: "兰州",
+          value: "2571",
+        },
+        {
+          name: "全国",
+          value: "9262",
+        },
+      ];
+      var legendData = ["其他", "兰州", "全国"];
+      var colorList = ["#73DDFF","#43BB2E", "#FDB36A"];
+      var option = {
+        // backgroundColor: "#000E63",
+        tooltip: {
+          trigger: "item",
+          borderColor: "rgba(255,255,255,.3)",
+          backgroundColor: "rgba(13,5,30,.6)",
+          borderWidth: 1,
+          padding: 5,
+          formatter: function (parms) {
+            var str =
+              parms.marker +
+              "" +
+              parms.data.name +
+              "</br>" +
+              "数量：" +
+              parms.data.value +
+              "</br>" +
+              "占比：" +
+              parms.percent +
+              "%";
+            return str;
+          },
+        },
+        grid: {
+          left: "22%",
+          top: "4%",
+          bottom: "28%",
+        },
+        legend: {
+          type: "scroll",
+          orient: "horizontal",
+          left: "27%",
+          bottom: "0%",
+          itemWidth: 10,
+          itemHeight: 8,
+          textStyle: {
+            color: "#fff",
+          },
+          data: legendData,
+        },
+        series: [
+          {
+            type: "pie",
+            z: 3,
+            center: ["50%", "50%"],
+            radius: ["30%", "55%"],
+            clockwise: true,
+            avoidLabelOverlap: true,
+            hoverOffset: 5,
+            itemStyle: {
+              normal: {
+                color: function (params) {
+                  return colorList[params.dataIndex];
+                },
+              },
+            },
+            label: {
+              show: false,
+            },
+            data: seriesData,
+          },
+        ],
+      }
+      myChart.setOption(option);
+      //使用制定的配置项和数据显示图表
+      myChart.setOption(option);
+      function createExample(option, tooltipOption) {
+        // 基于准备好的dom，初始化echarts图表
+        // 为echarts对象加载数据
+        tools.loopShowTooltip(myChart, option, tooltipOption); //第一个参数需要改一下
+      }
+      createExample(option, {
+        loopSeries: true,
+        // 间隔时间
+        interval: 2000,
+      });
+    },
+  },
+};
+</script>
+
+```
+
+## 前端请求封装
+
+> 已经写好请调用
+
+```js
+import axios from 'axios'
+import qs from 'qs'
+import httpApi from './httpApi.js'
+// const baseSrc = ""
+function setUrl(src) {
+  let url = httpApi.api.baseSrc + httpApi.api[src]
+  return  encodeURI(url)
+}
+
+function setOutUrl(src) {
+  let url = httpApi.api[src]
+  return  encodeURI(url)
+}
+export default {
+  install(Vue) {
+    //get 请求
+    Vue.prototype.GetAxios = function(src, params) {
+      let url = setUrl(src) //设置url
+      return new Promise((resolve, reject) => {
+        axios.get(url, params)
+          .then(response => {
+            resolve(response);
+          }, err => {
+            reject(err);
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    }
+    Vue.prototype.GetJson = function(src, params){
+      let url = setUrl(src) //设置url
+      return new Promise((resolve,reject)=>{
+        axios.request({
+              url: url,
+              method:"get",
+              params: params,
+              headers: {
+                'Content-Type': "application/json; charset=utf-8"
+              }
+          }).then((ok)=>{
+              resolve(ok)
+          }).catch((err)=>{
+              reject(err)
+          })
+      })
+  }
+    // formdata格式 post
+    Vue.prototype.PostAxios = function(src, params) {
+      let url = setUrl(src) //设置url
+      return new Promise((resolve, reject) => {
+        axios.post(url, qs.stringify(params))
+          .then(response => {
+            resolve(response);
+          }, err => {
+            reject(err);
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    }
+    // json格式 post
+    Vue.prototype.PostJsonAxios = function(src, params) {
+      let obj = setUrl(src) //设置url
+      return new Promise((resolve, reject) => {
+        axios({
+            url: obj,
+            method: 'post',
+            data:params,
+            headers: {
+              'Content-Type': "application/json; charset=utf-8"
+            },
+          }).then(response => {
+            resolve(response);
+          }, err => {
+            reject(err);
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    }
+    //接入第三方时的请求
+    //get 请求
+    Vue.prototype.GetOutAxios = function(src, params) {
+      let url = setOutUrl(src) //设置url
+      return new Promise((resolve, reject) => {
+        axios.get(url, params)
+          .then(response => {
+            resolve(response);
+          }, err => {
+            reject(err);
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    }
+    Vue.prototype.GetOutJson = function(src, params){
+      let url = setOutUrl(src) //设置url
+      return new Promise((resolve,reject)=>{
+        axios.request({
+              url: url,
+              method:"get",
+              params: params,
+              headers: {
+                'Content-Type': "application/json; charset=utf-8"
+              }
+          }).then((ok)=>{
+              resolve(ok)
+          }).catch((err)=>{
+              reject(err)
+          })
+      })
+  }
+    // formdata格式 post
+    Vue.prototype.PostOutAxios = function(src, params) {
+      let url = setOutUrl(src) //设置url
+      return new Promise((resolve, reject) => {
+        axios.post(url, qs.stringify(params))
+          .then(response => {
+            resolve(response);
+          }, err => {
+            reject(err);
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    }
+    // json格式 post
+    Vue.prototype.PostOutJsonAxios = function(src, params) {
+      let obj = setOutUrl(src) //设置url
+      return new Promise((resolve, reject) => {
+        axios({
+            url: obj,
+            method: 'post',
+            data:params,
+            headers: {
+              'Content-Type': "application/json; charset=utf-8"
+            },
+          }).then(response => {
+            resolve(response);
+          }, err => {
+            reject(err);
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    }
+
+  }
+}
+
+
+/* 请求拦截器 */
+// let comloading = ''
+// axios.interceptors.request.use(function(config) { // 每次请求时会从localStorage中获取token
+//   var token = sessionStorage.getItem('token');
+//   if (token) {
+//     config.headers.common['token'] = [token];
+//   }
+//   return config
+// }, function(error) {
+//   return Promise.reject(error)
+// })
+// // 响应
+// axios.interceptors.response.use(response => {
+//   // if (response.status == 401) {
+//   //   if (vm.$route.path != '/login') {
+//   //     vm.$alert('登录异常，请重新登录', '提示', {
+//   //       confirmButtonText: '确定',
+//   //       callback: action => {
+//   //         vm.$router.push('/login')
+//   //       }
+//   //     });
+//   //   }
+//   // }
+//   console.log(response)
+//   let data = response.data
+//   if(data.data) {
+//     data.data = JSON.parse(decrypt(data.data))
+//   }
+//   if(data.code !== 0) {
+//     console.log(decrypt(data.message))
+//     vm.$message.error(decrypt(data.message))
+//     return
+//   }else {
+//     return data
+//   }
+// }, error => {
+//   vm.$message.error('连接错误,请稍后再试')
+//   console.log(error)
+//   return Promise.resolve(error.response)
+// },data => {
+//   console.log(data)
+// })
+
+```
+
++ 引入：
+
+  + ![11](./img/11.png)
+
+  + 调用案例：login
+
+    + ```vue
+      <template>
+        <div class="login_container">
+          <Stare/>
+          <div class="login_box">
+            <!-- 头像区域 -->
+            <div class="avatar_box">
+              <img src="@/assets/logo.png" alt="" />
+            </div>
+            <!-- 登录表单区域 -->
+            <el-form
+              ref="loginFormRef"
+              :model="loginForm"
+              :rules="loginFormRules"
+              label-width="0px"
+              class="login_form"
+            >
+              <el-form-item label="" prop="Sphone">
+                <el-input
+                 placeholder="请输入电话号码"
+                  v-model="loginForm.Sphone"
+                  prefix-icon="iconfont icon-user"
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="" prop="Spassword">
+                <el-input
+                 placeholder="请输入密码"
+                  v-model="loginForm.Spassword"
+                  prefix-icon="iconfont icon-3702mima"
+                  type="password"
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="" class="btns">
+                <el-button type="primary" @click="login">账号登录</el-button>
+                <el-button type="primary" @click="$router.push('/findFace')">人脸登录</el-button>
+                <el-button type="info" @click="resetLoginForm">重置</el-button>
+                 <el-link class="register" href="/register" type="primary">没有账号去注册</el-link>
+              </el-form-item>
+            </el-form>
+          </div>
+        </div>
+      </template>
+      
+      <script>
+      import Stare from '../../components/stare'
+      export default {
+        components:{
+          Stare
+        },
+        data() {
+          // 验证邮箱的手机
+          var checkMbile = (rule, value, cb) => {
+            const regMobile = /^((\+|00)86)?((134\d{4})|((13[0-3|5-9]|14[1|5-9]|15[0-9]|16[2|5|6|7]|17[0-8]|18[0-9]|19[0-2|5-9])\d{8}))$/;
+            if (regMobile.test(value)) {
+              return cb();
+            }
+            cb(new Error("请输入合法的手机号"));
+          };
+          return {
+            loginForm: {
+              Sphone: "",
+              Spassword: "",
+            },
+            // 表单的验证规则对象
+            loginFormRules: {
+              // 用户名的表单验证
+              Sphone: [
+                { required: true, message: "请输入电话号码", trigger: "blur" },
+                { validator: checkMbile, trigger: "blur" },
+              ],
+              // 密码的表单验证
+              Spassword: [
+                { required: true, message: "请输入登录密码", trigger: "blur" },
+                { min: 6, max: 15, message: "长度在 6到 14 个字符", trigger: "blur" },
+              ],
+            },
+          };
+        },
+        mounted() {
+        },
+        methods: {
+          // 点击重置按钮，重置登录表单resetFields()
+          resetLoginForm() {
+            this.$refs.loginFormRef.resetFields();
+          },
+          login() {
+            this.$refs.loginFormRef.validate((valid) => {
+              // console.log(valid)
+              // eslint-disable-next-line
+              if (!valid) return;
+              this.PostAxios("Login", this.loginForm).then((res)=>{
+                console.log(res.data)
+              if (res.data.flag != 1) {
+                return this.$message.error(res.data.msg);
+              } else {
+                this.$message.success("登陆成功");
+                // 1. 将登录成功之后的Token，保存到客户端的 sessionStorage中
+                // 1.1 项目中出现了登录之外的其他API接口，必须的登录之后才能访问
+                // 1.2 token只应在当前网站打开期间生效，所以将token 保存到sessionStorage中
+                window.sessionStorage.setItem("token", res.data.token);
+                window.sessionStorage.setItem("Sphone",this.loginForm.Sphone);
+                // 2. 通过编程式导航跳转到后台主页，路由地址是 /home
+                this.$router.push("/home");
+              }
+               })
+            });
+          },
+        },
+      };
+      </script>
+      
+      <style  scoped>
+      .login_container {
+        width: 100vw;
+        height: 100vh;
+        background-color: #000E63;
+      }
+      .login_box {
+        width: 450px;
+        height: 300px;
+        background-color: #1340B6;
+        border-radius: 3px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
+      .avatar_box {
+        height: 130px;
+        width: 130px;
+        border: 1px solid #004EFF;
+        border-radius: 50%;
+        padding: 10px;
+        box-shadow: 0 0 10px #004EFF;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #004EFF;
+      }
+      .avatar_box img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background-color: #000E63;
+      }
+      .login_form {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        padding: 0 20px;
+        box-sizing: border-box;
+      }
+      .btns {
+        display: flex;
+        justify-content: flex-start;
+      }
+      .el-input{
+        opacity: 0.9 ;
+      }
+      </style>
+      
+      ```
+
+## 8. 服务端的开发
+
++ nodejs
+
++ mysql
+
++ 安装 `nodemon`
+
+  + ```shell
+    npm i -g nodemon
+    ```
+
+#### 8.1 解析我们的静态资源（WebGL）
+
+```nodejs
+const path = require("path")
+app.use('/public',express.static(path.join(__dirname,"public")))
+```
+
+### 8.2 请求的封装
+
++ 请求路由 `/router/router.js`
+
+  + ```js
+    const express = require('express')
+    const router = express.Router()
+    const home = require('../api/home')
+    
+    // router.get('/', (req, res) => {
+    //   res.send('Hello World!')
+    // })
+    router.get("/",home.main)
+    
+    module.exports = router
+    ```
+
+  + 记得在根目录的 `index.js`
+
+    + ```js
+      app.use(router);
+      ```
+
++ 业务的编写封装
+
+  + 目录：`\api\home.js`
+
+  + ```js
+    const db = require('../dbfile/db')
+    const sql = require("../dbfile/sql")
+    exports.main = (req,res) => {
+        db.base(sql.daySql,null,(result)=>{
+            res.send(result)
+        })
+    }
+    ```
+
+### 8.3 mysql配置及封装
+
++ mysq配置封装
+
+  + 目录：`\dbfile\db.js`
++ mysql下载
+
+  + `npm i mysql`
++ ```js
+  const mysql = require('mysql')
+   
+  exports.base = (sql,data,callback) => {
+      const connection = mysql.createConnection({
+          host:'127.0.0.1',
+          user:'root',
+          password:'123456',
+          database:'dtcity'
+      });
+      connection.connect();
+      connection.query(sql,data,function(error,results,fields){
+          if(error) throw error;
+           callback(results,error);    
+      })
+      connection.end;
+  }
+  ```
+
++ sql语句的封装
+
+  + 目录：`\dbfile\sql.js`
+
++ ```js
+  exports.daySql = `select * from day`;
+  ```
+
+## 9. 硬件
+
++ 巴法云官网：https://cloud.bemfa.com/
+
++ 文档： https://cloud.bemfa.com/docs/#/
+
++ 数据交互简单的一个过程
+
+  + ![13](./img/13.png)
+
+  + 继电器为例
+
+    1. 服务端向巴法云平台发送请求，并携带我们的消息体
+    2. 巴法云平台收到了请求，将对应的消息体的指令发送到我们主题对应的终端上面
+    3. 最后我们的终端设备收到指令，并作出对应的行为，比如继电器的开和关
+
+  + 后端请求代码示例
+
+    + `/router/outWater.js`(因为源代码做了封装，所以这样写了，有问题私信)
+
+      + ```js
+        // 修改灯的状态
+        router.post('/isOpenoutWaterMsg',outWater.isOpenoutWaterMsg)
+        ```
+
+    + `/api/outWater.js`(因为源代码做了封装，所以这样写了，有问题私信)
+
+      + ```js
+        // 修改灯的状态
+        // on/off
+        exports.isOpenoutWaterMsg= (req,res) => {
+            let info = req.body;
+            let sql = "update outWater set isOpen=? where id=?";
+            let data = [info.isOPen,info.id];
+            let params = {
+                uid:'745e2d7bee3a553a3693dc150d3711cf',
+                topic:'light001',
+                type:3,
+                msg:info.isOPen
+            }
+            console.log(params.msg)
+            db.base(sql,data,(result) => {
+                if(result.affectedRows >= 1){
+                    axios({
+                        method: "POST",
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        url: 'https://api.bemfa.com/api/device/v1/data/1/push/post/',
+                        data: querystring.stringify(params),
+                      }).then((msg)=>{
+                        res.send(msg.data)
+                        console.log(params)
+                      })
+                }else{
+                    res.json({flag:2});
+                }
+            });
+        
+        }
+        ```
+
++ 硬件代码
+
+  + ```c
+    #include <ESP8266WiFiMesh.h>
+    #include <NetworkInfo.h>
+    #include <TransmissionResult.h>
+    #include <TypeConversionFunctions.h>
+    
+    #include <ESP8266WiFi.h>      // 本程序使用 ESP8266WiFi库
+    #include <WiFiClient.h>
+    #include <Servo.h>
+    Servo myServo;  // 定义Servo对象来控制
+    
+    //巴法云服务器地址默认即可
+    #define TCP_SERVER_ADDR "bemfa.com"
+    //服务器端口，tcp创客云端口8344
+    #define TCP_SERVER_PORT "8344" // 如果使用的是MQTT的话，将此处改为  9501即可
+    
+    //********************需要修改的部分*******************//
+    
+    #define DEFAULT_STASSID  "WIFI名称"     //WIFI名称，区分大小写，不要写错
+    #define DEFAULT_STAPSW   "WIFI密码"  //WIFI密码
+    String UID = "用户私钥";  //用户私钥，可在控制台获取,修改为自己的UID
+    String TOPIC =   "主题1";         //主题名字，可在控制台新建
+    String TOPIC1 =   "主题2";         //主题名字，可在控制台新建
+    int LED_Pin = D2;              //单片机LED引脚值
+    
+    //**************************************************//
+    
+    
+    int pos = 0;    // 角度存储变量
+    
+    
+    
+    //最大字节数
+    #define MAX_PACKETSIZE 512
+    //设置心跳值30s
+    #define KEEPALIVEATIME 30*1000
+    
+    
+    
+    //tcp客户端相关初始化，默认即可
+    WiFiClient TCPclient;
+    String TcpClient_Buff = "";
+    unsigned int TcpClient_BuffIndex = 0;
+    unsigned long TcpClient_preTick = 0;
+    unsigned long preHeartTick = 0;//心跳
+    unsigned long preTCPStartTick = 0;//连接
+    bool preTCPConnected = false;
+    
+    
+    
+    //相关函数初始化
+    //连接WIFI
+    void doWiFiTick();
+    void startSTA();
+    
+    //TCP初始化连接
+    void doTCPClientTick();
+    void startTCPClient();
+    void sendtoTCPServer(String p);
+    
+    //led 控制函数
+    void turnOnLed();
+    void turnOffLed();
+    
+    void openSwitch();
+    void closSwitch();
+    
+    
+    
+    /*
+      *发送数据到TCP服务器
+     */
+    void sendtoTCPServer(String p){
+      
+      if (!TCPclient.connected()) 
+      {
+    //    Serial.println("Client is not readly");
+        return;
+      }
+      TCPclient.print(p);
+    //  Serial.println("[Send to TCPServer]:String");
+    //  Serial.println(p);
+    }
+    
+    
+    /*
+      *初始化和服务器建立连接
+    */
+    void startTCPClient(){
+      if(TCPclient.connect(TCP_SERVER_ADDR, atoi(TCP_SERVER_PORT))){
+    //    Serial.print("\nConnected to server:");
+    //    Serial.printf("%s:%d\r\n", TCP_SERVER_ADDR,atoi(TCP_SERVER_PORT));
+        
+        String tcpTemp="";  //初始化字符串
+        String tcpTemp1="";  //初始化字符串
+        tcpTemp = "cmd=1&uid="+UID+"&topic="+TOPIC+"\r\n"; //构建订阅指令
+        tcpTemp1 = "cmd=1&uid="+UID+"&topic="+TOPIC1+"\r\n"; //构建订阅指令
+        sendtoTCPServer(tcpTemp); //发送订阅指令
+        sendtoTCPServer(tcpTemp1); //发送订阅指令
+        tcpTemp="";//清空
+        tcpTemp1="";//清空
+        
+        preTCPConnected = true;
+        preHeartTick = millis();
+        TCPclient.setNoDelay(true);
+      }
+      else{
+    //    Serial.print("Failed connected to server:");
+    //    Serial.println(TCP_SERVER_ADDR);
+        TCPclient.stop();
+        preTCPConnected = false;
+      }
+      preTCPStartTick = millis();
+    }
+    
+    
+    /*
+      *检查数据，发送心跳
+    */
+    void doTCPClientTick(){
+     //检查是否断开，断开后重连
+       if(WiFi.status() != WL_CONNECTED) return;
+    
+      if (!TCPclient.connected()) {//断开重连
+    
+      if(preTCPConnected == true){
+    
+        preTCPConnected = false;
+        preTCPStartTick = millis();
+    //    Serial.println();
+        TCPclient.stop();
+      }
+      else if(millis() - preTCPStartTick > 1*1000)//重新连接
+        startTCPClient();
+      }
+      else
+      {
+        if (TCPclient.available()) {//收数据
+          char c =TCPclient.read();
+    //      Serial.println("--Keep alive:");
+          TcpClient_Buff +=c;
+          TcpClient_BuffIndex++;
+          TcpClient_preTick = millis();
+          
+          if(TcpClient_BuffIndex>=MAX_PACKETSIZE - 1){
+            TcpClient_BuffIndex = MAX_PACKETSIZE-2;
+            TcpClient_preTick = TcpClient_preTick - 200;
+          }
+          preHeartTick = millis();
+        }
+        if(millis() - preHeartTick >= KEEPALIVEATIME){//保持心跳
+          preHeartTick = millis();
+    //      Serial.println("--Keep alive:");
+          sendtoTCPServer("cmd=0&msg=keep\r\n");
+        }
+      }
+      if((TcpClient_Buff.length() >= 1) && (millis() - TcpClient_preTick>=200))
+      {//data ready
+        TCPclient.flush();
+    //    Serial.println("Buff");
+        Serial.println(TcpClient_Buff);
+        if((TcpClient_Buff.indexOf("&msg=on") > 0)) {
+          if((TcpClient_Buff.indexOf("&topic=light002") > 0)){
+            turnOnLed();
+            }
+          else if((TcpClient_Buff.indexOf("&topic=light001") > 0)){
+            openSwitch();
+            }
+          
+        }else if((TcpClient_Buff.indexOf("&msg=off") > 0)) {
+           if((TcpClient_Buff.indexOf("&topic=light002") > 0)){
+            turnOffLed();
+            }
+          else if((TcpClient_Buff.indexOf("&topic=light001") > 0)){
+            closSwitch();
+            }
+        }
+       TcpClient_Buff="";
+       TcpClient_BuffIndex = 0;
+      }
+    }
+    
+    void startSTA(){
+      WiFi.disconnect();
+      WiFi.mode(WIFI_STA);
+      WiFi.begin(DEFAULT_STASSID, DEFAULT_STAPSW);
+    }
+    
+    
+    
+    /**************************************************************************
+                                     WIFI
+    ***************************************************************************/
+    /*
+      WiFiTick
+      检查是否需要初始化WiFi
+      检查WiFi是否连接上，若连接成功启动TCP Client
+      控制指示灯
+    */
+    void doWiFiTick(){
+      static bool startSTAFlag = false;
+      static bool taskStarted = false;
+      static uint32_t lastWiFiCheckTick = 0;
+    
+      if (!startSTAFlag) {
+        startSTAFlag = true;
+        startSTA();
+        Serial.printf("Heap size:%d\r\n", ESP.getFreeHeap());
+      }
+    
+      //未连接1s重连
+      if ( WiFi.status() != WL_CONNECTED ) {
+        if (millis() - lastWiFiCheckTick > 1000) {
+          lastWiFiCheckTick = millis();
+        }
+      }
+      //连接成功建立
+      else {
+        if (taskStarted == false) {
+          taskStarted = true;
+          Serial.print("\r\nGet IP Address: ");
+          Serial.println(WiFi.localIP());
+          startTCPClient();
+        }
+      }
+    }
+    //打开灯泡
+    void turnOnLed(){
+     Serial.println("Turn OFF");
+     digitalWrite(LED_Pin,LOW);
+      delay(1000);//延时1s
+    }
+    
+    //打开开关
+    void openSwitch(){
+    for (pos = 90; pos <= 180; pos ++) { // 0°到180°
+        // in steps of 1 degree
+        myServo.write(pos);              // 舵机角度写入
+        delay(15);                       // 等待转动到指定角度
+      } 
+      delay(2000);//延时2s
+    }
+    //关闭灯泡
+    void turnOffLed(){
+     Serial.println("Turn ON");
+      digitalWrite(LED_Pin,HIGH);
+      delay(1000);//延时1s 
+    }
+    //关闭开关
+    void closSwitch(){
+    for (pos = 180; pos >= 90; pos --) { // 从180°到0°
+        myServo.write(pos);              // 舵机角度写入
+        delay(15);                       // 等待转动到指定角度
+      }
+      delay(2000);//延时2s
+    }
+    
+    // 初始化，相当于main 函数
+    void setup() {
+      Serial.begin(115200);
+      myServo.attach(14); //D5   
+      pinMode(LED_Pin,OUTPUT);
+      digitalWrite(LED_Pin,HIGH);
+      Serial.println("Beginning...");
+    }
+    
+    //循环
+    void loop() {
+      doWiFiTick();
+      doTCPClientTick();
+    }
+    
+    ```
+
+## unity如何调用数据接口
+
+> unity官方文档→https://docs.unity3d.com/cn/2021.3/Manual/UnityWebRequest.html
+
++ `UnityWebRequest` 提供了一个模块化系统，用于构成 HTTP 请求和处理 HTTP 响应。***UnityWebRequest 系统的主要目标是让 Unity 游戏与 Web 浏览器后端进行交互***。该系统还支持高需求功能，例如分块 HTTP 请求、流式 POST/PUT 操作以及对 HTTP 标头和动词的完全控制。
+
+> 其实在整个的模型当中思路就是前后端分离的数据交互思路。
+
+### 架构
+
+UnityWebRequest 生态系统将 HTTP 事务分解为三个不同的操作：
+
+- 向服务器提供数据
+- 从服务器接收数据
+- HTTP 流量控制（例如，重定向和错误处理）
+
+为了给高级用户提供更好的界面，这些操作均由自己的对象进行管理：
+
+- `UploadHandler` 对象处理数据到服务器的传输
+- `DownloadHandler` 对象处理从服务器接收的数据的接收、缓冲和后处理
+- `UnityWebRequest` 对象管理其他两个对象，还处理 HTTP 流量控制。此对象是定义自定义标头和 URL 的位置，也是存储错误和重定向信息的位置。
+
+### 从 HTTP 服务器检索文本或二进制数据 (GET)
+
+|                                                              |
+| :----------------------------------------------------------- |
+| **Important**: UNet is a deprecated solution, and a new Multiplayer and Networking Solution (Netcode for GameObjects) is under development. For more information and next steps see the information on the [Unity Netcode for GameObjects website](https://docs-multiplayer.unity3d.com/). |
+
+要从标准 HTTP 或 HTTPS Web 服务器检索简单数据（比如文本数据或二进制数据），请使用 `UnityWebRequest.GET` 调用。此函数将单个字符串作为参数，字符串用于指定从中检索数据的 URL。
+
+此函数类似于标准 WWW 构造函数：
+
+```
+WWW myWww = new WWW("https://www.myserver.com/foo.txt");
+// ... 类似于 ...
+UnityWebRequest myWr = UnityWebRequest.Get("https://www.myserver.com/foo.txt");
+```
+
+### 详细信息
+
+- 此函数将创建 `UnityWebRequest` 并将目标 URL 设置为字符串参数。此函数不会设置任何其他自定义标志或标头。
+- 默认情况下，此函数将标准 `DownloadHandlerBuffer` 附加到 `UnityWebRequest`。此处理程序可缓冲从服务器接收的数据，并在请求完成时将数据提供给脚本。
+- 默认情况下，此函数不会将任何 `UploadHandler` 附加到 `UnityWebRequest`。如果需要，可以手动附加。
+
+### 示例
+
+```c#
+using UnityEngine;
+using System.Collections;
+using UnityEngine.Networking;
+ 
+public class MyBehaviour : MonoBehaviour {
+    void Start() {
+        StartCoroutine(GetText());
+    }
+ 
+    IEnumerator GetText() {
+        UnityWebRequest www = UnityWebRequest.Get("https://www.my-server.com");
+        yield return www.SendWebRequest();
+ 
+        if (www.result != UnityWebRequest.Result.Success) {
+            Debug.Log(www.error);
+        }
+        else {
+            // 以文本形式显示结果
+            Debug.Log(www.downloadHandler.text);
+ 
+            // 或者获取二进制数据形式的结果
+            byte[] results = www.downloadHandler.data;
+        }
+    }
+}
+```
+
+  项目代码
+
+```c#
+using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.Networking;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
+public class http : MonoBehaviour
+{
+    public float speed = 0.1f;
+
+    //private int degree;
+    public string rssTitle;
+    public GameObject LightObj;
+    public Light LightCon;
+    void Start()
+    {
+        //StartCoroutine(GetTexture());
+        LightCon = LightObj.GetComponent<Light>();
+        InvokeRepeating("doSomething", 0, 2);
+    }
+    // void Update()
+    // {
+    //     // Debug.Log(rssTitle);
+    //     StartCoroutine(GetTexture());
+        
+    // }
+    void doSomething()
+    {
+       StartCoroutine(GetTexture());
+    }
+    IEnumerator GetTexture()
+    {
+       
+        UnityWebRequest www = UnityWebRequest.Get("http://127.0.0.1:3000/day");
+        yield return www.SendWebRequest();
+        if (www.isNetworkError || www.isHttpError)
+        {
+            Debug.Log(www.error);
+        }
+        else
+        {
+            // 将结果显示为文本
+            string product = www.downloadHandler.text;
+            //JObject ob = (JObject)JsonConvert.DeserializeObject(product);
+            JObject rss = JObject.Parse(product);
+            rssTitle = (string)rss["result"][0]["day"];
+            if (rssTitle == "1")
+            {
+                //degree = Random.Range(0, 360);
+                //gameObject.transform.Rotate(180,360, 0, 0);
+                //gameObject.transform.Rotate(-speed * Time.deltaTime, 0, 0);
+                LightCon.enabled = false;
+                 Debug.Log("1");
+            }
+            if (rssTitle == "0")
+            {
+                LightCon.enabled = true;
+                Debug.Log("0");
+            }
+            // 或者以二进制数据格式检索结果
+            byte[] results = www.downloadHandler.data;
+        }
+    }
+}
+```
+
+## 这个项目中设计的技术我们还能做什么
+
++ 数字孪生——数化和互动
++ 可视化大屏
++ 前端开发
+  + `vue  html  css vue node echatrs……`
++ 游戏
++ 后端开发
++ 嵌入式
+
+……
+
+
+
+
+
+  
