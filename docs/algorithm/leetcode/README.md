@@ -3879,3 +3879,135 @@ public:
 ```
 
 <!-- tabs:end -->
+
+## 🐋226. 翻转二叉树【简单】【二叉树】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+给你一棵二叉树的根节点 `root` ，翻转这棵二叉树，并返回其根节点。
+
+**示例 1：**
+
+![img](./src/invert1-tree.jpg)
+
+```
+输入：root = [4,2,7,1,3,6,9]
+输出：[4,7,2,9,6,3,1]
+```
+
+**示例 2：**
+
+![img](./src/invert2-tree.jpg)
+
+```
+输入：root = [2,1,3]
+输出：[2,3,1]
+```
+
+**示例 3：**
+
+```
+输入：root = []
+输出：[]
+```
+
+
+
+**提示：**
+
+- 树中节点数目范围在 `[0, 100]` 内
+- `-100 <= Node.val <= 100`
+
+#### **题解(递归)**
+
+```c++
+#include<iostream>
+#include<vector>
+#include<queue>
+using namespace std;
+struct TreeNode {
+	int val;
+	TreeNode* left;
+	TreeNode* right;
+	TreeNode() : val(0), left(nullptr), right(nullptr) {}
+	TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+	TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
+
+};
+
+class Solution {
+public:
+	vector<vector<int>> levelOrder(TreeNode* root) {
+		vector<vector<int>>res;
+		queue<TreeNode*>q;
+		if (root != NULL) q.push(root);
+		while (!q.empty()) {
+			vector<int>count;
+			int n = q.size();
+			for (int i = 0; i < n; i++)
+			{
+				TreeNode* node = q.front();
+				q.pop();
+				count.push_back(node->val);
+				if (node->left) q.push(node->left);
+				if (node->right) q.push(node->right);
+			}
+			res.push_back(count);
+		}
+		return res;
+	}
+	TreeNode* invertTree(TreeNode* root) {
+		if (root == NULL) return root;
+		swap(root->left, root->right);
+		invertTree(root->left);
+		invertTree(root->right);
+		return root;
+	}
+};
+
+int main()
+{
+	Solution s;
+	TreeNode* root = new TreeNode(4);
+	root->left = new TreeNode(2);
+	root->right = new TreeNode(7);
+	root->left->left = new TreeNode(1);
+	root->left->right = new TreeNode(3);
+	root->right->left = new TreeNode(6);
+	root->right->right = new TreeNode(9);
+	/*s.invertTree(root);*/
+	s.invertTree(root);
+	for (auto el : s.levelOrder(root))
+	{
+		for (auto e : el)
+		{
+			cout << e << endl;
+		}
+	}
+}
+```
+
+#### **题解（迭代）**
+
+```c++
+class Solution {
+public:
+    TreeNode* invertTree(TreeNode* root) {
+        if (root == NULL) return root;
+        stack<TreeNode*> st;
+        st.push(root);
+        while(!st.empty()) {
+            TreeNode* node = st.top();              // 中
+            st.pop();
+            swap(node->left, node->right);
+            if(node->right) st.push(node->right);   // 右
+            if(node->left) st.push(node->left);     // 左
+        }
+        return root;
+    }
+};
+```
+
+<!-- tabs:end -->
