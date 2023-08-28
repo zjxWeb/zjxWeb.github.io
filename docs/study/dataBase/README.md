@@ -872,9 +872,9 @@ commit;
 >
 >   ```sql
 >   SELECT @@TRANSACTION_ISOLATION;
->                                     
+>                                       
 >   set session transaction isolation level read uncommitted ;
->                                     
+>                                       
 >   set session transaction isolation level repeatable read ;
 >   ```
 
@@ -2408,9 +2408,25 @@ select object_schema,object_name,index_name,lock_type,lock_mode,lock_data from p
 > 默认情况下，`InnoDB`在`REPEATABLE READ`事务隔离级别运行，`InnoDB`使用`next-key`锁进行搜索和索引扫描，以防止幻读。
 
 1. 针对唯一索引进行检索时，对已存在的记录进行等值匹配时，将会自动优化为行锁。
-2. `InnoDB`的行锁是针对于索引加的锁，不通过索引条件检索数据，那么`InnoDB`将对表中的所有记录加锁，此时***就会升级为表锁***。
+2. `InnoDB`的行锁是**针对于索引加的锁**，不通过索引条件检索数据，那么`InnoDB`将对表中的所有记录加锁，此时***就会升级为表锁***。
 
++ 可以通过以下SQL，查看意向锁及行锁的加锁情况:
 
+```sql
+select object_schema,object_name,index_name,lock_type,LOCK_MODE,lock_data from performance_schema.data_locks;
+```
+
++ 间隙锁/临键锁-演示
+> 默认情况下，InnoDB在REPEATABLEREAD事务隔离级别运行，InnoDB使用next-key锁进行搜索和索引扫描，以防止幻读。
+
+1. 索引上的等值查询(唯一索引)，给不存在的记录加锁时,优化为间隙锁(GAP)。
+2. 索引上的等值查询(普通索引)，向右遍历时最后一个值不满足查询需求时，`next-key lock`退化为间隙锁。
+3. 索引上的范围查询(唯一索引)--会访问到不满足条件的第一个值为止。
+
+> 注意:间隙锁唯一目的是防止其他事务插入间隙。间隙锁可以共存，一个事务采用的间隙锁不会阻止另一个事务在同一间隙上采用间隙锁。
+
++ 临键锁-:锁的是之前的。
++ 间隙锁：锁得值之间的
 
 <!-- tabs:end -->
 
