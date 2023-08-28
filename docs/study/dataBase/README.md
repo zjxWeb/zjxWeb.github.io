@@ -872,9 +872,9 @@ commit;
 >
 >   ```sql
 >   SELECT @@TRANSACTION_ISOLATION;
->                                   
+>                                     
 >   set session transaction isolation level read uncommitted ;
->                                   
+>                                     
 >   set session transaction isolation level repeatable read ;
 >   ```
 
@@ -2384,6 +2384,31 @@ select object_schema,object_name,index_name,lock_type,lock_mode,lock_data from p
 
 
 #### **行级锁**
+
+> `InnoDB`实现了以下两种类型的行锁：
+
+1. 共享锁（S）：运行一个事务去读一行，阻止其他事务获得相同数据集的排它锁。
+2. 排他锁（X）：运行获取排他锁的事务更新数据，组织其他事务获得相同数据集的共享锁合排他锁。
+
+![25](./src/25.png)
+
++ 行锁
+
+| SQL                       |     行锁类型     | 说明                                     |
+| :------------------------ | :--------------: | :--------------------------------------- |
+| INSERT…                   |      排他锁      | 自动加锁                                 |
+| UPDATE…                   |      排他锁      | 自动加锁                                 |
+| DELETE…                   |      排他锁      | 自动加锁                                 |
+| SELECT（正常）            | ***不加任何锁*** |                                          |
+| SELECT…LOCK IN SHARE MODE |      共享锁      | 需要手动在SELECT之后加LOCK IN SHARE MODE |
+| SELECT…FOR UPDATE         |      排他锁      | 需要手动在SELECT之后加FOR UPDATE         |
+
++ 案列：
+
+> 默认情况下，`InnoDB`在`REPEATABLE READ`事务隔离级别运行，`InnoDB`使用`next-key`锁进行搜索和索引扫描，以防止幻读。
+
+1. 针对唯一索引进行检索时，对已存在的记录进行等值匹配时，将会自动优化为行锁。
+2. `InnoDB`的行锁是针对于索引加的锁，不通过索引条件检索数据，那么`InnoDB`将对表中的所有记录加锁，此时***就会升级为表锁***。
 
 
 
