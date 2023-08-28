@@ -6209,3 +6209,226 @@ int main()
 + 在这个示例中，我们同样定义了一个 ThreadPool 类，并且在构造函数中创建了指定数目的线程。在每个线程中，我们不断地从任务队列中获取任务并执行，直到线程池被停止。在 enqueue() 函数中，我们将任务封装成一个 std::function 对象，并将它添加到任务队列中。在 ThreadPool 的析构函数中，我们等待所有线程执行完成后再停止所有线程。
 
 >  在主函数中，我们创建了一个 ThreadPool 对象，并向任务队列中添加了 8 个任务。每个任务会输出一些信息，并且在执行完后等待 1 秒钟。由于线程池中有 4 个线程，因此这 8 个任务会被分配到不同的线程中执行。在任务执行完成后，程序会退出。
+
+## 9.异步并发—— async future packaged_task promise
+
+**1. async 、 future**
+
+>  是C++11引入的一个函数模板，用于异步执行一个函数，并返回一个std::future对象，表示异步操作的结果。使用std::async可以方便地进行异步编程，避免了手动创建线程和管理线程的麻烦。下面是一个使用std::async的案例：
+
+```
+#include <iostream>
+#include <future>
+int calculate() {
+    // 模拟一个耗时的计算
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    return 42;
+}
+int main() {
+    std::future<int> future_result 
+    = std::async(std::launch::async, calculate);
+    // 在这里可以做其他的事情
+    int result = future_result.get(); // 获取异步操作的结果
+    std::cout << result << std::endl; // 输出42
+    return 0;
+}
+```
+
+
+
++ 这个例子中，我们使用std::async函数异步执行了一个耗时的计算，这个计算可以在另一个线程中执行，不会阻塞主线程。同时，我们也避免了手动创建线程和管理线程的麻烦。
+
+**2. packaged_task**
+
++ 在C++中，packaged_task是一个类模板，用于将一个可调用对象（如函数、函数对象或Lambda表达式）封装成一个异步操作，并返回一个std::future对象，表示异步操作的结果。packaged_task可以方便地将一个函数或可调用对象转换成一个异步操作，供其他线程使用。
+
++ 以下是packaged_task的基本用法：
+
+1. 定义可调用对象
+
+```
+int calculate(int x, int y) {
+    return x + y;
+}
+```
+
+> 这里定义了一个函数calculate，用于将两个整数相加。
+
+2. 创建packaged_task对象
+
+```
+std::packaged_task<int(int, int)> task(calculate);
+std::future<int> future_result = task.get_future();
+```
+
+>  这里创建了一个packaged_task对象，将函数calculate封装成异步操作，并返回一个std::future对象，表示异步操作的结果。
+
+3. 在其他线程中执行异步操作
+
+```
+std::thread t(std::move(task), 1, 2);
+t.join();
+```
+
+> 这里创建了一个新的线程，并在这个线程中执行异步操作。由于packaged_task对象是可移动的，因此需要使用std::move()函数将task对象转移至新线程中执行。
+
+4. 获取异步操作的结果
+
+```
+int result = future_result.get();
+std::cout << result << std::endl; // 输出3
+```
+
++ 在主线程中，我们可以使用future_result.get()方法获取异步操作的结果，并输出到控制台。
+
+  > 在这个例子中，我们成功地将一个函数calculate封装成了一个异步操作，并在其他线程中执行。通过packaged_task和future对象，我们可以方便地实现异步编程，使得代码更加简洁和易于维护。
+
+**3. promise**
+
++ 在C++中，promise是一个类模板，用于在一个线程中产生一个值，并在另一个线程中获取这个值。promise通常与future和async一起使用，用于实现异步编程。
+
++ 以下是promise的基本用法：
+
+1. 创建promise对象
+
+```
+std::promise<int> p;
+```
+
+>  这里创建了一个promise对象，用于产生一个整数值。
+
+2. 获取future对象
+
+```
+std::future<int> f = p.get_future();
+```
+
+> 通过promise对象的get_future()方法，可以获取与之关联的future对象，用于在另一个线程中获取promise对象产生的值。
+
+3. 在其他线程中设置值
+
+```
+std::thread t([&p]() {
+    p.set_value(42);
+});
+t.join();
+```
+
+> 这里创建了一个新的线程，并在这个线程中，使用promise对象的set_value()方法设置一个整数值42。
+
+4. 在主线程中获取值
+
+```
+int result = f.get();
+std::cout << result << std::endl; // 输出42
+```
+
++ 在主线程中，我们可以使用future对象的get()方法获取promise对象产生的值，并输出到控制台。
+
+> 在这个例子中，我们成功地使用promise和future对象实现了跨线程的值传递。通过promise和future对象，我们可以方便地实现异步编程，避免了手动创建线程和管理线程的麻烦。
+
+```c++
+#include<iostream>
+#include<future>
+using namespace std;
+
+void func(promise<int>& f) {
+	f.set_value(1000);
+}
+
+int main() {
+	//future<int> future_res = async(launch::async, func);// 相当于会[自动开启]一个现成进行运行这个函数
+
+	//packaged_task<int()>  task(func);
+	//auto future_res = task.get_future();
+	//// 手动开辟线程
+	//// move左值转换成右值
+	//// 因为packaged_task是一个可移动对象
+	//thread t1(move(task));
+
+	//cout << func() << endl;// 在主线程中运行
+
+	//t1.join();
+	//cout << future_res.get() << endl;
+
+	promise<int> f;
+	auto future_res = f.get_future();
+
+	thread t1(func, ref(f));
+	t1.join();
+	cout << future_res.get() << endl;
+
+	return 0;
+}
+```
+
+## 10. std::atomic
+
++ `std::atomic` 是 C++11 标准库中的一个模板类，用于实现多线程环境下的原子操作。它提供了一种线程安全的方式来访问和修改共享变量，可以避免多线程环境中的数据竞争问题。
+
++ `std::atomic` 的使用方式类似于普通的 C++ 变量，但是它的操作是原子性的。也就是说，在多线程环境下，多个线程同时对同一个 `std::atomic` 变量进行操作时，不会出现数据竞争问题。
+
++ 以下是一些常用的 `std::atomic` 操作：
+
+  1. `load()`：将 `std::atomic` 变量的值加载到当前线程的本地缓存中，并返回这个值。
+
+  2. `store(val)`：将 `val` 的值存储到 `std::atomic` 变量中，并保证这个操作是原子性的。
+
+  3. `exchange(val)`：将 `val` 的值存储到 `std::atomic` 变量中，并返回原先的值。
+
+  4. `compare_exchange_weak(expected, val)` 和 `compare_exchange_strong(expected, val)`：比较 `std::atomic` 变量的值和 `expected` 的值是否相同，如果相同，则将 `val` 的值存储到 `std::atomic` 变量中，并返回 `true`；否则，将 `std::atomic` 变量的值存储到 `expected` 中，并返回 `false`。
+
+> 以下是一个示例，演示了如何使用 `std::atomic` 进行原子操作：
+
+```
+#include <atomic>
+#include <iostream>
+#include <thread>
+std::atomic<int> count = 0;
+void increment() {
+    for (int i = 0; i < 1000000; ++i) {
+        count++;
+    }
+}
+int main() {
+    std::thread t1(increment);
+    std::thread t2(increment);
+    t1.join();
+    t2.join();
+    std::cout << count << std::endl;
+    return 0;
+}
+```
+
+
+
+> 在这个示例中，我们定义了一个 `std::atomic<int>` 类型的变量 `count`，并将其初始化为 0。然后，我们启动两个线程分别执行 `increment` 函数，这个函数的作用是将 `count` 变量的值加一，执行一百万次。最后，我们在主线程中输出 `count` 变量的值。由于 `count` 变量是一个 `std::atomic` 类型的变量，因此对它进行操作是原子性的，不会出现数据竞争问题。在这个示例中，最终输出的 `count` 变量的值应该是 2000000
+
+```c++
+#include <atomic>
+#include <iostream>
+#include <thread>
+using namespace std;
+
+std::atomic<int> share_data = 0;
+void increment() {
+    for (int i = 0; i < 1000000; ++i) {
+        share_data++;
+    }
+}
+int main() {
+    auto last = chrono::duration_cast<chrono::microseconds>(
+         chrono::system_clock::now().time_since_epoch()).count();
+    std::thread t1(increment);
+    std::thread t2(increment);
+    t1.join();
+    t2.join();
+    share_data.store(1);// 赋值保证是原子性
+    auto cur = chrono::duration_cast<chrono::microseconds>(
+        chrono::system_clock::now().time_since_epoch()).count();
+   cout << cur-last << std::endl;
+   cout << share_data << endl;
+    return 0;
+}
+```
+
