@@ -3291,6 +3291,7 @@ struct TreeNode {
     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
     TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
 };
+// 迭代法
 class Solution {
 public:
     vector<vector<int>> levelOrder(TreeNode* root) {
@@ -3313,7 +3314,24 @@ public:
         return res;
     }
 };
-
+// 递归法
+class Solution {
+public:
+    void order(TreeNode* cur, vector<vector<int>>& result, int depth)
+    {
+        if (cur == nullptr) return;
+        if (result.size() == depth) result.push_back(vector<int>());
+        result[depth].push_back(cur->val);
+        order(cur->left, result, depth + 1);
+        order(cur->right, result, depth + 1);
+    }
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>> result;
+        int depth = 0;
+        order(root, result, depth);
+        return result;
+    }
+};
 int main()
 {
     Solution s;
@@ -3920,7 +3938,7 @@ public:
 - 树中节点数目范围在 `[0, 100]` 内
 - `-100 <= Node.val <= 100`
 
-#### **题解(递归)**
+#### **题解(迭代)**
 
 ```c++
 #include<iostream>
@@ -3989,7 +4007,7 @@ int main()
 }
 ```
 
-#### **题解（迭代）**
+#### **题解（递归）**
 
 ```c++
 class Solution {
@@ -4170,3 +4188,365 @@ public:
 ```
 
 <!-- tabs:end -->
+
+## 🐋222. 完全二叉树的节点个数【中等】【二叉树】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+给你一棵 **完全二叉树** 的根节点 `root` ，求出该树的节点个数。
+
+[完全二叉树](https://baike.baidu.com/item/完全二叉树/7773232?fr=aladdin) 的定义如下：在完全二叉树中，除了最底层节点可能没填满外，其余每层节点数都达到最大值，并且最下面一层的节点都集中在该层最左边的若干位置。若最底层为第 `h` 层，则该层包含 `1~ 2h` 个节点。
+
+**示例 1：**
+
+![img](./src/complete.jpg)
+
+```
+输入：root = [1,2,3,4,5,6]
+输出：6
+```
+
+**示例 2：**
+
+```
+输入：root = []
+输出：0
+```
+
+**示例 3：**
+
+```
+输入：root = [1]
+输出：1
+```
+
+**提示：**
+
+- 树中节点的数目范围是`[0, 5 * 104]`
+- `0 <= Node.val <= 5 * 104`
+- 题目数据保证输入的树是 **完全二叉树**
+
+**进阶：**遍历树来统计节点是一种时间复杂度为 `O(n)` 的简单解决方案。你可以设计一个更快的算法吗？
+
+#### **题解**
+
+```c++
+#include<iostream>
+#include<vector>
+#include<queue>
+using namespace std;
+struct TreeNode {
+	int val;
+	TreeNode* left;
+	TreeNode* right;
+	TreeNode() : val(0), left(nullptr), right(nullptr) {}
+	TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+	TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
+
+};
+class Solution {
+public:
+	/*
+	* 迭代方法
+	* 此处采用了层次遍历，可能不同的遍历方法执行的效率也是有差别，其他的方法并没有做提交测试
+	*/
+	/*int countNodes(TreeNode* root) {
+		vector<vector<int>>res;
+		queue<TreeNode*>q;
+		int countSum = 0;
+		if (root != NULL) q.push(root);
+		while (!q.empty()) {
+			int n = q.size();
+			for (int i = 0; i < n; i++)
+			{
+				TreeNode* node = q.front();
+				q.pop();
+				countSum++;
+				if (node->left) q.push(node->left);
+				if (node->right) q.push(node->right);
+			}
+		}
+		return countSum;
+	}*/
+	/*
+	* 递归方法
+	* 效率相比迭代的方法有所提高
+	*/
+	int countNodes(TreeNode* root) {
+		if (root == NULL) return 0;
+		return 1 + countNodes(root->left) + countNodes(root->right);
+	}
+};
+int main()
+{
+	Solution s;
+	TreeNode* root = new TreeNode(1);
+	root->left = new TreeNode(2);
+	root->right = new TreeNode(3);
+	root->left->left = new TreeNode(4);
+	root->left->right = new TreeNode(5);
+	root->right->left = new TreeNode(6);
+	cout << s.countNodes(root) << endl;
+}
+```
+
+<!-- tabs:end -->
+
+## 🐋110. 平衡二叉树【简单】【二叉树】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+给定一个二叉树，判断它是否是高度平衡的二叉树。
+
+本题中，一棵高度平衡二叉树定义为：
+
+> 一个二叉树*每个节点* 的左右两个子树的高度差的绝对值不超过 1 。
+
+**示例 1：**
+
+![img](./src/balance_1.jpg)
+
+```
+输入：root = [3,9,20,null,null,15,7]
+输出：true
+```
+
+**示例 2：**
+
+![img](./src/balance_2.jpg)
+
+```
+输入：root = [1,2,2,3,3,null,null,4,4]
+输出：false
+```
+
+**示例 3：**
+
+```
+输入：root = []
+输出：true
+```
+
+**提示：**
+
+- 树中的节点数在范围 `[0, 5000]` 内
+- `-104 <= Node.val <= 104`
+
+#### **题解**
+
+```c++
+#include<iostream>
+#include<vector>
+#include<queue>
+using namespace std;
+struct TreeNode {
+	int val;
+	TreeNode* left;
+	TreeNode* right;
+	TreeNode() : val(0), left(nullptr), right(nullptr) {}
+	TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+	TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
+};
+
+class Solution {
+public:
+	/*
+	* 1. 求高度-后序遍历  深度-前序遍历
+	* 2. 一边遍历一边判断
+	*/
+	int getHeight(TreeNode* node) {
+		int res;
+		if (node == NULL)  return 0;
+		int leftHeight = getHeight(node->left);
+		if (leftHeight == -1) return -1;
+		int rigthHeight = getHeight(node->right);
+		if (rigthHeight == -1) return -1;
+		if (abs(rigthHeight - leftHeight) > 1) res = -1;
+		else res = 1 + max(rigthHeight, leftHeight);
+		return res;
+	}
+	bool isBalanced(TreeNode* root) {
+		return getHeight(root) == -1 ? false : true;
+	}
+	/*
+	* 提交错误，但是值得再看一下
+	*/
+	//int levelOrder(TreeNode* root) {
+	//	queue<TreeNode*>q;
+	//	if (root != NULL) q.push(root);
+	//	int count = 0;
+	//	while (!q.empty()) {
+	//		count++;
+	//		int n = q.size();
+	//		for (int i = 0; i < n; i++)
+	//		{
+	//			TreeNode* node = q.front();
+	//			q.pop();
+	//			if (node->left) q.push(node->left);
+	//			if (node->right) q.push(node->right);
+	//		}
+	//	}
+	//	return count;
+	//}
+	//// 判断一棵树是不是二叉树
+	//bool isBinaryTree(TreeNode* root) {
+	//	if (root == NULL) return true;
+	//	if (root->left != NULL && root->right != NULL) {
+	//		return isBinaryTree(root->left) && isBinaryTree(root->right);
+	//	}
+	//	else if (root->left == NULL && root->right == NULL) {
+	//		return true;
+	//	}
+	//	else {
+	//		return false;
+	//	}
+	//}
+	//bool isBalanced(TreeNode* root) {
+	//	if (root == NULL) return true;
+	//	int countLeft = levelOrder(root->left);
+	//	int countRigth = levelOrder(root->right);
+	//	if (countLeft == 1 && countRigth <= 1) return true;
+	//	if (countLeft <= 1 && countRigth == 1) return true;
+	//	cout << isBinaryTree(root) << endl;
+	//	if (isBinaryTree(root)) {
+	//		cout << countLeft << '\t' << countRigth << endl;
+	//		if (abs(countLeft - countRigth) > 1) return false;
+	//		return true;
+	//	}
+	//	return false;
+	//}
+};
+
+int main()
+{
+	Solution s;
+	TreeNode* root = new TreeNode(1);
+	root->left = new TreeNode(2);
+	/*root->right = new TreeNode(20);
+	root->right->left = new TreeNode(15);
+	root->right->right = new TreeNode(7);*/
+	cout << s.isBalanced(root) << endl;
+}
+```
+
+## 🐋257. 二叉树的所有路径【简单】【二叉树】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+给你一个二叉树的根节点 `root` ，按 **任意顺序** ，返回所有从根节点到叶子节点的路径。
+
+**叶子节点** 是指没有子节点的节点。
+
+ 
+
+**示例 1：**
+
+![img](./src/paths-tree.jpg)
+
+```
+输入：root = [1,2,3,null,5]
+输出：["1->2->5","1->3"]
+```
+
+**示例 2：**
+
+```
+输入：root = [1]
+输出：["1"]
+```
+
+**提示：**
+
+- 树中节点的数目在范围 `[1, 100]` 内
+- `-100 <= Node.val <= 100`
+
+#### **说明**
+
++ 这道题目要求从根节点到叶子的路径，所以需要前序遍历，这样才方便让父节点指向孩子节点，找到对应的路径。
+
++ 在这道题目中将第一次涉及到回溯，因为我们要把路径记录下来，需要回溯来回退一个路径再进入另一个路径。
+
++ 前序遍历以及回溯的过程如图：
++ ![10](./src/10.png)
+
+#### **题解**
+
+```c++
+#include<iostream>
+#include<vector>
+#include<string>
+using namespace std;
+struct TreeNode {
+	int val;
+	TreeNode* left;
+	TreeNode* right;
+	TreeNode() : val(0), left(nullptr), right(nullptr) {}
+	TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+	TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
+
+};
+
+class Solution {
+private:
+	void traversal(TreeNode* cur, vector<int>& path, vector<string>& res) {
+        // 中，中为什么写在这里，因为最后一个节点也要加入到path中 
+		path.push_back(cur->val);
+         // 这才到了叶子节点
+		if (cur->left == NULL && cur->right == NULL) {
+			string str;
+			for (int i = 0; i < (path.size() - 1); i++)
+			{
+				str += to_string(path[i]);
+				str += "->";
+			}
+			str += to_string(path[path.size() - 1]);
+			res.push_back(str);
+			return;
+		}
+		if (cur->left) {
+			traversal(cur->left, path, res);
+			path.pop_back();//回溯
+		}
+		if (cur->right) {
+			traversal(cur->right, path, res);
+			path.pop_back();
+		}
+	}
+public:
+	vector<string> binaryTreePaths(TreeNode* root) {
+		vector<int> path; 
+		vector<string>res;
+		if (root == NULL) return res;
+		traversal(root, path, res);
+		return res;
+	}
+};
+
+int main()
+{
+	Solution s;
+	TreeNode* root = new TreeNode(1);
+	root->left = new TreeNode(2);
+	root->right = new TreeNode(2);
+	root->left->left = new TreeNode(3);
+	root->left->right = new TreeNode(4);
+	root->right->left = new TreeNode(4);
+	root->right->right = new TreeNode(3);
+	//cout << s.isSymmetric(root) << endl;
+	for (auto el : s.binaryTreePaths(root)) {
+		for (auto e : el) {
+			cout << e;
+		}
+		cout << endl;
+	}
+}
+```
+
+<!-- tabs:end -->
+
