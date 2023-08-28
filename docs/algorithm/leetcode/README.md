@@ -4011,3 +4011,162 @@ public:
 ```
 
 <!-- tabs:end -->
+
+## 🐋101. 对称二叉树【简单】【二叉树】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+给你一个二叉树的根节点 `root` ， 检查它是否轴对称。
+
+**示例 1：**
+
+![img](./src/symtree1.jpg)
+
+```
+输入：root = [1,2,2,3,4,4,3]
+输出：true
+```
+
+**示例 2：**
+
+![img](./src/symtree2.jpg)
+
+```
+输入：root = [1,2,2,null,3,null,3]
+输出：false
+```
+
+**提示：**
+
+- 树中节点数目在范围 `[1, 1000]` 内
+- `-100 <= Node.val <= 100`
+
+**进阶：**你可以运用递归和迭代两种方法解决这个问题吗？
+
+#### **说明**
+
+> + 本题遍历只能是“后序遍历”，因为我们要通过递归函数的返回值来判断两个子树的内侧节点和外侧节点是否相等。
+>
+> + **正是因为要遍历两棵树而且要比较内侧和外侧节点，所以准确的来说是一个树的遍历顺序是左右中，一个树的遍历顺序是右左中。**
+>
+> + 但都可以理解算是后序遍历，尽管已经不是严格上在一个树上进行遍历的后序遍历了。
+>
+> + 其实后序也可以理解为是一种回溯
+
+![9](./src/9.png)
+
+#### **题解（递归）**
+
+```c++
+#include<iostream>
+#include<vector>
+#include<queue>
+using namespace std;
+struct TreeNode {
+	int val;
+	TreeNode* left;
+	TreeNode* right;
+	TreeNode() : val(0), left(nullptr), right(nullptr) {}
+	TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+	TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
+
+};
+
+class Solution {
+public:
+	bool compare(TreeNode* left, TreeNode* right)
+	{
+		if (left == NULL && right != NULL) return false;
+		else if (left != NULL && right == NULL) return false;
+		else if (left == NULL && right == NULL) return true;
+		else if (left->val != right->val) return false;
+
+		// 比较外侧合内测
+		bool outSide = compare(left->left, right->right);
+		bool inSide = compare(left->right, right->left);
+		return outSide && inSide;
+	}
+	bool isSymmetric(TreeNode* root) {
+		if (root == NULL)  return false;
+		return compare(root->left, root->right);
+	}
+};
+
+int main()
+{
+	Solution s;
+	TreeNode* root = new TreeNode(1);
+	root->left = new TreeNode(2);
+	root->right = new TreeNode(2);
+	root->left->left = new TreeNode(3);
+	root->left->right = new TreeNode(4);
+	root->right->left = new TreeNode(4);
+	root->right->right = new TreeNode(3);
+	cout << s.isSymmetric(root) << endl;
+}
+```
+
+#### **题解（迭代(队列)）**
+
+```c++
+class Solution {
+public:
+    bool isSymmetric(TreeNode* root) {
+        if (root == NULL) return true;
+        queue<TreeNode*> que;
+        que.push(root->left);   // 将左子树头结点加入队列
+        que.push(root->right);  // 将右子树头结点加入队列
+        
+        while (!que.empty()) {  // 接下来就要判断这两个树是否相互翻转
+            TreeNode* leftNode = que.front(); que.pop();
+            TreeNode* rightNode = que.front(); que.pop();
+            if (!leftNode && !rightNode) {  // 左节点为空、右节点为空，此时说明是对称的
+                continue;
+            }
+
+            // 左右一个节点不为空，或者都不为空但数值不相同，返回false
+            if ((!leftNode || !rightNode || (leftNode->val != rightNode->val))) {
+                return false;
+            }
+            que.push(leftNode->left);   // 加入左节点左孩子
+            que.push(rightNode->right); // 加入右节点右孩子
+            que.push(leftNode->right);  // 加入左节点右孩子
+            que.push(rightNode->left);  // 加入右节点左孩子
+        }
+        return true;
+    }
+};
+```
+
+#### **题解（迭代(栈)）**
+
+```c++
+class Solution {
+public:
+    bool isSymmetric(TreeNode* root) {
+        if (root == NULL) return true;
+        stack<TreeNode*> st; // 这里改成了栈
+        st.push(root->left);
+        st.push(root->right);
+        while (!st.empty()) {
+            TreeNode* leftNode = st.top(); st.pop();
+            TreeNode* rightNode = st.top(); st.pop();
+            if (!leftNode && !rightNode) {
+                continue;
+            }
+            if ((!leftNode || !rightNode || (leftNode->val != rightNode->val))) {
+                return false;
+            }
+            st.push(leftNode->left);
+            st.push(rightNode->right);
+            st.push(leftNode->right);
+            st.push(rightNode->left);
+        }
+        return true;
+    }
+};
+```
+
+<!-- tabs:end -->
