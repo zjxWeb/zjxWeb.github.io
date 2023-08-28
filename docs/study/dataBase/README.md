@@ -2417,7 +2417,7 @@ select object_schema,object_name,index_name,lock_type,LOCK_MODE,lock_data from p
 ```
 
 + 间隙锁/临键锁-演示
-> 默认情况下，InnoDB在REPEATABLEREAD事务隔离级别运行，InnoDB使用next-key锁进行搜索和索引扫描，以防止幻读。
+> 默认情况下，`InnoDB`在REPEATABLEREAD事务隔离级别运行，`InnoDB`使用`next-key`锁进行搜索和索引扫描，以防止幻读。
 
 1. 索引上的等值查询(唯一索引)，给不存在的记录加锁时,优化为间隙锁(GAP)。
 2. 索引上的等值查询(普通索引)，向右遍历时最后一个值不满足查询需求时，`next-key lock`退化为间隙锁。
@@ -2425,8 +2425,8 @@ select object_schema,object_name,index_name,lock_type,LOCK_MODE,lock_data from p
 
 > 注意:间隙锁唯一目的是防止其他事务插入间隙。间隙锁可以共存，一个事务采用的间隙锁不会阻止另一个事务在同一间隙上采用间隙锁。
 
-+ 临键锁-:锁的是之前的。
-+ 间隙锁：锁得值之间的
++ 临键锁: 既会包含当前对应的数据记录，也会锁定该数据记录之前的间隙。
++ 间隙锁：锁的是间隙不包含对应的数据记录。
 
 <!-- tabs:end -->
 
