@@ -4433,6 +4433,8 @@ int main()
 }
 ```
 
+<!-- tabs:end -->
+
 ## 🐋257. 二叉树的所有路径【简单】【二叉树】
 
 <!-- tabs:start -->
@@ -4550,3 +4552,304 @@ int main()
 
 <!-- tabs:end -->
 
+## 🐋404. 左叶子之和【简单】【二叉树】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+给定二叉树的根节点 `root` ，返回所有左叶子之和。
+
+ 
+
+**示例 1：**
+
+![img](./src/leftsum-tree.jpg)
+
+```
+输入: root = [3,9,20,null,null,15,7] 
+输出: 24 
+解释: 在这个二叉树中，有两个左叶子，分别是 9 和 15，所以返回 24
+```
+
+**示例 2:**
+
+```
+输入: root = [1]
+输出: 0
+```
+
+**提示:**
+
+- 节点数在 `[1, 1000]` 范围内
+- `-1000 <= Node.val <= 1000`
+
+#### **题解**
+
+```c++
+#include<iostream>
+#include<vector>
+#include<string>
+#include<stack>
+using namespace std;
+struct TreeNode {
+	int val;
+	TreeNode* left;
+	TreeNode* right;
+	TreeNode() : val(0), left(nullptr), right(nullptr) {}
+	TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+	TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
+
+};
+
+class Solution {
+public:
+	int sumOfLeftLeaves(TreeNode* root) {
+		if (root == NULL) return 0;
+		if (root->left == NULL && root->right == NULL) return 0;
+		int leftValue = sumOfLeftLeaves(root->left);
+		// 左子树就是一个左叶子的情况
+		if (root->left && !root->left->left && !root->left->right) {
+			leftValue = root->left->val;
+		}
+		int rightValue = sumOfLeftLeaves(root->right);
+		int sumValue = leftValue + rightValue;
+		return sumValue;
+	}
+};
+
+int main()
+{
+	Solution s;
+	TreeNode* root = new TreeNode(1);
+	root->left = new TreeNode(2);
+	root->right = new TreeNode(2);
+	root->left->left = new TreeNode(3);
+	root->left->right = new TreeNode(4);
+	root->right->left = new TreeNode(4);
+	root->right->right = new TreeNode(3);
+	cout << s.sumOfLeftLeaves(root) << endl;
+
+}
+```
+
+<!-- tabs:end -->
+
+## 🐋404. 左叶子之和【中等】【二叉树】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+给定一个二叉树的 **根节点** `root`，请找出该二叉树的 **最底层 最左边** 节点的值。
+
+假设二叉树中至少有一个节点。
+
+ 
+
+**示例 1:**
+
+![img](./src/tree1-1.jpg)
+
+```
+输入: root = [2,1,3]
+输出: 1
+```
+
+**示例 2:**
+
+![img](./src/tree2.jpg)
+
+```
+输入: [1,2,3,4,null,5,6,null,null,7]
+输出: 7
+```
+
+**提示:**
+
+- 二叉树的节点个数的范围是 `[1,104]`
+- `-231 <= Node.val <= 231 - 1`
+
+#### **题解**
+
+ ```c++
+ #include<iostream>
+ #include<vector>
+ #include<string>
+ #include<queue>
+ using namespace std;
+ struct TreeNode {
+ 	int val;
+ 	TreeNode* left;
+ 	TreeNode* right;
+ 	TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ 	TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ 	TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
+ 
+ };
+ 
+ class Solution {
+ public:
+ 	int findBottomLeftValue(TreeNode* root) {
+ 		queue<TreeNode*>q;
+ 		if (root != NULL) q.push(root);
+ 		int res = 0;
+ 		while (!q.empty()) {
+ 			int n = q.size();
+ 			for (int i = 0; i < n; i++)
+ 			{
+ 				TreeNode* node = q.front();
+ 				q.pop();
+ 				// 记录最后一行第一个元素
+ 				if (i == 0) res = node->val;
+ 				if (node->left) q.push(node->left);
+ 				if (node->right) q.push(node->right);
+ 			}
+ 		}
+ 		return res;
+ 	}
+ };
+ 
+ int main()
+ {
+ 	Solution s;
+ 	TreeNode* root = new TreeNode(1);
+ 	root->left = new TreeNode(2);
+ 	root->right = new TreeNode(2);
+ 	root->left->right = new TreeNode(4);
+ 	root->right->left = new TreeNode(4);
+ 	root->right->right = new TreeNode(3);
+ 	cout << s.findBottomLeftValue(root) << endl;
+ 
+ }
+ ```
+
+<!-- tabs:end -->
+
+## 🐋112. 路径总和【简单】【二叉树】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+给你二叉树的根节点 `root` 和一个表示目标和的整数 `targetSum` 。判断该树中是否存在 **根节点到叶子节点** 的路径，这条路径上所有节点值相加等于目标和 `targetSum` 。如果存在，返回 `true` ；否则，返回 `false` 。
+
+**叶子节点** 是指没有子节点的节点。
+
+ 
+
+**示例 1：**
+
+![img](./src/pathsum1.jpg)
+
+```
+输入：root = [5,4,8,11,null,13,4,7,2,null,null,null,1], targetSum = 22
+输出：true
+解释：等于目标和的根节点到叶节点路径如上图所示。
+```
+
+**示例 2：**
+
+![img](./src/pathsum2.jpg)
+
+```
+输入：root = [1,2,3], targetSum = 5
+输出：false
+解释：树中存在两条根节点到叶子节点的路径：
+(1 --> 2): 和为 3
+(1 --> 3): 和为 4
+不存在 sum = 5 的根节点到叶子节点的路径。
+```
+
+**示例 3：**
+
+```
+输入：root = [], targetSum = 0
+输出：false
+解释：由于树是空的，所以不存在根节点到叶子节点的路径。
+```
+
+**提示：**
+
+- 树中节点的数目在范围 `[0, 5000]` 内
+- `-1000 <= Node.val <= 1000`
+- `-1000 <= targetSum <= 1000`
+
+#### **题解(精简)**
+
+```c++
+#include<iostream>
+using namespace std;
+struct TreeNode {
+	int val;
+	TreeNode* left;
+	TreeNode* right;
+	TreeNode() : val(0), left(nullptr), right(nullptr) {}
+	TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+	TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
+
+};
+
+class Solution {
+public:
+	bool hasPathSum(TreeNode* root, int targetSum) {
+		if (!root) return false;
+		if (!root->left && !root->right) return targetSum == root->val;
+		return hasPathSum(root->left, targetSum - root->val) || hasPathSum(root->right, targetSum - root->val);
+	}
+};
+
+int main()
+{
+	Solution s;
+	TreeNode* root = new TreeNode(1);
+	root->left = new TreeNode(2);
+	root->right = new TreeNode(2);
+	root->left->right = new TreeNode(4);
+	root->right->left = new TreeNode(4);
+	root->right->right = new TreeNode(3);
+	int targetSum = 22;
+	cout << s.hasPathSum(root, targetSum) << endl;
+
+}
+```
+
+#### **题解(完整)**
+
+```c++
+ count -= cur->left->val; // 递归，处理节点;
+if (traversal(cur->left, count)) return true;
+count += cur->left->val; // 回溯，撤销处理结果
+
+===> return traversal(cur->left,count - cur->left->val);// 因为是传参的形式，属于值拷贝，并没有改变原有的值
+```
+
+```cpp
+class Solution {
+private:
+    bool traversal(TreeNode* cur, int count) {
+        if (!cur->left && !cur->right && count == 0) return true; // 遇到叶子节点，并且计数为0
+        if (!cur->left && !cur->right) return false; // 遇到叶子节点直接返回
+
+        if (cur->left) { // 左
+            count -= cur->left->val; // 递归，处理节点;
+            if (traversal(cur->left, count)) return true;
+            count += cur->left->val; // 回溯，撤销处理结果
+        }
+        if (cur->right) { // 右
+            count -= cur->right->val; // 递归，处理节点;
+            if (traversal(cur->right, count)) return true;
+            count += cur->right->val; // 回溯，撤销处理结果
+        }
+        return false;
+    }
+
+public:
+    bool hasPathSum(TreeNode* root, int sum) {
+        if (root == NULL) return false;
+        return traversal(root, sum - root->val);
+    }
+};
+```
+
+<!-- tabs:end -->
