@@ -10,8 +10,16 @@
 
 ## 输入密码验证登录
 > 只是防止小白的，稍微有点技术的人，分分钟破解，为了减少一下有人恶意访问而已。
++ 文件：./src/js/password.js
 1. 采用cookie过期，来做长久登录
 2. 当cookie值不正确或者不存在的时候，则需要输入密码进行验证。
 3. 验证通过就会将正确的cookie存入到浏览器cookie中。
 
 ![password](./docs/src/img/password.png)
+
+## 回到顶部
+> 当文档读到一定的位置我们想要回到顶部，滑动滚动条比较费时费力，所以这么一个小按钮就比较重要，可以很大程度上帮助我们。
++ 文件：./src/js/clickHeader.js
++ 当滚动条在一定的位置之后才会显示出来
+
+![clickHeader](./docs/src/img/clickHeader.png)
