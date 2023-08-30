@@ -827,10 +827,10 @@ commit;
 
 #### **四大特性ACID**
 
-- 原子性(Atomicity)：事务是不可分割的最小操作但愿，要么全部成功，要么全部失败
-- 一致性(Consistency)：事务完成时，必须使所有数据都保持一致状态
-- 隔离性(Isolation)：数据库系统提供的隔离机制，保证事务在不受外部并发操作影响的独立环境下运行
-- 持久性(Durability)：事务一旦提交或回滚，它对数据库中的数据的改变就是永久的
+- `原子性(Atomicity)`：事务是不可分割的最小操作但愿，要么全部成功，要么全部失败
+- `一致性(Consistency)`：事务完成时，必须使所有数据都保持一致状态
+- `隔离性(Isolation)`：数据库系统提供的隔离机制，保证事务在不受外部并发操作影响的独立环境下运行
+- `持久性(Durability)`：事务一旦提交或回滚，它对数据库中的数据的改变就是永久的
 
 #### **并发事务**
 
@@ -850,14 +850,12 @@ commit;
 
 | 隔离级别  | 脏读  | 不可重复读  | 幻读  |
 | ------------ | ------------ | ------------ | ------------ |
-| `Read uncommitted` | √  | √  | √  |
-| `Read committed` | ×  | √  | √  |
-| `Repeatable Read(默认)` | ×  | ×  | √  |
-| `Serializable` | ×  | ×  | ×  |
+| `Read uncommitted`(读未提交) | √  | √  | √  |
+| `Read committed`（读已提交） | ×  | √  | √  |
+| `Repeatable Read(默认)`（可重复读） | ×  | ×  | √  |
+| `Serializable`（串行化） | ×  | ×  | ×  |
 
 >  **√表示在当前隔离级别下该问题会出现**
-
-
 
 - `Serializable` 性能最低；`Read uncommitted` 性能最高，数据安全性最差
 
@@ -872,9 +870,9 @@ commit;
 >
 >   ```sql
 >   SELECT @@TRANSACTION_ISOLATION;
->                                       
+>                                           
 >   set session transaction isolation level read uncommitted ;
->                                       
+>                                           
 >   set session transaction isolation level repeatable read ;
 >   ```
 
@@ -2427,6 +2425,102 @@ select object_schema,object_name,index_name,lock_type,LOCK_MODE,lock_data from p
 
 + 临键锁: 既会包含当前对应的数据记录，也会锁定该数据记录之前的间隙。
 + 间隙锁：锁的是间隙不包含对应的数据记录。
+
+<!-- tabs:end -->
+
+## InnoDB引擎
+
+### 逻辑存储结构
+
+![26](./src/26.png)
+
+### 架构
+
+>  MySQL5.5版本开始，默认使用`InnoDB`存储引擎，它擅长事务处理，具有崩溃恢复特性，在日常开发中使用非常广泛。下面是`InnoDB`架构图，左侧为内存结构,右侧为磁盘结构。
+
+![27](./src/27.png)
+
+<!-- tabs:start -->
+
+#### **内存架构**
+
+![28](./src/28.png)
+
+![29](./src/29.png)
+
+![30](./src/30.png)
+
+```sql
+show variables like '%hash_index%';
+```
+
+![31](./src/31.png)
+
+```sql
+show variables like '%log_buffer_size%';
+show variables like '%flush_log%';
+```
+
+#### **磁盘结构**
+
+![32](./src/32.png)
+
+![33](./src/33.png)
+
+```sql
+create tablespace zjx_idb add datafile 'myzjx.ibd' engine = innodb;
+use zjxweb;
+create table a(id int  primary key auto_increment,name varchar(10)) engine = innodb tablespace zjx_idb;
+```
+
+![34](./src/34.png)
+
+
+#### **后台线程**
+
+![35](./src/35.png)
+
+```sql
+ show engine innodb status;
+```
+
+<!-- tabs:end -->
+
+### 事务原理
+
+<!-- tabs:start -->
+
+#### **概述**
+
+> 事务:是一组操作的集合，它是一个不可分割的工作单位，事务会把所有的操作作为一个整体一起向系统提交或撤销操作请求，即这些操作要么同时成功，要么同时失败。
+
+![36](./src/36.png)
+
+#### **事务原理**
+
+> `redo log`    持久性
+
++ 重做日志，记录的是事务提交时数据页的物理修改，是用来实现事务的持久性。
++ 该日志文件由两部分组成:重做日志缓冲 (`redo log buffer`)以及重做日志文件(`redo log file)`,前者是在内存中，后者在磁盘中。当事务提交之后会把所有修改信息都存到该日志文件中,用于在刷新脏页到磁盘,发生错误时，进行数据恢复使用。
+
+![37](./src/37.png)
+
+> `undo log`  原子性
+
++ 回滚日志，用于记录数据被修改前的信息，作用包含两个： **提供回滚 和  MVCC（多版本并发控制）**；
++ `undo log`和 `redo log`记录物理日志不一样，它是**逻辑日志**。可以认为当`delete` 一条记录时， `undo  log`中会记录一条对应的 `insert`记录，反之依然，当 `update`一条记录时，它记录一条对应相反的 `update`记录。当执行 `rollback`时，就可以从 `undo log`中的逻辑记录读取到对应的内容并进行回滚。
++ `undo log销毁`： `undo log`在事务执行时产生，事务提交时，并不会立即删除 `undo log`，因为这些日志可能还可用于 `MVCC`。
++ `undo log存储`： `undo log`采用**段的方式进行管理和记录**，存放在前面介绍的 `rollback segment`回滚段中，内部包含 `1024个undo log segment`。
+
+<!-- tabs:end -->
+
+### MVCC（多版本并发控制）
+
+<!-- tabs:start -->
+
+#### **基本概念**
+
+
 
 <!-- tabs:end -->
 

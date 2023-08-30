@@ -4853,3 +4853,397 @@ public:
 ```
 
 <!-- tabs:end -->
+
+## 🐋106.从中序与后序遍历序列构造二叉树【中等】【二叉树】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+给定两个整数数组 `inorder` 和 `postorder` ，其中 `inorder` 是二叉树的中序遍历， `postorder` 是同一棵树的后序遍历，请你构造并返回这颗 *二叉树* 。
+
+**示例 1:**
+
+![img](./src/tree.jpg)
+
+```
+输入：inorder = [9,3,15,20,7], postorder = [9,15,7,20,3]
+输出：[3,9,20,null,null,15,7]
+```
+
+**示例 2:**
+
+```
+输入：inorder = [-1], postorder = [-1]
+输出：[-1]
+```
+
+**提示:**
+
+- `1 <= inorder.length <= 3000`
+- `postorder.length == inorder.length`
+- `-3000 <= inorder[i], postorder[i] <= 3000`
+- `inorder` 和 `postorder` 都由 **不同** 的值组成
+- `postorder` 中每一个值都在 `inorder` 中
+- `inorder` **保证**是树的中序遍历
+- `postorder` **保证**是树的后序遍历
+
+#### **题解**
+
+```c++
+#include<iostream>
+#include<queue>
+#include<vector>
+
+using namespace std;
+
+struct TreeNode {
+	int val;
+	TreeNode* left;
+	TreeNode* right;
+	TreeNode() : val(0), left(nullptr), right(nullptr) {}
+	TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+	TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
+
+};
+
+class Solution {
+public:
+	// 二叉树的层次遍历
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>>res;
+        queue<TreeNode*>q;
+        if (root != NULL) q.push(root);
+        while (!q.empty()) {
+            vector<int>count;
+            int n = q.size();
+            for (int i = 0; i < n; i++)
+            {
+                TreeNode* node = q.front();
+                q.pop();
+                count.push_back(node->val);
+                if (node->left) q.push(node->left);
+                if (node->right) q.push(node->right);
+            }
+            res.push_back(count);
+        }
+        return res;
+    }
+    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+        if (inorder.size() == 0 || postorder.size() == 0) return NULL;
+        return traversal(inorder, postorder);
+    }
+private:
+    TreeNode* traversal(vector<int>& inorder, vector<int>& postorder) {
+        if (postorder.size() == 0) return NULL;// 如果后序为空则此二叉树 不可能构造成功
+        int pn = postorder.size();
+        int rootPot = postorder[pn - 1];// 后序的最后一个结点一定是此树的根结点
+        TreeNode* root = new TreeNode(rootPot);
+        if (postorder.size() == 1) return root;
+        int index = 0;//找下标
+        // 找到分割点
+        for (index = 0; index < inorder.size(); index++)
+        {
+            if (inorder[index] == rootPot) break;
+        }
+
+        // 切割中序数组
+        // 左闭右开区间：[0, index)
+        vector<int> leftInorder(inorder.begin(), inorder.begin() + index);
+        // [delimiterIndex + 1, end)
+        vector<int> rightInorder(inorder.begin() + index + 1, inorder.end());
+
+        // postorder 舍弃末尾元素
+        postorder.resize(postorder.size() - 1);
+
+        // 切割后序数组
+        // 依然左闭右开，注意这里使用了左中序数组大小作为切割点
+        // [0, leftInorder.size)
+        vector<int> leftPostorder(postorder.begin(), postorder.begin() + leftInorder.size());
+        // [leftInorder.size(), end)
+        vector<int> rightPostorder(postorder.begin() + leftInorder.size(), postorder.end());
+
+        root->left = traversal(leftInorder, leftPostorder);
+        root->right = traversal(rightInorder, rightPostorder);
+
+        return root;
+    }
+};
+
+int main()
+{
+    Solution s;
+    vector<int>inorder = { 9, 3, 15, 20, 7 };
+    vector<int>postorder = { 9, 15, 7, 20, 3 };
+    for (auto el : s.levelOrder(s.buildTree(inorder, postorder))) {
+        for (auto e : el) {
+            cout << e << "\t" << endl;
+        }
+    }
+	return 0;
+}
+```
+
+<!-- tabs:end -->
+
+## 🐋106.从中序与后序遍历序列构造二叉树【中等】【二叉树】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+给定一个不重复的整数数组 `nums` 。 **最大二叉树** 可以用下面的算法从 `nums` 递归地构建:
+
+1. 创建一个根节点，其值为 `nums` 中的最大值。
+2. 递归地在最大值 **左边** 的 **子数组前缀上** 构建左子树。
+3. 递归地在最大值 **右边** 的 **子数组后缀上** 构建右子树。
+
+返回 *`nums` 构建的* ***最大二叉树\*** 。
+
+**示例 1：**
+
+![img](./src/654tree1.jpg)
+
+```
+输入：nums = [3,2,1,6,0,5]
+输出：[6,3,5,null,2,0,null,null,1]
+解释：递归调用如下所示：
+- [3,2,1,6,0,5] 中的最大值是 6 ，左边部分是 [3,2,1] ，右边部分是 [0,5] 。
+    - [3,2,1] 中的最大值是 3 ，左边部分是 [] ，右边部分是 [2,1] 。
+        - 空数组，无子节点。
+        - [2,1] 中的最大值是 2 ，左边部分是 [] ，右边部分是 [1] 。
+            - 空数组，无子节点。
+            - 只有一个元素，所以子节点是一个值为 1 的节点。
+    - [0,5] 中的最大值是 5 ，左边部分是 [0] ，右边部分是 [] 。
+        - 只有一个元素，所以子节点是一个值为 0 的节点。
+        - 空数组，无子节点。
+```
+
+**示例 2：**
+
+![img](./src/654tree2.jpg)
+
+```
+输入：nums = [3,2,1]
+输出：[3,null,2,null,1]
+```
+
+**提示：**
+
+- `1 <= nums.length <= 1000`
+- `0 <= nums[i] <= 1000`
+- `nums` 中的所有整数 **互不相同**
+
+#### **题解**
+
+```c++
+#include<iostream>
+#include<queue>
+#include<vector>
+
+using namespace std;
+
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
+
+};
+
+class Solution {
+public:
+    // 二叉树的层次遍历
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>>res;
+        queue<TreeNode*>q;
+        if (root != NULL) q.push(root);
+        while (!q.empty()) {
+            vector<int>count;
+            int n = q.size();
+            for (int i = 0; i < n; i++)
+            {
+                TreeNode* node = q.front();
+                q.pop();
+                count.push_back(node->val);
+                if (node->left) q.push(node->left);
+                if (node->right) q.push(node->right);
+            }
+            res.push_back(count);
+        }
+        return res;
+    }
+    TreeNode* constructMaximumBinaryTree(vector<int>& nums) {
+        //int n = nums.size();
+        //if (n == 0) return nullptr;
+        //TreeNode* root = new TreeNode(0);
+        //if (n == 1) return new TreeNode(nums[0]);
+        //// 找出最大值，及其下表
+        //int maxValue = 0;
+        //int maxIndex = 0;
+        //for (int i = 0; i < n; i++)
+        //{
+        //    if (nums[i] > maxValue) { 
+        //        maxValue = nums[i];
+        //        maxIndex = i;
+        //    }
+        //}
+        //root->val = maxValue;
+        //if (maxIndex > 0) {
+        //    vector<int>newNums(nums.begin(), nums.begin() + maxIndex);
+        //    root->left = constructMaximumBinaryTree(newNums);
+        //}
+        //if (maxIndex < n - 1) {
+        //    vector<int>newNums(nums.begin() + maxIndex + 1, nums.end());
+        //    root->right = constructMaximumBinaryTree(newNums);
+        //}
+        //return root;
+        int n = nums.size();
+        if (nums.size() == 0) return nullptr;
+        return traversal(nums, 0, n);
+    }
+private:
+    TreeNode* traversal(vector<int>& nums, int left, int right)
+    {
+        if (left >= right) return nullptr;
+        // 找下标分割
+        int maxIndex = left;
+        for (int i = left; i < right; i++)
+        {
+            if (nums[i] > nums[maxIndex]) maxIndex = i;
+        }
+        TreeNode* root = new TreeNode(nums[maxIndex]);
+        //  左子树
+        root->left = traversal(nums,left,maxIndex);
+        // 右子树
+        root->right = traversal(nums, maxIndex + 1, right);
+        return root;
+    }
+};
+
+int main()
+{
+    Solution s;
+    vector<int>nums = { 3,2,1,6,0,5 };
+    for (auto el : s.levelOrder(s.constructMaximumBinaryTree(nums))) {
+        for (auto e : el) {
+            cout << e << "\t" << endl;
+        }
+    }
+    return 0;
+}
+```
+
+<!-- tabs:end -->
+
+## 🐋617.合并二叉树【简单】【二叉树】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+给你两棵二叉树： `root1` 和 `root2` 。
+
+想象一下，当你将其中一棵覆盖到另一棵之上时，两棵树上的一些节点将会重叠（而另一些不会）。你需要将这两棵树合并成一棵新二叉树。合并的规则是：如果两个节点重叠，那么将这两个节点的值相加作为合并后节点的新值；否则，**不为** null 的节点将直接作为新二叉树的节点。
+
+返回合并后的二叉树。
+
+**注意:** 合并过程必须从两个树的根节点开始。
+
+**示例 1：**
+
+![img](./src/merge.jpg)
+
+```
+输入：root1 = [1,3,2,5], root2 = [2,1,3,null,4,null,7]
+输出：[3,4,5,5,4,null,7]
+```
+
+**示例 2：**
+
+```
+输入：root1 = [1], root2 = [1,2]
+输出：[2,2]
+```
+
+**提示：**
+
+- 两棵树中的节点数目在范围 `[0, 2000]` 内
+- `-104 <= Node.val <= 104`
+
+#### **题解**
+
+```c++
+#include<iostream>
+#include<queue>
+#include<vector>
+
+using namespace std;
+
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
+
+};
+
+class Solution {
+public:
+    // 二叉树的层次遍历
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>>res;
+        queue<TreeNode*>q;
+        if (root != NULL) q.push(root);
+        while (!q.empty()) {
+            vector<int>count;
+            int n = q.size();
+            for (int i = 0; i < n; i++)
+            {
+                TreeNode* node = q.front();
+                q.pop();
+                count.push_back(node->val);
+                if (node->left) q.push(node->left);
+                if (node->right) q.push(node->right);
+            }
+            res.push_back(count);
+        }
+        return res;
+    }
+    TreeNode* mergeTrees(TreeNode* root1, TreeNode* root2) {
+        if (root1 == NULL) return root2;
+        if (root2 == NULL) return root1;
+        root1->val += root2->val;
+        root1->left = mergeTrees(root1->left, root2->left);
+        root1->right = mergeTrees(root1->right, root2->right);
+        return root1;
+    }
+};
+
+int main()
+{
+    Solution s;
+    TreeNode* t1 = new TreeNode(1);
+	t1->left = new TreeNode(3);
+	t1->right = new TreeNode(2);
+	t1->left->left = new TreeNode(5);
+
+    TreeNode* t2 = new TreeNode(2);
+    t2->left = new TreeNode(1);
+    t2->right = new TreeNode(3);
+    t2->left->right = new TreeNode(4);
+    t2->right->right = new TreeNode(7);
+    for (auto el : s.levelOrder(s.mergeTrees(t1,t2))) {
+        for (auto e : el) {
+            cout << e << "\t" << endl;
+        }
+    }
+    return 0;
+}
+```
+
+<!-- tabs:end -->
