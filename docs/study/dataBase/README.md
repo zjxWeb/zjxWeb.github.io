@@ -2512,6 +2512,10 @@ create table a(id int  primary key auto_increment,name varchar(10)) engine = inn
 + `undo log销毁`： `undo log`在事务执行时产生，事务提交时，并不会立即删除 `undo log`，因为这些日志可能还可用于 `MVCC`。
 + `undo log存储`： `undo log`采用**段的方式进行管理和记录**，存放在前面介绍的 `rollback segment`回滚段中，内部包含 `1024个undo log segment`。
 
+> 一致性 undo log + redo log
+
+> 隔离性  锁+MVCC
+
 <!-- tabs:end -->
 
 ### MVCC（多版本并发控制）
