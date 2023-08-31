@@ -5247,3 +5247,107 @@ int main()
 ```
 
 <!-- tabs:end -->
+
+## 🐋617.合并二叉树【简单】【二叉树】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+给定二叉搜索树（BST）的根节点 `root` 和一个整数值 `val`。
+
+你需要在 BST 中找到节点值等于 `val` 的节点。 返回以该节点为根的子树。 如果节点不存在，则返回 `null` 。
+
+**示例 1:**
+
+![img](./src/tree700.jpg)
+
+```
+输入：root = [4,2,7,1,3], val = 2
+输出：[2,1,3]
+```
+
+**示例 2:**
+
+![img](./src/tree2-700.jpg)
+
+```
+输入：root = [4,2,7,1,3], val = 5
+输出：[]
+```
+
+**提示：**
+
+- 数中节点数在 `[1, 5000]` 范围内
+- `1 <= Node.val <= 107`
+- `root` 是二叉搜索树
+- `1 <= val <= 107`
+
+#### **题解**
+
+```c++
+#include<iostream>
+#include<queue>
+#include<vector>
+
+using namespace std;
+
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
+};
+
+class Solution {
+public:
+    // 二叉树的层次遍历
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>>res;
+        queue<TreeNode*>q;
+        if (root != NULL) q.push(root);
+        while (!q.empty()) {
+            vector<int>count;
+            int n = q.size();
+            for (int i = 0; i < n; i++)
+            {
+                TreeNode* node = q.front();
+                q.pop();
+                count.push_back(node->val);
+                if (node->left) q.push(node->left);
+                if (node->right) q.push(node->right);
+            }
+            res.push_back(count);
+        }
+        return res;
+    }
+    TreeNode* searchBST(TreeNode* root, int val) {
+        if (root == NULL || root->val == val) return root;
+        TreeNode* res = NULL;
+        if (root->val > val)  res = searchBST(root->left, val);
+        if (root->val < val) res = searchBST(root->right, val);
+        return res;
+    }
+};
+
+int main()
+{
+    Solution s;
+    TreeNode* t1 = new TreeNode(4);
+    t1->left = new TreeNode(2);
+    t1->right = new TreeNode(7);
+    t1->left->left = new TreeNode(1);
+    t1->left->right = new TreeNode(3);
+    int val = 2;
+    for (auto el : s.levelOrder(s.searchBST(t1, val))) {
+        for (auto e : el) {
+            cout << e << "\t" << endl;
+        }
+    }
+    return 0;
+}
+```
+
+<!-- tabs:end -->

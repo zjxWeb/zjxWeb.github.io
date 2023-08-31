@@ -177,7 +177,7 @@ input:checked + .slider:before {
     display: none;
     position: fixed;
     right: 40px;
-    bottom: 66px;
+    bottom: 110px;
     width: 65px;
     height: 35px;
     background-color: #29a9e0cf;  
