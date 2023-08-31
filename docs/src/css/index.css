@@ -100,7 +100,7 @@
 }
 
 /* 主题 */
-/* .teme{
+/* .{
     position: fixed;
     right: 40px;
     bottom: 66px;
@@ -116,7 +116,10 @@
     text-align: center;  
     cursor: pointer;
 } */
-
+.teme:hover {
+    background-color: #ebdfa3;
+    transform: scale(1.05);
+  }
 
 
 /* 定义滑动按钮的基本样式 */
@@ -190,8 +193,8 @@ input:checked + .slider:before {
     text-align: center;  
     cursor: pointer;
   }
-
+ */
   #scrollToTopBtn:hover {
     background-color: #ebdfa3;
     transform: scale(1.05);
-  } */
+  }
