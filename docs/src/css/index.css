@@ -198,3 +198,5 @@ input:checked + .slider:before {
     background-color: #ebdfa3;
     transform: scale(1.05);
   }
+
+  
