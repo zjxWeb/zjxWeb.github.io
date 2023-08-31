@@ -100,7 +100,7 @@
 }
 
 /* 主题 */
-.teme{
+/* .teme{
     position: fixed;
     right: 40px;
     bottom: 66px;
@@ -115,7 +115,7 @@
     line-height: 20px;
     text-align: center;  
     cursor: pointer;
-}
+} */
 
 
 
@@ -173,7 +173,7 @@ input:checked + .slider:before {
 
 
 /* 返回顶部按钮样式 */
-#scrollToTopBtn {
+/* #scrollToTopBtn {
     display: none;
     position: fixed;
     right: 40px;
@@ -194,4 +194,4 @@ input:checked + .slider:before {
   #scrollToTopBtn:hover {
     background-color: #ebdfa3;
     transform: scale(1.05);
-  }
+  } */
