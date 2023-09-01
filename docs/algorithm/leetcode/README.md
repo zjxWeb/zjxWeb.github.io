@@ -5351,3 +5351,217 @@ int main()
 ```
 
 <!-- tabs:end -->
+
+## 🐋98. 验证二叉搜索树【中等】【二叉树】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+给你一个二叉树的根节点 `root` ，判断其是否是一个有效的二叉搜索树。
+
+**有效** 二叉搜索树定义如下：
+
+- 节点的左子树只包含 **小于** 当前节点的数。
+- 节点的右子树只包含 **大于** 当前节点的数。
+- 所有左子树和右子树自身必须也是二叉搜索树。
+
+**示例 1：**
+
+![img](./src/tree1-98.jpg)
+
+```
+输入：root = [2,1,3]
+输出：true
+```
+
+**示例 2：**
+
+![img](./src/tree2-98.jpg)
+
+```
+输入：root = [5,1,4,null,null,3,6]
+输出：false
+解释：根节点的值是 5 ，但是右子节点的值是 4 。
+```
+
+**提示：**
+
+- 树中节点数目范围在`[1, 104]` 内
+- `-231 <= Node.val <= 231 - 1`
+
+#### **题解-常规**
+
+```c++
+#include<iostream>
+#include<queue>
+#include<vector>
+
+using namespace std;
+
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
+};
+
+class Solution {
+public:
+    vector<int>count;
+    void traversal(TreeNode* root)
+    {
+        if (root == nullptr) return;
+        // left
+        traversal(root->left);
+        //root
+        count.push_back(root->val);
+        traversal(root->right);
+    }
+    bool isValidBST(TreeNode* root) {
+        // 使用中序遍历将结点放到数组中，最后判断数组是否单调递增
+        count.clear();
+        traversal(root);
+        for (int i = 1; i < count.size(); i++)
+        {
+            if (count[i] <= count[i - 1]) return false;
+        }
+        return true;
+    }
+};
+
+int main()
+{
+    Solution s;
+    TreeNode* t1 = new TreeNode(4);
+    t1->left = new TreeNode(2);
+    t1->right = new TreeNode(7);
+    t1->left->left = new TreeNode(1);
+    t1->left->right = new TreeNode(3);
+    cout << s.isValidBST(t1) << endl;
+    return 0;
+}
+```
+
+#### **题解-优化 **
+
+```c++
+
+    long maxvalue = LONG_MIN;
+    bool isValidBST(TreeNode* root) {
+        if (root == NULL) return true;
+        bool left = isValidBST(root->left);
+        if (root->val > maxvalue)
+        {
+            maxvalue = root->val;
+        }else return false;
+        bool right = isValidBST(root->right);
+        return left && right;
+
+    }
+```
+
+#### **题解-双指针 **
+
+```c++
+	TreeNode* pre = nullptr; // 记录前一个结点
+    bool isValidBST(TreeNode* root) {
+        if (root == NULL) return true;
+        bool left = isValidBST(root->left);
+        if (pre != NULL && pre->val >= root->val) return false;
+        pre = root;
+        bool right = isValidBST(root->right);
+        return left && right;
+    }
+```
+
+<!-- tabs:end -->
+
+## 🐋530. 二叉树搜素树的最小绝对差【简单】【二叉树】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+给你一个二叉搜索树的根节点 `root` ，返回 **树中任意两不同节点值之间的最小差值** 。
+
+差值是一个正数，其数值等于两值之差的绝对值。
+
+**示例 1：**
+
+![img](./src/bst1.jpg)
+
+```
+输入：root = [4,2,6,1,3]
+输出：1
+```
+
+**示例 2：**
+
+![img](./src/bst2.jpg)
+
+```
+输入：root = [1,0,48,null,null,12,49]
+输出：1
+```
+
+**提示：**
+
+- 树中节点的数目范围是 `[2, 104]`
+- `0 <= Node.val <= 105`
+
+#### **题解**
+
+```c++
+#include<iostream>
+#include<queue>
+#include<vector>
+
+using namespace std;
+
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
+};
+
+class Solution {
+public:
+    // 放到数组中
+    vector<int>count;
+    void traversal(TreeNode* root) {
+        if (root == NULL) return;
+        traversal(root->left);
+        count.push_back(root->val);
+        traversal(root->right);
+    }
+    int getMinimumDifference(TreeNode* root) {
+        count.clear();
+        traversal(root);
+        int res = INT_MAX;
+        for (int i = 1; i < count.size(); i++) { // 统计有序数组的最小差值
+            res = min(res, count[i] - count[i - 1]);
+        }
+        return res;
+    }
+};
+
+int main()
+{
+    Solution s;
+    TreeNode* t1 = new TreeNode(4);
+    t1->left = new TreeNode(2);
+    t1->right = new TreeNode(7);
+    t1->left->left = new TreeNode(1);
+    t1->left->right = new TreeNode(3);
+    cout << s.getMinimumDifference(t1) << endl;
+    return 0;
+}
+```
+
+<!-- tabs:end -->
