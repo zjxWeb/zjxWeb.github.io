@@ -870,9 +870,9 @@ commit;
 >
 >   ```sql
 >   SELECT @@TRANSACTION_ISOLATION;
->                                                       
+>                                                         
 >   set session transaction isolation level read uncommitted ;
->                                                       
+>                                                         
 >   set session transaction isolation level repeatable read ;
 >   ```
 
@@ -2620,17 +2620,17 @@ ibd2sdi student.ibd
 ### 常用工具
 
 1. `mysql`
-  Mysql客户端工具，-e执行SQL并退出
+    Mysql客户端工具，-e执行SQL并退出
 2.  `mysqladmin`
-  Mysql管理工具
+    Mysql管理工具
 3.  `mysqlbinlog`
-  二进制日志查看工具
+    二进制日志查看工具
 4. `mysqlshow`
-  查看数据库、表、字段的统计信息
+    查看数据库、表、字段的统计信息
 5. `mysqldump`
-  数据备份工具
+    数据备份工具
 6. `mysqlimport/source`
-  数据导入工具
+    数据导入工具
 
 <!-- tabs:start -->
 
