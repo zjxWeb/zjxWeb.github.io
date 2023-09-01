@@ -870,9 +870,9 @@ commit;
 >
 >   ```sql
 >   SELECT @@TRANSACTION_ISOLATION;
->                                                   
+>                                                       
 >   set session transaction isolation level read uncommitted ;
->                                                   
+>                                                       
 >   set session transaction isolation level repeatable read ;
 >   ```
 
@@ -2617,13 +2617,26 @@ ibd2sdi student.ibd
 | `performance_schema` | 为MySQL服务器运行时状态提供了一个底层监控功能，主要用于手机数据库服务器性能参数 |
 | `sys`                | 包含了一系列方便DBA和开发人员利用 `performance_schema`性能数据库进行性能调优和诊断的视图 |
 
-#### 常用工具
+### 常用工具
+
+1. `mysql`
+  Mysql客户端工具，-e执行SQL并退出
+2.  `mysqladmin`
+  Mysql管理工具
+3.  `mysqlbinlog`
+  二进制日志查看工具
+4. `mysqlshow`
+  查看数据库、表、字段的统计信息
+5. `mysqldump`
+  数据备份工具
+6. `mysqlimport/source`
+  数据导入工具
 
 <!-- tabs:start -->
 
-#### **mysql**
+#### **`mysql`**
 
-+ 该mysql不是指mysql服务而是mysql的客户端工具
++ 该`mysql`不是指`mysql`服务而是`mysql`的客户端工具
 
 ```sql
 语法:
@@ -2687,6 +2700,52 @@ mysqlshow[options] [db_name [table_name [col_name]]]
 	mysqlshow -uroot -p2143 test --count
 	#查询test库中book表的详细情况
 	mysqlshow -uroot-p2143 test book --count
+```
+
+#### **`mysqldump`**
+
+> `mysqldump`客户端工具用来备份数据库或在不同数据库之间进行数据迁移。备份内容包含创建表，及插入表的`SQL`语句。
+
+```mysql
+语法:
+	mysqldump[options] db_name [tables]
+	mysqldump [options] --database/-B db1 [db2 db3...]
+	mysqldump [options] --all-databases/-A
+连接选项:
+	-u, --user=name				指定用户名
+	-p, --password[=name]		指定密码
+	-h, --host=name				指定服务器ip或域名
+	-P,--port一#					指定连接端口
+输出选项:
+	--add-drop-database			在每个数据库创建语句前加上 drop database语句
+	--add-drop-table			在每个表创建语句前加上drop table语句,默认开启;不开启(--skip-add-drop-table)
+	-n,--no-create-db			不包含数据库的创建语句
+	-t, --no-create-info		不包含数据表的创建语句
+	-d --no-data				不包含数据
+	-T, --tab=name				自动生成两个文件:一个.sql文件，创建表结构的语句;一个.txt文件，数据文件
+```
++ 备份数据库
+
+```mysql
+mysqldump -uroot -p123456 student > student.sql
+```
+
+#### **`mysqlimport/source`**
+
+> `mysqlimport`是客户端数据导入工具，用来导入`mysqldump`加-T参数后导出的文本文件。
+
+```mysql
+语法:
+	mysqlimport [options] db_name textfile1 [textfile2...]
+示例:
+	mysqlimport -uroot -p2143 test /tmp/city.txt
+```
+
+> 如果需要导入`sql`文件,可以使用`mysql`中的source 指令
+
+```mysqsl
+语法:
+	source /root/xxxxx.sql
 ```
 
 <!-- tabs:end -->
