@@ -5248,7 +5248,7 @@ int main()
 
 <!-- tabs:end -->
 
-## 🐋617.合并二叉树【简单】【二叉树】
+## 🐋617.二叉树中的搜索【简单】【二叉树】
 
 <!-- tabs:start -->
 
@@ -5563,5 +5563,220 @@ int main()
     return 0;
 }
 ```
+
+<!-- tabs:end -->
+
+## 🐋501.二叉搜索树中的众数【简单】【二叉树】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+给你一个含重复值的二叉搜索树（BST）的根节点 `root` ，找出并返回 BST 中的所有 [众数](https://baike.baidu.com/item/众数/44796)（即，出现频率最高的元素）。
+
+如果树中有不止一个众数，可以按 **任意顺序** 返回。
+
+假定 BST 满足如下定义：
+
+- 结点左子树中所含节点的值 **小于等于** 当前节点的值
+- 结点右子树中所含节点的值 **大于等于** 当前节点的值
+- 左子树和右子树都是二叉搜索树
+
+**示例 1：**
+
+![img](./src/mode-tree.jpg)
+
+```
+输入：root = [1,null,2,2]
+输出：[2]
+```
+
+**示例 2：**
+
+```
+输入：root = [0]
+输出：[0]
+```
+
+**提示：**
+
+- 树中节点的数目在范围 `[1, 104]` 内
+- `-105 <= Node.val <= 105`
+
+**进阶：**你可以不使用额外的空间吗？（假设由递归产生的隐式调用栈的开销不被计算在内）
+
+#### **题解**
+
+```c++
+#include<iostream>
+#include<queue>
+#include<vector>
+
+using namespace std;
+
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
+};
+
+class Solution {
+private:
+    // 中序遍历  双指针 cur pre
+    vector<int>res;
+    TreeNode* pre = NULL;// 指向前一个元素
+    int count = 0;//用count 记录当前数字重复的次数
+    int maxCount = 0;//maxCount 来维护已经扫描过的数当中出现最多的那个数字的出现次数
+    void dfs(TreeNode* cur)
+    {
+        if (cur == NULL) return;
+        // 左
+        dfs(cur->left);
+        // 中
+        if (pre == NULL) count = 1;
+        else if (pre->val == cur->val) count++;
+        else count = 1;
+        pre = cur;// 下一次递归的时候pre跟在cur的后面
+        if (count == maxCount) res.push_back(cur->val);
+        if (count > maxCount) {
+            maxCount = count;
+            res.clear();
+            res.push_back(cur->val);
+        }
+        pre = cur;
+        // 右
+        dfs(cur->right);
+    }
+public:
+    vector<int> findMode(TreeNode* root) {
+        count = 0;
+        maxCount = 0;
+        TreeNode* pre = NULL; // 记录前一个节点
+        res.clear();
+        dfs(root);
+        return res;
+    }
+};
+
+int main()
+{
+    Solution s;
+    TreeNode* t1 = new TreeNode(1);
+    t1->right = new TreeNode(2);
+    t1->right->left = new TreeNode(2);
+    for (auto el : s.findMode(t1))
+    {
+        cout << el << endl;
+    }
+    return 0;
+}
+```
+
+<!-- tabs:end -->
+
+## 🐋236. 二叉树的最近公共祖先【中等 】【二叉树】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+给定一个二叉树, 找到该树中两个指定节点的最近公共祖先。
+
+[百度百科](https://baike.baidu.com/item/最近公共祖先/8918834?fr=aladdin)中最近公共祖先的定义为：“对于有根树 T 的两个节点 p、q，最近公共祖先表示为一个节点 x，满足 x 是 p、q 的祖先且 x 的深度尽可能大（**一个节点也可以是它自己的祖先**）。”
+
+**示例 1：**
+
+![img](https://assets.leetcode.com/uploads/2018/12/14/binarytree.png)
+
+```
+输入：root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 1
+输出：3
+解释：节点 5 和节点 1 的最近公共祖先是节点 3 。
+```
+
+**示例 2：**
+
+![img](https://assets.leetcode.com/uploads/2018/12/14/binarytree.png)
+
+```
+输入：root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 4
+输出：5
+解释：节点 5 和节点 4 的最近公共祖先是节点 5 。因为根据定义最近公共祖先节点可以为节点本身。
+```
+
+**示例 3：**
+
+```
+输入：root = [1,2], p = 1, q = 2
+输出：1
+```
+
+**提示：**
+
+- 树中节点数目在范围 `[2, 105]` 内。
+- `-109 <= Node.val <= 109`
+- 所有 `Node.val` `互不相同` 。
+- `p != q`
+- `p` 和 `q` 均存在于给定的二叉树中。
+
+#### **题解**
+
+```c++
+#include<iostream>
+#include<queue>
+#include<vector>
+
+using namespace std;
+
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
+
+};
+
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        if (root == q || root == p || root == NULL) return root;
+        TreeNode* left = lowestCommonAncestor(root->left, p, q);
+        TreeNode* right = lowestCommonAncestor(root->right, p, q);
+        /*if (left != NULL && right != NULL) return root;
+        if (left != NULL && right == NULL) return left;
+        if (left == NULL && right != NULL) return right;
+        else return NULL;*/
+        if (left != NULL && right != NULL) return root;
+        if (left == NULL) return right;
+        return left;
+    }
+};
+
+int main() {
+    TreeNode root(1);
+    TreeNode a(2);
+    TreeNode b(3);
+    TreeNode c(4);
+    TreeNode d(5);
+    TreeNode e(6);
+    root.left = &a;
+    root.right = &b;
+    a.left = &c;
+    a.right = &d;
+    b.left = &e;
+    TreeNode* lca_node = Solution().lowestCommonAncestor(&root, &a, &e);
+    cout  << lca_node->val << endl;
+    return 0;
+}
+```
+
+1.  求最小公共祖先，需要从底向上遍历，那么二叉树，只能通过后序遍历（即：回溯）实现从底向上的遍历方式。
+2.  在回溯的过程中，必然要遍历整棵二叉树，即使已经找到结果了，依然要把其他节点遍历完，因为要使用递归函数的返回值（也就是代码中的left和right）做逻辑判断。
+3.  要理解如果返回值left为空，right不为空为什么要返回right，为什么可以用返回right传给上一层结果。
 
 <!-- tabs:end -->
