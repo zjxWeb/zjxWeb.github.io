@@ -16,12 +16,16 @@ if (!x) {
     let overlayLayle  = document.createElement("div"); //指令盒子
     let qrDiv  = document.createElement("div"); //底部二维码盒子
     let qr  = document.createElement("img"); //底部二维码QR
+    let qrTitle  = document.createElement("h3"); 
+    
+
     overlayLayle.className = "overlay ";
     document.body.appendChild(titleDiv);
     titleDiv.appendChild(titleDoc);
     document.body.appendChild(overlayLayle);
     document.body.appendChild(qrDiv); //底部二维码盒子
     qrDiv.appendChild(qr);
+    qrDiv.appendChild(qrTitle);
 
     //主标题外部盒子样式
     titleDiv.style.width="100vw";
@@ -34,13 +38,15 @@ if (!x) {
     titleDoc.style.color = "#fff";
     //底部二维码盒子样式
     qrDiv.style.width="100vw";
-    qrDiv.style.height = "100px";
     qrDiv.style.position="fixed";
-    qrDiv.style.bottom="30px";
-    qrDiv.style.background="red";
+    qrDiv.style.bottom="10px";
+    // qrDiv.style.background="red";
     qrDiv.style.textAlign="center";
+    qrDiv.style.color = "#fff";
+    qr.style.width = "150px";
 
     titleDoc.innerText="关注公众号“拼搏的小浣熊”——回复“接头口令”，来获取接头口令♥♥♥";
+    qrTitle.innerText="👉扫一扫关注小浣熊的公众号👈";
     let title  = document.createElement("p");
     title.innerText="🐻欢迎来到小浣熊的世界🐻"
     let container = document.createElement("div");
@@ -58,9 +64,9 @@ if (!x) {
 
     let button = document.createElement("button");
     button.innerText = "提交";
-
     //QR
-    qr.setAttribute("src","../img/qr.png")
+    // qr.setAttribute("src","../img/qr.png")
+    qr.src="https://cdn.jsdelivr.net/gh/zjxWeb/zjxWeb.github.io@main/docs/src/img/qr.png";
     button.onclick = function () {
         password = input.value;
         // 主要业务代码
