@@ -1,36 +1,66 @@
 // 设置cookie过期时间  7天
 function setCookie(cname, cvalue, exdays) {
-    var d = new Date();
+    let d = new Date();
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-    var expires = "expires=" + d.toUTCString();
+    let expires = "expires=" + d.toUTCString();
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
 // while(true) {
-var password = "";
-var x = document.cookie;
+let password = "";
+let x = document.cookie;
 
 if (!x) {
-    var overlayLayle  = document.createElement("div");
+    let titleDiv  = document.createElement("div");// 主标题外部盒子
+    let titleDoc  = document.createElement("h1");//主标题
+    let overlayLayle  = document.createElement("div"); //指令盒子
+    let qrDiv  = document.createElement("div"); //底部二维码盒子
+    let qr  = document.createElement("img"); //底部二维码QR
     overlayLayle.className = "overlay ";
+    document.body.appendChild(titleDiv);
+    titleDiv.appendChild(titleDoc);
     document.body.appendChild(overlayLayle);
-    var title  = document.createElement("p");
+    document.body.appendChild(qrDiv); //底部二维码盒子
+    qrDiv.appendChild(qr);
+
+    //主标题外部盒子样式
+    titleDiv.style.width="100vw";
+    titleDiv.style.height = "80px";
+    titleDiv.style.position="fixed";
+    titleDiv.style.top="30px";
+    // titleDiv.style.background="red";
+    titleDiv.style.textAlign="center";
+    //主标题样式
+    titleDoc.style.color = "#fff";
+    //底部二维码盒子样式
+    qrDiv.style.width="100vw";
+    qrDiv.style.height = "100px";
+    qrDiv.style.position="fixed";
+    qrDiv.style.bottom="30px";
+    qrDiv.style.background="red";
+    qrDiv.style.textAlign="center";
+
+    titleDoc.innerText="关注公众号“拼搏的小浣熊”——回复“接头口令”，来获取接头口令♥♥♥";
+    let title  = document.createElement("p");
     title.innerText="🐻欢迎来到小浣熊的世界🐻"
-    var container = document.createElement("div");
+    let container = document.createElement("div");
     container.className = "password_input ";
     container.style.position = "absolute";
     container.style.top = "50%";
     container.style.left = "50%";
     container.style.transform = "translate(-50%, -50%)";
 
-    var input = document.createElement("input");
+    let input = document.createElement("input");
     input.type = "password";
     input.setAttribute( "placeholder","请输入接头口令");
     input.style.display = "block";
     input.style.marginBottom = "10px";
 
-    var button = document.createElement("button");
+    let button = document.createElement("button");
     button.innerText = "提交";
+
+    //QR
+    qr.setAttribute("src","../img/qr.png")
     button.onclick = function () {
         password = input.value;
         // 主要业务代码
