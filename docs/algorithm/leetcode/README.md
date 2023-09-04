@@ -6049,5 +6049,345 @@ int main()
 
 <!-- tabs:end -->
 
+## 🐋669. 修剪二叉搜索树【中等 】【二叉树】
 
+<!-- tabs:start -->
 
+#### **题目**
+
+给你二叉搜索树的根节点 `root` ，同时给定最小边界`low` 和最大边界 `high`。通过修剪二叉搜索树，使得所有节点的值在`[low, high]`中。修剪树 **不应该** 改变保留在树中的元素的相对结构 (即，如果没有被移除，原有的父代子代关系都应当保留)。 可以证明，存在 **唯一的答案** 。
+
+所以结果应当返回修剪好的二叉搜索树的新的根节点。注意，根节点可能会根据给定的边界发生改变。
+
+**示例 1：**
+
+![img](./src/trim1.jpg)
+
+```
+输入：root = [1,0,2], low = 1, high = 2
+输出：[1,null,2]
+```
+
+**示例 2：**
+
+![img](./src/trim2.jpg)
+
+```
+输入：root = [3,0,4,null,2,null,null,1], low = 1, high = 3
+输出：[3,2,null,1]
+```
+
+**提示：**
+
+- 树中节点数在范围 `[1, 104]` 内
+- `0 <= Node.val <= 104`
+- 树中每个节点的值都是 **唯一** 的
+- 题目数据保证输入是一棵有效的二叉搜索树
+- `0 <= low <= high <= 104`
+
+#### **题解**
+
+```c++
+#include<iostream>
+#include<queue>
+#include<vector>
+
+using namespace std;
+
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
+
+};
+
+class Solution {
+public:
+    // 二叉树的层次遍历
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>>res;
+        queue<TreeNode*>q;
+        if (root != NULL) q.push(root);
+        while (!q.empty()) {
+            vector<int>count;
+            int n = q.size();
+            for (int i = 0; i < n; i++)
+            {
+                TreeNode* node = q.front();
+                q.pop();
+                count.push_back(node->val);
+                if (node->left) q.push(node->left);
+                if (node->right) q.push(node->right);
+            }
+            res.push_back(count);
+        }
+        return res;
+    }
+    TreeNode* trimBST(TreeNode* root, int low, int high) {
+        if (root == nullptr) return nullptr;
+        if (root->val < low) return trimBST(root->right, low, high);// 返回右子树，因为此时右子树的值符合
+        if (root->val > high) return trimBST(root->left, low, high);
+        root->left = trimBST(root->left, low, high);
+        root->right = trimBST(root->right, low, high);
+        return root;
+    }
+};
+
+int main()
+{
+    Solution s;
+    TreeNode* t1 = new TreeNode(3);
+    t1->left = new TreeNode(0);
+    t1->right = new TreeNode(4);
+    t1->left->right = new TreeNode(2);
+    t1->left->right->left = new TreeNode(1);
+    int low = 1,height = 3;
+    for (auto el : s.levelOrder(s.trimBST(t1, low,height))) {
+        for (auto e : el) {
+            cout << e << "\t" << endl;
+        }
+    }
+    return 0;
+}
+```
+
+<!-- tabs:end -->
+
+## 🐋108. 将有序数组转换为二叉搜索树【简单 】【二叉树】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+给你一个整数数组 `nums` ，其中元素已经按 **升序** 排列，请你将其转换为一棵 **高度平衡** 二叉搜索树。
+
+**高度平衡** 二叉树是一棵满足「每个节点的左右两个子树的高度差的绝对值不超过 1 」的二叉树。
+
+**示例 1：**
+
+![img](https://assets.leetcode.com/uploads/2021/02/18/btree1.jpg)
+
+```
+输入：nums = [-10,-3,0,5,9]
+输出：[0,-3,9,-10,null,5]
+解释：[0,-10,5,null,-3,null,9] 也将被视为正确答案：
+```
+
+**示例 2：**
+
+![img](https://assets.leetcode.com/uploads/2021/02/18/btree.jpg)
+
+```
+输入：nums = [1,3]
+输出：[3,1]
+解释：[1,null,3] 和 [3,1] 都是高度平衡二叉搜索树。
+```
+
+**提示：**
+
+- `1 <= nums.length <= 104`
+- `-104 <= nums[i] <= 104`
+- `nums` 按 **严格递增** 顺序排列
+
+#### **题解**
+
+```c++
+#include<iostream>
+#include<queue>
+#include<vector>
+
+using namespace std;
+
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
+
+};
+
+class Solution {
+public:
+    // 二叉树的层次遍历
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>>res;
+        queue<TreeNode*>q;
+        if (root != NULL) q.push(root);
+        while (!q.empty()) {
+            vector<int>count;
+            int n = q.size();
+            for (int i = 0; i < n; i++)
+            {
+                TreeNode* node = q.front();
+                q.pop();
+                count.push_back(node->val);
+                if (node->left) q.push(node->left);
+                if (node->right) q.push(node->right);
+            }
+            res.push_back(count);
+        }
+        return res;
+    }
+    TreeNode* buildBst(vector<int>& num, int left, int right) {
+        if (left > right) return nullptr;
+        int mid = left + ((right - left) / 2);
+        TreeNode* res = new TreeNode(num[mid]);
+        res->left = buildBst(num, left, mid - 1);
+        res->right = buildBst(num, mid+1,right);
+        return res;
+    }
+    TreeNode* sortedArrayToBST(vector<int>& nums) {
+        return buildBst(nums, 0, nums.size() - 1);
+    }
+};
+
+int main()
+{
+    Solution s;
+    vector<int> nums = { -10,-3,0,5,9 };
+    for (auto el : s.levelOrder(s.sortedArrayToBST(nums))) {
+        for (auto e : el) {
+            cout << e << "\t" << endl;
+        }
+    }
+    return 0;
+}
+```
+
+<!-- tabs:end -->
+
+## 🐋[538. 把二叉搜索树转换为累加树](https://leetcode.cn/problems/convert-bst-to-greater-tree/)【中等】【二叉树】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+给出二叉 **搜索** 树的根节点，该树的节点值各不相同，请你将其转换为累加树（Greater Sum Tree），使每个节点 `node` 的新值等于原树中大于或等于 `node.val` 的值之和。
+
+提醒一下，二叉搜索树满足下列约束条件：
+
+- 节点的左子树仅包含键 **小于** 节点键的节点。
+- 节点的右子树仅包含键 **大于** 节点键的节点。
+- 左右子树也必须是二叉搜索树。
+
+**注意：**本题和 1038: https://leetcode-cn.com/problems/binary-search-tree-to-greater-sum-tree/ 相同
+
+ 
+
+**示例 1：**
+
+**![img](https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2019/05/03/tree.png)**
+
+```
+输入：[4,1,6,0,2,5,7,null,null,null,3,null,null,null,8]
+输出：[30,36,21,36,35,26,15,null,null,null,33,null,null,null,8]
+```
+
+**示例 2：**
+
+```
+输入：root = [0,null,1]
+输出：[1,null,1]
+```
+
+**示例 3：**
+
+```
+输入：root = [1,0,2]
+输出：[3,3,2]
+```
+
+**示例 4：**
+
+```
+输入：root = [3,2,4,1]
+输出：[7,9,4,10]
+```
+
+**提示：**
+
+- 树中的节点数介于 `0` 和 `104` 之间。
+- 每个节点的值介于 `-104` 和 `104` 之间。
+- 树中的所有值 **互不相同** 。
+- 给定的树为二叉搜索树。
+
+#### **题解**
+
+```c++
+#include<iostream>
+#include<queue>
+#include<vector>
+
+using namespace std;
+
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
+
+};
+
+class Solution {
+public:
+    // 二叉树的层次遍历
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>>res;
+        queue<TreeNode*>q;
+        if (root != NULL) q.push(root);
+        while (!q.empty()) {
+            vector<int>count;
+            int n = q.size();
+            for (int i = 0; i < n; i++)
+            {
+                TreeNode* node = q.front();
+                q.pop();
+                count.push_back(node->val);
+                if (node->left) q.push(node->left);
+                if (node->right) q.push(node->right);
+            }
+            res.push_back(count);
+        }
+        return res;
+    }
+    // (倒)中序遍历有序数组
+    int pre = 0;
+    void midArr(TreeNode* cur)
+    {
+        if (cur == NULL) return;
+        midArr(cur->right);
+        cur->val += pre;
+        pre = cur->val;// 下一次递归的时候pre跟在cur的后面
+        midArr(cur->left);
+    }
+    TreeNode* convertBST(TreeNode* root) {
+        midArr(root);
+        return root;
+    }
+};
+
+int main()
+{
+    Solution s;
+    TreeNode* t1 = new TreeNode(3);
+    t1->left = new TreeNode(0);
+    t1->right = new TreeNode(4);
+    t1->left->right = new TreeNode(2);
+    t1->left->right->left = new TreeNode(1);
+    for (auto el : s.levelOrder(s.convertBST(t1))) {
+        for (auto e : el) {
+            cout << e << "\t" << endl;
+        }
+    }
+    return 0;
+}
+```
+
+<!-- tabs:end -->
