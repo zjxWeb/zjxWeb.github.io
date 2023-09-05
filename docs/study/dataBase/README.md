@@ -870,9 +870,9 @@ commit;
 >
 >   ```sql
 >   SELECT @@TRANSACTION_ISOLATION;
->                                                         
+>                                                           
 >   set session transaction isolation level read uncommitted ;
->                                                         
+>                                                           
 >   set session transaction isolation level repeatable read ;
 >   ```
 
@@ -2749,6 +2749,116 @@ mysqldump -uroot -p123456 student > student.sql
 ```
 
 <!-- tabs:end -->
+
+# 📃运维篇
+
+## 日志
+
+<!-- tabs:start -->
+
+#### **错误日志**
+
+> 错误日志是`MySQL`中最重要的日志之一，它记录了当`mysqld`启动和停止时，以及服务器在运行过程中发生任何严重错误时的相关信息。当数据库出现任何故障导致无法正常使用时，建议首先查看此日志。
+
++ 该日志是默认开启的，默认存放目录`/var/log/`，默认的日志文件名为`mysqld.log`。查看日志位置:
+
+```mysql
+show variables like '%log_errgr%'
+```
+
+```shell
+tail -50 /var/log/mysqld.log  # 尾部50行日志
+tail -f /var/log/mysqld.log tail -f /var/log/mysqld.log  # 动态监控日志
+```
+
+#### **二进制日志**
+
+> 二进制日志（BINLOG）记录了所有的DDL(数据定义语言）语句和DML（数据操纵语言）语句，但不包括数据查询（SELECT、SHOW)语句。
+
++ 作用:1.灾难时的数据恢复;2.MySQL的主从复制。在MySQL8版本中，默认二进制日志是开启着的，涉及到的参数如下:
+
+```mysql
+show variables like '%log_bin%'
+```
+
+![45](./src/45.png)
+
++ 日志格式
+
+`MySQL`服务器中提供了多种格式来记录二进制日志，具体格式及特点如下:
+
+| 日志格式  | 含义                                                         |
+| --------- | ------------------------------------------------------------ |
+| STATEMENT | 基于SQL语句的日志记录，记录的是SQL语句，对数据进行修改的SQL都会记录在日志文件中。 |
+| ROW       | 基于行的日志记录，记录的是每一行的数据变更。（默认）         |
+| MIXED     | 混合STATEMENT和ROW两种格式，默认采用STATEMENT，在某些特殊情况下会自动切换为ROW进行记录。 |
+
+```mysql
+show variables like '%binlog_format%';
+```
+
+查看二进制文件：参考进阶篇
+
++ 日志删除
+
+对于比较繁忙的业务系统，每天生成的binlog数据巨大，如果长时间不清除，将会占用大量磁盘空间。可以通过以下几种方式清理日志;
+
+| 指令                                             | 含义                                                         |
+| ------------------------------------------------ | ------------------------------------------------------------ |
+| reset master                                     | 删除全部binlog日志，删除之后，日志编号，将从binlog.000001重新开始 |
+| purge master logs to 'binlog.****`               | 删除\*\*\*\*\*\*编号之前的所有日志                           |
+| purge master logs before 'yyyy-mm-dd hh24:mi:ss' | 删除日志为"yyyy-mm-dd hh24:mi:ss"之前产生的所有日志          |
+
+> 删除日志为"yyyy-mm-dd hh24:mi:ss"之前产生的所有日志
+
+```mysql
+show variables like '%binlog_expire_logs_seconds%';
+```
+
+#### **查询日志**
+
+> 查询日志中记录了客户端的所有操作语句，而二进制日志不包含查询数据的SQL语句。默认情况下，查询日志是未开启的。如果需要开启查询日志，可以设置以下配置:
+
+![46](./src/46.png)
+
+> 修改MySQL的配置文件/etc/my.cnf文件，添加如下内容:
+
+```mysql
+#该选项用来开启查询日志，可选值:0或者1;0代表关闭，1代表开启
+general_log=1
+#设置日志的文件名，如果没有指定，默认的文件名为host_name.log
+general_log_file=mysql_query.log
+```
+
+#### **慢查询日志**
+
+> 慢查询日志记录了所有执行时间超过参数`long_query_time` 设置值并且扫描记录数不小于`min_examined_row_limit`的所有的SQL语句的日志，默认未开启。`long_query_time`默认为10秒，最小为0，精度可以到微秒。
+
+```mysql
+#慢查询日志
+slow_query log=1
+#执行时间参数
+long_query_time=2
+```
+
+> 默认情况下，不会记录管理语句，也不会记录不使用索引进行查找的查询。可以使用`log_slow_admin_statements`和更改此行为`log_queries_not_using_indexes`，如下所述
+
+```mysql
+#记录执行较慢的管理语句
+log_slow_admin_statements =1
+#记录执行较慢的未使用索引的语句
+log_queries_not_using_indexes =1s
+```
+
+<!-- tabs:end -->
+
+## 主从复制
+
+### 概述
+
+> 主从复制是指将主数据库的DDL和DML操作通过二进制日志传到从库服务器中，然后在从库上对这些日志重新执行（也叫重做)，从而使得从库和主库的数据保持同步。
+
+
 
 # 📃数据类型
 

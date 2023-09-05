@@ -6391,3 +6391,337 @@ int main()
 ```
 
 <!-- tabs:end -->
+
+## 🐋[77. 组合](https://leetcode.cn/problems/combinations/)【中等】【回溯】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+给定两个整数 `n` 和 `k`，返回范围 `[1, n]` 中所有可能的 `k` 个数的组合。
+
+你可以按 **任何顺序** 返回答案。
+
+**示例 1：**
+
+```
+输入：n = 4, k = 2
+输出：
+[
+  [2,4],
+  [3,4],
+  [2,3],
+  [1,2],
+  [1,3],
+  [1,4],
+]
+```
+
+**示例 2：**
+
+```
+输入：n = 1, k = 1
+输出：[[1]]
+```
+
+**提示：**
+
+- `1 <= n <= 20`
+- `1 <= k <= n`
+
+#### **题解**
+
+```c++
+#include<iostream>
+#include<vector>
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> combine(int n, int k) {
+        res.clear();
+        path.clear();
+        backtracking(n, k, 1);
+        return res;
+    }
+private:
+    vector<vector<int>>res;// 存放结果集
+    vector<int>path;//存放符合条件的
+    void backtracking(int n, int k ,int startIndex) {
+        if (path.size() == k) {
+            res.push_back(path);
+            return;
+        }
+        for (int i = startIndex; i <= n; i++)
+        {
+            path.push_back(i);
+            backtracking(n, k, i + 1);
+            path.pop_back();// 回溯
+        }
+    }
+};
+
+int main()
+{
+    Solution s;
+    int n = 4, k = 2;
+    for (auto el : s.combine(n, k)) {
+        for (auto e : el) {
+            cout << e << "\t";
+        }
+        cout << endl;
+    }
+	return 0;
+}
+```
+
+#### **优化**
+
+> 1. 已经选择的元素个数：path.size();
+> 2. 所需需要的元素个数为: k - path.size();
+> 3. 列表中剩余元素（n-i） >= 所需需要的元素个数（k - path.size()）
+> 4. 在集合n中至多要从该起始位置 : i <= n - (k - path.size()) + 1，开始遍历
+>
+> 为什么有个+1呢，因为包括起始位置，我们要是一个左闭的集合。
+>
+> 举个例子，n = 4，k = 3， 目前已经选取的元素为0（path.size为0），n - (k - 0) + 1 即 4 - ( 3 - 0) + 1 = 2。
+>
+> 从2开始搜索都是合理的，可以是组合[2, 3, 4]。
+
+```c++
+class Solution {
+private:
+    vector<vector<int>> result;
+    vector<int> path;
+    void backtracking(int n, int k, int startIndex) {
+        if (path.size() == k) {
+            result.push_back(path);
+            return;
+        }
+        for (int i = startIndex; i <= n - (k - path.size()) + 1; i++) { // 优化的地方
+            path.push_back(i); // 处理节点
+            backtracking(n, k, i + 1);
+            path.pop_back(); // 回溯，撤销处理的节点
+        }
+    }
+public:
+
+    vector<vector<int>> combine(int n, int k) {
+        backtracking(n, k, 1);
+        return result;
+    }
+};
+```
+
+<!-- tabs:end -->
+
+## 🐋[216. 组合总和 III](https://leetcode.cn/problems/combination-sum-iii/)【中等】【回溯】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+找出所有相加之和为 `n` 的 `k` 个数的组合，且满足下列条件：
+
+- 只使用数字1到9
+- 每个数字 **最多使用一次** 
+
+返回 *所有可能的有效组合的列表* 。该列表不能包含相同的组合两次，组合可以以任何顺序返回。
+
+**示例 1:**
+
+```
+输入: k = 3, n = 7
+输出: [[1,2,4]]
+解释:
+1 + 2 + 4 = 7
+没有其他符合的组合了。
+```
+
+**示例 2:**
+
+```
+输入: k = 3, n = 9
+输出: [[1,2,6], [1,3,5], [2,3,4]]
+解释:
+1 + 2 + 6 = 9
+1 + 3 + 5 = 9
+2 + 3 + 4 = 9
+没有其他符合的组合了。
+```
+
+**示例 3:**
+
+```
+输入: k = 4, n = 1
+输出: []
+解释: 不存在有效的组合。
+在[1,9]范围内使用4个不同的数字，我们可以得到的最小和是1+2+3+4 = 10，因为10 > 1，没有有效的组合。
+```
+
+**提示:**
+
+- `2 <= k <= 9`
+- `1 <= n <= 60`
+
+#### **题解**
+
+```c++
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> combinationSum3(int k, int n) {
+        path.clear();
+        res.clear();
+        backtracking(k, n, 0, 1);
+        return res;
+    }
+private:
+    vector<vector<int>>res;
+    vector<int>path;
+    void backtracking(int k,int n,int sum,int startIndex) {
+        if (sum > n) return; //优化
+        if (sum == n && path.size() == k) {
+            res.push_back(path);
+            return;
+        }
+        for (int i = startIndex; i <= 9-(k-path.size())+1; i++) // 9-(k-path.size())+1优化
+        {
+            sum += i;
+            path.push_back(i);
+            backtracking(k, n, sum, i + 1);
+            // 回溯
+            sum -= i;
+            path.pop_back();
+        }
+    }
+};
+
+int main() {
+     Solution s;
+    int n = 9, k = 3;
+    for (auto el : s.combinationSum3(k, n)) {
+        for (auto e : el) {
+            cout << e << "\t";
+        }
+        cout << endl;
+    }
+	return 0;
+}
+```
+
+<!-- tabs:end -->
+
+## 🐋[216. 组合总和 III](https://leetcode.cn/problems/combination-sum-iii/)【中等】【回溯】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+给定一个仅包含数字 `2-9` 的字符串，返回所有它能表示的字母组合。答案可以按 **任意顺序** 返回。
+
+给出数字到字母的映射如下（与电话按键相同）。注意 1 不对应任何字母。
+
+![img](https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2021/11/09/200px-telephone-keypad2svg.png)
+
+ 
+
+**示例 1：**
+
+```
+输入：digits = "23"
+输出：["ad","ae","af","bd","be","bf","cd","ce","cf"]
+```
+
+**示例 2：**
+
+```
+输入：digits = ""
+输出：[]
+```
+
+**示例 3：**
+
+```
+输入：digits = "2"
+输出：["a","b","c"]
+```
+
+ 
+
+**提示：**
+
+- `0 <= digits.length <= 4`
+- `digits[i]` 是范围 `['2', '9']` 的一个数字。
+
+#### **题解**
+
+```c++
+#include<iostream>
+#include<vector>
+#include<string>
+
+using namespace std;
+
+class Solution {
+public:
+    vector<string> letterCombinations(string digits) {
+        res.clear();
+        // 对于为空的字段还是要自定义判断一下的
+        if (digits.size() == 0) return res;
+        backtracking(digits, 0, "");
+        return res;
+    }
+private:
+    vector<string>res;
+    const string phoneNum[10] = {
+    "", // 0
+    "", // 1
+    "abc", // 2
+    "def", // 3
+    "ghi", // 4
+    "jkl", // 5
+    "mno", // 6
+    "pqrs", // 7
+    "tuv", // 8
+    "wxyz", // 9
+    };
+    void backtracking(const string & digits,int index,const string & st) {
+        // 确定递归的返回的条件
+        if (index == digits.size())
+        {
+            res.push_back(st);
+            return;
+        }
+        int digit = digits[index] - '0';        // 将index指向的数字转为int
+        string getPhoneNum = phoneNum[digit];     // 取出对应的值
+        for (int i = 0; i < getPhoneNum.size(); i++)
+        {
+            /*s.push_back(getPhoneNum[i]);
+            backtracking(digits, i + 1);
+            s.pop_back();*/
+
+            //写成一行，隐藏回溯
+            backtracking(digits, index + 1, st + getPhoneNum[i]);
+        }
+    }
+};
+
+int main() {
+    Solution s;
+    string digits = "23";
+    for (auto el : s.letterCombinations(digits)) {
+        for (auto e : el) {
+            cout << e << "\t";
+        }
+        cout << endl;
+    }
+	return 0;
+}
+```
+
+<!-- tabs:end -->
