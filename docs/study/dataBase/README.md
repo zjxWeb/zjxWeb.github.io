@@ -870,9 +870,9 @@ commit;
 >
 >   ```sql
 >   SELECT @@TRANSACTION_ISOLATION;
->                                                           
+>                                                               
 >   set session transaction isolation level read uncommitted ;
->                                                           
+>                                                               
 >   set session transaction isolation level repeatable read ;
 >   ```
 
@@ -2857,6 +2857,185 @@ log_queries_not_using_indexes =1s
 ### 概述
 
 > 主从复制是指将主数据库的DDL和DML操作通过二进制日志传到从库服务器中，然后在从库上对这些日志重新执行（也叫重做)，从而使得从库和主库的数据保持同步。
+
++ `MySQL`支持一台主库同时向多台从库进行复制，从库（`Slave`）同时也可以作为其他从服务器的主库（`Master`），实现**链状复制**。
+
++ `MySQL` 复制的有点主要包含以下三个方面:
+  + 主库出现问题，可以快速切换到从库提供服务。
+  + 实现读写分离，降低主库的访问压力。
+  + 可以在从库中执行备份，以避免备份期间影响主库服务
+
+### 原理
+
+![47](./src/47.png)
+
+从上图来看，复制分成三步:
+1.  Master主库在事务提交时，会把数据变更记录在二进制日志文件Binlog 中
+1. 从库读取主库的二进制日志文件 Binlog，写入到从库的中继日志 Relay Log 。
+1. slave重做中继日志中的事件，将改变反映它自己的数据。
+
+### 搭建
+
+<!-- tabs:start -->
+
+#### **服务器准备**
+
+![48](./src/48.png)
+
+#### **主库配置**
+
+1. 修改配置文件 `/etc/my.cnf`
+
+```shell
+#mysql服务ID，保证整个集群环境中唯一，取值范围:1-2^32-1，默认为1
+server-id=1
+#是否只读,1代表只读,0代表读写
+read-only=0
+#忽略的数据,指不需要同步的数据库
+#binlog-ignore-db=mysql
+#指定同步的数据库
+#binlog-do-db=db01
+```
+
+2. 重启mysql
+
+````mysql
+systemctl restart mysqld
+````
+
+3. 登录`mysql`，创建远程连接的账号，并授予主从复制权限
+
+```mysql
+#创建itcast用户，并设置密码，该用户可在任意主机连接该MySQL服务
+CREATE USER 'itcast'@'%' IDENTIFIED WITH mysql_native_password BY 'Root@123456';
+#为'itcast'@'%'用户分配主从复制权限
+GRANT REPLICATION SLAVE ON *.* TO 'itcast'@'%';
+```
+
+4.通过指令，查看二进制日志坐标
+
+```mysql
+show master status ;
+```
+
+```tex
+字段含义说明:
+file:从哪个日志文件开始推送日志文件
+position : 从哪个位置开始推送日志
+binlog_ignore_db:指定不需要同步的数据库
+```
+
+#### **从库配置**
+
+1. 修改配置文件 `/etc/my.cnf`
+
+```shell
+#mysql服务ID，保证整个集群环境中唯一，取值范围:1-2^32-1，默认为1
+server-id=2
+#是否只读,1代表只读,0代表读写
+read-only=1
+# 超级管理员也是只读的
+#super-read-only=1
+```
+
+2. 重启mysql
+
+````mysql
+systemctl restart mysqld
+````
+
+3. 登录`mysql`，设置主库配置
+
+```mysql
+CHANGE REPLICATION SOURCE TO SOURCE_HOST='xxx.xXx', SOURCE_USER='xxx' SOURCE_PASSWORD='xxx', SOURCE_LOG_FILE='xxx',SOURCE_LOG_POS=xxx;
+```
+
+上述是8.0.23中的语法。如果mysql是8.0.23之前的版本，执行如下SQL:
+
+```mysql
+CHANGE MASTER TO MASTER. HOST='xxx.xXx',MASTER_USER='xxx', MASTER_PASSWORD='xxx',MASTER_LOG_FILE='xxx', MASTER_LOG_POS=xxx;
+```
+
+| 参数名          | 含义               | 8.0.23之前      |
+| --------------- | ------------------ | --------------- |
+| SOURCE_HOST     | 主库ip地址         | MASTER_HOST     |
+| SOURCE_USER     | 连接主库的用户名   | MASTER_USER     |
+| SOURCE_PASSWORD | 连接主库的密码     | MASTER_PASSWORD |
+| SOURCE_LOG_FILE | binlog日志文件名   | MASTER_LOG_FILE |
+| SOURCE_LOG_POS  | binlog日志文件位置 | MASTER_LOG_POS  |
+
+4. 开启同步操作
+
+```mysql
+start replica;  #8.0.22之后
+start slave;	#8.0.22之前
+```
+
+5. 查看主从同步状态
+
+```mysql
+show replica status; #8.0.22之后
+show slave status; #8.0.22之前
+```
+
+![49](./src/49.png)
+
+<!-- tabs:end -->
+
+## 分库分表
+
+### 介绍
+
++ 问题分析
++ 随着互联网及移动互联网的发展，应用系统的数据量也是成指数式增长，若采用单数据库进行数据存储，存在以下性能瓶颈:
+  1.  IO瓶颈:热点数据太多，数据库缓存不足，产生大量磁盘IO，效率较低。请求数据太多，带宽不够，网络IO瓶颈。
+  2.  CPU瓶颈:排序、分组、连接查询、聚合统计等SQL会耗费大量的CPU资源，请求数太多，CPU出现瓶颈。
+
+> 分库分表的中心思想都是将数据分散存储，使得单一数据库/表的数据量变小来缓解单一数据库的性能问题，从而达到提升数据库性能的目的。
+
+### 拆分策略
+
+![50](./src/50.png)
+
++ 垂直拆分
+
+![51](./src/51.png)
+
++ 水平拆分
+
+![52](./src/52.png)
+
++ 实现技术
+
+  ![52](./src/53.png)
+
+  + `shardingJDBC`∶基于`AOP`原理，在应用程序中对本地执行的`SQL`进行拦截，解析、改写、路由处理。需要自行编码配置实现，只支持`java`语言，性能较高。
+  + `MyCat`:数据库分库分表中间件，不用调整代码即可实现分库分表，支持多种语言，性能不及前者。
+
+### `Mycat`概述
+
++ 介绍
+  + Mycat是开源的、活跃的、基于Java语言编写的MySQL数据库中间件可以像使用mysql一样来使用mycat，对于开发人员来说根本感觉不到mycat的存在。
++ 优势:
+  + 性能可靠稳定
+  + 强大的技术团队
+  + 体系完善
+  + 社区活跃
++ [下载地址](http: //dl.mycat.org.cn/)
+
+![54](./src/54.png)
+
+### Mycat入门
+
+由于tb_order表中数据量很大，磁盘to及容量都到达了瓶颈，现在需要对t_order表进行数据分片，分为三个数据节点，每一个节点主机位于不同的服务器上,具体的结构,参考下图:
+
+![55](./src/55.png)
+
+> 环境准备
+
+![56](./src/56.png)
+
+![57](./src/57.png)
 
 
 
