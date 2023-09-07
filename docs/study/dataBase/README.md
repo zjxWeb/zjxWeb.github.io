@@ -870,9 +870,9 @@ commit;
 >
 >   ```sql
 >   SELECT @@TRANSACTION_ISOLATION;
->                                                               
+>                                                                 
 >   set session transaction isolation level read uncommitted ;
->                                                               
+>                                                                 
 >   set session transaction isolation level repeatable read ;
 >   ```
 
@@ -887,7 +887,7 @@ commit;
 #### **MySQL体系结构：**
 
 ![结构图](./src/6.png)
-![层级描述](https://dhc.pythonanywhere.com/media/editor/MySQL体系结构层级含义_20220315034359342837.png "层级描述")
+![层级描述](./src/58.png)
 
 >  存储引擎就是存储数据、建立索引、更新/查询数据等技术的实现方式。存储引擎是基于表而不是基于库的，所以存储引擎也可以被称为表引擎。
 
