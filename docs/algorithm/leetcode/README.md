@@ -6725,3 +6725,295 @@ int main() {
 ```
 
 <!-- tabs:end -->
+
+## 🐋[40. 组合总和 II](https://leetcode.cn/problems/combination-sum-ii/)【中等】【回溯】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+给定一个候选人编号的集合 `candidates` 和一个目标数 `target` ，找出 `candidates` 中所有可以使数字和为 `target` 的组合。
+
+`candidates` 中的每个数字在每个组合中只能使用 **一次** 。
+
+**注意：**解集不能包含重复的组合。 
+
+ 
+
+**示例 1:**
+
+```
+输入: candidates = [10,1,2,7,6,1,5], target = 8,
+输出:
+[
+[1,1,6],
+[1,2,5],
+[1,7],
+[2,6]
+]
+```
+
+**示例 2:**
+
+```
+输入: candidates = [2,5,2,1,2], target = 5,
+输出:
+[
+[1,2,2],
+[5]
+]
+```
+
+ 
+
+**提示:**
+
+- `1 <= candidates.length <= 100`
+- `1 <= candidates[i] <= 50`
+- `1 <= target <= 30`
+
+#### **题解**
+
+```c++
+class Solution {
+public:
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        vector<bool> use(candidates.size(), false);
+        res.clear();
+        path.clear();
+        // 首先把给candidates排序，让其相同的元素都挨在一起。
+        sort(candidates.begin(), candidates.end());
+        backtracking(candidates, target, 0, 0,use);
+        return res;
+    }
+private:
+    // 记得此题一定要去重
+    vector<vector<int>> res;
+    vector<int> path;
+    void backtracking(vector<int>& candidates, int target, int sum, int startIndex, vector<bool>& used) {
+        if (sum > target) return;
+        if (sum == target) {
+            res.push_back(path);
+            return;
+        }
+        for (int i = startIndex; i < candidates.size(); i++) {
+            // used[i - 1] == true，说明同一树枝candidates[i - 1]使用过
+            // used[i - 1] == false，说明同一树层candidates[i - 1]使用过
+            // 要对同一树层使用过的元素进行跳过
+            if (i > 0 && candidates[i] == candidates[i - 1] && used[i - 1] == false) {
+                continue;
+            }
+            sum += candidates[i];
+            path.push_back(candidates[i]);
+            used[i] = true;
+            backtracking(candidates, target, sum, i + 1, used); // 和39.组合总和的区别1，这里是i+1，每个数字在每个组合中只能使用一次
+            used[i] = false;
+            sum -= candidates[i];
+            path.pop_back();
+        }
+    }
+};
+```
+
+<!-- tabs:end -->
+
+## 🐋[131. 分割回文串](https://leetcode.cn/problems/palindrome-partitioning/)【中等】【回溯】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+给你一个字符串 `s`，请你将 `s` 分割成一些子串，使每个子串都是 **回文串** 。返回 `s` 所有可能的分割方案。
+
+**回文串** 是正着读和反着读都一样的字符串。
+
+ 
+
+**示例 1：**
+
+```
+输入：s = "aab"
+输出：[["a","a","b"],["aa","b"]]
+```
+
+**示例 2：**
+
+```
+输入：s = "a"
+输出：[["a"]]
+```
+
+ 
+
+**提示：**
+
+- `1 <= s.length <= 16`
+- `s` 仅由小写英文字母组成
+
+#### **题解**
+
+```c++
+#include<iostream>
+#include<vector>
+#include<string>
+#include<algorithm>
+
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<string>> partition(string s) {
+        res.clear();
+        path.clear();
+        backtracking(s, 0);
+        return res;
+    }
+private:
+    vector<vector<string>>res;
+    vector<string>path;
+    // 双指针判断回文串
+   bool palindromeString(string& str,int pre,int end) {
+       for (int i = pre, j = end; i < j; i++, j--) {
+           if (str[i] != str[j]) {
+               return false;
+           }
+       }
+       return true;
+    }
+    void backtracking(string& str,int index) {
+        if (index >= str.size()) {
+
+            res.push_back(path);
+            return;
+        }
+        for (int i = index; i < str.size(); i++)
+        {
+            if (palindromeString(str,index,i))
+            {
+                string s = str.substr(index, i - index + 1);
+                path.push_back(s);
+            }
+            else continue;//  如果不是则直接跳过
+            backtracking(str, i + 1); 
+            path.pop_back();// 回溯
+        }
+    }
+};
+
+int main() {
+    Solution s;
+    string str = "aab";
+    for (auto el : s.partition(str)) {
+        for (auto e : el) {
+            cout << e << "\t";
+        }
+        cout << endl;
+    }
+    return 0;
+}
+```
+
+<!-- tabs:end -->
+
+## 🐋[93. 复原 IP 地址](https://leetcode.cn/problems/restore-ip-addresses/)【中等】【回溯】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+**有效 IP 地址** 正好由四个整数（每个整数位于 `0` 到 `255` 之间组成，且不能含有前导 `0`），整数之间用 `'.'` 分隔。
+
+- 例如：`"0.1.2.201"` 和` "192.168.1.1"` 是 **有效** IP 地址，但是 `"0.011.255.245"`、`"192.168.1.312"` 和 `"192.168@1.1"` 是 **无效** IP 地址。
+
+给定一个只包含数字的字符串 `s` ，用以表示一个 IP 地址，返回所有可能的**有效 IP 地址**，这些地址可以通过在 `s` 中插入 `'.'` 来形成。你 **不能** 重新排序或删除 `s` 中的任何数字。你可以按 **任何** 顺序返回答案。
+
+**示例 1：**
+
+```
+输入：s = "25525511135"
+输出：["255.255.11.135","255.255.111.35"]
+```
+
+**示例 2：**
+
+```
+输入：s = "0000"
+输出：["0.0.0.0"]
+```
+
+**示例 3：**
+
+```
+输入：s = "101023"
+输出：["1.0.10.23","1.0.102.3","10.1.0.23","10.10.2.3","101.0.2.3"]
+```
+
+**提示：**
+
+- `1 <= s.length <= 20`
+- `s` 仅由数字组成
+
+#### **题解**
+
+```c++
+#include<iostream>
+#include<vector>
+using namespace std;
+
+class Solution {
+public:
+    vector<string> restoreIpAddresses(string s) {
+        res.clear();
+        // 如果符合才执行backtracking
+        if (s.size() < 4 || s.size() > 12) return res;
+        backtracking(s, 0, 0);
+        return res;
+    }
+private:
+    vector<string> res;// 存放结果集
+    void backtracking(string &s, int point,int index) {
+        if (point == 3) {
+            if (isIp(s, index, s.size() - 1)) {// 判断是否合法，合法则push
+                res.push_back(s);
+            }
+            return;
+        }
+        for (int i = index; i < s.size(); i++)
+        {
+            if (isIp(s, index, i)) { // 判断字串是否合法
+                s.insert(s.begin() + i + 1, '.');
+                point++;
+                backtracking(s, point, i + 2);// 插入逗点之后下一个子串的起始位置为i+2
+                point--;//回溯
+                s.erase(s.begin() + i + 1);//回溯
+            }
+            else break;
+        }
+    }
+    bool isIp(string& s,int pre,int end) {
+        if (pre > end) return false;
+        if (s[pre] == '0' && pre != end) return false; // 0开头不合法 
+        int num = 0;
+        for (int i = pre; i <= end; i++)
+        {
+            if (s[i] > '9' || s[i] < '0') return false;
+            num = num * 10 + (s[i] - '0'); // 字串
+            if (num > 255) return false;
+        }
+        return true;
+    }
+};
+
+int main()
+{
+    Solution s;
+    string str = "25525511135";
+    for (auto el : s.restoreIpAddresses(str)) {
+        cout << el << "\t";
+        cout << endl;
+    }
+	return 0;
+}
+```
+
+<!-- tabs:end -->
