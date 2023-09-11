@@ -312,7 +312,7 @@ sudo iptables-restore < /etc/sysconfig/iptables
 
 这些步骤可以帮助您在`CentOS`中切换全局镜像。使用较快的yum源可以加快软件包的下载速度，并优化`CentOS`系统的性能。
 
-## 2. 安装`NodeJS`
+### 2. 安装`NodeJS`
 
 在`CentOS`中安装`Node.js`，可以遵循以下步骤：
 
@@ -373,4 +373,17 @@ sudo iptables-restore < /etc/sysconfig/iptables
 > 如果安装完之后 ，输入 `npm -v`提示，命令不存在，可以使用 `yum -y install npm` 进行二次安装，随后即可完成。
 
 这些是在`CentOS`中安装`Node.js`的基本步骤，您可以根据需要使用不同的选项来安装不同版本的`Node.js`。
+
+### 3. 安装man中文手册
+
+```shell
+yum -y install man-pages-zh-CN.noarch
+vi .bashrc
+alias cman='man -M /usr/share/man/zh_CN'
+source .bashrc
+
+example: cman socket
+```
+
+
 

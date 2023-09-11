@@ -7017,3 +7017,351 @@ int main()
 ```
 
 <!-- tabs:end -->
+
+## 🐋[90. 子集 II](https://leetcode.cn/problems/subsets-ii/)【中等】【回溯】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+给你一个整数数组 `nums` ，其中可能包含重复元素，请你返回该数组所有可能的子集（幂集）。
+
+解集 **不能** 包含重复的子集。返回的解集中，子集可以按 **任意顺序** 排列。
+
+**示例 1：**
+
+```
+输入：nums = [1,2,2]
+输出：[[],[1],[1,2],[1,2,2],[2],[2,2]]
+```
+
+**示例 2：**
+
+```
+输入：nums = [0]
+输出：[[],[0]]
+```
+
+**提示：**
+
+- `1 <= nums.length <= 10`
+- `-10 <= nums[i] <= 10`
+
+#### **题解**
+
+```c++
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+class Solution  {
+public:
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        res.clear();
+        path.clear();
+        vector<bool>used(nums.size(), false);
+        sort(nums.begin(), nums.end()); //去重之前必须先要排序
+        backtracking(nums, 0, used);
+        return res;
+    }
+private:
+    vector<vector<int>>res;// 存放结果集
+    vector<int>path = { };//存放符合条件的
+    void backtracking(vector<int>& nums, int index,vector<bool>used) {
+        res.push_back(path);
+        for (int i = index; i < nums.size(); i++)
+        {
+            // 要对同一树层使用过的元素进行跳过
+            if (i > 0 && nums[i] == nums[i - 1] && used[i - 1] == false) continue;
+            path.push_back(nums[i]);
+            used[i] = true;
+            backtracking(nums, i + 1,used);
+            used[i] = false;
+            path.pop_back();
+        }
+    }
+};
+
+int main()
+{
+    Solution s;
+    vector<int> nums = { 4,4,4,1,4 };
+    for (auto el : s.subsetsWithDup(nums)) {
+        for (auto e : el) {
+            cout << e << "\t";
+        }
+        cout << endl;
+    }
+    return 0;
+}
+```
+
+<!-- tabs:end -->
+
+## 🐋[491. 递增子序列](https://leetcode.cn/problems/non-decreasing-subsequences/)【中等】【回溯】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+给你一个整数数组 `nums` ，找出并返回所有该数组中不同的递增子序列，递增子序列中 **至少有两个元素** 。你可以按 **任意顺序** 返回答案。
+
+数组中可能含有重复元素，如出现两个整数相等，也可以视作递增序列的一种特殊情况。
+
+**示例 1：**
+
+```
+输入：nums = [4,6,7,7]
+输出：[[4,6],[4,6,7],[4,6,7,7],[4,7],[4,7,7],[6,7],[6,7,7],[7,7]]
+```
+
+**示例 2：**
+
+```
+输入：nums = [4,4,3,2,1]
+输出：[[4,4]]
+```
+
+**提示：**
+
+- `1 <= nums.length <= 15`
+- `-100 <= nums[i] <= 100`
+
+#### **题解**
+
+```c++
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<unordered_set>
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> findSubsequences(vector<int>& nums) {
+        res.clear();
+        path.clear();
+        backtracking(nums,0);
+        return res;
+    }
+private:
+    vector<vector<int>>res;// 存放结果集
+    vector<int>path;//存放符合条件的
+    void backtracking(vector<int>& nums, int index) {
+        if (path.size() > 1)  res.push_back(path); // 注意这里不要加return，要取树上的节点
+        unordered_set<int>used; // 使用unordered_set来去重nums，使其没有重复的数字
+        for (int i = index; i < nums.size(); i++)
+        {
+           // nums[i] < path.back()  如果当前小于最右边元素就不能选了
+            // used.find(nums[i]) != used.end() 不能重复取数
+            if ((!path.empty() && nums[i] < path.back()) || used.find(nums[i]) != used.end()) continue;
+            used.insert(nums[i]); // 记录这个元素在本层用过了，本层后面不能再用了
+            path.push_back(nums[i]);
+            backtracking(nums,i + 1);
+            path.pop_back();
+        }
+    }
+};
+
+int main()
+{
+    Solution s;
+    vector<int> nums = { 4,6,7,7 };
+    for (auto el : s.findSubsequences(nums)) {
+        for (auto e : el) {
+            cout << e << "\t";
+        }
+        cout << endl;
+    }
+    return 0;
+}
+```
+
+<!-- tabs:end -->
+
+## 🐋[46. 全排列](https://leetcode.cn/problems/permutations/)【中等】【回溯】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+给定一个不含重复数字的数组 `nums` ，返回其 *所有可能的全排列* 。你可以 **按任意顺序** 返回答案。
+
+**示例 1：**
+
+```
+输入：nums = [1,2,3]
+输出：[[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
+```
+
+**示例 2：**
+
+```
+输入：nums = [0,1]
+输出：[[0,1],[1,0]]
+```
+
+**示例 3：**
+
+```
+输入：nums = [1]
+输出：[[1]]
+```
+
+**提示：**
+
+- `1 <= nums.length <= 6`
+- `-10 <= nums[i] <= 10`
+- `nums` 中的所有整数 **互不相同**
+
+#### **题解**
+
+![11](./src/11.png)
+
+```c++
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> permute(vector<int>& nums) {
+        res.clear();
+        path.clear();
+        vector<bool>used(nums.size(),false);//used数组，标记已经选择的元素
+        backtracking(nums,used);
+        return res;
+    }
+private:
+    vector<vector<int>>res;// 存放结果集
+    vector<int>path;//存放符合条件的
+    void backtracking(vector<int>& nums, vector<bool>used) {
+        if (nums.size() == path.size())
+        {
+            res.push_back(path);
+            return;
+        }
+        for (int i = 0; i < nums.size(); i++)
+        {
+            if (used[i] == true) continue;
+            used[i] = true;
+            path.push_back(nums[i]);
+            backtracking(nums, used);
+            path.pop_back();
+            used[i] = false;
+        }
+
+    }
+};
+
+int main()
+{
+    Solution s;
+    vector<int> nums = { 1,2,3 };
+    for (auto el : s.permute(nums)) {
+        for (auto e : el) {
+            cout << e << "\t";
+        }
+        cout << endl;
+    }
+    return 0;
+}
+```
+
+<!-- tabs:end -->
+
+## 🐋[47. 全排列 II](https://leetcode.cn/problems/permutations-ii/)【中等】【回溯】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+给定一个可包含重复数字的序列 `nums` ，***按任意顺序*** 返回所有不重复的全排列。
+
+ 
+
+**示例 1：**
+
+```
+输入：nums = [1,1,2]
+输出：
+[[1,1,2],
+ [1,2,1],
+ [2,1,1]]
+```
+
+**示例 2：**
+
+```
+输入：nums = [1,2,3]
+输出：[[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
+```
+
+ 
+
+**提示：**
+
+- `1 <= nums.length <= 8`
+- `-10 <= nums[i] <= 10`
+
+#### **题解**
+
+```c++
+#include<iostream>
+#include<algorithm>
+#include<vector>
+
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+        res.clear();
+        path.clear();
+        sort(nums.begin(), nums.end());
+        vector<bool>used(nums.size(), false);//used数组，标记已经选择的元素
+        backtracking(nums, used);
+        return res;
+    }
+private:
+    vector<vector<int>>res;// 存放结果集
+    vector<int>path;//存放符合条件的
+    void backtracking(vector<int>& nums, vector<bool>used) {
+        if (nums.size() == path.size())
+        {
+            res.push_back(path);
+            return;
+        }
+        for (int i = 0; i < nums.size(); i++)
+        {
+            if (i > 0  && nums[i] == nums[i-1] && used[i-1]==false) continue;
+            if (used[i] == false)
+            {
+                used[i] = true;
+                path.push_back(nums[i]);
+                backtracking(nums, used);
+                path.pop_back();
+                used[i] = false;
+            }
+        }
+
+    }
+};
+
+int main()
+{
+    Solution s;
+    vector<int> nums = { 1,1,2 };
+    for (auto el : s.permuteUnique(nums)) {
+        for (auto e : el) {
+            cout << e << "\t";
+        }
+        cout << endl;
+    }
+    return 0;
+}
+```
+
+<!-- tabs:end -->

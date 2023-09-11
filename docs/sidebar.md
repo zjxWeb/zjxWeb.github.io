@@ -7,7 +7,6 @@
     * [📃QT](study/c++/QT/)
     * [📃GDB](study/c++/gdb/)
     * [📃MAKEFILE](study/c++/makefile/)
-    * [📃socket](study/c++/socket/)
   * [📁Machine Learning](study/machineLearning/)
     * [📃Python](study/machineLearning/python/) 
     * [📃pytorch](study/machineLearning/pytorch/)
