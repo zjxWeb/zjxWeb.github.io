@@ -2,6 +2,7 @@
 
 ## 🐋704.二分查找【简单】【数组】
 <!-- tabs:start -->
+
 #### **题目**
 
 给定一个 `n` 个元素有序的（升序）整型数组 `nums` 和一个目标值 `target` ，写一个函数搜索 `nums` 中的 `target`，如果目标值存在返回下标，否则返回 `-1`。
@@ -7361,6 +7362,213 @@ int main()
         cout << endl;
     }
     return 0;
+}
+```
+
+<!-- tabs:end -->
+
+## 🐋[332. 重新安排行程](https://leetcode.cn/problems/reconstruct-itinerary/description/)【困难】【回溯】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+给你一份航线列表 `tickets` ，其中 `tickets[i] = [fromi, toi]` 表示飞机出发和降落的机场地点。请你对该行程进行重新规划排序。
+
+所有这些机票都属于一个从 `JFK`（肯尼迪国际机场）出发的先生，所以该行程必须从 `JFK` 开始。如果存在多种有效的行程，请你按字典排序返回最小的行程组合。
+
+- 例如，行程 `["JFK", "LGA"]` 与 `["JFK", "LGB"]` 相比就更小，排序更靠前。
+
+假定所有机票至少存在一种合理的行程。且所有的机票 必须都用一次 且 只能用一次。
+
+ 
+
+**示例 1：**
+
+![img](https://assets.leetcode.com/uploads/2021/03/14/itinerary1-graph.jpg)
+
+```
+输入：tickets = [["MUC","LHR"],["JFK","MUC"],["SFO","SJC"],["LHR","SFO"]]
+输出：["JFK","MUC","LHR","SFO","SJC"]
+```
+
+**示例 2：**
+
+![img](https://assets.leetcode.com/uploads/2021/03/14/itinerary2-graph.jpg)
+
+```
+输入：tickets = [["JFK","SFO"],["JFK","ATL"],["SFO","ATL"],["ATL","JFK"],["ATL","SFO"]]
+输出：["JFK","ATL","JFK","SFO","ATL","SFO"]
+解释：另一种有效的行程是 ["JFK","SFO","ATL","JFK","ATL","SFO"] ，但是它字典排序更大更靠后。
+```
+
+#### **题解**
+
+```c++
+#include<iostream>
+#include<vector>
+#include<unordered_map>
+#include<map>
+#include<string>
+
+using namespace std;
+
+class Solution {
+public:
+    
+    vector<string> findItinerary(vector<vector<string>>& tickets) {
+        flage.clear();
+        vector<string>res;
+        for (const vector<string> vec : tickets)
+        {
+            flage[vec[0]][vec[1]]++;
+        }
+        res.push_back("JFK");
+        backtracking(tickets.size(), res);
+        return res;
+    }
+private:
+    // unordered_map<出发机场,map<到达机场，航班次数>>
+    unordered_map<string, map<string, int>>flage;
+    //count有多少航班
+    bool backtracking(int count, vector<string>& res) {
+        // 边表示航班，顶点表示 机场，所以当  机场 == 航班数量+1，表示一种行程
+        if (res.size() == count + 1) return true;
+        for (pair<const string, int>& target : flage[res[res.size()-1]])
+        {
+            if (target.second > 0) {//  记录到达机场是否飞过了
+                res.push_back(target.first);
+                target.second--;
+                if (backtracking(count, res)) return true;
+                //记得回溯
+                res.pop_back();
+                target.second++;
+            }
+        }
+        return false;
+    }
+};
+
+int main()
+{
+    vector<vector<string>>tickets = {
+        {"JFK","SFO"},
+        {"JFK","ATL"},
+        {"SFO","ATL"},
+        {"ATL","JFK"},
+        {"ATL","SFO"}
+    };
+    Solution s;
+    for (auto el : s.findItinerary(tickets)) {
+        cout << el << "\t" << endl;
+    }
+}
+```
+
+<!-- tabs:end -->
+
+## 🐋[51. N 皇后](https://leetcode.cn/problems/n-queens/description/)【困难】【回溯】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+按照国际象棋的规则，皇后可以攻击与之处在同一行或同一列或同一斜线上的棋子。
+
+**n 皇后问题** 研究的是如何将 `n` 个皇后放置在 `n×n` 的棋盘上，并且使皇后彼此之间不能相互攻击。
+
+给你一个整数 `n` ，返回所有不同的 **n 皇后问题** 的解决方案。
+
+每一种解法包含一个不同的 **n 皇后问题** 的棋子放置方案，该方案中 `'Q'` 和 `'.'` 分别代表了皇后和空位。
+
+ 
+
+**示例 1：**
+
+![img](https://assets.leetcode.com/uploads/2020/11/13/queens.jpg)
+
+```
+输入：n = 4
+输出：[[".Q..","...Q","Q...","..Q."],["..Q.","Q...","...Q",".Q.."]]
+解释：如上图所示，4 皇后问题存在两个不同的解法。
+```
+
+**示例 2：**
+
+```
+输入：n = 1
+输出：[["Q"]]
+```
+
+**提示：**
+
+- `1 <= n <= 9`
+
+#### **题解**
+
+![21](./src/12.png)
+
+```c++
+#include<iostream>
+#include<string>
+#include<vector>
+
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<string>> solveNQueens(int n) {
+        res.clear();
+        vector<string> checkerboard(n,string(n,'.'));
+        backtracking(checkerboard, n, 0);
+        return res;
+    }
+private:
+    vector<vector<string>> res;// 存符合期盼
+    void backtracking(vector<string>& checkerboard,int n,int row) {
+        if (row == n)
+        {
+            res.push_back(checkerboard);
+            return;
+        }
+        for (int col = 0; col < n; col++)
+        {
+            if (isValid(row, col, checkerboard, n)) {
+                checkerboard[row][col] = 'Q'; // 符合放皇后
+                backtracking(checkerboard, n, row + 1);
+                // 回溯
+                checkerboard[row][col] = '.';
+            }
+        }
+    }
+    // 判断此处的皇后是否可以被攻击
+    bool isValid(int row,int col, vector<string>& checkerboard, int n) {
+        for (int i = 0; i < row;i++)// 列
+        {
+            if (checkerboard[i][col] == 'Q') return false;
+        }
+        for (int i = row - 1, j = col - 1; i >= 0 && j >= 0; i--,j--) { // 45°
+            if (checkerboard[i][j] == 'Q') return false;
+        }
+        for (int i = row - 1, j = col + 1; i >= 0 && j < n;i--,j++) { // 135°
+            if (checkerboard[i][j] == 'Q') return false;
+        }
+        return true;
+    }
+};
+
+int main()
+{
+    Solution s;
+    int n = 4;
+    for (auto el : s.solveNQueens(n))
+    {
+        for (auto e : el)
+        {
+            cout << e << "\t";
+        }
+        cout << endl;
+    }
 }
 ```
 
