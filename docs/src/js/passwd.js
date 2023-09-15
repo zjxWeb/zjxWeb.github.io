@@ -35,14 +35,14 @@ if (!x) {
     // titleDiv.style.background="red";
     titleDiv.style.textAlign="center";
     //主标题样式
-    titleDoc.style.color = "#fff";
+    titleDoc.style.color = "black";
     //底部二维码盒子样式
     qrDiv.style.width="100vw";
     qrDiv.style.position="fixed";
     qrDiv.style.bottom="10px";
     // qrDiv.style.background="red";
     qrDiv.style.textAlign="center";
-    qrDiv.style.color = "#fff";
+    qrDiv.style.color = "black";
     qr.style.width = "150px";
 
     titleDoc.innerText="关注公众号“拼搏的小浣熊”——回复“接头口令”，来获取接头口令♥♥♥";
