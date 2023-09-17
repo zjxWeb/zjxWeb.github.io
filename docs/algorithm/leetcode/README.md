@@ -7574,7 +7574,7 @@ int main()
 
 <!-- tabs:end -->
 
-## 🐋[51. N 皇后](https://leetcode.cn/problems/sudoku-solver/description/)【困难】【回溯】
+## 🐋 [37. 解数独](https://leetcode.cn/problems/sudoku-solver/description/)【困难】【回溯】
 
 <!-- tabs:start -->
 
@@ -7700,5 +7700,153 @@ int main()
     }
 }
 ```
+
+<!-- tabs:end -->
+
+## 🐋 [455. 分发饼干](https://leetcode.cn/problems/assign-cookies/)【简单】【贪心】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+假设你是一位很棒的家长，想要给你的孩子们一些小饼干。但是，每个孩子最多只能给一块饼干。
+
+对每个孩子 `i`，都有一个胃口值 `g[i]`，这是能让孩子们满足胃口的饼干的最小尺寸；并且每块饼干 `j`，都有一个尺寸 `s[j]` 。如果 `s[j] >= g[i]`，我们可以将这个饼干 `j` 分配给孩子 `i` ，这个孩子会得到满足。你的目标是尽可能满足越多数量的孩子，并输出这个最大数值。
+
+**示例 1:**
+
+```
+输入: g = [1,2,3], s = [1,1]
+输出: 1
+解释: 
+你有三个孩子和两块小饼干，3个孩子的胃口值分别是：1,2,3。
+虽然你有两块小饼干，由于他们的尺寸都是1，你只能让胃口值是1的孩子满足。
+所以你应该输出1。
+```
+
+**示例 2:**
+
+```
+输入: g = [1,2], s = [1,2,3]
+输出: 2
+解释: 
+你有两个孩子和三块小饼干，2个孩子的胃口值分别是1,2。
+你拥有的饼干数量和尺寸都足以让所有孩子满足。
+所以你应该输出2.
+```
+
+**提示：**
+
+- `1 <= g.length <= 3 * 104`
+- `0 <= s.length <= 3 * 104`
+- `1 <= g[i], s[j] <= 231 - 1`
+
+#### **题解**
+
+```c++
+class Solution {
+public:
+    int findContentChildren(vector<int>& g, vector<int>& s) {
+        int index = 0;
+        sort(g.begin(), g.end());
+        sort(s.begin(), s.end());
+        for (int i = 0; i < s.size(); i++)
+        {
+            if (index < g.size() && g[index]<=s[i]) index++;
+        }
+        return index;// 最后返回的是满足胃口孩子的数量
+    }
+};
+```
+
+<!-- tabs:end -->
+
+## 🐋 [53. 最大子数组和](https://leetcode.cn/problems/maximum-subarray/description/)【简单】【贪心】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+给你一个整数数组 `nums` ，请你找出一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
+
+**子数组** 是数组中的一个连续部分。
+
+ 
+
+**示例 1：**
+
+```
+输入：nums = [-2,1,-3,4,-1,2,1,-5,4]
+输出：6
+解释：连续子数组 [4,-1,2,1] 的和最大，为 6 。
+```
+
+**示例 2：**
+
+```
+输入：nums = [1]
+输出：1
+```
+
+**示例 3：**
+
+```
+输入：nums = [5,4,-1,7,8]
+输出：23
+```
+
+ 
+
+**提示：**
+
+- `1 <= nums.length <= 105`
+- `-104 <= nums[i] <= 104`
+
+ 
+
+**进阶：**如果你已经实现复杂度为 `O(n)` 的解法，尝试使用更为精妙的 **分治法** 求解。
+
+
+
+#### **题解**
+
+```c++
+class Solution {
+public:
+    // 暴力超时间限制
+    //int maxSubArray(vector<int>& nums) {
+    //    int n = nums.size();
+    //    int res = INT16_MIN;
+    //    int index = 0;  // 统计
+    //    for (int i = 0; i < n; i++)
+    //    {
+    //        index = 0;
+    //        for (int j = i; j < n; j++)
+    //        {
+    //            index += nums[j];
+    //            res = index > res ? index : res;
+    //        }
+    //    }
+    //    return res;
+    //}
+    
+    // 贪心实现
+    int maxSubArray(vector<int>& nums) {
+        // 统计正数，当连续和相加出现负数，那么应该重新从  i+1  开始进行累加
+        int n = nums.size();
+        int res = INT16_MIN;
+        int index = 0;
+        for (int i = 0; i < n; i++)
+        {
+            index += nums[i];
+            if (index > res) res = index;
+            if (index <= 0) index = 0;
+        }
+        return res;
+    }
+};
+```
+
+
 
 <!-- tabs:end -->
