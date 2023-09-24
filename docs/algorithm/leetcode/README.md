@@ -8127,3 +8127,239 @@ private:
 ```
 
 <!-- tabs:end -->
+
+## 🐋[134. 加油站](https://leetcode.cn/problems/gas-station/)【中等】【贪心】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+在一条环路上有 `n` 个加油站，其中第 `i` 个加油站有汽油 `gas[i]` 升。
+
+你有一辆油箱容量无限的的汽车，从第 `i` 个加油站开往第 `i+1` 个加油站需要消耗汽油 `cost[i]` 升。你从其中的一个加油站出发，开始时油箱为空。
+
+给定两个整数数组 `gas` 和 `cost` ，如果你可以按顺序绕环路行驶一周，则返回出发时加油站的编号，否则返回 `-1` 。如果存在解，则 **保证** 它是 **唯一** 的。
+
+ 
+
+**示例 1:**
+
+```
+输入: gas = [1,2,3,4,5], cost = [3,4,5,1,2]
+输出: 3
+解释:
+从 3 号加油站(索引为 3 处)出发，可获得 4 升汽油。此时油箱有 = 0 + 4 = 4 升汽油
+开往 4 号加油站，此时油箱有 4 - 1 + 5 = 8 升汽油
+开往 0 号加油站，此时油箱有 8 - 2 + 1 = 7 升汽油
+开往 1 号加油站，此时油箱有 7 - 3 + 2 = 6 升汽油
+开往 2 号加油站，此时油箱有 6 - 4 + 3 = 5 升汽油
+开往 3 号加油站，你需要消耗 5 升汽油，正好足够你返回到 3 号加油站。
+因此，3 可为起始索引。
+```
+
+**示例 2:**
+
+```
+输入: gas = [2,3,4], cost = [3,4,3]
+输出: -1
+解释:
+你不能从 0 号或 1 号加油站出发，因为没有足够的汽油可以让你行驶到下一个加油站。
+我们从 2 号加油站出发，可以获得 4 升汽油。 此时油箱有 = 0 + 4 = 4 升汽油
+开往 0 号加油站，此时油箱有 4 - 3 + 2 = 3 升汽油
+开往 1 号加油站，此时油箱有 3 - 3 + 3 = 3 升汽油
+你无法返回 2 号加油站，因为返程需要消耗 4 升汽油，但是你的油箱只有 3 升汽油。
+因此，无论怎样，你都不可能绕环路行驶一周。
+```
+
+ 
+
+**提示:**
+
+- `gas.length == n`
+- `cost.length == n`
+- `1 <= n <= 105`
+- `0 <= gas[i], cost[i] <= 104`
+
+#### **题解**
+
+```c++
+class Solution {
+public:
+    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+        int cursum = 0;// 每一站剩余的油量
+        int totalsum = 0;// 将gas - cost的值相减，累加
+        int start = 0; // 记录i+1
+        int n = gas.size();
+        for (int i = 0; i < n; i++)
+        {
+            cursum += (gas[i] - cost[i]);
+            totalsum += (gas[i] - cost[i]);
+            if (cursum < 0)
+            {
+                start = i + 1;
+                cursum = 0;
+            }
+        }
+        if (totalsum < 0) return -1;
+        return start;
+    }
+};
+```
+
+<!-- tabs:end -->
+
+## 🐋[135. 分发糖果](https://leetcode.cn/problems/candy/)【困难】【贪心】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+`n` 个孩子站成一排。给你一个整数数组 `ratings` 表示每个孩子的评分。
+
+你需要按照以下要求，给这些孩子分发糖果：
+
+- 每个孩子至少分配到 `1` 个糖果。
+- 相邻两个孩子评分更高的孩子会获得更多的糖果。
+
+请你给每个孩子分发糖果，计算并返回需要准备的 **最少糖果数目** 。
+
+ 
+
+**示例 1：**
+
+```
+输入：ratings = [1,0,2]
+输出：5
+解释：你可以分别给第一个、第二个、第三个孩子分发 2、1、2 颗糖果。
+```
+
+**示例 2：**
+
+```
+输入：ratings = [1,2,2]
+输出：4
+解释：你可以分别给第一个、第二个、第三个孩子分发 1、2、1 颗糖果。
+     第三个孩子只得到 1 颗糖果，这满足题面中的两个条件。
+```
+
+ 
+
+**提示：**
+
+- `n == ratings.length`
+- `1 <= n <= 2 * 104`
+- `0 <= ratings[i] <= 2 * 104`
+
+#### **题解**
+
+```c++
+class Solution {
+public:
+    int candy(vector<int>& ratings) {
+        vector<int> candyVec(ratings.size(), 1);
+        // 从前向后
+        for (int i = 1; i < ratings.size(); i++) {
+            if (ratings[i] > ratings[i - 1]) candyVec[i] = candyVec[i - 1] + 1;
+        }
+        // 从后向前
+        for (int i = ratings.size() - 2; i >= 0; i--) {
+            if (ratings[i] > ratings[i + 1] ) {
+                candyVec[i] = max(candyVec[i], candyVec[i + 1] + 1);
+            }
+        }
+        // 统计结果
+        int result = 0;
+        for (int i = 0; i < candyVec.size(); i++) result += candyVec[i];
+        return result;
+    }
+};
+```
+
+<!-- tabs:end -->
+
+## 🐋[860. 柠檬水找零](https://leetcode.cn/problems/lemonade-change/)【简单】【贪心】
+
+<!-- tabs:start -->
+
+#### **题目**
+
+在柠檬水摊上，每一杯柠檬水的售价为 `5` 美元。顾客排队购买你的产品，（按账单 `bills` 支付的顺序）一次购买一杯。
+
+每位顾客只买一杯柠檬水，然后向你付 `5` 美元、`10` 美元或 `20` 美元。你必须给每个顾客正确找零，也就是说净交易是每位顾客向你支付 `5` 美元。
+
+注意，一开始你手头没有任何零钱。
+
+给你一个整数数组 `bills` ，其中 `bills[i]` 是第 `i` 位顾客付的账。如果你能给每位顾客正确找零，返回 `true` ，否则返回 `false` 。
+
+ 
+
+**示例 1：**
+
+```
+输入：bills = [5,5,5,10,20]
+输出：true
+解释：
+前 3 位顾客那里，我们按顺序收取 3 张 5 美元的钞票。
+第 4 位顾客那里，我们收取一张 10 美元的钞票，并返还 5 美元。
+第 5 位顾客那里，我们找还一张 10 美元的钞票和一张 5 美元的钞票。
+由于所有客户都得到了正确的找零，所以我们输出 true。
+```
+
+**示例 2：**
+
+```
+输入：bills = [5,5,10,10,20]
+输出：false
+解释：
+前 2 位顾客那里，我们按顺序收取 2 张 5 美元的钞票。
+对于接下来的 2 位顾客，我们收取一张 10 美元的钞票，然后返还 5 美元。
+对于最后一位顾客，我们无法退回 15 美元，因为我们现在只有两张 10 美元的钞票。
+由于不是每位顾客都得到了正确的找零，所以答案是 false。
+```
+
+ 
+
+**提示：**
+
+- `1 <= bills.length <= 105`
+- `bills[i]` 不是 `5` 就是 `10` 或是 `20` 
+
+#### **题解**
+
+```c++
+class Solution {
+public:
+    bool lemonadeChange(vector<int>& bills) {
+        int five = 0, ten = 0, twenty = 0;
+        for (int el : bills)
+        {
+            switch (el)
+            {
+            case 5:
+                five++;
+                break;
+            case 10:
+                if (five <= 0) return false;
+                ten++;
+                five--;
+                break;
+            case 20:
+                if (five > 0 && ten > 0)
+                {
+                    five--;
+                    ten--;
+                    twenty++;
+                }
+                else if (five >= 3) five -= 3;
+                else return false;
+                break;
+            default:
+                break;
+            }
+        }
+        return true;
+    }
+};
+```
+
+<!-- tabs:end -->
