@@ -8524,7 +8524,7 @@ private:
 
 <!-- tabs:end -->
 
-## 🐋[452. 用最少数量的箭引爆气球](https://leetcode.cn/problems/minimum-number-of-arrows-to-burst-balloons/)【中等】【贪心】
+## 🐋[435. 无重叠区间](https://leetcode.cn/problems/non-overlapping-intervals/)【中等】【贪心】
 
 <!-- tabs:start -->
 
