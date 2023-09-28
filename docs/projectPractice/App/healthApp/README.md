@@ -17,7 +17,7 @@
 
 <!-- tabs:start -->
 #### **主界面**
-  + <img src="./src/8.jpg" alt="主界面" style="zoom: 25%;" />
+  + <img src="./src/8.jpg" alt="8" style="zoom:33%;" />
 #### **添加菜单**
   + <img src="./src/9.jpg" alt="添加菜单" style="zoom:33%;" />
 #### **菜谱展示**
