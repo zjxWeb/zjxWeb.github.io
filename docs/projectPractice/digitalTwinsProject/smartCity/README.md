@@ -525,7 +525,7 @@ R19之前才会有mesa文件夹。。所以装R21这个办法不适用！
     + box-sizing:border-box属性，宽高会加上padding和border的值，需要我们手动去计算，减去padding和border的值，并调整content的值，以免超过给定的宽高
     + 此时子元素的宽高为500px（content 478px + padding 40px + border 4px）所以就覆盖了父元素的黑色背景，只能看到子元素的灰色背景
     + title --- height 7 vh
-    + ![image-20230719155749388](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20230719155749388.png)
+    + ![15](./img/15.png)
     + 满天星：https://blog.csdn.net/qq_44891434/article/details/113363626
     + 动态时间封装：https://blog.csdn.net/qq_44891434/article/details/115002709
     + 饼图1：https://blog.csdn.net/qq_44891434/article/details/118789359
@@ -535,7 +535,7 @@ R19之前才会有mesa文件夹。。所以装R21这个办法不适用！
 
 ## webGL引入
 
-![image-20230726155600161](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20230726155600161.png)
+![14](./img/14.png)
 
 webGL：启动方式（原理都是一样的）
 
