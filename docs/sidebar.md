@@ -40,6 +40,7 @@
   * [📁C++Project](projectPractice/cppProject/)
     * [📃机房预约系统](projectPractice/cppProject/computerOrder/)
     * [📃商城分布式文件服务器](projectPractice/cppProject/distributedServerProgramming/)
+    <!-- * [📃自动化测试平台](projectPractice/cppProject/automatedTestingPlatform/) -->
   * [📁数字孪生实例](projectPractice/digitalTwinsProject/)
     * [📃智慧城市数字孪生平台](projectPractice/digitalTwinsProject/smartCity/)
   * [📁APP项目](projectPractice/App/)
