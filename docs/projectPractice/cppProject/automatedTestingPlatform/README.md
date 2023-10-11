@@ -190,6 +190,62 @@ code .
 
 #### 3.1 重定向输出脚本
 
+##### 测试案列：
+
+> `redirect.cpp`
+
+```cPP
+#include <iostream>
+#include <chrono>
+#include <thread>
+
+int main() {
+   const char* fileName = "output.txt";
+    // FILE *outFile = fopen("output.txt", "a");
+    FILE *outFile = fopen(fileName, "w");
+    if (outFile == NULL) {
+        fprintf(stderr, "Failed to open output.txt\n");
+        return 1;
+    }
+
+    int i = 1;
+    while (1) {
+        fprintf(outFile, "This is line %d\n", i);
+        printf("This is line %d\n", i);
+        std::cout << "This is line " << i+100 << std::endl;
+        fflush(stdout);
+        i++;
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+
+    fclose(outFile);
+    return 0;
+}
+```
+
+> main.cpp
+
+```cpp
+#include <iostream>
+#include <cstdlib>
+
+int main() {
+    // system("./redirect >> output.txt");
+    system("./redirect > output.txt");
+    return 0;
+}
+```
+
+###### 代码执行
+
+```
+g++ -o main main.cpp
+g++ -o redirect redirect.cpp
+./main
+```
+
+#### 项目中实现
+
 > 这里会给出代码流程，需要修改的地方有注释，参考注释 `new zjx`
 
 + 修改路径 `/board_sdk_service/src/target/o_main_i30service/main.cpp`
