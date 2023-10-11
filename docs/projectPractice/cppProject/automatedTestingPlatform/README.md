@@ -12,9 +12,11 @@
 >
 > +  测试平台对用户下发的任务进行分解、决策、细化为设备任务，分配给不同设备进行“消费”，设备端服 务对上层下发的任务进行任务甄别、作并行化处理，提高效率。双方通过http通信。
 
-+ objective流程
+## objective流程
 
 <img src="./src/objective流程.png" alt="objective流程" style="zoom:150%;" />
+
+![12](./src/12.png)
 
 ## 一、环境配置
 
@@ -100,7 +102,7 @@ code .
    python3 focus.py -b main_service  # 不带o_
    ```
 
-3. 刚开始的时候可以先注释掉 `focus.py` 参考下图，并按下图修改 `CMakeList.txt`
+3. 刚开始的时候可以先注释掉 `focus.py` 参考下图，并按下图修改 `CMakeList.txt`(主目录下的)
 
    + `focus.py`
 
@@ -488,7 +490,15 @@ connection.close()
 
 ## 五、`i30`任务`API`
 
-### 1. 获取设备状态
+### 1. i30流程
+
+![i30流程图](./src/i30流程.png)
+
+![i30](./src/i30.png)
+
+
+
+### 2. 获取设备状态
 
 + ```
   url:http://172.17.185.252:7000/device_service/device/status
@@ -520,7 +530,7 @@ connection.close()
     }
     ```
 
-### 2. testbedMetiral
+### 3. testbedMetiral
 
 + ```
   url:http://172.17.185.252:7000/device_service/update/testbed_metiral
@@ -555,7 +565,7 @@ connection.close()
 
 > 更新完 testbed 根据后端
 
-###  3. `taskRun`运行任务
+###  4. `taskRun`运行任务
 
 + ```
   url:http://172.17.185.252:7000/device_service/task/run
@@ -587,7 +597,7 @@ connection.close()
     }
     ```
 
-### 4. `taskStatus`任务状态
+### 5. `taskStatus`任务状态
 
 + ```
   url:http://172.17.185.252:7000/device_service/task/status
@@ -618,7 +628,7 @@ connection.close()
     }
     ```
 
-### 5. `sdkVersion`获取`SDK`版本(终止任务之后执行，否则会报错)
+### 6. `sdkVersion`获取`SDK`版本(终止任务之后执行，否则会报错)
 
 + ```
   url:http://172.17.185.252:7000/device_service/sdk/version
@@ -650,7 +660,7 @@ connection.close()
     }
     ```
 
-### 6. 终止任务
+### 7. 终止任务
 
 + ```
   url:http://172.17.185.252:7000/device_service/task/terminate
@@ -680,7 +690,7 @@ connection.close()
     }
     ```
 
-### 7. `deviceInfo`获取设备信息
+### 8. `deviceInfo`获取设备信息
 
 + ```
   url:http://172.17.185.252:7000/device_service/device/info
