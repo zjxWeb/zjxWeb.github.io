@@ -36,6 +36,7 @@
 * [**好东西tips**](tips)
   * [📁docsify](tips/docsify/)
   * [📁Hubilder连接nox](tips/noxHubilder/)
+  * [📁vscode相关技巧](tips/vsCodeTools/)
 * [**项目实战**](projectPractice)
   * [📁C++Project](projectPractice/cppProject/)
     * [📃机房预约系统](projectPractice/cppProject/computerOrder/)
