@@ -6,9 +6,9 @@
 
 ## 项目架构
 
-<img src="./src/1.jpg" alt="1" style="zoom:150%;" />
+![1](./src/1.jpg)
 
-<img src="./src/8.png" alt="8" style="zoom: 200%;" />
+![8](./src/8.png)
 
 > 平台部分的框图
 >
@@ -1275,7 +1275,7 @@ def startExt():
 
 ### objective流程
 
-<img src="./src/objective流程.png" alt="objective流程" style="zoom:150%;" />
+![objective流程](./src/objective流程.png)
 
 ![12](./src/12.png)
 
@@ -2012,10 +2012,10 @@ std::string run_cmd =fmt::format("chmod a+x {} && {} > {}/{}", testbed_path, tes
 3)  上传跑图SDK
 
  ![img](./src/43.png)
- 
- 
 
  
 
-
  
+
+
+
