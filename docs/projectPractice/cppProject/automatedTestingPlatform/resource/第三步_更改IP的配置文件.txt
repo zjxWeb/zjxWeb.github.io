@@ -1,0 +1,18 @@
+cat /scripts/startup.sh |tail -n 20  查询
+
+vi/vim   编辑文件
+i 进入编辑模式
+wq 保存退出
+qi 强制退出，不保存
+
+添加代码：
+
+route delete default 192.168.1.10
+ifconfig emac0 link
+mac5=$(getserial | grep Num | awk '{print substr($4,5,2)}')
+mac7=$(getserial | grep Num | awk '{print substr($4,7,2)}')
+mac9=$(getserial | grep Num | awk '{print substr($4,9,2)}')
+ifconfig emac0 link 02:04:00:${mac5}:${mac7}:${mac9} active
+ifconfig emac0 link
+dhclient emac0
+ifconfig -a
