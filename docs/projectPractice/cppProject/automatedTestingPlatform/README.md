@@ -6,9 +6,9 @@
 
 ## 项目架构
 
-![1](./src/1.jpg)
+<img src="./src/1.jpg" alt="1" style="zoom:150%;" />
 
-![8](./src/8.png)
+<img src="./src/8.png" alt="8" style="zoom: 200%;" />
 
 > 平台部分的框图
 >
@@ -1275,7 +1275,7 @@ def startExt():
 
 ### objective流程
 
-![objective流程](./src/objective流程.png)
+<img src="./src/objective流程.png" alt="objective流程" style="zoom:150%;" />
 
 ![12](./src/12.png)
 
@@ -1737,7 +1737,11 @@ else:
 > LOG_EXTR -------			  SLOGW
 >
 > MG_INFO/MG_DEBUG ----   	SLOGD
->
+
++ 宏定义中带 `FF`的表示立即刷新到文档中。
++ 没有FF的是等到缓存满了才刷新到文件里。
+  + 如果这条记录不是很频繁的，就直接FF宏调用
+  + 如果是一个基本上ms级别的，那就不要FF宏
 
 > `spdlog`是一个非常快、基于头文件编译的、跨多平台的C++日志库。
 
@@ -1863,6 +1867,40 @@ std::string run_cmd =fmt::format("chmod a+x {} && {} > {}/{}", testbed_path, tes
 
 **永远查看一下空间！永远查看一下空间！永远查看一下空间！**
 
+### 3. 新增记录的需求（方式）
+
++ 首先在 `spdlog`单例中添加如下代码 (路径：`/src/module/m_spdlog/impl/log_-inl.h`)
+
+```c++
+regi_gf_sink_to_logger_("scm", gen_default_gf_sink_({test_message_dir,"system_call_message.txt"},1024*512*1,100));
+    regi_gf_sink_to_logger_("rm", gen_default_gf_sink_({test_message_dir,"request_message.txt"},1024*512*1,100));
+    regi_gf_sink_to_logger_("qm", gen_default_gf_sink_({test_message_dir,"mq_message.txt"},1024*512*1,100));
+```
+
+![46](./src/46.png)
+
++ 其次在需要的地方调用就好，比如：
+
+![47](./src/47.png)
+
+### 4.配置文件库`toml`（客观任务举例）
+
+> `toml_sample.toml` 是放在开发板上的；记住！记住！记住！
+
++ 在客观中的目录结构
+
+![48](./src/48.png)
+
++ 先 加载进去——一般就是在 `main`函数当中
+
+![49](./src/49.png)
+
++ 后面 `get`使用
+
+![50](./src/50.png)
+
+![51](./src/51.png)
+
 ## 十二、 轻量型web服务器搭建测试环境
 
 ### 1. 环境说明
@@ -1885,7 +1923,7 @@ std::string run_cmd =fmt::format("chmod a+x {} && {} > {}/{}", testbed_path, tes
 
 1.  目前使用的镜像`qfil_hqx1.2.1_r00005.2` 
 2.  `QFIL`工具为高通通用的刷机工具 ，安装完毕后启用`QFIL.exe`即可（资料在 resource文件夹中）
-3. 双口USB线缆 *1 用来ADB连接板子
+3. 双口`USB线缆 *1` 用来`ADB`连接板子,还需要一个`Micro`接口数据 线
 4. 两路电源，分别用来给板子及风扇供电
 
 #### QFIL download 
@@ -1899,6 +1937,22 @@ std::string run_cmd =fmt::format("chmod a+x {} && {} > {}/{}", testbed_path, tes
 ![22](./src/22.png)
 
 #### 开始刷机
+
+> 在设备管理器看一下  **端口的位置有没有显示**，如下图
+
+![34](./src/34.png)
+
+> 如果看到端口那有感叹号或者其他符号，请执行一下操作。
+
+> + 设备管理器（文档是安装完成后写的，这里是参考，到时候点击板子对应端口右击就好）
+>
+> ![44](./src/44.png)
+>
+> + 继续看下图
+>
+> ![45](./src/45.png)
+>
+> + 接下来就是选择文件啦，选择资源目录下的 `驱动目录`进行扫描，即可自动配置。（驱动目录记得先解压）
 
 + A.启动`QFIL`，选择Select Port，选择对应的`9008`串口
 
@@ -1918,7 +1972,7 @@ std::string run_cmd =fmt::format("chmod a+x {} && {} > {}/{}", testbed_path, tes
 
 ![27](./src/27.png)
 
-+ D.  Select Programmer
++ D.  `Select Programmer`
 
 ![28](./src/28.png)
 
@@ -1928,7 +1982,7 @@ std::string run_cmd =fmt::format("chmod a+x {} && {} > {}/{}", testbed_path, tes
 
 ![29](./src/29.png)
 
-+ F.  `Click Download Content` (如果失败了就断电重新尝试)
++ F.  `Click Download Content` (`如果失败了就断电重新尝试`)
 
 ![30](./src/30.png)
 
@@ -1940,21 +1994,25 @@ std::string run_cmd =fmt::format("chmod a+x {} && {} > {}/{}", testbed_path, tes
 
 ### 2. 串口连接qnx端方法
 
-> 连接示意图
+> 使用镊子将主板背面`S3` 第7个复位
+>
+> ![21](./src/21.png)
+>
+> 连接示意图（一定要按图中所示连接）
 
 ![连接示意图](./src/33.png)
 
-1. 查询端口
+#### 1.查询端口
 
 ![34](./src/34.png)
 
-2. 打开`MobaXterm`
+#### 2.打开`MobaXterm`
 
 ![35](./src/35.png)
 
-3. 设置信息
+#### 3.设置信息
 
-   ![36](./src/36.png)
+![36](./src/36.png)
 
 
 
@@ -1967,15 +2025,19 @@ std::string run_cmd =fmt::format("chmod a+x {} && {} > {}/{}", testbed_path, tes
 #### 三、更改IP
 
 1)  输入root
-2)  先备份一份防止弄错，命令为：cp /scripts/startup.sh  /scripts/startup_11.sh
-3)  用vi 命令写入配置文件：vi /scripts/startup.sh  （配置文件见附件：配置文件.txt）
+2)  先备份一份防止弄错，命令为：`cp /scripts/startup.sh  /scripts/startup_11.sh`
+3. 用vi 命令写入配置文件：`vi /scripts/startup.sh`  （配置文件见附件：`配置文件.txt`）
 
-+ `i` 进入编辑模式
-+  键盘一直按下键，翻到最下方粘贴
-+  输入冒号 `：`
-+  输入`wq` （保存退出）   如输入错误： q！（不保存退出）
-   ![img](./src/37.png)
-   ![img](./src/38.png)
+   + `i` 进入编辑模式
+
+   +  键盘一直按下键，翻到最下方粘贴
+
+   +  输入冒号 `：`
+
+   +  输入`wq` （保存退出）   如输入错误： q！（不保存退出）
+      ![img](./src/37.png)
+      ![img](./src/38.png)
+
 
 4)  断电重启
 5)  插入网线
@@ -2015,7 +2077,72 @@ std::string run_cmd =fmt::format("chmod a+x {} && {} > {}/{}", testbed_path, tes
 
  
 
- 
+#  十四、 NGINX搭建文件服务器
 
+> Nginx搭建文件服务器，但是它还是基于http和https协议的
 
+## 步骤
 
+1. 下载安装Nginx  [官网下载](https://nginx.org/)
+
+2. 下载好了解压就好，解压完成之后点击鼠标右键，管理员运行`nginx.exe`
+
+3. 然后输入 `127.0.0.1`
+
+4. 出现如下页面说明安装成功
+
+   ![52](./src/52.png)
+
+5. 修改配置文件，首先我们在nginx的根目录下创建 `file` 目录，然后将需要远程下载和访问的文件放入到这个路径下面。
+
+![53](./src/53.png)
+
+6. 修改 `nginx.conf`配置文件
+
+​	![54](./src/54.png)
+
+7. 复制如下代码
+
+```nginx
+server {
+        listen       8080; #监听8080端口
+        server_name  localhost; #这里可以是服务器对应的域名或者IP，如果是localhost，那访问的时候用IP就行
+        # nignx根目录文件访问
+        location / {
+            root file;  #指定哪个目录作为Http文件服务器的根目录，如果你这里写了file就是你的根目录，那么访问的时候file就不会出现在目录中
+            autoindex on;   #设置允许列出整个目录
+            autoindex_exact_size off; #默认为on，显示出文件的确切大小，单位是bytes。改为off后，显示出文件的大概大小，单位是kB或者MB或者GB
+            autoindex_localtime on; #默认为off，显示的文件时间为GMT时间。改为on后，显示的文件时间为文件的服务器时间
+            charset utf-8; #防止文件乱码显示, 如果用utf-8还是乱码，就改成gbk试试
+        }
+        
+    }
+```
+
+> 上述配置要在 `http {`里面包含着
+
+![55](./src/55.png)
+
+8. 如果我们要访问我们主机上的其他地方的文件夹
+
+9. 添加如下配置比如我要访问的是路径是 `D:/work/code_space`
+
+   ```nginx
+   server {
+           listen       8080; #监听8080端口
+           server_name  localhost; #这里可以是服务器对应的域名或者IP，如果是localhost，那访问的时候用IP就行
+           location /code_space {
+               root D:/work;  
+               autoindex on;   
+               autoindex_exact_size off; 
+               autoindex_localtime on; 
+               charset utf-8; 
+           }
+       }
+   ```
+
+   > 上述配置要在 `http {`里面包含着
+
+   ![56](./src/56.png)
+
+> 如果要在局域网访问则将ip更改成对应主机IPV4地址即可
