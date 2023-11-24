@@ -5036,6 +5036,8 @@ int main()
 
 ### 概述
 
+[lettcode优先队列题目练习（可做一下，巩固优先队列的使用）](https://leetcode.cn/problems/merge-k-sorted-lists/description/?envType=study-plan-v2&envId=top-100-liked)
+
 > + 普通的队列是一种先进先出的数据结构，元素在队列尾追加，而从队列头删除。
 >
 > + 在优先队列中，元素被赋予优先级。当访问元素时，具有最高优先级的元素最先删除。优先队列具有最高级先出 （first in, largest out）的行为特征。
