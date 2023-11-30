@@ -199,4 +199,9 @@ input:checked + .slider:before {
     transform: scale(1.05);
   }
 
+  /* 菜谱app图片样式 */
+  .menuAppClass{
+    width: 20vw;
+    margin-left: 20vw;
+  }
   

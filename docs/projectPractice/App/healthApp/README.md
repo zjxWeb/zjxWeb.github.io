@@ -17,19 +17,19 @@
 
 <!-- tabs:start -->
 #### **主界面**
-  + <img src="./src/8.jpg" alt="8" style="zoom:33%;" />
+![主界面](./src/8.jpg ':class=menuAppClass')
+
 #### **添加菜单**
-  + <img src="./src/9.jpg" alt="添加菜单" style="zoom:33%;" />
+![添加菜单](./src/9.jpg ':class=menuAppClass')
+
 #### **菜谱展示**
-  + <img src="./src/10.jpg" alt="菜谱展示" style="zoom:33%;" />
+![菜谱展示](./src/10.jpg ':class=menuAppClass')
 
 #### **个人中心**
-
-+ <img src="./src/3.jpg" alt="我的信息" style="zoom:33%;" />
+![我的信息](./src/3.jpg ':class=menuAppClass')
 
 #### **个人信息修改**
-
-+ <img src="./src/4.jpg" alt="个人修改" style="zoom:33%;" />
+![个人修改](./src/4.jpg ':class=menuAppClass')
 
 #### **权限管理**
 
@@ -37,21 +37,20 @@
 
 > 限管理是通过，在用户登录的时候，后端会将用户做区分，并将结果返回给客户端的axios请求。
 
-+ + <img src="./src/5.jpg" alt="权限管理" style="zoom:33%;" />
-  
-####  **用户管理**
+![权限管理](./src/5.jpg ':class=menuAppClass')
 
-+ <img src="./src/6.jpg" alt="修改权限" style="zoom:33%;" />
+####  **用户管理**
+![修改权限](./src/6.jpg ':class=menuAppClass')
+
 #### **菜单管理**
 
-  + <img src="./src/7.jpg" alt="菜单管理" style="zoom:33%;" />
-#### **登录**
+![菜单管理](./src/7.jpg ':class=menuAppClass')
 
-+ <img src="./src/1.jpg" alt="登录" style="zoom:33%;" />
+#### **登录**
+![登录](./src/1.jpg ':class=menuAppClass')
 
 #### **注册**
-
-+ <img src="./src/2.jpg" alt="注册" style="zoom:33%;" />
+![注册](./src/2.jpg ':class=menuAppClass')
 <!-- tabs:end -->
 ## 3.其他功能说明
 
