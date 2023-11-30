@@ -9,8 +9,8 @@
 - 既是笔记也是博客！
 
 - 座右铭 :  Less interests.More interest. 
-<span style="position:fixed;bottom:10vh;left:0;color:#fff256;text-align: center;width:100vw;height:40px;font-weight:600px;">
-<a href="https://chuangdu.gitee.io/zjxweb.github.io/#/">网站备用地址@https://chuangdu.gitee.io/zjxweb.github.io/#/</a>
+<span style="position:fixed;bottom:5vh;left:0;color:#fff256;text-align: center;width:100vw;height:40px;font-weight:600px;font-size:18px;">
+    <a href="https://chuangdu.gitee.io/zjxweb.github.io/#/">网站备用地址@https://chuangdu.gitee.io/zjxweb.github.io/#/</a>
 </span>
 
 
