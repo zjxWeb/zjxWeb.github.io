@@ -5482,6 +5482,45 @@ int main()
 
 > lock() 方法会返回一个 share pointer
 
+## c++中的auto、const auto&
+
++ 先介绍一下auto、const
++ 在块作用域、命名作用域、循环初始化语句等等 中声明变量时，关键词auto用作类型指定符。
++ `const`:修饰符
++ 接下来我们细细分析一下：
+
+### **auto**
+
+> `auto即 for(auto x:range)` 这样会拷贝一份range元素，而不会改变range中元素；
+
+   
+
+> 但是！（重点) 使用`for(auto x:vector<bool>)`时得到一个proxy class,操作时会改变vector<bool>本身元素。应用：`for(bool x:vector<bool>)`
+
+### **`auto&`**
+
+> 当需要修改range中元素，用`for(auto& x:range)`
+
+  
+
+> 当vector<bool>返回临时对象，使用`auto&`会编译错误，临时对象不能绑在`non-const l-value reference （左值引用）`需使用**auto&&**,初始化右值时也可捕获
+
+### **`const auto&`**  
+
+> 当只想读取range中元素时，使用`const auto&`,如：`for(const auto&x:range),`它不会进行拷贝，也不会修改range  
+
+### **`const auto`**
+
+> 当需要拷贝元素，但不可修改拷贝出来的值时，使用 `for(const auto x:range)`，避免拷贝开销                   
+
+### **整理下**                                                              
+
++ 想要**拷贝**元素：`for(auto x:range)`
+
++  想要**修改**元素 : `for(auto &&x:range)`
+
++ 想要**只读**元素：`for(const auto& x:range)` 
+
 ## C++在 vs中的常用调试方法
 
 1. 打印数据来调试程序
