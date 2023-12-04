@@ -10,7 +10,7 @@
 - [👉备用地址👈](https://chuangdu.gitee.io/zjxweb.github.io/#/)
 
 <!-- [B站主页](https://space.bilibili.com/330132447?spm_id_from=333.1007.0.0) -->
-[🐻🐻小世界入口](guide)
+[【博客&&笔记】入口](guide)
 
 <!-- 背景图片 -->
 
