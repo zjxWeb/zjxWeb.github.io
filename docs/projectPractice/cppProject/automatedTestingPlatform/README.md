@@ -6,9 +6,9 @@
 
 ## 项目架构
 
-<img src="./src/1.jpg" alt="1" style="zoom:150%;" />
+![1](./src/1.png)
 
-<img src="./src/8.png" alt="8" style="zoom: 200%;" />
+![8](./src/8.png)
 
 > 平台部分的框图
 >
@@ -178,13 +178,13 @@ code .
 
    + `focus.py`
 
-   <img src="./src/4.png" alt="4" style="zoom: 67%;" />
+   ![4](./src/4.png)
 
    + `CMakeList.txt`
 
-   <img src="./src/5.png" alt="5" style="zoom: 50%;" />
+   ![5](./src/5.png)
 
-   4. 在 `focus.py`对应的目录下执行(编译不通过)
+   1. 在 `focus.py`对应的目录下执行(编译不通过)
 
          ```shell
          python3 focus.py -b main_i30service
@@ -192,35 +192,35 @@ code .
          make
          ```
 
-   5. 成功生成out目录和对应的文件。
+   2. 成功生成out目录和对应的文件。
 
       + 此时如果没有生成此目录 `/home/zjx/code-space/QNX/qnx-sdk-project-20220228/FOR-PUBLIC/FOR_GTEST`
       + 可以手动生成，并将之前的修改的，复原回来。**思考一下，其实可以在刚开始的时候，根据自己的需求进行修改。**
 
-   6. 如果编译 `main_service` 失败，可以查看自己留下的注释 ，注释规则 `zjx new：行为`
+   3. 如果编译 `main_service` 失败，可以查看自己留下的注释 ，注释规则 `zjx new：行为`
 
-   7. `error`：`aarch64-unknown-nto-qnx7.0.0-g++-5.4.0: fatal error: error: environment variables QNX_HOST and QNX_TARGET not defined`
+   4. `error`：`aarch64-unknown-nto-qnx7.0.0-g++-5.4.0: fatal error: error: environment variables QNX_HOST and QNX_TARGET not defined`
 
       + 处理方式：**仔细对照根目录的 `CMakeLists.txt`文件 和  `/src/target/o_main_service` 目录下的  `CMakeLists.txt`文件**
 
-   8. `main_service`文件执行过程，**不要make**
+   5. `main_service`文件执行过程，**不要make**
 
       ```shell
       python3 focus.py -b main_service
       # 执行成功之后在out文件夹中有对应的可执行文件生成（此处的可执行文件是要导入到开发板中执行，在ubuntu不能执行）
       ```
 
-   9. 开发板252连接
+   6. 开发板252连接
 
       + 远程连接开发板软件：`MobaXterm`
       + 连接`IP`询问即可
       + 工具连接参考下图
-
-      <img src="./src/6.png" alt="6" style="zoom:50%;" />
+  
+      ![6](./src/6.png)
 
       + 将生成好的可执行程序拖到开发板中（当时是拖到连接工具啦！）
 
-      <img src="./src/7.png" alt="7" style="zoom:50%;" />
+      ![7](./src/7.png)
 
       + 执行： `./执行程序的name`
 
@@ -1275,7 +1275,7 @@ def startExt():
 
 ### objective流程
 
-<img src="./src/objective流程.png" alt="objective流程" style="zoom:150%;" />
+![objective流程](./src/objective流程.png)
 
 ![12](./src/12.png)
 
@@ -2077,7 +2077,7 @@ regi_gf_sink_to_logger_("scm", gen_default_gf_sink_({test_message_dir,"system_ca
 
  
 
-#  十四、 NGINX搭建文件服务器
+##  十四、 NGINX搭建文件服务器
 
 > Nginx搭建文件服务器，但是它还是基于http和https协议的
 

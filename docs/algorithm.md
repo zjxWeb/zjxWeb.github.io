@@ -257,5 +257,46 @@ void backtracking(参数) {
     }
 }
 ```
+#### **并查集模板**
+1. 定义数据结构
 
+```c++
+int fa[100010]; // fa[i]表示i的父亲
+```
+
+2. 定义查找函数
+
+```c++
+int find(int x){
+	// 如果i的父亲是他自己，那么返回自己
+	if(x==fa[x]) return x;
+	// 如果不是的话
+	else{
+	// 找到他的父亲
+	// 并且令他的父亲为他父亲的父亲
+	// 即路径压缩
+	fa[x]=find(fa[x]);
+	// 返回他的父亲
+	return fa[x];
+}
+
+```
+
+> 进行简化
+
+```c++
+int find(int x){
+	return fa[x]==x ? x : fa[x]=find(fa[x]);
+}
+```
+
+3. 定义合并函数
+
+```c++
+void unity(int x,int y){
+	// 将y的父亲指向x的父亲，即合并xy
+	// 这里x和y可以互换位置，不影响最终结果
+	fa[find(y)]=find(x);
+}
+```
 <!-- tabs:end -->
