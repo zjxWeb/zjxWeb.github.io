@@ -2,12 +2,18 @@
 
 ## go的相关说明
 
+[go环境下载](https://go.dev/dl/)
+
 ### 路径说明
 
 + GOROOT  表示当前所在源码包所在路径
 + GOPATH  开发者go的项目默认路径
 
-![1](./src/1.png)
+```shell
+export GOROOT=/usr/local/go
+export GOPATH=/home/go
+export PATH=$PATH:$GOROOT/bin:$GOPATG/bin
+```
 
 + 通过 `go version`来检查是否安装成功，和go的版本号。
 
@@ -197,4 +203,184 @@ func main() {// 函数的 { 一定是和 函数名在同一行
 }
 ```
 
-#### slcie切片追加与截取
+#### slice切片追加与截取
+
+##### slice追加
+
+```go
+func main() {// 函数的 { 一定是和 函数名在同一行
+	var number = make([]int,3,5)
+
+	fmt.Printf("len = %d,cap = %d,slice = %v\n",len(number),cap(number),number)
+}
+```
+
+![1](./src/1.png ':class=goBaseImg')
+
+```go
+package main //程序的包名
+
+import (
+	"fmt"
+)
+
+
+// main函数
+func main() {// 函数的 { 一定是和 函数名在同一行
+	var number = make([]int,3,5)
+
+	fmt.Printf("len = %d,cap = %d,slice = %v\n",len(number),cap(number),number) //len = 3,cap = 5,slice = [0 0 0]
+
+	// 向numbers切片追加一个元素1 number len = 4，[0,0,0,1]  cap = 5
+
+	number = append(number,1)
+
+	fmt.Printf("len = %d,cap = %d,slice = %v\n",len(number),cap(number),number) //len = 4,cap = 5,slice = [0 0 0 1]
+
+	// 向numbers切片追加一个元素1 number len = 4，[0,0,0,1,2]  cap = 5
+	number = append(number,2)
+
+	fmt.Printf("len = %d,cap = %d,slice = %v\n",len(number),cap(number),number) //len = 5,cap = 5,slice = [0 0 0 1 2]
+
+	// 向一个容量已经满的切片追加一个元素  会开发一个和之前一样的空间
+	number = append(number,2)
+
+	fmt.Printf("len = %d,cap = %d,slice = %v\n",len(number),cap(number),number) //len = 6,cap = 12,slice = [0 0 0 1 2 2]
+
+	var number2 = make([]int,3)
+	fmt.Printf("len = %d,cap = %d,slice = %v\n",len(number2),cap(number2),number2) //len = 3,cap = 3,slice = [0 0 0]
+
+	number2 = append(number2,1)
+	fmt.Printf("len = %d,cap = %d,slice = %v\n",len(number2),cap(number2),number2) //len = 4,cap = 6,slice = [0 0 0 1]
+}
+```
+
+> 切片的扩容机制，append的时候，如果长度增加后超过容量，则将容量增加2倍
+
+##### slice截取
+
+```go
+func main() {
+	s := []int{1,2,3}
+	s1 := s[0:2] //[1 2]
+	fmt.Println(s1)
+	s1[0] = 100
+	fmt.Println(s1) //[100 2]
+
+	//copy 深拷贝
+	s2 := make([]int, 3)
+	copy(s2, s)
+	fmt.Println(s2) //[100 2 3]
+}
+```
+
+### map
+
+#### 声明方式
+
+```go
+func main() {
+	// 声明myMap事一种map类型 key是string value是string 
+	var myMap map[string]string
+	if myMap == nil {
+		fmt.Println("myMap is nil")
+	}
+	myMap = make(map[string]string,10)
+
+	myMap["name"] = "tom"
+	myMap["age"] = "18"
+	
+	fmt.Println(myMap)
+
+	// 2 声明方式
+	map2 := make(map[string]string)
+	map2["name"] = "tom"
+	map2["age"] = "18"
+	fmt.Println(map2)
+
+	// 3 声明方式
+	map3 := map[string]string{
+		"name":"tom",
+		"age":"18",
+	}
+	fmt.Println(map3)
+}
+```
+
+#### 使用方式
+
+```go
+package main
+
+import "fmt"
+
+func printMap(cityMap map[string]string){
+	// cityMap是一个引用传递
+	for key, value := range cityMap {
+		fmt.Println(key, value)
+	}
+}
+
+func ChangeMap(cityMap map[string]string){
+	cityMap["London"] = "U"
+}
+func main() {
+	cityMap := make(map[string]string)
+	// 添加
+	cityMap["New York"] = "USA"
+	cityMap["London"] = "UK"
+	cityMap["Paris"] = "France"
+
+	// 删除
+	delete(cityMap, "London")
+
+	//修改
+	cityMap["London"] = "UK"
+	ChangeMap(cityMap)
+	printMap(cityMap)
+}
+```
+
+### struct 定义和使用
+
+#### 结构体的定义
+
+```go
+package main
+
+import "fmt"
+
+// 声明一种新的数据类型myint 是int的别名
+type myint int
+
+// 定义一个结构体
+type Book struct {
+	Title string
+	Author string
+	Price float64
+}
+
+func ChangeBook(book Book) {
+	// 传递一个book的副本
+	book.Price = 100
+}
+func changeBook2(book *Book){
+	// 指针传递
+	book.Price = 200
+}
+
+func main(){
+	var book1 Book
+	book1.Title = "The Go Programming Language"
+	book1.Author = "Addison-Wesley"
+	book1.Price = 128.95
+
+	ChangeBook(book1)
+	fmt.Println(book1)
+	//{The Go Programming Language Addison-Wesley 128.95}
+	changeBook2(&book1)
+	//{The Go Programming Language Addison-Wesley 200}
+	fmt.Println(book1)
+}
+```
+
