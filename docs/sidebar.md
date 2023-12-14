@@ -7,6 +7,8 @@
     * [📃QT](study/c++/QT/)
     * [📃GDB](study/c++/gdb/)
     * [📃MAKEFILE](study/c++/makefile/)
+  * [📁go](study/go/)
+    * [📃基础学习](study/go/base/) 
   * [📁AI](study/AI/)
     * [📃Python](study/AI/python/) 
     * [📃pytorch](study/AI/pytorch/)

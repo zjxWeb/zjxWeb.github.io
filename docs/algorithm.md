@@ -258,6 +258,9 @@ void backtracking(参数) {
 }
 ```
 #### **并查集模板**
+
+> 并查集是一种树型的数据结构，用于处理一些不相交集合的合并及查询问题（即所谓的并、查）。比如说，我们可以用并查集来判断一个森林中有几棵树、某个节点是否属于某棵树等。
+
 1. 定义数据结构
 
 ```c++
@@ -299,4 +302,148 @@ void unity(int x,int y){
 	fa[find(y)]=find(x);
 }
 ```
+
+
+#### **差分数组（前缀和的逆运算）**
+
+![2](./src/img/2c.png)
+
+> 区间加
+
++ a = [0,0,0,0,0,0]要求给下标2到4的位置+2
+  + 差分数组：0  0  2  0  0  -2 （修改起始位2，和结束的后一位4+1 = 5）
+  + 前缀和：   0   0  2  2  2   0
++ ![3](./src/img/3c.png)
+
++ ![4](./src/img/4c.png)
+
+> leetcode 1094.cpp  拼车
+
+```c++
+class Solution {
+public:
+    bool carPooling(vector<vector<int>>& trips, int capacity) {
+        // 差分数组(第一种写法)
+        int a[1001]{};
+        for(auto &el : trips){
+            int num = el[0],from = el[1],to = el[2];
+            a[from] += num;
+            a[to] -= num;
+        }
+        int s= 0;
+        for(int i= 0;i<1001;i++){
+            s += a[i];
+            if(s > capacity) return false;
+        }
+        return true;
+
+        // 差分数组(第二种写法)
+        map<int,int> m;
+        for(auto &el : trips){
+            int num = el[0],from = el[1],to = el[2];
+            m[from] += num;
+            m[to] -= num;
+        }
+        int s = 0;
+        for(auto [_,vallue]: m){
+            s += vallue;
+            if(s > capacity) return false;
+        }
+        return true;
+    }   
+};
+```
+
+>  一维差分的思想可以推广至二维
+
+![5](./src/img/5c.png)
+
+>  二维前缀和
+
+![6](./src/img/6c.png)
+
++ 模板
+
+```c++
+class MatrixSum {
+private:
+    vector<vector<int>> sum;
+
+public:
+    MatrixSum(vector<vector<int>> &matrix) {
+        int m = matrix.size(), n = matrix[0].size();
+        // 注意：如果 matrix[i][j] 范围很大，需要使用 long long
+        sum = vector<vector<int>>(m + 1, vector<int>(n + 1));
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                sum[i + 1][j + 1] = sum[i + 1][j] + sum[i][j + 1] - sum[i][j] + matrix[i][j];
+            }
+        }
+    }
+
+    // 返回左上角在 (r1,c1) 右下角在 (r2-1,c2-1) 的子矩阵元素和（类似前缀和的左闭右开）
+    int query(int r1, int c1, int r2, int c2) {
+        return sum[r2][c2] - sum[r2][c1] - sum[r1][c2] + sum[r1][c1];
+    }
+
+    // 如果你不习惯左闭右开，也可以这样写
+    // 返回左上角在 (r1,c1) 右下角在 (r2,c2) 的子矩阵元素和
+    int query2(int r1, int c1, int r2, int c2) {
+        return sum[r2 + 1][c2 + 1] - sum[r2 + 1][c1] - sum[r1][c2 + 1] + sum[r1][c1];
+    }
+};
+```
+
+> 2132 用邮票贴满网格图
+
+```c++
+class Solution {
+public:
+    bool possibleToStamp(vector<vector<int>>& grid, int stampHeight, int stampWidth) {
+        // 先计算前缀和
+        int n = grid.size(),m = grid[0].size();
+        // 定义前缀和数组
+        vector<vector<int>> sum(n+1,vector<int>(m+1));
+        for (int i = 0; i < n; i++){
+            for(int j = 0;j < m;j++){
+                sum[i+1][j+1] = sum[i+1][j]+sum[i][j+1]-sum[i][j]+grid[i][j];
+            }
+        }
+        // 差分数组
+        // 为方便第 3 步的计算，在 d 数组的最上面和最左边各加了一行（列），所以下标要 +1
+        vector<vector<int>> d(n+2,vector<int>(m+2));
+        for(int i = stampHeight;i < n+1;i++){
+            for(int j = stampWidth;j < m+1;j++){
+                int h = i - stampHeight + 1;
+                int w = j - stampWidth + 1;
+                // 判断子矩阵能不能放邮票
+                if(sum[i][j] - sum[i][w-1] - sum[h-1][j] + sum[h-1][w-1] == 0){
+                    d[h][w]++;
+                    d[h][j+1]--;
+                    d[i+1][w]--;
+                    d[i+1][j+1]++;
+                }
+            }
+        }
+        // 还原差分矩阵
+        for(int i = 0;i < n;i++){
+            for(int j = 0; j < m;j++){
+                d[i+1][j+1] += d[i+1][j] + d[i][j+1] - d[i][j];
+                if(grid[i][j] == 0 && d[i+1][j+1] == 0) return false;
+            }
+        }
+        return true;
+    }
+};
+```
+
 <!-- tabs:end -->
+
+## 刷题归纳
+
+| [1631. 最小体力消耗路径](https://leetcode.cn/problems/path-with-minimum-effort/)<br />1. 二分法   2. 并查集  3.  最短路  【图论】 |                                                              |      |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ---- |
+| [2454. 下一个更大元素 IV](https://leetcode.cn/problems/next-greater-element-iv/)<br />1. 单调栈（递减）+ 优先队列  2. 双单调栈 |                                                              |      |
+| [2132. 用邮票贴满网格图](https://leetcode.cn/problems/stamping-the-grid/)<br />1. 二维差分数组和二维前缀和 | [1094. 拼车](https://leetcode.cn/problems/car-pooling/)<br />1. 一维差分数组和一维前缀和 |      |
+|                                                              |                                                              |      |
+
