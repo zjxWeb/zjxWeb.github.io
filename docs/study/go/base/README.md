@@ -384,3 +384,341 @@ func main(){
 }
 ```
 
+## go面向对象
+
+### 面向对象的表示和封装
+
+```go
+// 如果类名首字母大写，表示其他也能够访问
+type Hero struct {
+    // 如果说类的属性首字母大学，表示该属性对外能够访问的，否则的话只能够类的内部访问
+    Name string
+    Age int
+    Weapon string
+}
+```
+
+> `如果类名首字母大写，表示其他也能够访问`
+
+> `如果说类的属性首字母大学，表示该属性对外能够访问的，否则的话只能够类的内部访问`  (**一定要注意首字母的大小写，因为涉及到你的属性和方法是public还是private**)
+
+```go
+package main
+
+import "fmt"
+
+// 如果类名首字母大写，表示其他也能够访问
+type Hero struct {
+    // 如果说类的属性首字母大学，表示该属性对外能够访问的，否则的话只能够类的内部访问
+    Name string
+    Age int
+    Weapon string
+}
+// func (this Hero) Show() {
+//     fmt.Println("this.Name:", this.Name)
+//     fmt.Println("this.Age:", this.Age)
+//     fmt.Println("this.Weapon:", this.Weapon)
+// }
+
+// func (this Hero) GetName() string {
+//     return this.Name
+// }
+
+// func (this Hero) setName(name string) {
+//     // this是调用该方法的对象的一个副本（浅拷贝）
+//     this.Name = name
+// }
+
+func (this *Hero) Show() {
+    fmt.Println("this.Name:", this.Name)
+    fmt.Println("this.Age:", this.Age)
+    fmt.Println("this.Weapon:", this.Weapon)
+}
+
+func (this *Hero) GetName() string {
+    return this.Name
+}
+
+func (this *Hero) setName(name string) {
+    this.Name = name
+}
+
+func main(){
+    // 创建一个对象
+	hero := Hero{Name: "孙悟空", Age: 18, Weapon: "剑"}
+
+    hero.Show()
+
+    hero.setName("孙悟能")
+    hero.Show()
+}
+```
+
+### 面向对象的继承
+
+```go
+package main
+
+import "fmt"
+
+type Human struct {
+    Name string
+    Age int
+}
+
+func (this *Human) Eat() {
+    fmt.Println("Human eat")
+}
+
+func (this *Human) Walk() {
+    fmt.Println("Human walk")
+}
+
+type SuperMan struct {
+    Human // SuperMan类继承了Human类的方法
+    SuperPower string
+}
+//=====================================
+// 重定义父类的方法Eat
+func (this *SuperMan) Eat() {
+    fmt.Println("SuperMan eat")
+}
+
+// 子类的新方法
+func (this *SuperMan) Say() {
+    fmt.Println("SuperMan say")
+}
+func (this *SuperMan) Print() {
+    fmt.Println(this.Name)
+    fmt.Println(this.Age)   
+    fmt.Println(this.SuperPower)
+
+}
+
+func main() {
+    h := Human{
+        Name: "Tom",
+        Age: 18,
+    }
+    h.Eat()
+    h.Walk()
+
+    fmt.Println("==========================")
+    // 定义一个子类的对象
+    // s := SuperMan{Human{"SuperMan",20,},"fly",}
+    var s SuperMan 
+    s.Name = "SuperMan"
+    s.Age = 20
+    s.SuperPower = "fly"
+    s.Eat() //父类的方法
+    s.Walk() // 父类的方法
+    s.Say() // 子类的方法
+    s.Print()
+}
+```
+
+### 多态的实现和基本要素
+
+> 基本要素：有一个父类（有接口）；有子类（实现了父类的全部接口）；父类类型的变量（指针）指向（引用）子类的具体数据变量
+
+```go
+package main
+import "fmt"
+
+// 本质是一个指针
+type AnimalIF interface{
+    Sleep()
+    GetColr() string
+    GetType() string
+}
+
+// 具体的类  实现了接口（要全部实现）
+type Dog struct {
+    color string
+}
+func (this *Dog) Sleep() {
+    fmt.Println("dog sleep")
+}
+
+func (this *Dog) GetColr() string {
+    return this.color
+}
+
+func (this *Dog) GetType() string {
+    return "dog"
+}
+
+// 具体的类
+type Cat struct {
+    color string
+}
+func (this *Cat) Sleep() {
+    fmt.Println("cat sleep")
+}
+func (this *Cat) GetColr() string {
+    return this.color
+}
+func (this *Cat) GetType() string {
+    return "cat"
+}
+
+func showAnimal(animal AnimalIF) {
+    fmt.Println(animal.GetType())
+    fmt.Println(animal.GetColr())
+    animal.Sleep()
+}
+
+func main() {
+    /*
+        var animal AnimalIF // 接口的数据类型，父类指针
+        animal = &Dog{"red"}
+        animal.Sleep() // 调用的就是Dog的Sleep（）方法   多态现象
+
+        animal = &Cat{"white"}
+        animal.Sleep() // 调用的就是Cat的Sleep（）方法  多态现象
+    */
+    cat := Cat{"white"}
+    dog := Dog{"black"}
+    showAnimal(&cat)
+    showAnimal(&dog)
+}
+```
+
+#### Interface 空接口万能类型与类型断言机制
+
+> 通用万能类型： `interface{}` 空接口
+
+```go
+package main
+
+import "fmt"
+
+// interface{} 是万能数据类型
+func myFunc(arg interface{}){
+    fmt.Println(arg)
+    // interface{} 改如何区分 此时引用的底层数据类型是什么嘛
+
+    // 给 interface{} 提供 “类型断言” 机制
+    switch arg.(type) {
+    case int:
+        fmt.Println("int")
+    case string:
+        fmt.Println("string")
+    case float64:
+        fmt.Println("float64")
+    default:
+        fmt.Println("default")
+    }
+}
+
+type Book struct {
+    Title string
+    Author string
+    Price float64
+}
+func main() {
+    book := Book{Title: "Go语言", Author: "astaxie", Price: 49.99}
+    myFunc(book)
+    myFunc(100)
+    myFunc("Hello World")
+}
+```
+
+### 反射
+
+#### 变量内置pair结构详细说明
+
+![6](./src/6.png ':class=goBaseImg')
+
++ 例一
+
+```go
+package main
+
+import (
+    "fmt"
+    "io"
+    "os"
+)
+
+func main() {
+    var a string
+    // pair<statictype:string,value:"aceld">
+    a = "aceld"
+
+    // pair<type:string,value:"aceld">
+    var allType interface{}
+    allType = a
+
+    str,_ := allType.(string)
+    fmt.Println(str)
+
+    fmt.Println("=================")
+
+    // tty:pair<type:*os.File,value:"/dev/tty" 文件描述符>
+    tty,err := os.OpenFile("/dev/tty",os.O_RDWR,0)
+    if err!= nil {
+        fmt.Println(err)
+        return
+    }
+
+    // r:pair<type:,value:>
+    var r io.Reader
+    // r:pair<type:*os.File,value:"/dev/tty" 文件描述符>
+    r = tty
+    
+    // w:pair<type:,value:>
+    var w io.Writer
+    // w:pair<type:*os.File,value:"/dev/tty" 文件描述符>
+    w  = r.(io.Writer)
+
+    w.Write([]byte("hello world"))
+}
+```
+
++ 例二
+
+```go
+package main
+import "fmt"
+
+type Reader interface {
+    ReadBook()
+}
+
+type Writer interface {
+    WriteBook()
+}
+
+// 具体类型
+type Book struct{
+
+}
+func (this *Book) ReadBook() {
+    fmt.Println("read book")
+}
+func (this *Book) WriteBook() {
+    fmt.Println("write book")
+}
+func main() {
+    // b:pair<type:Book,value:book{}地址>
+    b := &Book{}
+    // r:pair<type,value>
+    var r Reader
+    // r:pair<type:Book,value:book{}地址>
+    r = b
+    r.ReadBook()
+
+    var w Writer
+    // r:pair<type:Book,value:book{}地址>
+    w = r.(Writer)// 此处的断言为什么会成功——因为w r具体的类型type是一致
+
+    w.WriteBook()
+}
+```
+
+#### 反射reflect机制用法
+
+> ValueOf 用来获取输入参数接口的数据的值，如果接口为空则返回0
+
+> TypeOf 用来动态获取输入参数接口中的值类型，如果接口为空则返回nil
