@@ -1,6 +1,5 @@
-<!-- tabs:start -->
-
 [LeetCode练习](https://github.com/zjxWeb/leetcode)
+<!-- tabs:start -->
 
 #### **ASCII码表**
 
@@ -457,6 +456,59 @@ public:
 };
 ```
 
+#### **lazy线段树**
+> 问题： 一个数组，更新一个子数组的值（都加上一个数、把子数组内的元素取反）    查询一个子数组的值（求和，求最大值）
+
++ 两大思想
+    1. 挑选O(n) 个特殊区间，使得任意一个区间可以拆分为 O(log n) 个特殊区间(用最近公共祖先来思考)  O(n) <= 4n
+   
+      + 挑选O(n)个特殊区间：build  参数：结点的编号；左端点值；右端点的值；
+  
+    2. lazy更新/延迟更新
+
+       + lazy tag：用一个数组维护每个区间需要更新的值
+       + 如果这个值 = 0（不一定是0，按题目来），表示不需要更新
+       + 如果这个值 != 0,表示更新操作在这个区间停住了，不需要递归更新子区间了。
+       + 如果后面又来了一个更新，破坏了有lazy tag的区间，那么这个区间就得继续递归更新
+
+```c++
+
+   int n = nums1.size();
+   vector<int> todo(4*n,0);
+   void build(vector<int> &a, int o, int l, int r) {
+        if (l == r) {
+            cnt1[o] = a[l - 1];
+            return;
+        }
+        int m = (l + r) / 2; // 取中点
+        build(a, o * 2, l, m); // 左儿子
+        build(a, o * 2 + 1, m + 1, r); // 右儿子
+        // 维护
+    }
+
+    // 更新 [L,R]   o,l,r=1,1,n
+    void update(int o, int l, int r, int L, int R, int add) {
+        if (L <= l && r <= R) { // 区间被包含了
+            // 更新……
+            todo[o] += add;// 不在继续递归更新
+            return;
+        }
+        int m = (l + r) / 2;
+
+        // 破坏了就要更新
+        // 需要继续递归，就把todo[o]得内容传下去（给左右儿子）
+        if (todo[o] != 0){
+            todo[o*2] += todo[o];//left
+            todo[o*2+1] += todo[o];// right
+            todo[o] = 0; // 清空
+        }
+
+        // 有交集
+        if (m >= L) update(o * 2, l, m, L, R, add);
+        if (m < R) update(o * 2 + 1, m + 1, r, L, R, add);
+        // 维护操作
+    }
+```
 <!-- tabs:end -->
 
 ## 刷题归纳
