@@ -461,7 +461,7 @@ public:
 
 + 两大思想
     1. 挑选O(n) 个特殊区间，使得任意一个区间可以拆分为 O(log n) 个特殊区间(用最近公共祖先来思考)  O(n) <= 4n
-   
+      
       + 挑选O(n)个特殊区间：build  参数：结点的编号；左端点值；右端点的值；
   
     2. lazy更新/延迟更新
@@ -518,4 +518,9 @@ public:
 | [2454. 下一个更大元素 IV](https://leetcode.cn/problems/next-greater-element-iv/)<br />1. 单调栈（递减）+ 优先队列  2. 双单调栈 |                                                              |      |
 | [2132. 用邮票贴满网格图](https://leetcode.cn/problems/stamping-the-grid/)<br />1. 二维差分数组和二维前缀和 | [1094. 拼车](https://leetcode.cn/problems/car-pooling/)<br />1. 一维差分数组和一维前缀和 |      |
 | [2415. 反转二叉树的奇数层](https://leetcode.cn/problems/reverse-odd-levels-of-binary-tree/)<br />1. BFS 2.  DFS | [166. 分数到小数](https://leetcode.cn/problems/fraction-to-recurring-decimal/)<br />1. 模拟除法 |      |
+| [462. 最小操作次数使数组元素相等 II](https://leetcode.cn/problems/minimum-moves-to-equal-array-elements-ii/)<br />1. 排序（但是有个小知识需要注意一下）<br />`ans += abs(nums[i] - nums[n/2]);` |                                                              |      |
+
+
+
+
 
