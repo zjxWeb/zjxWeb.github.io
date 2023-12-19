@@ -461,7 +461,7 @@ public:
 
 + 两大思想
     1. 挑选O(n) 个特殊区间，使得任意一个区间可以拆分为 O(log n) 个特殊区间(用最近公共祖先来思考)  O(n) <= 4n
-      
+    
       + 挑选O(n)个特殊区间：build  参数：结点的编号；左端点值；右端点的值；
   
     2. lazy更新/延迟更新
@@ -509,6 +509,38 @@ public:
         // 维护操作
     }
 ```
+#### **预处理回文数**
+
+```c++
+vector<int> pal;
+
+auto init = [] {
+    // 严格按顺序从小到大生成所有回文数（不用字符串转换）
+    for (int base = 1; base <= 10000; base *= 10) {
+        // 生成奇数长度回文数
+        for (int i = base; i < base * 10; i++) {
+            int x = i;
+            for (int t = i / 10; t; t /= 10) {
+                x = x * 10 + t % 10;
+            }
+            pal.push_back(x);
+        }
+        // 生成偶数长度回文数
+        if (base <= 1000) {
+            for (int i = base; i < base * 10; i++) {
+                int x = i;
+                for (int t = i; t; t /= 10) {
+                    x = x * 10 + t % 10;
+                }
+                pal.push_back(x);
+            }
+        }
+    }
+    pal.push_back(1'000'000'001); // 哨兵，防止下面代码中的 i 下标越界
+    return 0;
+}();
+```
+
 <!-- tabs:end -->
 
 ## 刷题归纳
@@ -518,7 +550,10 @@ public:
 | [2454. 下一个更大元素 IV](https://leetcode.cn/problems/next-greater-element-iv/)<br />1. 单调栈（递减）+ 优先队列  2. 双单调栈 |                                                              |      |
 | [2132. 用邮票贴满网格图](https://leetcode.cn/problems/stamping-the-grid/)<br />1. 二维差分数组和二维前缀和 | [1094. 拼车](https://leetcode.cn/problems/car-pooling/)<br />1. 一维差分数组和一维前缀和 |      |
 | [2415. 反转二叉树的奇数层](https://leetcode.cn/problems/reverse-odd-levels-of-binary-tree/)<br />1. BFS 2.  DFS | [166. 分数到小数](https://leetcode.cn/problems/fraction-to-recurring-decimal/)<br />1. 模拟除法 |      |
-| [462. 最小操作次数使数组元素相等 II](https://leetcode.cn/problems/minimum-moves-to-equal-array-elements-ii/)<br />1. 排序（但是有个小知识需要注意一下）<br />`ans += abs(nums[i] - nums[n/2]);` |                                                              |      |
+| [462. 最小操作次数使数组元素相等 II](https://leetcode.cn/problems/minimum-moves-to-equal-array-elements-ii/)<br />1. 排序（但是有个小知识需要注意一下）<br />`ans += abs(nums[i] - nums[n/2]);` | [2967. 使数组成为等数数组的最小代价](https://leetcode.cn/problems/minimum-cost-to-make-array-equalindromic/)<br />1. 中位数 ；回文数；二分； |      |
+| [162. 寻找峰值](https://leetcode.cn/problems/find-peak-element/)<br />1. 二分查找 | [1901. 寻找峰值 II](https://leetcode.cn/problems/find-a-peak-element-ii/)<br />1. 二分查找 |      |
+
+
 
 
 
