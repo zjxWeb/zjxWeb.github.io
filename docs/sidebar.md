@@ -49,6 +49,8 @@
     * [📃智慧城市数字孪生平台](projectPractice/digitalTwinsProject/smartCity/)
   * [📁APP项目](projectPractice/App/)
     * [📃菜谱APP(可改任意APP)](projectPractice/App/healthApp/)
+  * [📁Golang实战](projectPractice/go/)
+    * [📃即时通信系统](projectPractice/go/instantMesg/)
 * [**算法(ASCII)**](algorithm)
   * [📁LeetCode](algorithm/leetcode/)
 * [**个人联系方式**](onself)

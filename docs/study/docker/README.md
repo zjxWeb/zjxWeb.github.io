@@ -118,7 +118,7 @@
 5. 删除本地的Docker镜像：
 
    + ```
-     docker rmi image_name:tag
+     docker rmi image_name:tag (可以加-f强制删除[docker rmi -f image_ID 来进行删除])
      ```
 
 6. 运行Docker容器：
@@ -195,3 +195,36 @@
 6. Docker安装和使用应用程序：在Docker容器内安装和使用应用程序，类似于在主机上安装和使用应用程序。例如：`docker run -it --rm -v $PWD:/app -w /app node:latest npm install`。
 
 >  以上是Docker的一些高级操作，可以方便地构建、管理和部署多个容器，实现分布式系统的管理和应用程序集成。
+
+## 有以下几种方法可以让Docker容器一直运行：
+
+1. 使用-d参数：在运行容器时，使用-d参数可以将容器放到后台运行，这样容器就会一直运行，直到手动停止或者出现错误。
+
+例如：
+```
+docker run -d image_name 
+```
+2. 在容器内运行一个无限循环的命令：可以在容器内运行一个无限循环的命令，这样容器就会一直运行。
+
+例如：
+```
+docker run image_name /bin/sh -c "while true; do echo hello world; sleep 1; done" 
+```
+3. 使用--restart参数：可以在运行容器时，使用--restart参数来设置容器的重启策略，这样容器就会在出现错误或者停止后自动重启。
+
+例如：
+```
+docker run --restart=always image_name 
+```
+4. 使用docker-compose：可以使用docker-compose来管理多个容器，这样可以方便地启动、停止和重启容器。
+
+例如：
+
+```
+version: '3' 
+services: 
+  web: 
+    image: nginx 
+    restart: always 
+```
+以上是几种让Docker容器一直运行的方法，可以根据实际情况选择适合自己的方法。
