@@ -545,13 +545,14 @@ auto init = [] {
 
 ## 刷题归纳
 
-| [1631. 最小体力消耗路径](https://leetcode.cn/problems/path-with-minimum-effort/)<br />1. 二分法   2. 并查集  3.  最短路  【图论】 |                                                              |      |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ---- |
-| [2454. 下一个更大元素 IV](https://leetcode.cn/problems/next-greater-element-iv/)<br />1. 单调栈（递减）+ 优先队列  2. 双单调栈 |                                                              |      |
-| [2132. 用邮票贴满网格图](https://leetcode.cn/problems/stamping-the-grid/)<br />1. 二维差分数组和二维前缀和 | [1094. 拼车](https://leetcode.cn/problems/car-pooling/)<br />1. 一维差分数组和一维前缀和 |      |
-| [2415. 反转二叉树的奇数层](https://leetcode.cn/problems/reverse-odd-levels-of-binary-tree/)<br />1. BFS 2.  DFS | [166. 分数到小数](https://leetcode.cn/problems/fraction-to-recurring-decimal/)<br />1. 模拟除法 |      |
-| [462. 最小操作次数使数组元素相等 II](https://leetcode.cn/problems/minimum-moves-to-equal-array-elements-ii/)<br />1. 排序（但是有个小知识需要注意一下）<br />`ans += abs(nums[i] - nums[n/2]);` | [2967. 使数组成为等数数组的最小代价](https://leetcode.cn/problems/minimum-cost-to-make-array-equalindromic/)<br />1. 中位数 ；回文数；二分； |      |
-| [162. 寻找峰值](https://leetcode.cn/problems/find-peak-element/)<br />1. 二分查找 | [1901. 寻找峰值 II](https://leetcode.cn/problems/find-a-peak-element-ii/)<br />1. 二分查找 |      |
+| [1631. 最小体力消耗路径](https://leetcode.cn/problems/path-with-minimum-effort/)<br />1. 二分法   2. 并查集  3.  最短路  【图论】 |                                                              |                                                              |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| [2454. 下一个更大元素 IV](https://leetcode.cn/problems/next-greater-element-iv/)<br />1. 单调栈（递减）+ 优先队列  2. 双单调栈 |                                                              |                                                              |
+| [2132. 用邮票贴满网格图](https://leetcode.cn/problems/stamping-the-grid/)<br />1. 二维差分数组和二维前缀和 | [1094. 拼车](https://leetcode.cn/problems/car-pooling/)<br />1. 一维差分数组和一维前缀和 |                                                              |
+| [2415. 反转二叉树的奇数层](https://leetcode.cn/problems/reverse-odd-levels-of-binary-tree/)<br />1. BFS 2.  DFS | [166. 分数到小数](https://leetcode.cn/problems/fraction-to-recurring-decimal/)<br />1. 模拟除法 |                                                              |
+| [462. 最小操作次数使数组元素相等 II](https://leetcode.cn/problems/minimum-moves-to-equal-array-elements-ii/)<br />1. 排序（但是有个小知识需要注意一下）<br />`ans += abs(nums[i] - nums[n/2]);` | [2967. 使数组成为等数数组的最小代价](https://leetcode.cn/problems/minimum-cost-to-make-array-equalindromic/)<br />1. 中位数 ；回文数；二分； |                                                              |
+| [162. 寻找峰值](https://leetcode.cn/problems/find-peak-element/)<br />1. 二分查找 | [1901. 寻找峰值 II](https://leetcode.cn/problems/find-a-peak-element-ii/)<br />1. 二分查找 |                                                              |
+| [394. 字符串解码](https://leetcode.cn/problems/decode-string/)<br />1. 递归 | [155. 最小栈](https://leetcode.cn/problems/min-stack/)<br />1. 辅助栈 | [347. 前 K 个高频元素](https://leetcode.cn/problems/top-k-frequent-elements/)<br />1. 优先队列 2. 小顶堆 |
 
 
 
