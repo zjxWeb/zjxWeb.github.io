@@ -541,6 +541,104 @@ auto init = [] {
 }();
 ```
 
+#### **单调栈**
+
+> 存在三种情况 
+>
+> - 情况一：当前遍历的元素T[i]小于栈顶元素T[st.top()]的情况
+> - 情况二：当前遍历的元素T[i]等于栈顶元素T[st.top()]的情况
+> - 情况三：当前遍历的元素T[i]大于栈顶元素T[st.top()]的情况
+
+`只有单调栈递增（从栈口到栈底顺序），就是求右边第一个比自己大的，单调栈递减的话，就是求右边第一个比自己小的。`
+
+> 每日温度
+
+```c++
+// 版本一
+class Solution {
+public:
+    vector<int> dailyTemperatures(vector<int>& T) {
+        // 递增栈
+        stack<int> st;
+        vector<int> result(T.size(), 0);
+        st.push(0);
+        for (int i = 1; i < T.size(); i++) {
+            if (T[i] < T[st.top()]) {                       // 情况一
+                st.push(i);
+            } else if (T[i] == T[st.top()]) {               // 情况二
+                st.push(i);
+            } else {
+                while (!st.empty() && T[i] > T[st.top()]) { // 情况三
+                    result[st.top()] = i - st.top();
+                    st.pop();
+                }
+                st.push(i);
+            }
+        }
+        return result;
+    }
+};
+```
+
+> 直接把情况一二三都合并到了一起
+
+```c++
+// 版本二
+class Solution {
+public:
+    vector<int> dailyTemperatures(vector<int>& T) {
+        stack<int> st; // 递增栈
+        vector<int> result(T.size(), 0);
+        for (int i = 0; i < T.size(); i++) {
+            while (!st.empty() && T[i] > T[st.top()]) { // 注意栈不能为空
+                result[st.top()] = i - st.top();
+                st.pop();
+            }
+            st.push(i);
+
+        }
+        return result;
+    }
+};
+```
+
+#### **优先队列/堆**
+
+[优先队列](/study/c++/c++base/?id=_6-优先队列)
+
+> 参考[347. 前 K 个高频元素](https://leetcode.cn/problems/top-k-frequent-elements/)
+
+```c++
+class Solution {
+public:
+    // 小顶堆
+    class mycomparison {
+    public:
+        bool operator()(const pair<int, int>& lhs, const pair<int, int>& rhs) {
+            return lhs.second > rhs.second;
+        }
+    };
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        // 统计出现的次数
+        unordered_map<int, int> m;
+        for (int i = 0; i < nums.size(); i++) m[nums[i]]++;
+        priority_queue<pair<int, int>, vector<pair<int, int>>, mycomparison> q;
+        for (auto it = m.begin(); it!= m.end(); it++) {
+            q.push(make_pair(it->first, it->second));
+            if (q.size() > k) q.pop();
+        }
+        // 找出前k个，倒序输出
+        vector<int> res;
+        while (!q.empty()) {
+            res.push_back(q.top().first);
+            q.pop();
+        }
+        reverse(res.begin(), res.end());
+        return res;
+    }
+};
+```
+
 <!-- tabs:end -->
 
 ## 刷题归纳
@@ -553,6 +651,7 @@ auto init = [] {
 | [462. 最小操作次数使数组元素相等 II](https://leetcode.cn/problems/minimum-moves-to-equal-array-elements-ii/)<br />1. 排序（但是有个小知识需要注意一下）<br />`ans += abs(nums[i] - nums[n/2]);` | [2967. 使数组成为等数数组的最小代价](https://leetcode.cn/problems/minimum-cost-to-make-array-equalindromic/)<br />1. 中位数 ；回文数；二分； |                                                              |
 | [162. 寻找峰值](https://leetcode.cn/problems/find-peak-element/)<br />1. 二分查找 | [1901. 寻找峰值 II](https://leetcode.cn/problems/find-a-peak-element-ii/)<br />1. 二分查找 |                                                              |
 | [394. 字符串解码](https://leetcode.cn/problems/decode-string/)<br />1. 递归 | [155. 最小栈](https://leetcode.cn/problems/min-stack/)<br />1. 辅助栈 | [347. 前 K 个高频元素](https://leetcode.cn/problems/top-k-frequent-elements/)<br />1. 优先队列 2. 小顶堆 |
+| [2866. 美丽塔 II](https://leetcode.cn/problems/beautiful-towers-ii/)<br />1. 单调栈 | [1671. 得到山形数组的最少删除次数](https://leetcode.cn/problems/minimum-number-of-removals-to-make-mountain-array/)<br />1. 动态规划 2. 二分法 |                                                              |
 
 
 

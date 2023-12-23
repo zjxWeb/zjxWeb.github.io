@@ -3331,6 +3331,8 @@ string中单个字符存取方式有两种
 + `vector(v.begin() , v.end( ) ) ;`	//将v[begin(), end())区间中的元素拷贝给本身
 + `vector(n, elem) ;`	                         //构造函数将n个elem拷贝给本身。
 + `vector( const vector &vec ) ;`	     //拷贝构造函数。
++ `c.rbegin()` 返回一个逆序迭代器，它指向容器c的最后一个元素
++ `c.rend()` 返回一个逆序迭代器，它指向容器c的第一个元素前面的位置
 + 示例：
 
 ```c++
