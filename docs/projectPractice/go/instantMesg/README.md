@@ -801,3 +801,146 @@ func main() {
 
 ### 更新用户名
 
+> 新增`UpdateName（）` 更新用户名
+
+```go
+// 更新用户名
+func (client *Client) UpdateName() bool {
+	fmt.Println("请输入新的用户名")
+	fmt.Scanln(&client.Name)
+
+	sendMsg := "rename| " + client.Name + "\n"
+	_,err := client.conn.Write([]byte(sendMsg))
+	if err!= nil{
+		fmt.Println("更新用户名失败")
+		return false
+	}
+	return true
+}
+```
+
+> 加入到Run业务分支中
+
+```go
+case 3:
+    // 更新用户名
+    client.UpdateName()
+    break
+```
+
+> 添加处理server 回执消息方法，`DeslResponse（）`
+
+```go
+// 处理server回应的消息，直接现实标准输出即可
+func (client *Client) DeslResponse() {
+	// 永久阻塞监听  一旦有数据，就直接copy到stdout 标准输出上
+	io.Copy(os.Stdout, client.conn)
+	// 等价于下面的写法
+	// for{
+	// 	buf := make()
+	// 	client.conn.Read(buf)
+	// 	fmt.Println(buf)
+	// }
+
+}
+```
+
+> 开启一个go，去承载`DealResponse（）`流程
+
+```go
+// 单独卡其一个gorountine去处理server回执的消息
+	go client.DeslResponse()
+```
+
+### 公聊模式
+
+> 新增`PublicChat（）` 公聊业务
+
+```go
+func (client *Client) PublicChat() {
+	// 提示用户输入消息
+	var chatMsg string
+	fmt.Println("请输入聊天内容，exit退出")
+	fmt.Scanln(&chatMsg)
+	for chatMsg!= "exit" {
+		// 发送消息给服务器
+
+		// 消息部位空则发送
+		if len(chatMsg) != 0 {
+			sendMsg := chatMsg + "\n"
+			_, err := client.conn.Write([]byte(sendMsg))
+			if err!= nil {
+				fmt.Println("发送消息失败:",err)
+				break
+			}
+		}
+		chatMsg = ""
+		fmt.Println("请输入聊天内容，exit退出")
+		fmt.Scanln(&chatMsg)
+	}
+}
+```
+
+> 加入RUN分支
+
+```go
+case 1:
+    // 公聊天模式
+    fmt.Println("公聊天模式")
+    client.PublicChat()
+    break
+```
+
+### 私聊模式
+
+> 1. 查询当前都有哪些用户在线
+> 2. 提示用户用户选择一个用户进入私聊
+
++ 查询当前有哪些用户在线
+
+```go
+//查询当前都有哪些用户在线
+func (client *Client) SelectUsers() {
+	sendMsg := "who\n"
+	_,err := client.conn.Write([]byte(sendMsg))
+	if err!= nil {
+		fmt.Println("查询用户失败",err)
+		return
+	}
+}
+```
+
++ 新增私聊模式业务
+
+```go
+// 私聊模式
+func (client *Client) PrivateChat() {
+	var remoteName string
+	var chatMsg string
+	client.SelectUsers()
+	fmt.Println("请选择用户,exit退出")
+	fmt.Scanln(&remoteName)
+	for remoteName != "exit" {
+		fmt.Println("请输入聊天内容，exit退出")
+		fmt.Scanln(&chatMsg)
+		for chatMsg != "exit" {
+			// 消息部位空则发送
+			if len(chatMsg) != 0{
+				sendMsg := "to|" + remoteName + "|" + chatMsg + "\n\n"
+				_,err := client.conn.Write([]byte(sendMsg))
+				if err!= nil {
+					fmt.Println("发送消息失败",err)
+					break
+				}
+			}
+			chatMsg = ""
+			fmt.Println("请选择用户,exit退出")
+			fmt.Scanln(&remoteName)
+		}
+		client.SelectUsers()
+		fmt.Println("请选择用户,exit退出")
+		fmt.Scanln(&remoteName)
+	}
+}
+```
+
