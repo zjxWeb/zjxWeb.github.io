@@ -48,7 +48,7 @@
 
 ![10](./src/10.png)
 
-#### spl- collection-grid 
+## spl—collection-grid 
 
 ![11](./src/11.png)
 
@@ -64,5 +64,23 @@
 
 > + ostr代表负责输出内容的stream,例如cout ofstream或ostringstream,你们可以将grid对象中的内容输出到ostr,它们会将grid对象中的内容以合理的方式输出
 
-## vector
+> **不使用引用传值**——复制出一整个grid对象的拷贝——降低程序的效率
+>
+> **引用传值**——grid对象会被其它对象所共享，会存在潜在的危险（需要加入const 来解决） 
+>
+> ```c++
+> intfunction(const Grid<int>& g)
+> ```
+
+## spl—vector
+
+![13](./src/13.png)
+
+> 空间是动态的。——list 
+>
+> 如果你使用array对象时发生了访问越界，那么程序会返回你无用的数据，
+>
+> 在vector中，则会有错误信息以帮助你debug
+
+![14](./src/14.png)
 
