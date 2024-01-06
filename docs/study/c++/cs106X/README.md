@@ -40,39 +40,41 @@
 
 ![8](./src/8.png)
 
-> Istringstream会从string对象读取数据，而不是从文件中读取的
+> `Istringstream`会从string对象读取数据，而不是从文件中读取的
 
-> ifstream对象读取文件中的其中一条line,再使用istringstream对象将该line中文本的word分开
+> `ifstream`对象读取文件中的其中一条`line`,再使用`istringstream`对象将该`line`中文本的`word`分开
 
 ![9](./src/9.png)
 
 ![10](./src/10.png)
 
-## spl—collection-grid 
+## `SPL（Stanford collection Library）`
+
+### `spl—collection-grid` 
 
 ![11](./src/11.png)
 
-> SPL中的 collection 拥有越界检测功能与内存错误检测功能
+> `SPL`中的 `collection` 拥有越界检测功能与内存错误检测功能
 
 > 使用其它的来实现二维数组的话，一般不会报错，所以说grid来实现二维数组更容易debugger
 
-> + 在没有输入grid对象中元素值时,matrix中每个元素都是0或与0类似的值,如果grid对象存储的是double,那么元素的默认值就是0.0,如果存储的是bool,那么元素的默认值就是false
+> + 在没有输入`grid`对象中元素值时,`matrix`中每个元素都是0或与0类似的值,如果grid对象存储的是double,那么元素的默认值就是0.0,如果存储的是`bool`,那么元素的默认值就是`false`
 
 ![12](./src/12.png)
 
 > Grid不会自动扩容
 
-> + ostr代表负责输出内容的stream,例如cout ofstream或ostringstream,你们可以将grid对象中的内容输出到ostr,它们会将grid对象中的内容以合理的方式输出
+> + `ostr`代表负责输出内容的stream,例如`cout ofstream`或`ostringstream`,你们可以将grid对象中的内容输出到`ostr`,它们会将grid对象中的内容以合理的方式输出
 
 > **不使用引用传值**——复制出一整个grid对象的拷贝——降低程序的效率
 >
-> **引用传值**——grid对象会被其它对象所共享，会存在潜在的危险（需要加入const 来解决） 
+> **引用传值**——grid对象会被其它对象所共享，会存在潜在的危险（需要加入`const` 来解决） 
 >
 > ```c++
 > intfunction(const Grid<int>& g)
 > ```
 
-## spl—vector
+### `spl—vector`
 
 ![13](./src/13.png)
 
@@ -83,4 +85,115 @@
 > 在vector中，则会有错误信息以帮助你debug
 
 ![14](./src/14.png)
+
+![15](./src/15.png)
+
+```C++
+void removeAll(Vector<string>& v, string s){
+    for(int i = v.size() - 1; i >= 0;i--){
+        if(v[i] == s){
+            v.remove(i);
+        }
+    }
+}
+
+// 或者
+void removeAll(Vector<string>& v, string s){
+    for(int i = 0; i < v.size(); i++){
+        if(v[i] == s){
+            v.remove(i);
+            i--;
+        }
+    }
+}
+```
+
+> 大O记法
+
+![16](./src/16.png)
+
+![17](./src/17.png)
+
+### `Linkedlist 与 vector不同之处`
+
++ `Linkedlist` 中某些操作会比 `vector` 更快或者更慢（插入`insert，remove`操作`linkedlist`更快）
+  + ![Linkedlist](./src/18.png)
+
+## `stacks and Queues`
+
+### `stack（FILO）`
+
+> stack——迷宫求解；回文；翻转顺序；软件中的undo（撤销）功能；括号匹配；
+>
+> 你将你想前往目标位置所经过的点push到stack上,搜索到一个新位置时，首先将该位置的坐标存储在栈中，若该位置不合法(经过各种递归操作，发现通过它没办法到达目标位置)，则将该坐标出栈，它可以让你最终得到一个合理的路线
+
+```c++
+// 括号匹配(使用标准库的#include<stack>是注释的)
+int checkBalance(string code){
+    stack<char>parent;
+    char top;
+    for(int i = 0; i < code.length(); i++){
+        if(code[i] == '(' || code[i] == '}'){
+            parent.push(code[i]);
+        }else if(code[i] == ')'){
+            if(parent.empty()) return i;
+            top = parent.pop();//先将栈顶元素赋值给top，然后在删除栈顶元素
+            // peek() 是先删除栈顶元素，在将栈中的栈顶元素赋值
+            //top = parent.top();
+            //parent.pop();
+            if(top != '('){
+                return i;
+            }
+        }else if(code[i] == '}'){
+            if(parent.empty()) return i;
+            top = parent.pop();
+            //top = parent.top();
+            //parent.pop();
+            if(top != '{'){
+                return i;
+            }
+        }
+
+    }
+    if(parent.empty()) return -1;
+    else return code.length();
+}
+```
+
+![19](./src/19.png)
+
+> **`stack`内部一般是由 `vector`或者 `array`实现的**
+
+### `queues（FIFO`
+
+> 打印任务；下载文件；
+>
+> `#include "queue.h"`
+
+![20](./src/20.png)
+
+> **一般使用 `Linkedlist`(环形数组)去实现 `queue`**
+
+![21](./src/21.png)
+
+```c++
+// {"a","b","c"}
+// {"a","b","c","c","b","a"}
+void mirror(Queue<string>& queue){
+	Stack<string> stack;
+    int size = queue.size();
+    for(int i = 0; i < size;i++){
+        string s = queue.dequeue();
+        stack.push(s);
+        queue.enqueue(s);
+    }
+    while(!stack.isEmpty()){
+        queue.enqueue(stack.pop);
+    }
+}
+```
+
+# `set and map`
+
+### `set 唯一不重复`
 
