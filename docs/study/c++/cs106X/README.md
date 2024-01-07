@@ -119,9 +119,11 @@ void removeAll(Vector<string>& v, string s){
 + `Linkedlist` 中某些操作会比 `vector` 更快或者更慢（插入`insert，remove`操作`linkedlist`更快）
   + ![Linkedlist](./src/18.png)
 
-## `stacks and Queues`
+### `stacks and Queues`
 
-### `stack（FILO）`
+<!-- tabs:start -->
+
+#### **`stack（FILO）`**
 
 > stack——迷宫求解；回文；翻转顺序；软件中的undo（撤销）功能；括号匹配；
 >
@@ -164,7 +166,7 @@ int checkBalance(string code){
 
 > **`stack`内部一般是由 `vector`或者 `array`实现的**
 
-### `queues（FIFO`
+#### **`queues（FIFO`**
 
 > 打印任务；下载文件；
 >
@@ -193,7 +195,35 @@ void mirror(Queue<string>& queue){
 }
 ```
 
-# `set and map`
+<!-- tabs:end -->
 
-### `set 唯一不重复`
+### `set and map`
 
+<!-- tabs:start -->
+
+#### **`set 唯一不重复`**
+
+![22](./src/22.png)
+
+#### **`set`和 `hashset`内部实现的不同**
+
+> + 大致不同就是内部实现的方法是不一样的
+>   + `set`内部是由 `二叉搜索树（binary search tree）`的数据结构实现
+>   + `hashset`内部是有一个 `array`实现，但是这个 `array`的用法很特殊，我们将其称为 `hash table（哈希表）`
+>     + `hashset`的存储数据的顺序难以预测，但**其运行速度要比set更快**
+
+#### **`Lecicon`存储string**
+
+![23](./src/23.png)
+
+> `lexicon就像一本字典，但这本字典里只有单词而没有单词的解释`
+>
+> + 基本上，`Lexicon`和 `Set<string>`一样
+
+#### **Maps**
+
+> map负责存储pairs（键值对）
+
+
+
+<!-- tabs:end -->
