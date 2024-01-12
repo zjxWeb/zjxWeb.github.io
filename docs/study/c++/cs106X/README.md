@@ -224,6 +224,40 @@ void mirror(Queue<string>& queue){
 
 > map负责存储pairs（键值对）
 
+![24](./src/24.png)
 
+> ```c++
+> ifstream input;
+> string word;
+> while(input >> word){// read one word
+>     word = toLowerCase(word);
+> }
+> ```
 
 <!-- tabs:end -->
+
+## `Recursion(递归)`
+
+> Writing a function that calls itself.("self-similar")
+
+```c++
+int fact(int n){
+    int res = 1;
+    for(int i = 2; i<= n;i++){
+        res *= i;
+    }
+    return res;
+}
+// recursive version of factorial function
+int fact(int n){
+    if(n < 2 ){
+        return 1;
+	}else{
+        return fact(n - 1) * n;
+	}
+}
+```
+
+> recursion 版本代码运行速度 回避 for 循环慢
+
+ 
