@@ -260,4 +260,112 @@ int fact(int n){
 
 > recursion 版本代码运行速度 回避 for 循环慢
 
- 
+ ```c++
+ int mystery(int n){
+     if(n < 10){
+         return n;
+     }else{
+         int a = n / 10;
+         int b = n % 10;
+         return mystery(a + b);
+     }
+ }
+ mystery(648); // 9
+ ```
+
+> 幂运算
+
+```c++
+int power(int base, int exp){
+    if(exp < 0){
+    	throw exp;   
+    }else if(exp == 0){
+        return 1;
+    }else{
+        return base * power(base,exp-1);
+    }
+}
+```
+
+> 输出二进制
+
+```c++
+void printsBinary(int n){
+    if(n < 0){
+        cout << "-";
+        printsBinary(-n);
+    }else if(n <= 1){
+        cout << n;
+    }else{
+        int lastDigit = n % 2;
+        int otherDigits = n / 2;
+        printsBinary(otherDigits);
+        cout << lastDigit;
+    }
+}
+```
+
+```c++
+void reverseLines(ifstream& input){
+    string line;
+    if(getline(input,line)){
+        // recursive case: reverse the file
+        reverseLines(input);
+        cout << line << endl;
+    }else{
+        //else,base case: no lines
+    }
+}
+```
+
+> `crawal()` 往其中传入一个文件名或目录名作为参数，然后程序就会打印其中包含的所有子文件名或子目录名（嵌套的情况）
+
+![25](./src/25.png)
+
+```c++
+void crawl(const string & filename,string& indentation{
+    cout << indentation << getTail(filename) << endl;
+    if(isFile(filename)){
+        // base case : normal file
+        cout << getTail(filename) << endl;
+    }else {
+        // recursive case : dircetory
+        Vector<string>files = listDirectory(dilename);
+        for(string file : files){
+            cout << "     " ;
+            crawl(filename + "/" + file,identation + "    ");
+        }
+    }
+}
+```
+
+> 斐波那契数列（为前两个数之和）
+
+```c++
+int fib(int n){
+    static HashMap<int,int> cache;// 记忆化搜素
+    if(n  <= 2) return 1;
+    else if( cache.containsKey(n)){
+        return cache.get(n);
+    }
+    else {
+        int re = f(n - 1) + f(n + 2);
+        cache.put(n,res);
+        return res;
+    }
+}
+```
+
+> 括号运算符计算
+
+![26](./src/26.png)
+
+```c++
+int evaluate(const string& exp){
+    
+    return 0;
+}
+```
+
+
+
