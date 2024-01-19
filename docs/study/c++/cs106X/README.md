@@ -349,7 +349,7 @@ int fib(int n){
         return cache.get(n);
     }
     else {
-        int re = f(n - 1) + f(n + 2);
+        int re = fib(n - 1) + fib(n + 2);
         cache.put(n,res);
         return res;
     }
@@ -361,11 +361,46 @@ int fib(int n){
 ![26](./src/26.png)
 
 ```c++
+int evalHelper(const string & exp,int & index){
+    if(isdigit(exp[index])){
+        return exp[index++] - '0';
+    }else if(exp[index] == '('){
+        index++;
+        int left = evalHelper(exp,index); // operand
+        char op = exp[index++];             // operator
+        int right = evalHelper(exp,index);   // operand
+        index++; // skip
+        if(op == "+"){
+            return left + right;
+        }else{ // op == '*'
+            return left * right;
+        }
+    }
+}
+
 int evaluate(const string& exp){
-    
-    return 0;
+    int index = 0;
+    return evaluate(exp,index);
 }
 ```
 
+### Fractals（尾递归）
 
+![27](./src/27.png)
+
+```c++
+void cantorSet(GWindow& windows,int x,int y, int length, int lenvels){
+    if(levels >= 1){
+        pause(100);
+        window.drawLine(x,y,x+length,y);
+        window.drwLine(x,y+1,x+length,y+1);
+        cantorSet(window,x,y+20,length/3,levels-1);
+        cantorSet(window,x+2*length/3,y+20,length/3,levels-1);
+    }
+}
+```
+
+## backtracking(回溯)
+
+### Exhaustive search(穷举搜索)
 
