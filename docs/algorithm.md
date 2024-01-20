@@ -723,6 +723,7 @@ public:
 | [162. 寻找峰值](https://leetcode.cn/problems/find-peak-element/)<br />1. 二分查找 | [1901. 寻找峰值 II](https://leetcode.cn/problems/find-a-peak-element-ii/)<br />1. 二分查找 |                                                              |
 | [394. 字符串解码](https://leetcode.cn/problems/decode-string/)<br />1. 递归 | [155. 最小栈](https://leetcode.cn/problems/min-stack/)<br />1. 辅助栈 | [347. 前 K 个高频元素](https://leetcode.cn/problems/top-k-frequent-elements/)<br />1. 优先队列 2. 小顶堆 |
 | [2866. 美丽塔 II](https://leetcode.cn/problems/beautiful-towers-ii/)<br />1. 单调栈 | [1671. 得到山形数组的最少删除次数](https://leetcode.cn/problems/minimum-number-of-removals-to-make-mountain-array/)<br />1. 动态规划 2. 二分法 |                                                              |
+| [2788. 按分隔符拆分字符串](https://leetcode.cn/problems/split-strings-by-separator/)<br />1.  讨论 2. \#include<sstream>   字符串流相关操作 | [136. 只出现一次的数字](https://leetcode.cn/problems/single-number/)<br />位运算（^） |                                                              |
 
 
 
