@@ -211,3 +211,9 @@ input:checked + .slider:before {
   .goBaseImg{
     width: 29vw;
   }
+
+/* 全局样式 */
+.halfWidth{
+    width: 40vw;
+    margin-left: 10vw;
+}

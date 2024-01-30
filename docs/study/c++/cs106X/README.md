@@ -404,3 +404,21 @@ void cantorSet(GWindow& windows,int x,int y, int length, int lenvels){
 
 ### Exhaustive search(穷举搜索)
 
+![28](./src/28.png)
+
+> 小练习——输出二进制
+
+![29](./src/29.png)
+
+```c++
+void printBinary(int digits, string prefix){
+    if(digits == 0) {
+        cout << prefix << endl;
+    }else {
+        printBinary(digits - 1, prefix + "0");
+        printBinary(digits - 1, prefix + "1");
+    }
+}
+```
+
+![30](./src/30.png ':class=halfWidth')
