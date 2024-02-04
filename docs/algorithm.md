@@ -710,6 +710,12 @@ public:
 
 > C++ int 是signed  所以说 `i >= 0` 和 `~i` 是等价的
 
++ [异或运算](https://leetcode.cn/problems/single-number/solutions/242211/zhi-chu-xian-yi-ci-de-shu-zi-by-leetcode-solution/)
+
+> 1. 任何数和0做异或运算，结果仍然是原来的数，即 `a ⊕ 0 = a`
+> 2. 任何数和其自身做异或运算，结果是 0，即  `a ⊕ a = 0`
+> 3. 异或运算满足交换律和结合律，即 `a⊕b⊕a=b⊕a⊕a=b⊕(a⊕a)=b⊕0=b`
+
 <!-- tabs:end -->
 
 <!-- tabs:start -->
@@ -1195,7 +1201,7 @@ public:
 
 ## 刷题归纳
 
-| [1631. 最小体力消耗路径](https://leetcode.cn/problems/path-with-minimum-effort/)<br />1. 二分法   2. 并查集  3.  最短路  【图论】 |                                                              |                                                              |
+| [1631. 最小体力消耗路径](https://leetcode.cn/problems/path-with-minimum-effort/)<br />1. 二分法   2. 并查集  3.  最短路  【图论】 | [287. 寻找重复数](https://leetcode.cn/problems/find-the-duplicate-number/)<br />1. 双指针 2. 二分法（*） | [136. 只出现一次的数字](https://leetcode.cn/problems/single-number/)<br />1. 位操作（异或运算） |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | [2454. 下一个更大元素 IV](https://leetcode.cn/problems/next-greater-element-iv/)<br />1. 单调栈（递减）+ 优先队列  2. 双单调栈 |                                                              |                                                              |
 | [2132. 用邮票贴满网格图](https://leetcode.cn/problems/stamping-the-grid/)<br />1. 二维差分数组和二维前缀和 | [1094. 拼车](https://leetcode.cn/problems/car-pooling/)<br />1. 一维差分数组和一维前缀和 |                                                              |
