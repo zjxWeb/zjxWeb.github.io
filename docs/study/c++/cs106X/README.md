@@ -422,3 +422,41 @@ void printBinary(int digits, string prefix){
 ```
 
 ![30](./src/30.png ':class=halfWidth')
+
+> 小案列——输出字母的不同组合顺序——排列
+
+```c++
+void permute(string s, string prefix){
+    if(s.length() == 0){
+        cout << prefix << endl;
+    }else{
+        for(int i = 0; i < s.length(); i++){
+            char ch = s[i];
+            string s2 = substr(0,i) + s.substr(i + 1);
+            permute(s2, prefix + ch);
+        }
+    }
+}
+```
+
+> 改成组合
+
+```c++
+set<string>permuteHelper;
+void permuteHelper(string s, string prefix,vector<string>&v){
+    if(s.length() == 0){
+        v.add(prefix);
+        if(!aleradyPrinted.contains(prefix)){
+        	cout << prefix << endl;
+        	aleradyPrinted.add(prefix);
+        }
+    }else{
+        for(int i = 0; i < s.length(); i++){
+            char ch = s[i];
+            string s2 = substr(0,i) + s.substr(i + 1);
+            permuteHelper(s2, prefix + ch);
+        }
+    }
+}
+```
+
