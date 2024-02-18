@@ -52,7 +52,7 @@ Maven是Apache旗下的一个开源项目，是一款用于管理和构建java�
 
 具体的统一结构如下：
 
-<img src="./assets/image-20221130140132209.png" alt="image-20221130140132209" style="zoom:80%;" />
+![1](./assets/image-20221130140132209.png)
 
 > 目录说明： 
 >
@@ -67,7 +67,7 @@ Maven是Apache旗下的一个开源项目，是一款用于管理和构建java�
 
 - maven提供了标准的、跨平台(Linux、Windows、MacOS) 的自动化项目构建方式
 
-<img src="./assets/image-20221130140247524.png" alt="image-20221130140247524" style="zoom:67%;" />
+![image-20221130231857537](./assets/image-20221130140247524.png) 
 
 如上图所示我们开发了一套系统，代码需要进行编译、测试、打包、发布，这些操作如果需要反复进行就显得特别麻烦，而Maven提供了一套简单的命令来完成项目构建。
 
@@ -175,7 +175,7 @@ Maven安装配置步骤：
 
 > 建议解压到没有中文、特殊字符的路径下。如课程中解压到 `E:\develop` 下。
 
-![](./assets/1-1669821012006.gif) 
+![1](./assets/1-1669821012006.gif) 
 
 解压缩后的目录结构如下：
 
@@ -199,8 +199,7 @@ Maven安装配置步骤：
 
 3). 复制之前新建的用来存储jar包的路径，替换掉<localRepository>标签体内容
 
-<img src="./assets/2.gif" style="zoom:80%;" />
-
+![image-20221130231857537](./assets/2.gif) 
 
 
 **3、配置阿里云私服**
@@ -222,7 +221,7 @@ Maven安装配置步骤：
 </mirror>
 ```
 
-![](./assets/3.gif)
+![1](./assets/3.gif)
 
 注意配置的位置，在<mirrors> ... </mirrors> 中间添加配置。如下图所示：
 
@@ -240,17 +239,13 @@ Maven安装配置步骤：
 
 - MAVEN_HOME环境变量的值，设置为maven的解压安装目录
 
-<img src="./assets/image-20220616102344350.png" style="zoom:80%;" />
-
-
+![1](./assets/image-20220616102344350.png)
 
 2). 在Path中进行配置
 
 - PATH环境变量的值，设置为：%MAVEN_HOME%\bin
 
-<img src="./assets/image-20220616102435856.png" style="zoom:80%;" /> 
-
-
+ ![1](./assets/image-20220616102435856.png)
 
 3). 打开DOS命令提示符进行验证，出现如图所示表示安装成功
 
@@ -278,7 +273,7 @@ mvn -v
 
 2、设置IDEA使用本地安装的Maven，并修改配置文件及本地仓库路径
 
-![](./assets/image-20220616103302386.png)
+![1](./assets/image-20220616103302386.png)
 
 > Maven home path ：指定当前Maven的安装目录
 >
@@ -304,25 +299,19 @@ mvn -v
 
 - 选择 IDEA中 File  =>  close project
 
-<img src="./assets/4.gif" style="zoom:80%;" />
+![1](./assets/4.gif)
 
-<img src="./assets/image-20220616104338612.png" style="zoom:80%;" />
-
-
+![1](./assets/image-20220616104338612.png)
 
 2、打开 All settings , 选择 Build,Execution,Deployment  =>  Build Tools  =>  Maven
 
-<img src="./assets/image-20220616104517726.png" style="zoom:80%;" />
-
-
+![1](./assets/image-20220616104517726.png)
 
 3、配置工程的编译版本为11
 
-<img src="./assets/image-20221201093737128.png" alt="image-20221201093737128" style="zoom:80%;" />
+![1](./assets/image-20221201093737128.png)
 
 这里所设置的maven的环境信息，并未指定任何一个project，此时设置的信息就属于全局配置信息。 以后，我们再创建project，默认就是使用我们全局配置的信息。
-
-
 
 ### 3.2 Maven项目
 
@@ -330,31 +319,29 @@ mvn -v
 
 1、创建一个空项目 
 
-<img src="./assets/image-20221201095621738.png" alt="image-20221201095621738" style="zoom:80%;" />
+![1](./assets/image-20221201095621738.png)
 
-<img src="./assets/image-20221201095600057.png" alt="image-20221201095600057" style="zoom:80%;" />
-
-
+![1](./assets/image-20221201095600057.png)
 
 2、创建模块，选择Maven，点击Next
 
-<img src="./assets/image-20221201095831320.png" alt="image-20221201095831320" style="zoom:80%;" />
+![1](./assets/image-20221201095831320.png)
 
-<img src="./assets/image-20221201100011799.png" alt="image-20221201100011799" style="zoom:80%;" />
+![1](./assets/image-20221201100011799.png)
 
 
 
 3、填写模块名称，坐标信息，点击finish，创建完成
 
-<img src="./assets/image-20221201100502234.png" alt="image-20221201100502234" style="zoom:80%;" /> 
+![1](./assets/image-20221201100502234.png) 
 
 
 
 4、在Maven工程下，创建HelloWorld类
 
-<img src="./assets/image-20221201101603397.png" alt="image-20221201101603397" style="zoom:80%;" />
+![1](./assets/image-20221201101603397.png)
 
-<img src="./assets/image-20221201101643427.png" alt="image-20221201101643427" style="zoom:80%;" />
+![2](./assets/image-20221201101643427.png ':class=bsWidth')
 
 > - Maven项目的目录结构:
 >
@@ -379,10 +366,6 @@ public class HelloWorld {
     }
 }
 ```
-
-
-
-
 
 #### 3.2.2 POM配置详解
 
@@ -420,8 +403,6 @@ pom文件详解：
   - 定位项目在本地仓库中的位置，由以上三个标签组成一个坐标
 - <packaging> ：maven项目的打包方式，通常设置为jar或war（默认值：jar）
 
-
-
 #### 3.2.3 Maven坐标详解
 
 什么是坐标？
@@ -444,10 +425,6 @@ Maven坐标主要组成
 > * 上面所说的资源可以是插件、依赖、当前项目。
 > * 我们的项目如果被其他的项目依赖时，也是需要坐标来引入的。
 
-
-
-
-
 ### 3.3 导入Maven项目
 
 - **方式1：使用Maven面板，快速导入项目**
@@ -456,7 +433,7 @@ Maven坐标主要组成
 
 ![image-20221201104320521](./assets/image-20221201104320521.png)
 
-<img src="./assets/image-20221201104906754.png" alt="image-20221201104906754" style="zoom:80%;" /> 
+![3](./assets/image-20221201104906754.png) 
 
 > 说明：如果没有Maven面板，选择 View  =>  Appearance  =>  Tool Window Bars
 >
@@ -468,19 +445,13 @@ Maven坐标主要组成
 
 File  =>  Project Structure  =>  Modules  =>  +  =>  Import Module
 
-<img src="./assets/image-20220823161727718.png" style="zoom:80%;" />
+![2](./assets/image-20220823161727718.png ':class=bsWidth')
 
 找到要导入工程的pom.xml
 
 ![image-20221201105532909](./assets/image-20221201105532909.png)
 
-<img src="./assets/image-20221201105845872.png" alt="image-20221201105845872" style="zoom:80%;" />
-
-
-
-
-
-
+![2](./assets/image-20221201105845872.png ':class=bsWidth')
 
 ## 04. 依赖管理
 
@@ -531,23 +502,18 @@ File  =>  Project Structure  =>  Modules  =>  +  =>  Import Module
 
 1. 利用中央仓库搜索的依赖坐标
 
-   <img src="./assets/5.gif" style="zoom:80%;" />
+   ![2](./assets/5.gif ':class=bsWidth')
 
 
 
 2. 利用IDEA工具搜索依赖
 
-   <img src="./assets/6.gif" style="zoom:80%;" />
 
-
+![2](./assets/6.gif ':class=bsWidth')
 
 3. 熟练上手maven后，快速导入依赖
 
-   <img src="./assets/7.gif" style="zoom:80%;" />
-
-
-
-
+   ![2](./assets/7.gif ':class=bsWidth')
 
 ### 4.2 依赖传递
 
@@ -899,11 +865,11 @@ Spring发展到今天已经形成了一种开发生态圈，Spring提供了若�
 
 基于Spring官方骨架，创建SpringBoot工程。
 
-<img src="./assets/image-20221201184702136.png" alt="image-20221201184702136" style="zoom:80%;" />
+![2](./assets/image-20221201184702136.png ':class=bsWidth')
 
 基本信息描述完毕之后，勾选web开发相关依赖。
 
-<img src="./assets/image-20221201184850248.png" alt="image-20221201184850248" style="zoom:80%;" />
+![2](./assets/image-20221201184850248.png ':class=bsWidth')
 
 点击Finish之后，就会联网创建这个SpringBoot工程，创建好之后，结构如下：
 
@@ -919,11 +885,11 @@ Spring发展到今天已经形成了一种开发生态圈，Spring提供了若�
 
 在com.itheima这个包下创建一个子包controller
 
-<img src="./assets/image-20221201190541295.png" alt="image-20221201190541295" style="zoom:80%;" />
+![2](./assets/image-20221201190541295.png ':class=bsWidth')
 
 然后在controller包下新建一个类：HelloController
 
-<img src="./assets/image-20221201190825439.png" alt="image-20221201190825439" style="zoom:80%;" />
+![2](./assets/image-20221201190825439.png ':class=bsWidth')
 
 ```java
 package com.itheima.controller;
@@ -953,7 +919,7 @@ public class HelloController {
 
 打开浏览器，输入 `http://localhost:8080/hello`
 
-<img src="./assets/image-20220823195048415.png" style="zoom:80%;" />
+![2](./assets/image-20220823195048415.png ':class=bsWidth')
 
 
 
@@ -997,14 +963,6 @@ public class HelloController {
 > **问题：浏览器和服务器两端进行数据交互，使用什么协议？**
 >
 > **答案：http协议**
-
-
-
-
-
-
-
-
 
 ## 2. HTTP协议
 
@@ -1593,9 +1551,7 @@ Tomcat的默认端口为8080，所以在浏览器的地址栏输入：`http://12
 
 - 解决方案：换Tomcat端口号
   - 要想修改Tomcat启动的端口号，需要修改 conf/server.xml文件
-
-<img src="./assets/image-20220825084017185.png" alt="image-20220825084017185" style="zoom:80%;" /> 
-
+  ![2](./assets/image-20220825084017185.png ':class=bsWidth')
 > 注: HTTP协议默认端口号为80，如果将Tomcat端口号改为80，则将来访问Tomcat时，将不用输入端口号。
 
 
@@ -4157,11 +4113,11 @@ Lombok的注意事项：
 
 - 根据资料中提供的《tlias智能学习辅助系统》页面原型及需求，完成员工管理的需求开发。
 
-![image-20221210180155700](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221210180155700.png) 
+![image-20221210180155700](./assets/image-20221210180155700.png) 
 
-![image-20221210180343288](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221210180343288.png)
+![image-20221210180343288](./assets/image-20221210180343288.png)
 
-![image-20221210180515206](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221210180515206.png)
+![image-20221210180515206](./assets/image-20221210180515206.png)
 
 通过分析以上的页面原型和需求，我们确定了功能列表：
 
@@ -4175,10 +4131,6 @@ Lombok的注意事项：
    - 根据主键ID删除
    - 根据主键ID批量删除
 
-
-
-
-
 ## 1.2 准备
 
 实施前的准备工作：
@@ -4188,8 +4140,6 @@ Lombok的注意事项：
 3. application.properties中引入数据库连接信息
 4. 创建对应的实体类 Emp（实体类属性采用驼峰命名）
 5. 准备Mapper接口 EmpMapper
-
-
 
 **准备数据库表**
 
@@ -4248,11 +4198,9 @@ VALUES
 (17, 'chenyouliang', '123456', '陈友谅', 1, '17.jpg', NULL, '2015-03-21', NULL, now(), now());
 ~~~
 
-
-
 **创建一个新的springboot工程，选择引入对应的起步依赖（mybatis、mysql驱动、lombok）**
 
-![image-20221210182008131](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221210182008131.png)
+![image-20221210182008131](./assets/image-20221210182008131.png)
 
 
 
@@ -4270,8 +4218,6 @@ spring.datasource.username=root
 #连接数据库的密码
 spring.datasource.password=1234
 ~~~
-
-
 
 **创建对应的实体类Emp（实体类属性采用驼峰命名）**
 
@@ -4294,8 +4240,6 @@ public class Emp {
 }
 ~~~
 
-
-
 **准备Mapper接口：EmpMapper**
 
 ~~~java
@@ -4310,11 +4254,7 @@ public interface EmpMapper {
 
 完成以上操作后，项目工程结构目录如下：
 
-![image-20221210182500817](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221210182500817.png)
-
-
-
-
+![image-20221210182500817](./assets/image-20221210182500817.png)
 
 ## 1.3 删除
 
@@ -4322,11 +4262,9 @@ public interface EmpMapper {
 
 页面原型：
 
-![image-20221210183336095](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221210183336095.png)
+![image-20221210183336095](./assets/image-20221210183336095.png)
 
 > 当我们点击后面的"删除"按钮时，前端页面会给服务端传递一个参数，也就是该行数据的ID。 我们接收到ID后，根据ID删除数据即可。
-
-
 
 **功能：根据主键删除数据**
 
@@ -4383,10 +4321,6 @@ class SpringbootMybatisCrudApplicationTests {
 }
 ~~~
 
-
-
-
-
 ### 1.3.2 日志输入
 
 在Mybatis当中我们可以借助日志，查看到sql语句的执行、执行传递的参数以及执行结果。具体操作如下：
@@ -4402,7 +4336,7 @@ mybatis.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl
 
 开启日志之后，我们再次运行单元测试，可以看到在控制台中，输出了以下的SQL语句信息：
 
-![image-20220901164225644](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20220901164225644.png) 
+![image-20220901164225644](./assets/image-20220901164225644.png) 
 
 > 但是我们发现输出的SQL语句：delete from emp where id = ?，我们输入的参数16并没有在后面拼接，id的值是使用?进行占位。那这种SQL语句我们称为预编译SQL。
 
@@ -4419,7 +4353,7 @@ mybatis.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl
 1. 性能更高
 2. 更安全(防止SQL注入)
 
-![image-20221210202222206](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221210202222206.png)
+![image-20221210202222206](./assets/image-20221210202222206.png)
 
 > 性能更高：预编译SQL，编译一次之后会将编译后的SQL语句缓存起来，后面再次执行这条语句时，不会再次编译。（只是输入的参数不同）
 >
@@ -4435,13 +4369,13 @@ SQL注入：是通过操作输入的数据来修改事先定义好的SQL语句�
 
 **测试1：使用资料中提供的程序，来验证SQL注入问题**
 
-![image-20221210205419634](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221210205419634.png)
+![image-20221210205419634](./assets/image-20221210205419634.png)
 
 第1步：进入到DOS
 
-![image-20221211124744203](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221211124744203.png)
+![image-20221211124744203](./assets/image-20221211124744203.png)
 
-![image-20221211124840720](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221211124840720.png)
+![image-20221211124840720](./assets/image-20221211124840720.png)
 
 第2步：执行以下命令，启动程序
 
@@ -4450,15 +4384,15 @@ SQL注入：是通过操作输入的数据来修改事先定义好的SQL语句�
 java -jar sql_Injection_demo-0.0.1-SNAPSHOT.jar 
 ~~~
 
-![image-20221210211605231](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221210211605231.png)
+![image-20221210211605231](./assets/image-20221210211605231.png)
 
 第3步：打开浏览器输入`http://localhost:9090/login.html`
 
-![image-20221210212406527](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221210212406527.png)
+![image-20221210212406527](./assets/image-20221210212406527.png)
 
 发现竟然能够登录成功：
 
-![image-20221210212511915](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221210212511915.png)
+![image-20221210212511915](./assets/image-20221210212511915.png)
 
 
 
@@ -4466,9 +4400,9 @@ java -jar sql_Injection_demo-0.0.1-SNAPSHOT.jar
 
 - 由于没有对用户输入内容进行充分检查，而SQL又是字符串拼接方式而成，在用户输入参数时，在参数中添加一些SQL关键字，达到改变SQL运行结果的目的，从而完成恶意攻击。
 
-![image-20221210213311518](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221210213311518.png)
+![image-20221210213311518](./assets/image-20221210213311518.png)
 
-> ![image-20221210214431228](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221210214431228.png)
+> ![image-20221210214431228](./assets/image-20221210214431228.png)
 >
 > 用户在页面提交数据的时候人为的添加一些特殊字符，使得sql语句的结构发生了变化，最终可以在没有用户名或者密码的情况下进行登录。
 
@@ -4487,15 +4421,15 @@ java -jar sql_prepared_demo-0.0.1-SNAPSHOT.jar
 
 第3步：打开浏览器输入`http://localhost:9090/login.html`
 
-![image-20221210212406527](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221210212406527.png)
+![image-20221210212406527](./assets/image-20221210212406527.png)
 
 发现无法登录：
 
-![image-20221211125751981](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221211125751981.png)
+![image-20221211125751981](./assets/image-20221211125751981.png)
 
 以上操作SQL语句的执行：
 
-![image-20221211130011973](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221211130011973.png)
+![image-20221211130011973](./assets/image-20221211130011973.png)
 
 > 把整个`' or '1'='1`作为一个完整的参数，赋值给第2个问号（`' or '1'='1`进行了转义，只当做字符串使用）
 
@@ -4525,13 +4459,13 @@ java -jar sql_prepared_demo-0.0.1-SNAPSHOT.jar
 
 功能：新增员工信息
 
-![image-20221211134239610](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221211134239610.png)
+![image-20221211134239610](./assets/image-20221211134239610.png)
 
 ### 1.4.1 基本新增
 
 员工表结构：
 
-![image-20221211134746319](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221211134746319.png)
+![image-20221211134746319](./assets/image-20221211134746319.png)
 
 SQL语句：
 
@@ -4591,7 +4525,7 @@ class SpringbootMybatisCrudApplicationTests {
 
 > 日志输出：
 >
-> ![image-20221211140222240](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221211140222240.png)
+> ![image-20221211140222240](./assets/image-20221211140222240.png)
 
 
 
@@ -4605,11 +4539,11 @@ class SpringbootMybatisCrudApplicationTests {
 
 > 如：添加套餐数据时，还需要维护套餐菜品关系表数据。
 >
-> ![image-20221211150353385](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221211150353385.png)
+> ![image-20221211150353385](./assets/image-20221211150353385.png)
 >
 > 业务场景：在前面讲解到的苍穹外卖菜品与套餐模块的表结构，菜品与套餐是多对多的关系，一个套餐对应多个菜品。既然是多对多的关系，是不是有一张套餐菜品中间表来维护它们之间的关系。
 >
-> ![image-20221212093655389](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221212093655389.png)
+> ![image-20221212093655389](./assets/image-20221212093655389.png)
 >
 > 在添加套餐的时候，我们需要在界面当中来录入套餐的基本信息，还需要来录入套餐与菜品的关联信息。这些信息录入完毕之后，我们一点保存，就需要将套餐的信息以及套餐与菜品的关联信息都需要保存到数据库当中。其实具体的过程包括两步，首先第一步先需要将套餐的基本信息保存了，接下来第二步再来保存套餐与菜品的关联信息。套餐与菜品的关联信息就是往中间表当中来插入数据，来维护它们之间的关系。而中间表当中有两个外键字段，一个是菜品的ID，就是当前菜品的ID，还有一个就是套餐的ID，而这个套餐的 ID 指的就是此次我所添加的套餐的ID，所以我们在第一步保存完套餐的基本信息之后，就需要将套餐的主键值返回来供第二步进行使用。这个时候就需要用到主键返回功能。
 
@@ -4672,7 +4606,7 @@ class SpringbootMybatisCrudApplicationTests {
 
 功能：修改员工信息
 
-![image-20221212095605863](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221212095605863.png)
+![image-20221212095605863](./assets/image-20221212095605863.png)
 
 > 点击"编辑"按钮后，会查询所在行记录的员工信息，并把员工信息回显在修改员工的窗体上(下个知识点学习)
 >
@@ -4742,7 +4676,7 @@ class SpringbootMybatisCrudApplicationTests {
 
 在员工管理的页面中，当我们进行更新数据时，会点击 “编辑” 按钮，然后此时会发送一个请求到服务端，会根据Id查询该员工信息，并将员工数据回显在页面上。
 
-![image-20221212101331292](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221212101331292.png) 
+![image-20221212101331292](./assets/image-20221212101331292.png) 
 
 SQL语句：
 
@@ -4778,7 +4712,7 @@ class SpringbootMybatisCrudApplicationTests {
 
 > 执行结果：
 >
-> ![image-20221212103004961](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221212103004961.png)
+> ![image-20221212103004961](./assets/image-20221212103004961.png)
 >
 > 而在测试的过程中，我们会发现有几个字段(deptId、createTime、updateTime)是没有数据值的
 
@@ -4790,7 +4724,7 @@ class SpringbootMybatisCrudApplicationTests {
 
 我们看到查询返回的结果中大部分字段是有值的，但是deptId，createTime，updateTime这几个字段是没有值的，而数据库中是有对应的字段值的，这是为什么呢？
 
-![image-20221212103124490](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221212103124490.png)
+![image-20221212103124490](./assets/image-20221212103124490.png)
 
 原因如下： 
 
@@ -4819,7 +4753,7 @@ public Emp getById(Integer id);
 
 > 再次执行测试类：
 >
-> ![image-20221212111027396](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221212111027396.png)
+> ![image-20221212111027396](./assets/image-20221212111027396.png)
 
 
 
@@ -4896,7 +4830,7 @@ mybatis.configuration.map-underscore-to-camel-case=true
 
 在员工管理的列表页面中，我们需要根据条件查询员工信息，查询条件包括：姓名、性别、入职时间。 
 
-![image-20221212113422924](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221212113422924.png)
+![image-20221212113422924](./assets/image-20221212113422924.png)
 
 通过页面原型以及需求描述我们要实现的查询：
 
@@ -4934,7 +4868,7 @@ public interface EmpMapper {
 }
 ```
 
-> ![image-20221212115149151](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221212115149151.png)
+> ![image-20221212115149151](./assets/image-20221212115149151.png)
 >
 > 以上方式注意事项：
 >
@@ -4964,7 +4898,7 @@ public interface EmpMapper {
 
 > 执行结果：生成的SQL都是预编译的SQL语句（性能高、安全）
 >
-> ![image-20221212120006242](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221212120006242.png)
+> ![image-20221212120006242](./assets/image-20221212120006242.png)
 
 
 
@@ -4976,7 +4910,7 @@ public interface EmpMapper {
 
 > 当方法中的形参名和SQL语句中的占位符参数名不相同时，就会出现以下问题：
 >
-> ![image-20221212150611796](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221212150611796.png)
+> ![image-20221212150611796](./assets/image-20221212150611796.png)
 
 
 
@@ -4984,21 +4918,21 @@ public interface EmpMapper {
 
 - 在springBoot的2.x版本（保证参数名一致）
 
-![image-20221212151156273](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221212151156273.png)
+![image-20221212151156273](./assets/image-20221212151156273.png)
 
 > springBoot的父工程对compiler编译插件进行了默认的参数parameters配置，使得在编译时，会在生成的字节码文件中保留原方法形参的名称，所以#{…}里面可以直接通过形参名获取对应的值
 >
-> ![image-20221212151411154](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221212151411154.png)
+> ![image-20221212151411154](./assets/image-20221212151411154.png)
 
 
 
 - 在springBoot的1.x版本/单独使用mybatis（使用@Param注解来指定SQL语句中的参数名）
 
-![image-20221212151628715](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221212151628715.png)
+![image-20221212151628715](./assets/image-20221212151628715.png)
 
 > 在编译时，生成的字节码文件当中，不会保留Mapper接口中方法的形参名称，而是使用var1、var2、...这样的形参名字，此时要获取参数值时，就要通过@Param注解来指定SQL语句中的参数名
 >
-> ![image-20221212151736274](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221212151736274.png)
+> ![image-20221212151736274](./assets/image-20221212151736274.png)
 
 
 
@@ -5029,7 +4963,7 @@ Mybatis的开发有两种方式：
 
 3. XML映射文件中sql语句的id与Mapper接口中的方法名一致，并保持返回类型一致。
 
-![image-20221212153529732](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221212153529732.png)
+![image-20221212153529732](./assets/image-20221212153529732.png)
 
 > \<select>标签：就是用于编写select查询语句的。
 >
@@ -5043,11 +4977,11 @@ Mybatis的开发有两种方式：
 
 第1步：创建XML映射文件
 
-![image-20221212154908306](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221212154908306.png)
+![image-20221212154908306](./assets/image-20221212154908306.png)
 
-![image-20221212155304635](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221212155304635.png)
+![image-20221212155304635](./assets/image-20221212155304635.png)
 
-![image-20221212155544404](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221212155544404.png)
+![image-20221212155544404](./assets/image-20221212155544404.png)
 
 
 
@@ -5069,7 +5003,7 @@ Mybatis的开发有两种方式：
 
 配置：XML映射文件的namespace属性为Mapper接口全限定名
 
-![image-20221212160316644](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221212160316644.png)
+![image-20221212160316644](./assets/image-20221212160316644.png)
 
 ~~~xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -5085,7 +5019,7 @@ Mybatis的开发有两种方式：
 
 配置：XML映射文件中sql语句的id与Mapper接口中的方法名一致，并保持返回类型一致
 
-![image-20221212163528787](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221212163528787.png)
+![image-20221212163528787](./assets/image-20221212163528787.png)
 
 ~~~xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -5107,7 +5041,7 @@ Mybatis的开发有两种方式：
 
 > 运行测试类，执行结果：
 >
-> ![image-20221212163719534](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221212163719534.png)
+> ![image-20221212163719534](./assets/image-20221212163719534.png)
 
 
 
@@ -5119,11 +5053,11 @@ MybatisX是一款基于IDEA的快速开发Mybatis的插件，为效率而生。
 
 MybatisX的安装：
 
-![image-20221213120923252](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221213120923252.png)
+![image-20221213120923252](./assets/image-20221213120923252.png)
 
 可以通过MybatisX快速定位：
 
-![image-20221213121521406](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221213121521406.png)
+![image-20221213121521406](./assets/image-20221213121521406.png)
 
 > MybatisX的使用在后续学习中会继续分享
 
@@ -5133,7 +5067,7 @@ MybatisX的安装：
 
 > 官方说明：https://mybatis.net.cn/getting-started.html
 >
-> ![image-20220901173948645](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20220901173948645.png) 
+> ![image-20220901173948645](./assets/image-20220901173948645.png) 
 
 **结论：**使用Mybatis的注解，主要是来完成一些简单的增删改查功能。如果需要实现复杂的SQL功能，建议使用XML来配置映射语句。
 
@@ -5153,15 +5087,15 @@ MybatisX的安装：
 
 在页面原型中，列表上方的条件是动态的，是可以不传递的，也可以只传递其中的1个或者2个或者全部。
 
-![](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20220901172933012.png)
+![](./assets/image-20220901172933012.png)
 
-![image-20220901173203491](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20220901173203491.png)
+![image-20220901173203491](./assets/image-20220901173203491.png)
 
 而在我们刚才编写的SQL语句中，我们会看到，我们将三个条件直接写死了。 如果页面只传递了参数姓名name 字段，其他两个字段 性别 和 入职时间没有传递，那么这两个参数的值就是null。
 
 此时，执行的SQL语句为：
 
-![image-20220901173431554](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20220901173431554.png) 
+![image-20220901173431554](./assets/image-20220901173431554.png) 
 
 
 
@@ -5187,7 +5121,7 @@ select *  from emp where name like '%张%' and gender = 1 order by update_time d
 
 SQL语句会随着用户的输入或外部条件的变化而变化，我们称为：**动态SQL**。
 
-![image-20221213122623278](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221213122623278.png)
+![image-20221213122623278](./assets/image-20221213122623278.png)
 
 在Mybatis中提供了很多实现动态SQL的标签，我们学习Mybatis中的动态SQL就是掌握这些动态SQL标签。
 
@@ -5261,7 +5195,7 @@ public void testList(){
 
 > 执行的SQL语句： 
 >
-> ![image-20221213140353285](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221213140353285.png)
+> ![image-20221213140353285](./assets/image-20221213140353285.png)
 
 
 
@@ -5282,9 +5216,9 @@ public void testList(){
 
 执行结果：
 
-![image-20221213141139015](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221213141139015.png) 
+![image-20221213141139015](./assets/image-20221213141139015.png) 
 
-![image-20221213141253355](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221213141253355.png) 
+![image-20221213141253355](./assets/image-20221213141253355.png) 
 
 
 
@@ -5303,7 +5237,7 @@ public void testList(){
 
 执行的SQL语句：
 
-![image-20221213143854434](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221213143854434.png)
+![image-20221213143854434](./assets/image-20221213143854434.png)
 
 
 
@@ -5347,7 +5281,7 @@ public void testList(){
 
 > 执行的SQL语句：
 >
-> ![image-20221213141909455](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221213141909455.png)
+> ![image-20221213141909455](./assets/image-20221213141909455.png)
 
 
 
@@ -5434,7 +5368,7 @@ public void testUpdate2(){
 
 > 执行的SQL语句：
 >
-> ![image-20221213152533851](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221213152533851.png)
+> ![image-20221213152533851](./assets/image-20221213152533851.png)
 
 
 
@@ -5455,7 +5389,7 @@ public void testUpdate2(){
 
 > 执行的SQL语句：
 >
-> ![image-20221213152850322](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221213152850322.png)
+> ![image-20221213152850322](./assets/image-20221213152850322.png)
 
 以上问题的解决方案：使用`<set>`标签代替SQL语句中的set关键字
 
@@ -5505,7 +5439,7 @@ public void testUpdate2(){
 
 > 再次执行测试方法，执行的SQL语句：
 >
-> ![image-20221213153329553](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221213153329553.png)
+> ![image-20221213153329553](./assets/image-20221213153329553.png)
 
 
 
@@ -5541,7 +5475,7 @@ public void testUpdate2(){
 
 案例：员工删除功能（既支持删除单条记录，又支持批量删除）
 
-![image-20220901181751004](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20220901181751004.png) 
+![image-20220901181751004](./assets/image-20220901181751004.png) 
 
 SQL语句：
 
@@ -5585,11 +5519,11 @@ XML映射文件：
 </mapper> 
 ~~~
 
-> ![image-20221213165710141](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221213165710141.png)
+> ![image-20221213165710141](./assets/image-20221213165710141.png)
 
 > 执行的SQL语句：
 >
-> ![image-20221213164957636](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221213164957636.png)
+> ![image-20221213164957636](./assets/image-20221213164957636.png)
 
 
 
@@ -5601,9 +5535,9 @@ XML映射文件：
 
 - 在xml映射文件中配置的SQL，有时可能会存在很多重复的片段，此时就会存在很多冗余的代码
 
-![](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20220901182204358.png)
+![](./assets/image-20220901182204358.png)
 
-![](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20220901182249421.png)
+![](./assets/image-20220901182249421.png)
 
 我们可以对重复的代码片段进行抽取，将其通过`<sql>`标签封装到一个SQL片段，然后再通过`<include>`标签进行引用。
 
@@ -5611,7 +5545,7 @@ XML映射文件：
 
 - `<include>`：通过属性refid，指定包含的SQL片段
 
-![image-20221213171244796](F:/BaiduNetdiskDownload/最新版JavaWeb开发教程/资料/day09-Mybatis/day09-Mybatis/讲义/assets/image-20221213171244796.png)
+![image-20221213171244796](./assets/image-20221213171244796.png)
 
 SQL片段： 抽取重复的代码
 
