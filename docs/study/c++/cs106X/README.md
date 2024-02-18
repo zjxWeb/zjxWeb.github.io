@@ -460,3 +460,30 @@ void permuteHelper(string s, string prefix,vector<string>&v){
 }
 ```
 
+> 掷骰子
+
+```c++
+void diceRollsHelper(int dice,Vector<int>& chosen){
+    //  此模板可以记一下
+    // if there are choies to make:(所有的骰子选择完毕)
+    if(dice == 0){
+        /// base case:
+        cout << chosen << endl;
+    }else{
+        // for each value for My choice
+        for(int i = 0; i <= 6; i++){
+            // choose
+            chosen.add(i);
+            // search/expore(递归部分)
+            diceRollsHelper(dice - 1,chosen);
+            // un-choose(自我清理)
+            chosen.remove(chosen.size()-1);
+        }
+    }
+}
+void diceRolls(int dice){
+    Vector<int> v;
+    diceRollsHelper(dice,v);
+}
+```
+
