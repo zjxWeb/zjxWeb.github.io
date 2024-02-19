@@ -2681,8 +2681,6 @@ public class ResponseController {
 
 - 获取员工数据，返回统一响应结果，在页面渲染展示
 
-
-
 #### 2.3.2 准备工作
 
 案例准备：
@@ -2696,7 +2694,7 @@ public class ResponseController {
 3. 前端页面资源
    - 已经准备好，直接拷贝进来，放在src/main/resources下的static目录下
 
-Springboot项目的静态资源(html，css，js等前端资源)默认存放目录为：classpath:/static 、 classpath:/public、 classpath:/resources
++ Springboot项目的静态资源(html，css，js等前端资源)默认存放目录为：classpath:/static 、 classpath:/public、 classpath:/resources
 
 > 在SpringBoot项目中，静态资源默认可以存放的目录：
 >
@@ -2708,8 +2706,6 @@ Springboot项目的静态资源(html，css，js等前端资源)默认存放目�
 > classpath：
 >
 > - 代表的是类路径，在maven的项目中，其实指的就是 src/main/resources 或者 src/main/java，但是java目录是存放java代码的，所以相关的配置文件及静态资源文档，就放在 src/main/resources下。
-
-
 
 #### 2.3.3 实现步骤
 
@@ -2734,8 +2730,6 @@ Springboot项目的静态资源(html，css，js等前端资源)默认存放目�
 4. 创建EmpController类，编写Controller程序，处理请求，响应数据
 
    ![image-20221204184313822](./assets/image-20221204184313822.png) 
-
-
 
 #### 2.3.4 代码实现
 
@@ -2822,8 +2816,6 @@ public class Result {
 }
 ~~~
 
-
-
 #### 2.3.5 测试
 
 代码编写完毕之后，我们就可以运行引导类，启动服务进行测试了。 
@@ -2835,10 +2827,6 @@ public class Result {
 打开浏览器，在浏览器地址栏输入： http://localhost:8080/emp.html
 
 ![image-20221204185455556](./assets/image-20221204185455556.png) 
-
-
-
-
 
 #### 2.3.6 问题分析
 
@@ -2855,10 +2843,6 @@ public class Result {
 - 当我们需要修改数据响应的代码，还是需要改动Controller
 
 这样呢，就会造成我们整个工程代码的复用性比较差，而且代码难以维护。 那如何解决这个问题呢？其实在现在的开发中，有非常成熟的解决思路，那就是分层开发。
-
-
-
-
 
 ## 3. 分层解耦
 
@@ -2904,10 +2888,6 @@ public class Result {
 > 思考：按照三层架构的思想，如何要对业务逻辑(Service层)进行变更，会影响到Controller层和Dao层吗？ 
 >
 > 答案：不会影响。 （程序的扩展性、维护性变得更好了）
-
-
-
-
 
 #### 3.1.2 代码拆分
 
@@ -3024,10 +3004,6 @@ public class EmpDaoA implements EmpDao {
 2. 便于维护
 3. 利用扩展
 
-
-
-
-
 ### 3.2 分层解耦
 
 刚才我们学习过程序分层思想了，接下来呢，我们来学习下程序的解耦思想。
@@ -3062,7 +3038,7 @@ public class EmpDaoA implements EmpDao {
 
 高内聚、低耦合的目的是使程序模块的可重用性、移植性大大增强。
 
-![](./assets/image-20220828215549593.png)
+![2](./assets/image-20220828215549593.png)
 
 
 
@@ -3072,7 +3048,7 @@ public class EmpDaoA implements EmpDao {
 
 之前我们在编写代码时，需要什么对象，就直接new一个就可以了。 这种做法呢，层与层之间代码就耦合了，当service层的实现变了之后， 我们还需要修改controller层的代码。
 
-![image-20221204204916033](./assets/image-20221204204916033.png)
+![](./assets/image-20221204204916033.png)
 
  那应该怎么解耦呢？
 
@@ -3099,10 +3075,6 @@ public class EmpDaoA implements EmpDao {
 
 IOC容器中创建、管理的对象，称之为：bean对象
 
-
-
-
-
 ### 3.3 IOC&DI
 
 上面我们引出了Spring中IOC和DI的基本概念，下面我们就来具体学习下IOC和DI的代码实现。
@@ -3124,8 +3096,6 @@ IOC容器中创建、管理的对象，称之为：bean对象
 
 ![image-20221204212807207](./assets/image-20221204212807207.png)
 
-
-
 第2步：Service层及Dao层的实现类，交给IOC容器管理
 
 - 使用Spring提供的注解：@Component ，就可以实现类交给IOC容器管理
@@ -3139,8 +3109,6 @@ IOC容器中创建、管理的对象，称之为：bean对象
 - 使用Spring提供的注解：@Autowired ，就可以实现程序运行时IOC容器自动注入需要的依赖对象
 
 ![image-20221204213859112](./assets/image-20221204213859112.png)
-
-
 
 完整的三层代码：
 
@@ -3227,12 +3195,6 @@ public class EmpDaoA implements EmpDao {
 
 ![image-20221204185455556](./assets/image-20221204185455556.png)
 
-
-
- 
-
-
-
 #### 3.3.2 IOC详解
 
 通过IOC和DI的入门程序呢，我们已经基本了解了IOC和DI的基础操作。接下来呢，我们学习下IOC控制反转和DI依赖注入的细节。
@@ -3248,8 +3210,6 @@ public class EmpDaoA implements EmpDao {
 - @Controller    （标注在控制层类上）
 - @Service          （标注在业务层类上）
 - @Repository    （标注在数据访问层类上）
-
-
 
 修改入门案例代码：
 
@@ -3328,8 +3288,6 @@ public class EmpDaoA implements EmpDao {
 }
 ~~~
 
-
-
 要把某个对象交给IOC容器管理，需要在对应的类上加上如下注解之一：
 
 | 注解        | 说明                 | 位置                                            |
@@ -3350,17 +3308,11 @@ public class EmpDaoA implements EmpDao {
 > - 声明bean的时候，可以通过value属性指定bean的名字，如果没有指定，默认为类名首字母小写。
 > - 使用以上四个注解都可以声明bean，但是在springboot集成web开发中，声明控制器bean只能用@Controller。
 
-
-
-
-
 ##### 3.3.2.2 组件扫描
 
 问题：使用前面学习的四个注解声明的bean，一定会生效吗？
 
 答案：不一定。（原因：bean想要生效，还需要被组件扫描）
-
-
 
  下面我们通过修改项目工程的目录结构，来测试bean对象是否生效：
 
@@ -3390,10 +3342,6 @@ public class EmpDaoA implements EmpDao {
 
 ![image-20221204225815624](./assets/image-20221204225815624.png)
 
-
-
-
-
 #### 3.3.3 DI详解
 
 上一小节我们讲解了控制反转IOC的细节，接下来呢，我们学习依赖注解DI的细节。
@@ -3416,8 +3364,6 @@ public class EmpDaoA implements EmpDao {
 
 ![image-20221204231616724](./assets/image-20221204231616724.png)
 
-
-
 如何解决上述问题呢？Spring提供了以下几种解决方案：
 
 - @Primary
@@ -3426,21 +3372,15 @@ public class EmpDaoA implements EmpDao {
 
 - @Resource
 
-
-
 使用@Primary注解：当存在多个相同类型的Bean注入时，加上@Primary注解，来确定默认的实现。
 
 ![image-20221204232501679](./assets/image-20221204232501679.png) 
-
-
 
 使用@Qualifier注解：指定当前要注入的bean对象。 在@Qualifier的value属性中，指定注入的bean的名称。
 
 - @Qualifier注解不能单独使用，必须配合@Autowired使用
 
 ![image-20221204233333606](./assets/image-20221204233333606.png)
-
-
 
 使用@Resource注解：是按照bean的名称进行注入。通过name属性指定要注入的bean的名称。
 
