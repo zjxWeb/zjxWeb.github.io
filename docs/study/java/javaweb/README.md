@@ -1412,10 +1412,6 @@ Tomcat就是一款软件，我们主要是以学习如何去使用为主。具�
 
 首选我们来认识下Tomcat。
 
-
-
-
-
 #### 3.1.3 Tomcat
 
 Tomcat服务器软件是一个免费的开源的web应用服务器。是Apache软件基金会的一个核心项目。由Apache，Sun和其他一些公司及个人共同开发而成。
@@ -1431,12 +1427,6 @@ Tomcat服务器软件是一个免费的开源的web应用服务器。是Apache�
 Tomcat的官网: https://tomcat.apache.org/ 
 
 ![image-20220824233903517](./assets/image-20220824233903517.png) 
-
-
-
-
-
-
 
 ### 3.2 基本使用
 
@@ -1457,10 +1447,6 @@ Tomcat的软件程序  ：/资料/SpringbootWeb/apache-tomcat-9.0.27-windows-x64
 
 ![](./assets/image-20220824234527743.png) 
 
- 
-
-
-
 #### 3.2.2 安装与卸载
 
 **安装:** Tomcat是绿色版，直接解压即安装
@@ -1471,8 +1457,6 @@ Tomcat的软件程序  ：/资料/SpringbootWeb/apache-tomcat-9.0.27-windows-x64
 
 ==注意，Tomcat在解压缩的时候，解压所在的目录可以任意，但最好解压到一个不包含中文和空格的目录，因为后期在部署项目的时候，如果路径有中文或者空格可能会导致程序部署失败。==
 
-
-
 打开`apache-tomcat-9.0.27`目录就能看到如下目录结构，每个目录中包含的内容需要认识下
 
 ![](./assets/image-20220824234652173.png)  
@@ -1481,13 +1465,7 @@ bin：目录下有两类文件，一种是以`.bat`结尾的，是Windows系统�
 
 webapps：就是以后项目部署的目录
 
-
-
 **卸载：**卸载比较简单，可以直接删除目录即可
-
-
-
-
 
 #### 3.2.3 启动与关闭
 
@@ -1513,8 +1491,6 @@ Tomcat的默认端口为8080，所以在浏览器的地址栏输入：`http://12
 
 ![image-20220825083848086](./assets/image-20220825083848086.png) 
 
-
-
 **关闭:**  关闭有三种方式 
 
 1、强制关闭：直接x掉Tomcat窗口（不建议）
@@ -1529,10 +1505,6 @@ Tomcat的默认端口为8080，所以在浏览器的地址栏输入：`http://12
 
 - 说明：如果按下Ctrl+C没有反映，可以多按几次
 
-
-
-
-
 #### 3.2.4 常见问题
 
 **问题1：Tomcat启动时，窗口一闪而过**
@@ -1540,8 +1512,6 @@ Tomcat的默认端口为8080，所以在浏览器的地址栏输入：`http://12
 - 检查JAVA_HOME环境变量是否正确配置
 
 ![image-20221202190033167](./assets/image-20221202190033167.png)
-
-
 
 **问题2：端口号冲突**
 
@@ -1553,8 +1523,6 @@ Tomcat的默认端口为8080，所以在浏览器的地址栏输入：`http://12
   - 要想修改Tomcat启动的端口号，需要修改 conf/server.xml文件
   ![2](./assets/image-20220825084017185.png ':class=bsWidth')
 > 注: HTTP协议默认端口号为80，如果将Tomcat端口号改为80，则将来访问Tomcat时，将不用输入端口号。
-
-
 
 ### 3.3 入门程序解析
 
@@ -1592,8 +1560,6 @@ Spring官方生成的SpringBoot项目，怎么使用呢？
 
 > **结论：不论使用IDEA创建SpringBoot项目，还是直接在官方网站利用骨架生成SpringBoot项目，项目的结构和pom.xml文件中内容是相似的。**
 
-
-
 #### 3.3.2 起步依赖
 
 在我们之前讲解的SpringBoot快速入门案例中，同样也引用了：web依赖和test依赖
@@ -1629,17 +1595,11 @@ Spring的官方提供了很多现成的starter(起步依赖)，我们在开发�
 
 ![image-20221202205103486](./assets/image-20221202205103486.png)
 
-
-
 为什么没有指定<version>版本号，可以正常使用呢？
 
 - 因为每一个SpringBoot工程，都有一个父工程。依赖的版本号，在父工程中统一管理。
 
 ![image-20221202205318778](./assets/image-20221202205318778.png)
-
-
-
-
 
 #### 3.3.3 内嵌Tomcat
 
@@ -1662,8 +1622,6 @@ Spring的官方提供了很多现成的starter(起步依赖)，我们在开发�
 在idea中创建一个maven项目，正常填写项目的坐标信息。如下图所示：
 
 ![image-20221017094402319](./assets/image-20221017094402319.png) 
-
-
 
 输入项目的基本信息之后，点击finish，就可以创建一个maven项目。
 
@@ -1722,6 +1680,8 @@ Spring的官方提供了很多现成的starter(起步依赖)，我们在开发�
 到此呢，我们就手动创建好了这样一个springboot项目~ 
 
 # SpringBootWeb请求响应
+
+[项目地址](https://github.com/zjxWeb/javaProject/tree/main/springboot-web-req-resp)
 
 ## 前言
 
@@ -3090,8 +3050,6 @@ IOC容器中创建、管理的对象，称之为：bean对象
      - Controller程序中注入依赖的Service层对象
      - Service程序中注入依赖的Dao层对象
 
-
-
 第1步：删除Controller层、Service层中new对象的代码
 
 ![image-20221204212807207](./assets/image-20221204212807207.png)
@@ -3201,7 +3159,7 @@ public class EmpDaoA implements EmpDao {
 
 ##### 3.3.2.1 bean的声明
 
-前面我们提到IOC控制反转，就是将对象的控制权交给Spring的IOC容器，由IOC容器创建及管理对象。IOC容器创建的对象称为bean对象。
+> 前面我们提到IOC控制反转，就是将对象的控制权交给Spring的IOC容器，由IOC容器创建及管理对象。IOC容器创建的对象称为bean对象。
 
 在之前的入门案例中，要把某个对象交给IOC容器管理，需要在类上添加一个注解：@Component 
 
@@ -3333,8 +3291,6 @@ public class EmpDaoA implements EmpDao {
 - 解决方案：手动添加@ComponentScan注解，指定要扫描的包   （==仅做了解，不推荐==）
 
 ![image-20221204225437297](./assets/image-20221204225437297.png)
-
-
 
 推荐做法（如下图）：
 
@@ -3543,10 +3499,6 @@ public class User {
 ```
 
 ![image-20221209170354143](./assets/image-20221209170354143.png)
-
-
-
-
 
 #### 1.2.2 配置Mybatis
 
@@ -3881,10 +3833,6 @@ public class JdbcTest {
 2. 提升系统响应速度
 3. 避免数据库连接遗漏
 
-
-
-
-
 ### 3.2 产品
 
 要怎么样实现数据库连接池呢？
@@ -3917,8 +3865,6 @@ public class JdbcTest {
   * Druid连接池是阿里巴巴开源的数据库连接池项目 
 
   * 功能强大，性能优秀，是Java语言最好的数据库连接池之一
-
-​		
 
 如果我们想把默认的数据库连接池切换为Druid数据库连接池，只需要完成以下两步操作即可：
 
@@ -3955,19 +3901,11 @@ spring.datasource.username=root
 spring.datasource.password=1234
 ~~~
 
-
-
-
-
-
-
-
-
 ## 4. lombok
 
 ### 4.1 介绍
 
-Lombok是一个实用的Java类库，可以通过简单的注解来简化和消除一些必须有但显得很臃肿的Java代码。
+Lombok是一个实用的Java类库，**可以通过简单的注解来简化和消除一些必须有但显得很臃肿的Java代码**。
 
 ![image-20221210164641266](./assets/image-20221210164641266.png)
 
@@ -4142,8 +4080,6 @@ VALUES
 
 ![image-20221210182008131](./assets/image-20221210182008131.png)
 
-
-
 **application.properties中引入数据库连接信息**
 
 > 提示：可以把之前项目中已有的配置信息复制过来即可
@@ -4280,10 +4216,6 @@ mybatis.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl
 
 > 但是我们发现输出的SQL语句：delete from emp where id = ?，我们输入的参数16并没有在后面拼接，id的值是使用?进行占位。那这种SQL语句我们称为预编译SQL。
 
-
-
-
-
 ### 1.3.3 预编译SQL
 
 #### 1.3.3.1 介绍
@@ -4298,8 +4230,6 @@ mybatis.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl
 > 性能更高：预编译SQL，编译一次之后会将编译后的SQL语句缓存起来，后面再次执行这条语句时，不会再次编译。（只是输入的参数不同）
 >
 > 更安全(防止SQL注入)：将敏感字进行转义，保障SQL的安全性。
-
-
 
 #### 1.3.3.2 SQL注入
 
@@ -4346,8 +4276,6 @@ java -jar sql_Injection_demo-0.0.1-SNAPSHOT.jar
 >
 > 用户在页面提交数据的时候人为的添加一些特殊字符，使得sql语句的结构发生了变化，最终可以在没有用户名或者密码的情况下进行登录。
 
-
-
 **测试2：使用资料中提供的程序，来验证SQL注入问题**
 
 第1步：进入到DOS
@@ -4373,11 +4301,9 @@ java -jar sql_prepared_demo-0.0.1-SNAPSHOT.jar
 
 > 把整个`' or '1'='1`作为一个完整的参数，赋值给第2个问号（`' or '1'='1`进行了转义，只当做字符串使用）
 
-
-
 #### 1.3.3.3 参数占位符
 
-在Mybatis中提供的参数占位符有两种：${...} 、#{...}
+**在Mybatis中提供的参数占位符有两种：${...} 、#{...}**
 
 - #{...}
   - 执行SQL时，会将#{…}替换为?，生成预编译SQL，会自动设置参数值
@@ -4388,12 +4314,6 @@ java -jar sql_prepared_demo-0.0.1-SNAPSHOT.jar
   - 使用时机：如果对表名、列表进行动态设置时使用
 
 > 注意事项：在项目开发中，建议使用#{...}，生成预编译SQL，防止SQL注入安全。
-
-
-
- 
-
-
 
 ## 1.4 新增
 
@@ -4816,8 +4736,6 @@ public interface EmpMapper {
 >
 > 2. 模糊查询使用${...}进行字符串拼接，这种方式呢，由于是字符串拼接，并不是预编译的形式，所以效率不高、且存在sql注入风险。
 
-
-
 - 方式二（解决SQL注入风险）
   - 使用MySQL提供的字符串拼接函数：concat('%' , '关键字' , '%')
 
@@ -4840,10 +4758,6 @@ public interface EmpMapper {
 >
 > ![image-20221212120006242](./assets/image-20221212120006242.png)
 
-
-
-
-
 ### 1.6.4 参数名说明
 
 在上面我们所编写的条件查询功能中，我们需要保证接口中方法的形参名和SQL语句中的参数占位符名相同。
@@ -4851,8 +4765,6 @@ public interface EmpMapper {
 > 当方法中的形参名和SQL语句中的占位符参数名不相同时，就会出现以下问题：
 >
 > ![image-20221212150611796](./assets/image-20221212150611796.png)
-
-
 
 参数名在不同的SpringBoot版本中，处理方案还不同：
 
@@ -4864,8 +4776,6 @@ public interface EmpMapper {
 >
 > ![image-20221212151411154](./assets/image-20221212151411154.png)
 
-
-
 - 在springBoot的1.x版本/单独使用mybatis（使用@Param注解来指定SQL语句中的参数名）
 
 ![image-20221212151628715](./assets/image-20221212151628715.png)
@@ -4873,16 +4783,6 @@ public interface EmpMapper {
 > 在编译时，生成的字节码文件当中，不会保留Mapper接口中方法的形参名称，而是使用var1、var2、...这样的形参名字，此时要获取参数值时，就要通过@Param注解来指定SQL语句中的参数名
 >
 > ![image-20221212151736274](./assets/image-20221212151736274.png)
-
-
-
-
-
-
-
-
-
-
 
 # 2. Mybatis的XML配置文件
 
@@ -4897,7 +4797,7 @@ Mybatis的开发有两种方式：
 
 在Mybatis中使用XML映射文件方式开发，需要符合一定的规范：
 
-1. XML映射文件的名称与Mapper接口名称一致，并且将XML映射文件和Mapper接口放置在相同包下（同包同名）
+1. **XML映射文件的名称与Mapper接口名称一致**，并且将XML映射文件和Mapper接口放置在相同包下（同包同名）
 
 2. XML映射文件的namespace属性为Mapper接口全限定名一致
 
@@ -4909,10 +4809,6 @@ Mybatis的开发有两种方式：
 >
 > - resultType属性，指的是查询返回的单条记录所封装的类型。
 
-
-
-
-
 ## 2.2 XML配置文件实现
 
 第1步：创建XML映射文件
@@ -4922,8 +4818,6 @@ Mybatis的开发有两种方式：
 ![image-20221212155304635](./assets/image-20221212155304635.png)
 
 ![image-20221212155544404](./assets/image-20221212155544404.png)
-
-
 
 第2步：编写XML映射文件
 
@@ -4939,8 +4833,6 @@ Mybatis的开发有两种方式：
 </mapper>
 ~~~
 
-
-
 配置：XML映射文件的namespace属性为Mapper接口全限定名
 
 ![image-20221212160316644](./assets/image-20221212160316644.png)
@@ -4954,8 +4846,6 @@ Mybatis的开发有两种方式：
 
 </mapper>
 ~~~
-
-
 
 配置：XML映射文件中sql语句的id与Mapper接口中的方法名一致，并保持返回类型一致
 
@@ -5151,8 +5041,6 @@ public void testList(){
     }
 }
 ~~~
-
-
 
 执行结果：
 
@@ -5402,14 +5290,6 @@ public void testUpdate2(){
 - `<set>`
 
   - 动态地在行首插入 SET 关键字，并会删掉额外的逗号。（用在update语句中）
-
-
-
-
-
-
-
-
 
 ## 3.3 动态SQL-foreach
 
