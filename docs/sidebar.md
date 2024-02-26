@@ -52,6 +52,8 @@
     * [📃菜谱APP(可改任意APP)](projectPractice/App/healthApp/)
   * [📁Golang实战](projectPractice/go/)
     * [📃即时通信系统](projectPractice/go/instantMesg/)
+  * [📁JAVA实战](projectPractice/java/)
+    * [📃外卖系统](projectPractice/java/DeliverySystem/)
 * [**算法(ASCII)**](algorithm)
   * [📁LeetCode](algorithm/leetcode/)
 * [**个人联系方式**](onself)
