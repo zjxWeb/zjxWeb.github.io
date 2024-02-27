@@ -1,9 +1,12 @@
-## 1. [Make概述](https://subingwen.cn/cmake/CMake-primer/#2-1-1-%E5%85%B1%E5%A4%84%E4%B8%80%E5%AE%A4)
+# [CMake入门](https://subingwen.cn/cmake/CMake-primer/#2-1-1-%E5%85%B1%E5%A4%84%E4%B8%80%E5%AE%A4) 
+
+## 1. CMake概述
 
 + CMake 是一个项目构建工具，并且是跨平台的。关于项目构建我们所熟知的还有Makefile（通过 make 命令进行项目的构建），大多是IDE软件都集成了make，比如：VS 的 nmake、linux 下的 GNU make、Qt 的 qmake等，如果自己动手写 makefile，会发现，makefile 通常依赖于当前的编译平台，而且编写 makefile 的工作量比较大，解决依赖关系时也容易出错。
 
 + 而 CMake 恰好能解决上述问题， 其允许开发者指定整个工程的编译流程，在根据编译平台，自动生成本地化的Makefile和工程文件，最后用户只需make编译即可，所以可以把CMake看成一款自动生成 Makefile的工具.
-+ ![1](./src/1.png)
+
+  ![1](./src/1.png)
   + 蓝色虚线表示使用makefile构建项目的过程
   + 红色实线表示使用cmake构建项目的过程
 
@@ -1080,3 +1083,270 @@ add_executable(app ./test.c)
 |       `PROJECT_NAME`       |             返回通过`PROJECT`指令定义的项目名称              |
 |     `CMAKE_BINARY_DIR`     | 项目实际构建路径，假设在`build`目录进行的构建，那么得到的就是这个目录的路径 |
 
+# [CMake 进阶](https://subingwen.cn/cmake/CMake-advanced/)
+
+## 1. 嵌套的CMake
+
++ 如果项目很大，或者项目中有很多的源码目录，在通过`CMake`管理项目的时候如果只使用一个`CMakeLists.txt`，那么这个文件相对会比较复杂，有一种化繁为简的方式就是给每个源码目录都添加一个`CMakeLists.txt`文件（头文件目录不需要），这样每个文件都不会太复杂，而且更灵活，更容易维护。
++ 先来看一下下面的这个的目录结构：
+
+```shell
+$ tree
+.
+├── build
+├── calc
+│   ├── add.cpp
+│   ├── CMakeLists.txt
+│   ├── div.cpp
+│   ├── mult.cpp
+│   └── sub.cpp
+├── CMakeLists.txt
+├── include
+│   ├── calc.h
+│   └── sort.h
+├── sort
+│   ├── CMakeLists.txt
+│   ├── insert.cpp
+│   └── select.cpp
+├── test1
+│   ├── calc.cpp
+│   └── CMakeLists.txt
+└── test2
+    ├── CMakeLists.txt
+    └── sort.cpp
+
+6 directories, 15 files
+```
+
++ `include` 目录：头文件目录
+
++ `calc` 目录：目录中的四个源文件对应的加、减、乘、除算法
+  + 对应的头文件是`include`中的`calc.h`
+
++ `sort` 目录 ：目录中的两个源文件对应的是插入排序和选择排序算法
+  + 对应的头文件是`include`中的sort.h
+
++ `test1` 目录：测试目录，对加、减、乘、除算法进行测试
+
++ `test2` 目录：测试目录，对排序算法进行测试
+
+可以看到各个源文件目录所需要的`CMakeLists.txt`文件现在已经添加完毕了。接下来庖丁解牛，我们依次分析一下各个文件中需要添加的内容。
+
+### 1.1 准备工作
+
+#### 1.1.1 节点关系
+
+>  众所周知，Linux的目录是树状结构，所以`嵌套的 CMake 也是一个树状结构，最顶层的 CMakeLists.txt 是根节点，其次都是子节点`。因此，我们需要了解一些关于 `CMakeLists.txt` 文件变量作用域的一些信息：
+
++ 根节点`CMakeLists.txt`中的变量全局有效
++ 父节点`CMakeLists.txt`中的变量可以在子节点中使用
++ 子节点CMakeLists.txt中的变量只能在当前节点中使用
+
+#### 1.1.2 添加子目录
+
++ 接下来我们还需要知道在 `CMake` 中父子节点之间的关系是如何建立的，这里需要用到一个 `CMake` 命令：
+
+```cm
+add_subdirectory(source_dir [binary_dir] [EXCLUDE_FROM_ALL])
+```
+
++ `source_dir`：指定了`CMakeLists.txt`源文件和代码文件的位置，其实就是指定**子目录**
++ `binary_dir`：指定了输出文件的路径，一般不需要指定，忽略即可。
++ `EXCLUDE_FROM_ALL`：在子路径下的目标默认不会被包含到父路径的`ALL`目标里，并且也会被排除在IDE工程文件之外。用户必须显式构建在子路径下的目标。
+
+通过这种方式`CMakeLists.txt`文件之间的父子关系就被构建出来了。
+
+### 1.2 解决问题
+
+在上面的目录中我们要做如下事情：
+
+1. 通过 `test1` 目录中的测试文件进行计算器相关的测试
+
+2. 通过 `test2` 目录中的测试文件进行排序相关的测试
+
+现在相当于是要进行模块化测试，对于`calc`和`sort`目录中的源文件来说，可以将它们先编译成库文件（可以是静态库也可以是动态库）然后在提供给测试文件使用即可。库文件的本质其实还是代码，只不过是从文本格式变成了二进制格式。
+
+<!-- tabs:start -->
+
+#### **根目录**
+
+> 根目录中的 `CMakeLists.txt`文件内容如下：
+
+```cmake
+cmake_minimum_required(VERSION 3.0)
+project(test)
+# 定义变量
+# 静态库生成的路径
+set(LIB_PATH ${CMAKE_CURRENT_SOURCE_DIR}/lib)
+# 测试程序生成的路径
+set(EXEC_PATH ${CMAKE_CURRENT_SOURCE_DIR}/bin)
+# 头文件目录
+set(HEAD_PATH ${CMAKE_CURRENT_SOURCE_DIR}/include)
+# 静态库的名字
+set(CALC_LIB calc)
+set(SORT_LIB sort)
+# 可执行程序的名字
+set(APP_NAME_1 test1)
+set(APP_NAME_2 test2)
+# 添加子目录
+add_subdirectory(calc)
+add_subdirectory(sort)
+add_subdirectory(test1)
+add_subdirectory(test2)
+```
+
++ 在根节点对应的文件中主要做了两件事情：定义全局变量和添加子目录。
+  + 定义的全局变量主要是给子节点使用，目的是为了提高子节点中的`CMakeLists.txt`文件的可读性和可维护性，避免冗余并降低出差的概率。
+  + 一共添加了四个子目录，每个子目录中都有一个`CMakeLists.txt`文件，这样它们的父子关系就被确定下来了。\
+
+#### **calc 目录**
+
+> `calc` 目录中的 `CMakeLists.txt`文件内容如下：
+
+```cmake
+cmake_minimum_required(VERSION 3.0)
+project(CALCLIB)
+aux_source_directory(./ SRC)
+include_directories(${HEAD_PATH})
+set(LIBRARY_OUTPUT_PATH ${LIB_PATH})
+add_library(${CALC_LIB} STATIC ${SRC})
+```
+
++ 第3行`aux_source_directory`：搜索当前目录（`calc`目录）下的所有源文件
++ 第4行`include_directories`：包含头文件路径，`HEAD_PATH`是在根节点文件中定义的
++ 第5行`set`：设置库的生成的路径，`LIB_PATH`是在根节点文件中定义的
++ 第6行`add_library`：生成静态库，静态库名字`CALC_LIB`是在根节点文件中定义的
+
+#### **sort目录**
+
+> `sort` 目录中的 `CMakeLists.txt`文件内容如下：
+
+```cmake
+cmake_minimum_required(VERSION 3.0)
+project(SORTLIB)
+aux_source_directory(./ SRC)
+include_directories(${HEAD_PATH})
+set(LIBRARY_OUTPUT_PATH ${LIB_PATH})
+add_library(${SORT_LIB} SHARED ${SRC})
+```
+
++ 第6行`add_library`：生成动态库，动态库名字`SORT_LIB`是在根节点文件中定义的
++ 这个文件中的内容和`calc`节点文件中的内容类似，只不过这次生成的是动态库。
+
+>  在生成库文件的时候，这个库可以是静态库也可以是动态库，一般需要根据实际情况来确定。如果生成的库比较大，建议将其制作成动态库。
+
+#### **test1 目录**
+
++ `test1` 目录中的 `CMakeLists.txt`文件内容如下：
+
+```cmake
+cmake_minimum_required(VERSION 3.0)
+project(CALCTEST)
+aux_source_directory(./ SRC)
+include_directories(${HEAD_PATH})
+link_directories(${LIB_PATH})
+link_libraries(${CALC_LIB})
+set(EXECUTABLE_OUTPUT_PATH ${EXEC_PATH})
+add_executable(${APP_NAME_1} ${SRC})
+```
+
++ 第4行`include_directories`：指定头文件路径，`HEAD_PATH`变量是在根节点文件中定义的
++ 第6行`link_libraries`：指定可执行程序要链接的静态库，`CALC_LIB`变量是在根节点文件中定义的
++ 第7行`set`：指定可执行程序生成的路径，`EXEC_PATH`变量是在根节点文件中定义的
++ 第8行`add_executable`：生成可执行程序，`APP_NAME_1`变量是在根节点文件中定义的
+
+> 此处的可执行程序链接的是静态库，最终静态库会被打包到可执行程序中，可执行程序启动之后，静态库也就随之被加载到内存中了。
+
+#### **test2 目录**
+
++ `test2` 目录中的 `CMakeLists.txt`文件内容如下：
+
+```cmake
+cmake_minimum_required(VERSION 3.0)
+project(SORTTEST)
+aux_source_directory(./ SRC)
+include_directories(${HEAD_PATH})
+set(EXECUTABLE_OUTPUT_PATH ${EXEC_PATH})
+link_directories(${LIB_PATH})
+add_executable(${APP_NAME_2} ${SRC})
+target_link_libraries(${APP_NAME_2} ${SORT_LIB})
+```
+
++ 第四行`include_directories`：包含头文件路径，`HEAD_PATH`变量是在根节点文件中定义的
+
++ 第五行`set`：指定可执行程序生成的路径，`EXEC_PATH`变量是在根节点文件中定义的
+
++ 第六行`link_directories`：指定可执行程序要链接的动态库的路径，`LIB_PATH`变量是在根节点文件中定义的
+
++ 第七行`add_executable`：生成可执行程序，`APP_NAME_2`变量是在根节点文件中定义的
+
++ 第八行`target_link_libraries`：指定可执行程序要链接的动态库的名字
+
+  > 在生成可执行程序的时候，动态库不会被打包到可执行程序内部。当可执行程序启动之后动态库也不会被加载到内存，**只有可执行程序调用了动态库中的函数的时候，动态库才会被加载到内存中**，且多个进程可以共用内存中的同一个动态库，所以动态库又叫共享库。
+
+#### **构建项目**
+
++ 一切准备就绪之后，开始构建项目，进入到根节点目录的`build` 目录中，执行`cmake` 命令，如下:
+
+```shell
+$ cmake ..
+-- The C compiler identification is GNU 5.4.0
+-- The CXX compiler identification is GNU 5.4.0
+-- Check for working C compiler: /usr/bin/cc
+-- Check for working C compiler: /usr/bin/cc -- works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Check for working CXX compiler: /usr/bin/c++
+-- Check for working CXX compiler: /usr/bin/c++ -- works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/robin/abc/cmake/calc/build
+```
+
+> 可以看到在build目录中生成了一些文件和目录，如下所示：
+
+```shell
+$ tree build -L 1     
+build
+├── calc                  # 目录
+├── CMakeCache.txt        # 文件
+├── CMakeFiles            # 目录
+├── cmake_install.cmake   # 文件
+├── Makefile              # 文件
+├── sort                  # 目录
+├── test1                 # 目录
+└── test2                 # 目录
+```
+
+> 然后在`build` 目录下执行`make` 命令:
+
+![2](./src/2.png)
+
+> 通过上图可以得到如下信息：
+
+1. 在项目根目录的`lib`目录中生成了静态库`libcalc.a`
+2. 在项目根目录的`lib`目录中生成了动态库`libsort.so`
+3. 在项目根目录的`bin`目录中生成了可执行程序`test1`
+4. 在项目根目录的`bin`目录中生成了可执行程序`test2`
+
+>  最后再来看一下上面提到的这些文件是否真的被生成到对应的目录中了:
+
+```shell
+$ tree bin/ lib/
+bin/
+├── test1
+└── test2
+lib/
+├── libcalc.a
+└── libsort.so
+```
+
+> 在项目中，如果将程序中的某个模块制作成了动态库或者静态库并且在`CMakeLists.txt` 中指定了库的输出目录，而后其它模块又需要加载这个生成的库文件，此时直接使用就可以了，如果没有指定库的输出路径或者需要直接加载外部提供的库文件，此时就需要使用 `link_directories` 将库文件路径指定出来.
+
+<!-- tabs:end -->
