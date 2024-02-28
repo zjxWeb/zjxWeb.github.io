@@ -665,3 +665,155 @@ if(p) //false
 
 ![34](./src/34.png)
 
+### Linked Lists
+
+ ```cpp
+ struct ListNode{
+     int val;
+     ListNode* next;
+     ListNode() : val(0), next(nullptr) {}
+     ListNode(int x) : val(x), next(nullptr) {}
+     ListNode(int x, ListNode* next1) : val(x), next(next1) {}
+ };
+ 
+ int main(){
+     ListNode *node1 = new ListNode(42);
+     ListNode* node2 = new ListNode(13);
+     node1->next = node2;
+ }
+ ```
+
+> `&` 取内存地址
+
+![35](./src/35.png)
+
+> `a-> next = p` 即如果我将p辅助给其它变量
+
+```cpp
+ListNode *a = new ListNode(10);
+a-> next = new ListNode(20);
+ListNode* b = new ListNode(30);
+b->next = new ListNode(40);
+a->next = b->next;
+cout << a->next->val << endl; // 40
+```
+
+![36](./src/36.png)
+
+![37](./src/37.png)
+
+> `A`
+
+![38](./src/38.png)
+
+> `指针——可以看作是告诉你如何找到那个隐蔽的抽屉的秘密地图。如果不小心弄丢了这张地图（也就是我们说的指针），那么你可能就在也找不到那个抽屉了，里面的宝贝也就无法取回了。这就是所谓的 内存泄漏`
+
+```cpp
+// Appends the given value to the end of the list
+void add(ListNode*& node1,int value){
+    ListNode* newNode = new ListNode(value);
+    if(node1 == nullptr){
+        node1 == newNode;
+    }else{
+        // walk to end of list
+        ListNode* cur = node1;
+        while(cur->next != nullptr){
+            cur = cur->next;
+        }
+        cur->next = newNode;
+    }
+}
+```
+
+> 计算链表的长度
+
+```cpp
+int size(ListNode* front){
+    if(front == nullptr){
+        return 0;
+    }else{
+        ListNode* cur = front;
+        int count = 0;
+        while(cur != nullptr){
+            count++;
+            cur = cur->next;
+        }
+        return count;
+    }
+    
+    //  // 递归实现
+    if(front == nullptr){
+        return 0;
+    }else{
+        return 1 + size(front->next);
+    }
+}
+```
+
+> returns value in list at given index
+
+```cpp
+int get(ListNode* front,int index){
+    ListNode* cur = front;
+    for(int i = 0; i < index; i++){
+        cur = cur->next;
+    }
+    return cur->val;
+}
+```
+
+> `*`是创建新的指针  `&`跟随指针
+
+![39](./src/39.png)
+
+> ***在C++中，你不能定义一个指向引用的指针，这是不被允许的，所以pointer to a reference 这种说法在C++种是不成立的，你可以传递指针的引用，但不能传递指向引用的指针***
+
+> `*` 是对指针所存地址进行解析操作，`&` 是对给出的对象取地址的操作。
+
+>  Inserts the given value at the front of the list
+
+```cpp
+void addFirst(ListNode*& front,int value){
+    //ListNode* newNode = new ListNode(value);
+    //newNode->next = front;
+    //front = newNode;
+    
+    front == new ListNode(value, front);
+}
+```
+
+> remove 删除
+
+```cpp
+void removeFirst(ListNode*& front){
+    if(front != nullptr){
+        ListNode* trash = front;// 删除的元素指针
+        front = front->next;
+        delete trash;
+    }
+}
+void remove(ListNode*& front,int index){
+    if(front == nullptr){
+        front = newNode;
+    }else{
+        ListNode * cur = front;
+        for(int i = 0; i < index-1; i++){
+            cur = cur->next;
+        }
+        ListNode* trash = cur->next;
+        cur->next = cur->next->next;
+        delete trash;
+    }
+}
+```
+
+## Classes and Objects
+
+> 类是一种对象类型，一种对象模板
+
+![40](./src/40.png)
+
+> 还有一种方式 `#pragma once` 兼容性不好
+
+> 这些加 `#`的预编译指令，是防止多次加载
+
