@@ -406,7 +406,9 @@ void cantorSet(GWindow& windows,int x,int y, int length, int lenvels){
 
 ![28](./src/28.png)
 
-> 小练习——输出二进制
+<!-- tabs:start -->
+
+#### **输出二进制**
 
 ![29](./src/29.png)
 
@@ -423,7 +425,7 @@ void printBinary(int digits, string prefix){
 
 ![30](./src/30.png ':class=halfWidth')
 
-> 小案列——输出字母的不同组合顺序——排列
+#### **输出字母的不同组合顺序——排列**
 
 ```c++
 void permute(string s, string prefix){
@@ -460,7 +462,7 @@ void permuteHelper(string s, string prefix,vector<string>&v){
 }
 ```
 
-> 掷骰子
+#### **掷骰子**
 
 ```c++
 void diceRollsHelper(int dice,Vector<int>& chosen){
@@ -486,4 +488,180 @@ void diceRolls(int dice){
     diceRollsHelper(dice,v);
 }
 ```
+
+#### **输出子序列**
+
+```c++
+// 选或者不选  包含和排除
+void sublists(Vector<string>& v){
+    if(v.isEmpty()){
+        cout << chosen << endl;
+    }else{
+     	// choose
+        string mine = v[0];
+		v.remove(0);
+        // expore / search
+        // yes include them
+		chosen.add(mine);
+        sublistsHelps(v,chosen);
+        // no exclude them   
+        chosen.remove(chosen.size()-1);
+        sublistsHelps(v,chosen);
+        // un-choose
+        v.insert(0,mine);
+    }
+}
+
+// 辅助函数
+void sublistsHelps(Vector<string>& v, Vector<string>&chosen){
+    string mine = v[0];
+    v.remove(0);
+}
+```
+
+#### **八皇后**
+
++ 优化——根据已经放置的皇后的位置，限制其它皇后可以放置的位置。通过逐步缩小解的范围，我们可以更快地找到有效的解决方案。
++ 辅助函数
+
+![31](./src/31.png)
+
+```c++
+int main_queens(){
+    Board board(8);
+    solveQueens(board);
+    return 0;
+}
+// pre : columns [0.. col-1] have legally placed quees
+// if solution found, prints it,and returns true
+// if no solution found,returns false
+bool solveHelps(Board& board,int col){
+     // 回溯 base case 选择 探索  撤销选择 传递参数
+    // base case
+    if(col.size() >= col){
+       // 调用完毕之后 
+        cout << board << endl;// 所有的解决方案
+        //exit(0); // 不建议
+        // return; // error
+        return true;
+    }else{
+       for(int row = 0; row < board.size();row++){
+            if(board.isSafe(row,col)){
+            // choose
+            board.place(row,col);
+            // enpore
+            bool res = solveHelps(board,col+1);
+            if(res) return true;
+            // un-choose
+            board.remove(row,col);
+        	}
+       }
+        return false;
+    }
+}
+void solveQueens(Board& board){
+    // 回溯 base case 选择 探索  撤销选择 传递参数
+    
+}
+```
+
+#### 多米诺骨牌
+
+![32](./src/32.png)
+
+```cpp
+void travelHelper(const GPoint& target,GPoint me,Vector<string>&chosen){
+    if(target == me){
+        // base case:  done
+        cout << chosen << endl;
+    }else if(me.getX() <= target.getX() && me.getY() <= target.getY() ){
+        // 向前迈一步 take a step toward target
+        // choose/expore/unchoose E
+        // choose/expore/unchoose N
+        // choose/expore/unchoose NE
+        GPoint e(me.getX() + 1,me.getY());
+        GPoint n(me.getX(),me.getY() + 1);
+        GPoint ne(me.getX() + 1,me.getY() + 1);
+        
+        chosen.add("E");
+        travelHelper(target,e,chosen);
+        chosen.remove(chosen.size()-1);
+        
+        chosen.add("N");
+        travelHelper(target,n,chosen);
+        chosen.remove(chosen.size()-1);
+        
+        chosen.add("NE");
+        travelHelper(target,ne,chosen);
+        chosen.remove(chosen.size()-1);
+    }
+}
+void traval(const GPoint& target){
+    GPoint origin(0,0);
+    travelHelper(target,origin);
+}
+```
+
+<!-- tabs:end -->
+
+## Pointers and Nodes
+
+> 指针是引用的前身。
+
+```cpp
+#include <iostream>
+
+using namespace std;
+
+void mystert(int a,int& b,int* c){
+    a++;
+    (*c)--;
+    b += *c;
+    cout << a << " " << b << " " << c << endl;
+}
+
+int main(){
+    int a = 4;
+    int b = 8;
+    int c = -3;
+    cout << a << " " << b << " " << c << endl;
+    mystert(c,a,&b);
+    cout << a << " " << b << " " << c << endl;
+    return 0;
+}
+```
+
+> output
+
+```shell
+4 8 -3
+-2 11 0xf6bd9ff7a4
+11 7 -3
+```
+
+>  使用`nullptr` 表示空指针，编译器更擅长找出错误和进行检查
+>
+> + `NULL`其实就是 `0`的别名
+
+```cpp
+int* p = nullptr;
+cout << p << endl; // 0
+cout << &p << endl; //0xa0837ff8b8
+cout << *p << endl; // Exception has occurred.  // KABOOM
+```
+
+```cpp
+if(p == nullptr && p == NULL) // true
+if(p) //false
+```
+
+> `虚拟地址`——使得每个程序都有属于自己的内存地址映射
+
+![33](./src/33.png)
+
+> `箭头就是跟随这个指针`‘
+>
+> `（*p）.month`——你必须要写先去找这个指针指向的内存地址，找到它指向的 `data`，并获取它的 `month`
+
+![34](./src/34.png)
 

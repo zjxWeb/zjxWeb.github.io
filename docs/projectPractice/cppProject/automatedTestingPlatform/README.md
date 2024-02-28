@@ -215,15 +215,16 @@ code .
       + 远程连接开发板软件：`MobaXterm`
       + 连接`IP`询问即可
       + 工具连接参考下图
-  
+      
+      
       ![6](./src/6.png)
-
+      
       + 将生成好的可执行程序拖到开发板中（当时是拖到连接工具啦！）
-
+      
       ![7](./src/7.png)
-
+      
       + 执行： `./执行程序的name`
-
+      
       + **此时处于监听状态**
 
 ## 三、自动化测试脚本（`i30`）
@@ -1964,7 +1965,7 @@ regi_gf_sink_to_logger_("scm", gen_default_gf_sink_({test_message_dir,"system_ca
 
 + B．`Load Content,` 同时选择对应`file path`（注意英文路径）
 
-![25](./src/25.PNG)
+![25](./src/25.png)
 
 ![26](./src/26.png)
 
