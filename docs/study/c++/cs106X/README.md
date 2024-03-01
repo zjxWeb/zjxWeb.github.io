@@ -817,3 +817,47 @@ void remove(ListNode*& front,int index){
 
 > 这些加 `#`的预编译指令，是防止多次加载
 
+```cpp
+ostream& operator <<(ostream& out ,const BankAccount& ba){
+    return out << ba.name << " " << ba.balance;
+}
+```
+
+### 双向链表（`doubly linkedlists`）和跳表（`skip litsts`）
+
+![41](./src/41.png)
+
+![42](./src/42.png)
+
+> 维护一个指针数组
+>
+> + 跳表，又叫做跳跃表、跳跃列表，在有序链表的基础上增加了“跳跃”的功能
+> + 跳表在原来的有序链表上加上了多级索引，通过索引来快速查找；可以支持快速的删除、插入和查找操作。
+> + 跳表实际上是一种增加了前向指针的链表，是一种随机化的数据结构
+> + `Redis`中 的 `SortedSet`、`LevelDB` 中的 `MemTable` 都用到了跳表
+> + 对比平衡树, 跳表的实现和维护会更加简单, 跳表的搜索、删除、添加的平均时间复杂度是 `O(logn)`
+
+## Arrays
+
+> 将内存置为0，需要 O（N）的时间来清零N个元素
+
+> ```cpp
+> int a[3]; // 初始化数组为随机值
+> int a[3]{}; // 初始化值为0
+> int* a = new int[4](); // 在堆上开辟内存，初始化为0
+> ```
+
+![43](./src/43.png)
+
+![44](./src/44.png)
+
+![45](./src/45.png)
+
+> **浅拷贝——只拷贝了地址，没去拷贝地址指向的数据**
+
+![46](./src/46.png)
+
++ 如果使用 `new` 分配内存，需要在析构函数中清理内存
+
+## Graphs
+
