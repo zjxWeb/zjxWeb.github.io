@@ -1212,6 +1212,11 @@ public:
 | [2866. 美丽塔 II](https://leetcode.cn/problems/beautiful-towers-ii/)<br />1. 单调栈 | [1671. 得到山形数组的最少删除次数](https://leetcode.cn/problems/minimum-number-of-removals-to-make-mountain-array/)<br />1. 动态规划 2. 二分法 |                                                              |
 | [2788. 按分隔符拆分字符串](https://leetcode.cn/problems/split-strings-by-separator/)<br />1.  讨论 2. \#include<sstream>   字符串流相关操作 | [136. 只出现一次的数字](https://leetcode.cn/problems/single-number/)<br />位运算（^） | [912. 排序数组](https://leetcode.cn/problems/sort-an-array/)<br />十大排序算法 |
 | [2765. 最长交替子数组](https://leetcode.cn/problems/longest-alternating-subarray/)<br />分组循环 | [2865. 美丽塔 I](https://leetcode.cn/problems/beautiful-towers-i/)<br />1. 枚举（枚举每一座塔作为最高塔，每一次向左右两边扩展）<br />2. 动态规划 + 单调栈 | [365. 水壶问题](https://leetcode.cn/problems/water-and-jug-problem/)<br />1. DFS 2. 贝祖定理 |
+| [7. 整数反转](https://leetcode.cn/problems/reverse-integer/)<br /><br />`  res = res * 10 + x % 10;<br/>            x /= 10;` | [6. Z 字形变换](https://leetcode.cn/problems/zigzag-conversion/)<br />`if(i == 0 || i == numRows - 1) flag = -flag;`**巧设flag** |                                                              |
+
+
+
+
 
 
 
