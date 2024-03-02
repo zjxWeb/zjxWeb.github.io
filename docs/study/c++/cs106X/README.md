@@ -915,5 +915,11 @@ string coolest(istream& input){
 
 ### `Dijkstra's`
 
+> 采用了优先队列（priority queue）
+>
+> + 迪杰斯特拉算法存在负权重的情况下并不适用。
+
+
+
 
 
