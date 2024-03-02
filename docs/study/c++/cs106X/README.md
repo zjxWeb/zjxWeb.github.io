@@ -861,3 +861,59 @@ ostream& operator <<(ostream& out ,const BankAccount& ba){
 
 ## Graphs
 
+![47](./src/47.png)
+
+![48](./src/48.png)
+
+> 粉丝关注
+
+```cpp
+string coolest(istream& input){
+    BasicGraph graph;
+    string nume1,nume2;
+    // read file into graph
+    while(input >> nume1 >> nume2){
+        graph.addVertex(name1);
+        graph.addVertex(nume2);
+        graph.addEdge(nume1,nume2);
+    }
+    // learn who has most F-o-F
+    int maxFof = 0;
+    string coolName = "";
+    for(Vertex* v : graph.getVertexSet()){
+        // count fof of this vertex v
+        Set<string> fofs;
+        for(Vertex* neighbor : graph.getNeighbors(v)){
+            for(Vertex* fof : graph.getNeighbors(neighbor)){
+                fofs.add(fof->getName());
+            }
+        }
+        cout << v-> name << " fofs " << fofs << endl;
+        if(fofs.size() > maxFof){
+            maxFof = fofs.size();
+            coolName = v->getName();
+        }
+    }
+    cout << graph << endl;
+    return "?";
+}
+```
+
+### `DFS`——深度优先搜索
+
+![49](./src/49.png)
+
+> 特点： 不能保证找到最佳路径，最短路径或者边上权重最小的路径；（可以找到从起点到终点的路径，如果有的话，它最终会找到）
+
+### `BFS`——广度优先搜索
+
+> 返回最短路径
+
+![50](./src/50.png)
+
+> `BFS` 可能会更耗时，因为它必须处理 `Queue`，即 `enqueue（插入）`， `dequeue（删除）`等不同的操作
+
+### `Dijkstra's`
+
+
+

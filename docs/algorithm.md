@@ -716,6 +716,149 @@ public:
 > 2. 任何数和其自身做异或运算，结果是 0，即  `a ⊕ a = 0`
 > 3. 异或运算满足交换律和结合律，即 `a⊕b⊕a=b⊕a⊕a=b⊕(a⊕a)=b⊕0=b`
 
+#### `BFS/DFS`
+
+> `BFS`
+>
+> + `BFS`使用队列（`queue`）来实现，整个过程也可以看做一个倒立的树形：
+>   1. 把根节点放到队列的末尾。
+>   2. 每次从队列的头部取出一个元素，查看这个元素所有的下一级元素，把它们放到队列的末尾。并把这个元素记为它下一级元素的前驱。
+>   3. 找到所要找的元素时结束程序。
+>   4. 如果遍历整个树还没有找到，结束程序。
+
+```cpp
+BFS()
+{
+	初始化队列
+	while(队列不为空且未找到目标节点)
+	{
+		取队首节点扩展，并将扩展出的非重复节点放入队尾;
+			必要时记住每个节点的父节点; 
+	} 
+}
+
+void bfs(起始点)
+{
+	将起始点放入队列中;
+	标记起点已访问;
+	while(队列不为空)
+	{
+		访问队列中首元素x;
+		删除队首元素;
+		for(x所有相邻点)
+		{
+			if(该点未被访问过且合法)
+				将该点加入队列末尾; 
+		}
+	}
+	队列为空，广搜结束; 
+} 
+```
+
+> [2415. 反转二叉树的奇数层](https://leetcode.cn/problems/reverse-odd-levels-of-binary-tree/)
+
+```cpp
+class Solution {
+public:
+    TreeNode* reverseOddLevels(TreeNode* root) {
+        queue<TreeNode *> qu;
+        qu.emplace(root);
+        bool isOdd = false;
+        while (!qu.empty()) {
+            int sz = qu.size();
+            vector<TreeNode *> arr;
+            for (int i = 0; i < sz; i++) {
+                TreeNode *node = qu.front();
+                qu.pop();
+                if (isOdd) {
+                    arr.emplace_back(node);
+                }
+                if (node->left) {
+                    qu.emplace(node->left);
+                    qu.emplace(node->right);
+                }
+            }
+            if (isOdd) {
+                for (int l = 0, r = sz - 1; l < r; l++, r--) {
+                    swap(arr[l]->val, arr[r]->val);
+                }
+            }            
+            isOdd ^= true;
+        }
+        return root;
+    }
+};
+```
+
+> `DFS`
+>
+> 1.从根节点开始
+>
+> 2.放入一个节点（起始时放入的为根节点）
+>
+> 3.如果这个节点是第一次出现，则放入堆栈中
+>
+> 4.判断该节点的子节点是否搜索完成，
+>
+> ```txt
+>     a.如果是则将该节点出栈,判断该栈是否为空
+> 
+>          a.1 若为空则结束
+> 
+>         a.2 若不为空则取栈顶元素，并回到第2步
+> 
+>     b.如果没有完成搜索，取未被搜索的根节点，并回到第2步
+> ```
+
+```cpp
+void dfs(int num，......)//参数用来表示状态  
+{  
+    if(判断边界)  
+    {  
+        ...//根据题意添加  
+        return;  
+    }  
+    if(越界或者是不合法状态)  
+        return;  
+    for(扩展方式)  //也可能是if根据题意使用适合的方式
+    {  
+        if(扩展方式所达到状态合法)  
+        {  
+            修改操作;//根据题意来添加  
+            标记；  
+            dfs（）；  
+            (还原标记)；  
+            //是否还原标记根据题意  
+            //如果加上（还原标记）就是 回溯法  
+        }  
+    }  
+}
+
+```
+
+```cpp
+class Solution {
+public:
+    TreeNode* reverseOddLevels(TreeNode* root) {
+        dfs(root->left, root->right, true);
+        return root;
+    }
+
+    void dfs(TreeNode *root1, TreeNode *root2, bool isOdd) {
+        if (root1 == nullptr) {
+            return;
+        }
+        if (isOdd) {
+            swap(root1->val, root2->val);
+        }
+        dfs(root1->left, root2->right, !isOdd);
+        dfs(root1->right, root2->left, !isOdd);
+    }
+};
+```
+
+
+
 <!-- tabs:end -->
 
 <!-- tabs:start -->
