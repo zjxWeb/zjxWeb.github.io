@@ -19,6 +19,8 @@
   * [📁linux](study/linux/)
   * [📁docker](study/docker/)
   * [📁数据库](study/dataBase/)
+    * [📃MySQL](study/dataBase/MySQL/)
+    * [📃redis入门](study/dataBase/redisBase/)
   * [📁设计模式](study/designPattern/)
   * [📁java](study/java/)
     * [📃javaweb](study/java/javaweb/)
@@ -46,7 +48,7 @@
   * [📁C++Project](projectPractice/cppProject/)
     * [📃机房预约系统](projectPractice/cppProject/computerOrder/)
     * [📃商城分布式文件服务器](projectPractice/cppProject/distributedServerProgramming/)
-    <!-- * [📃车载自动化测试平台](projectPractice/cppProject/automatedTestingPlatform/) -->
+    * [📃车载自动化测试平台](projectPractice/cppProject/automatedTestingPlatform/)
   * [📁数字孪生实例](projectPractice/digitalTwinsProject/)
     * [📃智慧城市数字孪生平台](projectPractice/digitalTwinsProject/smartCity/)
   * [📁APP项目](projectPractice/App/)
