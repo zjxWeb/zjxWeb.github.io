@@ -972,9 +972,7 @@ string coolest(istream& input){
 
 `employee.h`
 
-![63](./src/63.png)
-
-> 纯虚函数——当你调用得时候，编译器会跳出错误，告诉你，你正在尝试调用一个美哟实现得纯虚函数。
+![63](./src/63.png)s
 
 > 如何表示一个类是另一个类得子类——你需要使用一个冒号，然后写上父类得名称。
 
@@ -983,4 +981,16 @@ string coolest(istream& input){
 ![65](./src/65.png)
 
 ![66](./src/66.png)
+
+ 
+
+## hashing
+
+### set
+
+![67](./src/67.png)
+
+![68](./src/68.png)
+
+![69](./src/69.png)
 
