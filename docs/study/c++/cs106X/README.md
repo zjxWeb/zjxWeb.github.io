@@ -946,5 +946,41 @@ string coolest(istream& input){
 
 ### 生成树（spanning trees）
 
-#### 最小生成树和Kurskal
+#### 最小生成树和`Kurskal`
+
+![57](./src/57.png)
+
+### Topological sort(拓扑排序)
+
+![58](./src/58.png)
+
+![59](./src/59.png)
+
+#### Adjacency matrix
+
+![60](./src/60.png)
+
+![61](./src/61.png)
+
+## Inheritance and Polymorphism
+
+### Inheritance
+
+![62](./src/62.png)
+
+> `virtual` 这个关键字基本上`意味着子类的可以重写这个方法`，所以，如果基类有一个方法，而子类想要为这个同样得方法写一个新的版本，如果你希望其能够成功执行，你必须在父类得方法声明中加上 `virtual`关键字；
+
+`employee.h`
+
+![63](./src/63.png)
+
+> 纯虚函数——当你调用得时候，编译器会跳出错误，告诉你，你正在尝试调用一个美哟实现得纯虚函数。
+
+> 如何表示一个类是另一个类得子类——你需要使用一个冒号，然后写上父类得名称。
+
+![64](./src/64.png)
+
+![65](./src/65.png)
+
+![66](./src/66.png)
 
