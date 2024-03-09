@@ -1,1 +1,2 @@
-<iframe src="//player.bilibili.com/player.html?aid=899653399&bvid=BV1qN4y1V7M9&cid=810513103&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="height:80vh;"> </iframe>
+> 数字孪生项目实战
+<!-- <iframe src="//player.bilibili.com/player.html?aid=899653399&bvid=BV1qN4y1V7M9&cid=810513103&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="height:80vh;"> </iframe> -->
