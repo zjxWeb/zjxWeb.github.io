@@ -369,8 +369,11 @@ void unity(int x,int y){
 }
 ```
 
-
 #### **差分数组（前缀和的逆运算）**
+
+> + **差分数组** —— 得主要使用场景是频繁对原始数组得某个区间得元素进行增减。
+>
+> + **前缀和**——主要适用得场景是原始数组不会被修改得情况下，频繁查询某个区间得累加和。
 
 ![2](./src/img/2c.png)
 
@@ -382,6 +385,102 @@ void unity(int x,int y){
 + ![3](./src/img/3c.png)
 
 + ![4](./src/img/4c.png)
+
+> + 一维前缀和
+>
+>   + [303. 区域和检索 - 数组不可变](https://leetcode.cn/problems/range-sum-query-immutable/)
+>
+>   + ```cpp
+>     class NumArray {
+>     public:
+>         vector<int>num;
+>         NumArray(vector<int>& nums) {
+>             int n = nums.size();
+>             num.resize(n+1);
+>             for(int i =0; i < n;i++){
+>                 num[i+1] = num[i] + nums[i];
+>             }
+>         }
+>         int sumRange(int left, int right) {
+>             return num[right+1] - num[left];
+>         }
+>     };
+>     ```
+>
+> + 二维前缀和
+>
+>   + [304. 二维区域和检索 - 矩阵不可变](https://leetcode.cn/problems/range-sum-query-2d-immutable/)
+>
+>   + ```cpp
+>     class NumMatrix {
+>         vector<vector<int>> sum;
+>     public:
+>         NumMatrix(vector<vector<int>>& matrix) {
+>             int m = matrix.size(),n = matrix[0].size();
+>             sum.resize(m+1, vector<int>(n+1));
+>             for(int i = 0; i < m;i++){
+>                 for(int j = 0; j < n;j++){
+>                     sum[i+1][j+1] = sum[i+1][j] + sum[i][j+1] - sum[i][j]  + matrix[i][j];
+>                 }
+>             }
+>         }
+>         
+>         int sumRegion(int row1, int col1, int row2, int col2) {
+>             return sum[row2+1][col2+1] - sum[row1][col2+1] - sum[row2+1][col1] + sum[row1][col1];
+>         }
+>     };
+>     ```
+
+> [1109. 航班预订统计](https://leetcode.cn/problems/corporate-flight-bookings/)
+>
+> ```cpp
+> class Difference{
+>     // 差分数组
+>     vector<int> difference;
+> public:
+>     // 输入一个初始数组，区间操作将在这个数组上进行
+>     Difference(vector<int> &a) {
+>         int n = a.size();
+>         difference.resize(n);
+>         difference[0] = a[0];
+>         for(int i = 1; i < n; ++i){
+>             difference[i] = a[i] - a[i-1];
+>         }
+>     }
+>     // 给闭区间[i,j] 增加 val 可能是负数
+>     void increment(int i, int j, int val) {
+>         difference[i] += val;
+>         if(j + 1 < difference.size()) difference[j + 1] -= val;
+>     }
+> 
+>     // 返回结果数组
+>     vector<int> result() {
+>         vector<int> res;
+>         res.push_back(difference[0]);
+>         for(int i = 1; i < difference.size(); ++i){
+>             res.push_back(res[i-1] + difference[i]);
+>         }
+>         return res;
+>     }
+> };
+> class Solution {
+> public:
+>     vector<int> corpFlightBookings(vector<vector<int>>& bookings, int n) {
+>         // 初始化一个差分数组
+>         vector<int> num(n,0);
+>         Difference *df = new Difference(num);
+>         for(auto & el : bookings){
+>             int i = el[0] - 1;
+>             int j = el[1] - 1;
+>             int val = el[2];
+>             df->increment(i,j,val);
+>         }
+>         return df->result();
+>     }
+> };
+> ```
+>
+> 
 
 > leetcode 1094.cpp  拼车
 
@@ -1643,7 +1742,8 @@ public:
 | [2866. 美丽塔 II](https://leetcode.cn/problems/beautiful-towers-ii/)<br />1. 单调栈 | [1671. 得到山形数组的最少删除次数](https://leetcode.cn/problems/minimum-number-of-removals-to-make-mountain-array/)<br />1. 动态规划 2. 二分法 |                                                              |
 | [2788. 按分隔符拆分字符串](https://leetcode.cn/problems/split-strings-by-separator/)<br />1.  讨论 2. \#include<sstream>   字符串流相关操作 | [136. 只出现一次的数字](https://leetcode.cn/problems/single-number/)<br />位运算（^） | [912. 排序数组](https://leetcode.cn/problems/sort-an-array/)<br />十大排序算法 |
 | [2765. 最长交替子数组](https://leetcode.cn/problems/longest-alternating-subarray/)<br />分组循环 | [2865. 美丽塔 I](https://leetcode.cn/problems/beautiful-towers-i/)<br />1. 枚举（枚举每一座塔作为最高塔，每一次向左右两边扩展）<br />2. 动态规划 + 单调栈 | [365. 水壶问题](https://leetcode.cn/problems/water-and-jug-problem/)<br />1. DFS 2. 贝祖定理 |
-| [7. 整数反转](https://leetcode.cn/problems/reverse-integer/)<br /><br />`  res = res * 10 + x % 10;<br/>            x /= 10;` | [6. Z 字形变换](https://leetcode.cn/problems/zigzag-conversion/)<br />`if(i == 0 || i == numRows - 1) flag = -flag;`**巧设flag** |                                                              |
+| [7. 整数反转](https://leetcode.cn/problems/reverse-integer/)<br /><br />`  res = res * 10 + x % 10;<br/>            x /= 10;` | [6. Z 字形变换](https://leetcode.cn/problems/zigzag-conversion/)<br />`if(i == 0 || i == numRows - 1) flag = -flag;`**巧设flag** | [2864. 最大二进制奇数](https://leetcode.cn/problems/maximum-odd-binary-number/)<br />`string(one - 1,'1') + string(n - one,'0') + '1' // one表示得是1的个数` |
+| [303. 区域和检索 - 数组不可变](https://leetcode.cn/problems/range-sum-query-immutable/)<br />一维前缀和（[视频讲解](https://www.bilibili.com/video/BV1NY4y1J7xQ/?spm_id_from=333.337.search-card.all.click&vd_source=97f1d2f43cfb254aee6535dca8f8f4ee)） | [304. 二维区域和检索 - 矩阵不可变](https://leetcode.cn/problems/range-sum-query-2d-immutable/)<br />**二维前缀和** | [1277. 统计全为 1 的正方形子矩阵](https://leetcode.cn/problems/count-square-submatrices-with-all-ones/)<br />**二维前缀和** |
 
 
 
