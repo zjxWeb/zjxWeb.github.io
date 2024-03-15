@@ -57,7 +57,7 @@ sudo apt-get install vim
 >
 > + 这里安装过程以open3为主，**遇到不能检查版本，往后面看有解决方法**
 
-<img src="./src/3.png" alt="3" style="zoom:50%;" />
+![](./src/3.png)
 
 ```shell
 # 解压
@@ -101,7 +101,7 @@ cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr/local ..
 > 如果终端卡住并显示正在下载，只需要等一会儿不用进行任何操作。
 > 否则，终端会显示报错，提示ippicv_2017u3_lnx_intel64_general_20170822.tgz的加速库下载失败。报错如下：
 
-<img src="./src/4.png" alt="4" style="zoom:50%;" />
+![](./src/4.png)
 
 + 解决方法是下载离线的ippicv库
 
@@ -115,9 +115,7 @@ cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr/local ..
     pkg-config --modversion opencv
     ```
 
-<img src="./src/5.png" alt="5" style="zoom: 50%;" />
-
-
+![](./src/5.png)
 
 + 然后把OpenCV源文件中 `/3rdparty/ippicv` 文件夹下的 `ippicv.cmake` 中，
 

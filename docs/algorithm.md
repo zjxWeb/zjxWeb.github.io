@@ -5,7 +5,62 @@
 
 ![ASCII](./src/img/ASCII.jpg)
 
+#### **滑动窗口**
+
+```cpp
+// 模板
+int left = 0,right = 0;
+while(right < s.size()){
+    // 增大窗口
+    window.add(s[right]);
+    right++;
+    while(window needs shrink){
+        // 缩小窗口
+        window.remove(s[left]);
+        left++;
+	}
+}
+
+/* 滑动窗口算法框架 */
+void slidingWindow(string s) {
+    // 用合适的数据结构记录窗口中的数据
+    unordered_map<char, int> window;
+    
+    int left = 0, right = 0;
+    while (right < s.size()) {
+        // c 是将移入窗口的字符
+        char c = s[right];
+        window.add(c)
+        // 增大窗口
+        right++;
+        // 进行窗口内数据的一系列更新
+        ...
+
+        /*** debug 输出的位置 ***/
+        // 注意在最终的解法代码中不要 print
+        // 因为 IO 操作很耗时，可能导致超时
+        printf("window: [%d, %d)\n", left, right);
+        /********************/
+        
+        // 判断左侧窗口是否要收缩
+        while (left < right && window needs shrink) {
+            // d 是将移出窗口的字符
+            char d = s[left];
+            window.remove(d)
+            // 缩小窗口
+            left++;
+            // 进行窗口内数据的一系列更新
+            ...
+        }
+    }
+}
+
+```
+
+
+
 #### **链表测试模板**
+
 ```C++
 #include <iostream>
 
@@ -424,7 +479,7 @@ void unity(int x,int y){
 >                 }
 >             }
 >         }
->         
+>             
 >         int sumRegion(int row1, int col1, int row2, int col2) {
 >             return sum[row2+1][col2+1] - sum[row1][col2+1] - sum[row2+1][col1] + sum[row1][col1];
 >         }
@@ -516,6 +571,34 @@ public:
         }
         return true;
     }   
+};
+```
+
+> [2536. 子矩阵元素加 1](https://leetcode.cn/problems/increment-submatrices-by-one/)**二维差分，二维前缀和**
+
+```cpp
+class Solution {
+public:
+    vector<vector<int>> rangeAddQueries(int n, vector<vector<int>>& queries) {
+        vector<vector<int>> diff(n+2,vector<int>(n+2));
+        // 二维差分模板
+        for(auto &el : queries){
+            int r1 = el[0],c1 = el[1],r2 = el[2],c2 = el[3];
+            ++diff[r1 + 1][c1 + 1];
+            --diff[r1 + 1][c2 + 2];
+            --diff[r2 + 2][c1 + 1];
+            ++diff[r2 + 2][c2 + 2];
+        }
+        // 用二维前缀和复原
+        for(int i = 1; i <= n; ++i){
+            for(int j = 1; j <= n; ++j){
+                diff[i][j] += diff[i][j-1] + diff[i-1][j] - diff[i-1][j-1];
+            }
+        }
+        diff.pop_back(),diff.erase(diff.begin());
+        for(auto &el : diff) el.pop_back(),el.erase(el.begin());
+        return diff;
+    }
 };
 ```
 
@@ -1744,6 +1827,7 @@ public:
 | [2765. 最长交替子数组](https://leetcode.cn/problems/longest-alternating-subarray/)<br />分组循环 | [2865. 美丽塔 I](https://leetcode.cn/problems/beautiful-towers-i/)<br />1. 枚举（枚举每一座塔作为最高塔，每一次向左右两边扩展）<br />2. 动态规划 + 单调栈 | [365. 水壶问题](https://leetcode.cn/problems/water-and-jug-problem/)<br />1. DFS 2. 贝祖定理 |
 | [7. 整数反转](https://leetcode.cn/problems/reverse-integer/)<br /><br />`  res = res * 10 + x % 10;<br/>            x /= 10;` | [6. Z 字形变换](https://leetcode.cn/problems/zigzag-conversion/)<br />`if(i == 0 || i == numRows - 1) flag = -flag;`**巧设flag** | [2864. 最大二进制奇数](https://leetcode.cn/problems/maximum-odd-binary-number/)<br />`string(one - 1,'1') + string(n - one,'0') + '1' // one表示得是1的个数` |
 | [303. 区域和检索 - 数组不可变](https://leetcode.cn/problems/range-sum-query-immutable/)<br />一维前缀和（[视频讲解](https://www.bilibili.com/video/BV1NY4y1J7xQ/?spm_id_from=333.337.search-card.all.click&vd_source=97f1d2f43cfb254aee6535dca8f8f4ee)） | [304. 二维区域和检索 - 矩阵不可变](https://leetcode.cn/problems/range-sum-query-2d-immutable/)<br />**二维前缀和** | [1277. 统计全为 1 的正方形子矩阵](https://leetcode.cn/problems/count-square-submatrices-with-all-ones/)<br />**二维前缀和** |
+| [2536. 子矩阵元素加 1](https://leetcode.cn/problems/increment-submatrices-by-one/)<br />二维差分；二维前缀和 |                                                              |                                                              |
 
 
 
