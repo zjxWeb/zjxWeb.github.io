@@ -1079,6 +1079,34 @@ void bfs(起始点)
 	}
 	队列为空，广搜结束; 
 } 
+
+
+
+int BFS(Node start, Node target) {
+    queue<Node> q; 
+    set<Node> visited;
+    
+    q.push(start); 
+    visited.insert(start);
+
+    while (!q.empty()) {
+        int sz = q.size();
+        for (int i = 0; i < sz; i++) {
+            Node cur = q.front();
+            q.pop();
+            if (cur == target)
+                return step;
+            for (Node x : cur.adj()) {
+                if (visited.count(x) == 0) {
+                    q.push(x);
+                    visited.insert(x);
+                }
+            }
+        }
+    }
+    // 如果走到这里，说明在图中没有找到目标节点
+}
+
 ```
 
 > [2415. 反转二叉树的奇数层](https://leetcode.cn/problems/reverse-odd-levels-of-binary-tree/)
