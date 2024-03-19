@@ -22,6 +22,8 @@
     * [📃MySQL](study/dataBase/MySQL/)
     * [📃redis入门](study/dataBase/redisBase/)
     * [📃redis实战](study/dataBase/redisApply/)
+    * [📃redis高级](study/dataBase/redisHigh/)
+    * [📃redis集群](study/dataBase/redisGroup/)
   * [📁设计模式](study/designPattern/)
   * [📁java](study/java/)
     * [📃javaweb](study/java/javaweb/)
