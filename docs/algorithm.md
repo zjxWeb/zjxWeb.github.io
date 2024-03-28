@@ -479,7 +479,7 @@ void unity(int x,int y){
 >                 }
 >             }
 >         }
->                     
+>                         
 >         int sumRegion(int row1, int col1, int row2, int col2) {
 >             return sum[row2+1][col2+1] - sum[row1][col2+1] - sum[row2+1][col1] + sum[row1][col1];
 >         }
@@ -758,6 +758,38 @@ public:
         // 维护操作
     }
 ```
+#### **快速幂**
+
+> [50. Pow(x, n)](https://leetcode.cn/problems/powx-n/)
+
+```cpp
+
+class Solution {
+public:
+    double myPow(double x, int n) {
+        if(x == 0.0)return 0.0;
+        double res = 1.0;
+        long b = n;
+        if(b < 0){
+            x = 1.0 / x;
+            b = -b;
+        }
+        while(b > 0){
+            if(b&1) res = res * x;
+            x = x * x;
+            b >>=1;
+        }
+        return res;
+    }
+};
+```
+
+> `(a*b) % p = [(a%p)*(b%p)] % p`
+
+> 当指数是偶数的时候 2^4 = (2 ^ 2)^2
+>
+> 当指数是奇数的时候  2^3 = 2 * 2 ^ 2
+
 #### **预处理回文数**
 
 ```c++
@@ -1853,9 +1885,10 @@ public:
 | [2866. 美丽塔 II](https://leetcode.cn/problems/beautiful-towers-ii/)<br />1. 单调栈 | [1671. 得到山形数组的最少删除次数](https://leetcode.cn/problems/minimum-number-of-removals-to-make-mountain-array/)<br />1. 动态规划 2. 二分法 |                                                              |
 | [2788. 按分隔符拆分字符串](https://leetcode.cn/problems/split-strings-by-separator/)<br />1.  讨论 2. \#include<sstream>   字符串流相关操作 | [136. 只出现一次的数字](https://leetcode.cn/problems/single-number/)<br />位运算（^） | [912. 排序数组](https://leetcode.cn/problems/sort-an-array/)<br />十大排序算法 |
 | [2765. 最长交替子数组](https://leetcode.cn/problems/longest-alternating-subarray/)<br />分组循环 | [2865. 美丽塔 I](https://leetcode.cn/problems/beautiful-towers-i/)<br />1. 枚举（枚举每一座塔作为最高塔，每一次向左右两边扩展）<br />2. 动态规划 + 单调栈 | [365. 水壶问题](https://leetcode.cn/problems/water-and-jug-problem/)<br />1. DFS 2. 贝祖定理 |
-| [7. 整数反转](https://leetcode.cn/problems/reverse-integer/)<br /><br />`  res = res * 10 + x % 10;<br/>            x /= 10;` | [6. Z 字形变换](https://leetcode.cn/problems/zigzag-conversion/)<br />`if(i == 0 || i == numRows - 1) flag = -flag;`**巧设flag** | [2864. 最大二进制奇数](https://leetcode.cn/problems/maximum-odd-binary-number/)<br />`string(one - 1,'1') + string(n - one,'0') + '1' // one表示得是1的个数` |
+| [7. 整数反转](https://leetcode.cn/problems/reverse-integer/)`  res = res * 10 + x % 10;           x /= 10;` | [6. Z 字形变换](https://leetcode.cn/problems/zigzag-conversion/)<br />巧设flag | [2864. 最大二进制奇数](https://leetcode.cn/problems/maximum-odd-binary-number/) |
 | [303. 区域和检索 - 数组不可变](https://leetcode.cn/problems/range-sum-query-immutable/)<br />一维前缀和（[视频讲解](https://www.bilibili.com/video/BV1NY4y1J7xQ/?spm_id_from=333.337.search-card.all.click&vd_source=97f1d2f43cfb254aee6535dca8f8f4ee)） | [304. 二维区域和检索 - 矩阵不可变](https://leetcode.cn/problems/range-sum-query-2d-immutable/)<br />**二维前缀和** | [1277. 统计全为 1 的正方形子矩阵](https://leetcode.cn/problems/count-square-submatrices-with-all-ones/)<br />**二维前缀和** |
 | [2536. 子矩阵元素加 1](https://leetcode.cn/problems/increment-submatrices-by-one/)<br />二维差分；二维前缀和 | [2602. 使数组元素全部相等的最少操作次数](https://leetcode.cn/problems/minimum-operations-to-make-all-array-elements-equal/)<br />前缀和（元素和）；二分；排序 |                                                              |
+| [50. Pow(x, n)](https://leetcode.cn/problems/powx-n/)<br />快速幂 |                                                              |                                                              |
 
 
 
