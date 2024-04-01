@@ -49,6 +49,7 @@
   * [📁vscode相关技巧](tips/vsCodeTools/)
 * [**项目实战**](projectPractice)
   * [📁C++Project](projectPractice/cppProject/)
+    * [📃QML实战及其案列](projectPractice/cppProject/QML/)
     * [📃机房预约系统](projectPractice/cppProject/computerOrder/)
     * [📃商城分布式文件服务器](projectPractice/cppProject/distributedServerProgramming/)
     * [📃车载自动化测试平台](projectPractice/cppProject/automatedTestingPlatform/)
