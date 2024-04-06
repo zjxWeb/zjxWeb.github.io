@@ -47,6 +47,7 @@
   * [📁docsify](tips/docsify/)
   * [📁Hubilder连接nox](tips/noxHubilder/)
   * [📁vscode相关技巧](tips/vsCodeTools/)
+  * [📁好用的小工具](tips/goodTools/)
 * [**项目实战**](projectPractice)
   * [📁C++Project](projectPractice/cppProject/)
     * [📃QML实战及其案列](projectPractice/cppProject/QML/)
