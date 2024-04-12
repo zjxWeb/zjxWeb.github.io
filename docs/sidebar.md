@@ -41,6 +41,7 @@
   * [📁数字孪生](techBlog/digitalTwins/)
   * [📁服务端](techBlog/server/)
   * [📁vim](techBlog/vim/)
+  * [📁git](techBlog/git/)
   * [📁vmware](techBlog/vmware/)
   * [📁hadoop安装及数组查重](techBlog/hadoop/)
 * [**好东西tips**](tips)
