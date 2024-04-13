@@ -65,7 +65,7 @@ int socket(int domain,int type.int protocol);
 
 #### 结构体
 
-<img src="./src/6.png" alt="6" style="zoom:80%;" />
+![6](./src/6.png)
 
 ##### `sockaddr`结构体
 
