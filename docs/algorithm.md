@@ -479,7 +479,7 @@ void unity(int x,int y){
 >                 }
 >             }
 >         }
->                         
+>                             
 >         int sumRegion(int row1, int col1, int row2, int col2) {
 >             return sum[row2+1][col2+1] - sum[row1][col2+1] - sum[row2+1][col1] + sum[row1][col1];
 >         }
@@ -1888,7 +1888,7 @@ public:
 | [7. 整数反转](https://leetcode.cn/problems/reverse-integer/)`  res = res * 10 + x % 10;           x /= 10;` | [6. Z 字形变换](https://leetcode.cn/problems/zigzag-conversion/)<br />巧设flag | [2864. 最大二进制奇数](https://leetcode.cn/problems/maximum-odd-binary-number/) |
 | [303. 区域和检索 - 数组不可变](https://leetcode.cn/problems/range-sum-query-immutable/)<br />一维前缀和（[视频讲解](https://www.bilibili.com/video/BV1NY4y1J7xQ/?spm_id_from=333.337.search-card.all.click&vd_source=97f1d2f43cfb254aee6535dca8f8f4ee)） | [304. 二维区域和检索 - 矩阵不可变](https://leetcode.cn/problems/range-sum-query-2d-immutable/)<br />**二维前缀和** | [1277. 统计全为 1 的正方形子矩阵](https://leetcode.cn/problems/count-square-submatrices-with-all-ones/)<br />**二维前缀和** |
 | [2536. 子矩阵元素加 1](https://leetcode.cn/problems/increment-submatrices-by-one/)<br />二维差分；二维前缀和 | [2602. 使数组元素全部相等的最少操作次数](https://leetcode.cn/problems/minimum-operations-to-make-all-array-elements-equal/)<br />前缀和（元素和）；二分；排序 |                                                              |
-| [50. Pow(x, n)](https://leetcode.cn/problems/powx-n/)<br />快速幂 |                                                              |                                                              |
+| [50. Pow(x, n)](https://leetcode.cn/problems/powx-n/)<br />快速幂 | [100265. 素数的最大距离](https://leetcode.cn/problems/maximum-prime-difference/) <br />素数 |                                                              |
 
 
 
