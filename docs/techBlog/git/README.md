@@ -1,6 +1,6 @@
 [git大文件操作，ssh配置等](/techBlog/server/?id=一git的基本操作，大文件上传（码云和github）和出现error处理)
 
-## 常用 Git 命令
+## 常用 Git 命令【[git官方文档](https://git-scm.com/book/zh/v2)】
 ![1](./src/1.png)
 ```
     git initWorkspace：工作区
