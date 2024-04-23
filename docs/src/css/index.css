@@ -221,3 +221,7 @@ input:checked + .slider:before {
 .bsWidth{
     width: 80vw;
 }
+/* github图标层级 */
+.github-corner{
+    z-index: 0!important;
+}
