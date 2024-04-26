@@ -1,4 +1,4 @@
-#   
+# 
 
 # (一) uni-app头像上传（完善个人信息功能），后端NodeJs+MySQL
 
@@ -6,92 +6,90 @@
 
 ```vue
 <template>
-	<view class="page-main">
-		<view class="upload">
-			<text>头像：</text>
-			<!-- <view class="box" @click="chooseUploads">
-				<image class="box-img" src="../../static/index/jia.png"></image>
-			</view> -->
-			<view class="box" @click="upload">
-				<image class="box-img" :src="avatar" mode=""></image>
-			</view>
-		</view>
-		<view class="user-info">
-			<view class="form">
-				<uni-forms ref="form" :modelValue="formData" label-position="left">
-					<!-- :rules="rules" name="iphone"name="password"   avatar-->
-					<uni-forms-item label="姓名：" label-width="20px">
-						<input class="input" type="text" value="" v-model="formData.Susername" placeholder="请输入姓名" />
-					</uni-forms-item>
-					<uni-forms-item label="性别：" label-width="0px">
-						<input class="input" type="text" value="" v-model="formData.Ssex" placeholder="请输入性别" />
-					</uni-forms-item>
-					<uni-forms-item label="年龄：" label-width="0px">
-						<input class="input" type="text" value="" v-model="formData.Sage" placeholder="请输入年龄" />
-					</uni-forms-item>
-					<uni-forms-item label="个人简介：" label-width="0px">
-						<textarea class="input-textarea" type="textarea" value="" v-model="formData.direction"
-							placeholder="请输入" />
-					</uni-forms-item>
+    <view class="page-main">
+        <view class="upload">
+            <text>头像：</text>
+            <!-- <view class="box" @click="chooseUploads">
+                <image class="box-img" src="../../static/index/jia.png"></image>
+            </view> -->
+            <view class="box" @click="upload">
+                <image class="box-img" :src="avatar" mode=""></image>
+            </view>
+        </view>
+        <view class="user-info">
+            <view class="form">
+                <uni-forms ref="form" :modelValue="formData" label-position="left">
+                    <!-- :rules="rules" name="iphone"name="password"   avatar-->
+                    <uni-forms-item label="姓名：" label-width="20px">
+                        <input class="input" type="text" value="" v-model="formData.Susername" placeholder="请输入姓名" />
+                    </uni-forms-item>
+                    <uni-forms-item label="性别：" label-width="0px">
+                        <input class="input" type="text" value="" v-model="formData.Ssex" placeholder="请输入性别" />
+                    </uni-forms-item>
+                    <uni-forms-item label="年龄：" label-width="0px">
+                        <input class="input" type="text" value="" v-model="formData.Sage" placeholder="请输入年龄" />
+                    </uni-forms-item>
+                    <uni-forms-item label="个人简介：" label-width="0px">
+                        <textarea class="input-textarea" type="textarea" value="" v-model="formData.direction"
+                            placeholder="请输入" />
+                    </uni-forms-item>
 
-				</uni-forms>
+                </uni-forms>
 
-				<button class="loginBtn" type="primary" @click="submit"><text class="btnValue">提交</text></button>
+                <button class="loginBtn" type="primary" @click="submit"><text class="btnValue">提交</text></button>
 
-			</view>
-		</view>
+            </view>
+        </view>
 
-	</view>
+    </view>
 </template>
 
 <script>
-	export default {
-		data() {
-			return {
-				 iconcheck:0, //头像是否改变
-				avatar:"", //默认头像
-				formData: {
-					direction: '',
-					Sage: '',
-					Ssex: '',
-					Susername: '',
-				},
+    export default {
+        data() {
+            return {
+                 iconcheck:0, //头像是否改变
+                avatar:"", //默认头像
+                formData: {
+                    direction: '',
+                    Sage: '',
+                    Ssex: '',
+                    Susername: '',
+                },
 
-			}
-		},
-		
-		methods: {
-			upload(){
-				uni.chooseImage({
-					count:1,
-					success: (res)=>{
-						this.avatar=res.tempFilePaths[0]
-					}
-				})
-			},
-			submit(){
-				console.log(this.avatar)
-				var _this = this;
-				uni.uploadFile({
-				    url: 'http://47.107.93.173:3000/avatar', //仅为示例，并非真实接口地址。
-					filePath: _this.avatar,
-					name: 'avatar',
-				    formData: {
-						'direction':_this.formData.direction,
-						'Sage':_this.formData.Sage,
-						'Ssex':_this.formData.Ssex,
-						'Susername':_this.formData.Susername,
-				    },
-				    success: (res) => {
-				        console.log(res);
-				    }
-				});
-			}
-		}
-	}
+            }
+        },
+
+        methods: {
+            upload(){
+                uni.chooseImage({
+                    count:1,
+                    success: (res)=>{
+                        this.avatar=res.tempFilePaths[0]
+                    }
+                })
+            },
+            submit(){
+                console.log(this.avatar)
+                var _this = this;
+                uni.uploadFile({
+                    url: 'http://47.107.93.173:3000/avatar', //仅为示例，并非真实接口地址。
+                    filePath: _this.avatar,
+                    name: 'avatar',
+                    formData: {
+                        'direction':_this.formData.direction,
+                        'Sage':_this.formData.Sage,
+                        'Ssex':_this.formData.Ssex,
+                        'Susername':_this.formData.Susername,
+                    },
+                    success: (res) => {
+                        console.log(res);
+                    }
+                });
+            }
+        }
+    }
 </script>
-
-
 ```
 
 ### 2. 后端代码
@@ -121,7 +119,9 @@ exports.avatar = (req,res)=>{
 # (二)vue前后端分离项目各种请求封装+应用
 
 ## 目录
+
 ![项目目录](./src/1.png)
+
 ## http.js
 
 ```
@@ -324,9 +324,10 @@ export default {
 // },data => {
 //   console.log(data)
 // })
-
 ```
+
 ### httpAPI.js
+
 ```javascript
 export default {
   api: {
@@ -401,8 +402,8 @@ new Vue({
   store,
   render: h => h(App)
 }).$mount('#app')
-
 ```
+
 ### 登录引用案例
 
 ```javascript
@@ -435,12 +436,17 @@ login() {
 ***
 
 ## web视频播放组件（easyplayer）和音频组件播放封装（vue-aplayer）
+
 ### 使用只需要传相应的参数就可以使用，比较方便快捷。
+
 ## easyplay使用教程：https://blog.csdn.net/qq_44891434/article/details/118525941
+
 ## vue-aplayer使用教程：https://aplayer.netlify.app/docs/guide/options.html#autoplay
 
 ***
+
 ## 视频子组件编写
+
 ```vue
 <template>
   <!-- 采用easyplayer.js -->
@@ -467,10 +473,10 @@ export default {
   }
 }
 </script>
-
-
 ```
+
 ## 音频子组件封装
+
 ```vue
 <template>
   <div :style="audiowidth">
@@ -512,9 +518,10 @@ export default {
 <style lang="scss" scoped>
 
 </style>
-
 ```
+
 ## 父组件调用
+
 ```vue
 <template>
   <!-- vue-video-player -->
@@ -552,17 +559,19 @@ export default {
   }
 }
 </script>
-
-
 ```
+
 ## 效果图展示
+
 ![效果展示图](./src/2.png)
 
-#  (四)Echarts-饼图
+# (四)Echarts-饼图
 
 ***
+
 ## 代码
-```js 
+
+```js
 const colors = ['#2EC7C9', '#B6A2DE', '#D87A80', '#FFB980', '#00c6ff', '#2EC7C9'].reverse()
 var data = [{
       name: '户外大屏',
@@ -632,44 +641,50 @@ option ={
         }]
       }
 ```
+
 ## 效果图
+
 ![效果图](./src/3.png)
 
 # (五) vue（父子组件）使用element弹窗功能
 
-##  注意点
-1.	注意使用父子组件传值的时候，props的值是单项的。
-2.	所以说在做弹窗的时候我们需要先，父组件向子组件传值，然后子组件向父组件传值。
-## 父组件
-```vue
-<template>
-  <div>
-    <div class="displayVideo">
-      <template>
-        <ul v-infinite-scroll="load"  class="personalDiaplayLine infinite-list" style="overflow:auto">
-          <li v-for=" ( item,index ) in personalDiaplayLine" :key="index">
-            <ul>
-              <li v-for="( ite,ind ) in personalDiaplay" :key="ind ">
-                <img :src="ite.url" :title="ite.title" width="100%" height="100%" @click="videoSpring">
-                <i class="videospanclose" />
-                <p>{{ ite.title }}</p>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </template>
-    </div>
-    <VideoFrame :display="display" @sendFVideo="getMsgVideoSon" />
-    <!-- <el-dialog
-      :visible.sync="dialogVisible"
-      width="55%"
-    >
-      <div class="boxDisplay">
-        <easy-player :video-url="videoUrl" :poster="videoImg" />
-      </div>
-    </el-dialog> -->
-  </div>
-</template>
+## 注意点
+
+1. 注意使用父子组件传值的时候，props的值是单项的。
+2. 所以说在做弹窗的时候我们需要先，父组件向子组件传值，然后子组件向父组件传值。
+   
+   ## 父组件
+   
+   ```vue
+   <template>
+   <div>
+   <div class="displayVideo">
+   <template>
+     <ul v-infinite-scroll="load"  class="personalDiaplayLine infinite-list" style="overflow:auto">
+       <li v-for=" ( item,index ) in personalDiaplayLine" :key="index">
+         <ul>
+           <li v-for="( ite,ind ) in personalDiaplay" :key="ind ">
+             <img :src="ite.url" :title="ite.title" width="100%" height="100%" @click="videoSpring">
+             <i class="videospanclose" />
+             <p>{{ ite.title }}</p>
+           </li>
+         </ul>
+       </li>
+     </ul>
+   </template>
+   </div>
+   <VideoFrame :display="display" @sendFVideo="getMsgVideoSon" />
+   <!-- <el-dialog
+   :visible.sync="dialogVisible"
+   width="55%"
+   >
+   <div class="boxDisplay">
+     <easy-player :video-url="videoUrl" :poster="videoImg" />
+   </div>
+   </el-dialog> -->
+   </div>
+   </template>
+   ```
 
 <script>
 import EasyPlayer from '@easydarwin/easyplayer'
@@ -812,6 +827,7 @@ export default {
 }
 
 </style>
+
 ```
 ## 子组件
 ```vue
@@ -883,15 +899,20 @@ left: 0;
 # (六)vue实现弹窗卡片表单变标签功能
 
 ## 功能描述
-1. 在主页面点击按钮显示弹窗（采用的是element）
-2. 在弹窗中，点击左上的添加会添加一个表单，每次只能添加一个表单。
-3. 填写表单会自动变成标签。
-## card.vue
-```vue
-<template>
-  <div>
-    <el-button type="text" @click="centerDialogVisible = true">点击打开 Dialog</el-button>
 
+1. 在主页面点击按钮显示弹窗（采用的是element）
+
+2. 在弹窗中，点击左上的添加会添加一个表单，每次只能添加一个表单。
+
+3. 填写表单会自动变成标签。
+   
+   ## card.vue
+   
+   ```vue
+   <template>
+   <div>
+    <el-button type="text" @click="centerDialogVisible = true">点击打开 Dialog</el-button>
+   
     <el-dialog
       title="添加标签"
       :visible.sync="centerDialogVisible"
@@ -954,19 +975,19 @@ left: 0;
         <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
       </span>
     </el-dialog>
-  </div>
-</template>
-<script>
-export default {
-  props: {
+   </div>
+   </template>
+   <script>
+   export default {
+   props: {
     parentarr: {
       type: Array,
       default() {
         return []
       }
     }
-  },
-  data() {
+   },
+   data() {
     return {
       centerDialogVisible: false,
       card: 0,
@@ -975,8 +996,8 @@ export default {
       labelarr: [],
       sumCard: null
     }
-  },
-  watch: {
+   },
+   watch: {
     labelarr(old, cur) {
       this.$emit('on-change', this.labelarr)
     },
@@ -990,11 +1011,11 @@ export default {
         this.labelarr = []
       }
     }
-  },
-  mounted() {
-
-  },
-  methods: {
+   },
+   mounted() {
+   
+   },
+   methods: {
     addcCard() {
       console.log(this.labelarr.length)
       // eslint-disable-next-line eqeqeq
@@ -1027,7 +1048,7 @@ export default {
       for (let j = 0; j < tagElements.length; j++) {
         const name = tagElements[j].name // 这里就是要获取得name属性，将此name属性作为json对象得key；
         const value = tagElements[j].value
-        json[name] = value 	// 注意这里必须要使用这种方式给json赋值。如果使用json.name=value得话你会发现你所有的key都是一个字符串name，而不是name代表的值
+        json[name] = value     // 注意这里必须要使用这种方式给json赋值。如果使用json.name=value得话你会发现你所有的key都是一个字符串name，而不是name代表的值
       }
       if (json != null) {
         formData.push(json)
@@ -1047,9 +1068,10 @@ export default {
       // this.card--
       console.log('已取消')
     }
-  }
-}
-</script>
+   }
+   }
+   </script>
+   ```
 
 <style lang="scss" scoped>
 /deep/ .el-dialog{
@@ -1160,6 +1182,7 @@ export default {
   cursor: pointer;
 }
 </style>
+
 ```
 ## 效果图
 
@@ -1331,6 +1354,7 @@ header span {
 
 </style>
 ```
+
 + 效果图
 
 ![5](./src/5.png)
@@ -1507,10 +1531,13 @@ export default {
 }
 </style>
 ```
+
 + 效果图
 
 ![在这里插入图片描述](./src/6.png)
+
 ## 当要一次性添加多个电话号码（粘贴复制）生成标签，可以参考下方代码改动。
+
 ```js
   addlabel() {
       let count = this.labelarr.indexOf(this.currentval);
@@ -1535,12 +1562,12 @@ export default {
       console.log(this.labelarr)
       this.currentval = "";
     },
-   
 ```
 
 # (十)vue动态时间显示
 
 ### 1. 封装date.js
+
 ```js
 function showDate() {
     const date = new Date();
@@ -1562,38 +1589,48 @@ export function showDateClick (){
         window.localStorage.setItem('date',JSON.stringify(a))
     },1000)
 };
-
 ```
+
 ### 2.导入date.js
+
 `import { showDateClick } from "../../../static/data";`
+
 ### 3.应用
 
 ![在这里插入图片描述](./src/7.png)
 
 ### 4.简单说一下这里我使用的思想。
+
 + 这个函数会将具体的时候返回，我将页面当作数据要处理的存入到localStorage，在页面调用的时候使用`JSON.parse`方法。如果页面需要动态展示可以直接设置id，来渲染进去。
-### 5.效果展示
+  
+  ### 5.效果展示
 + 动态渲染时钟展示
-	![在这里插入图片描述](./src/8.png)
+    ![在这里插入图片描述](./src/8.png)
 
 # (十一) vue中鼠标右击菜单（rightmenu），以及回调处理
 
 ***
+
 ### 安装和引用
+
 + `npm install rightmenu --save-dev`
+
 + `import rightMenu from "rightmenu"`
+
 + `Vue.use(rightMenu)`
-###  使用案例
-```vue
-<template>
+  
+  ### 使用案例
+  
+  ```vue
+  <template>
     <div>
         <h3>24324</h3>
         <button v-rightMenu = "menudata"  @contextmenu.prevent="get(index)" v-for="(item,index) in 10">
             <p>{{text}}</p>
         </button>
     </div>
-</template>
-<script>
+  </template>
+  <script>
     export default {
         name:"demo",
         data(){
@@ -1648,7 +1685,7 @@ export function showDateClick (){
         mounted() {
         },
         watch:{
-
+  
         },
         methods:{
             get(index){
@@ -1663,14 +1700,17 @@ export function showDateClick (){
             }
         }
     }
-</script>
-```
-#### 效果展示
-![在这里插入图片描述](./src/9.png)
+  </script>
+  ```
+  
+  #### 效果展示
+  
+  ![在这里插入图片描述](./src/9.png)
 
 # (十二)vue中使用echarts，自动切换选中目标动画
 
 ### 第一步新建`js`文件，将一下代码复制进去
+
 ```js
 (function (global) {
     global.tools = global.tools || {};
@@ -1867,10 +1907,12 @@ export function showDateClick (){
         };
     };
 })(window);
-
 ```
+
 ### 第二步 在main.js中引入（此处为全局引入，因为自己用的比较多）
+
 ### 第三步 项目引用
+
 ```vue
 <template>
   <div style="width: 100%; height: 100%" id="chartsL"></div>
@@ -2088,169 +2130,174 @@ export default {
 };
 </script>
 ```
+
 ### 注意点
+
 ![在这里插入图片描述](./src/10.png)
 
 # (十三)Vue项目中particles的使用，来实现屏幕飘浮小星星动画（满天星）
 
 1. 下载包可采用npm/cnpm
-
-   +  ` npm/cnpm install particles.js --save`
+   
+   + ` npm/cnpm install particles.js --save`
    + 这里附上git地址：`https://github.com/VincentGarreau/particles.js`
-   + +  版本：	
-![版本号](./src/11.png)
+   + + 版本：    
+       ![版本号](./src/11.png)
 
-2.  在main.js 中引包，注册
-
+2. 在main.js 中引包，注册
+   
    + ```js
      import particles from 'particles.js'
      
      Vue.use(particles)
      ```
 
-3.  在所要使用的界面引用如下代码
-
+3. 在所要使用的界面引用如下代码
+   
    + ```html
      <div id="particles-js">
-           <canvas class="particles-js-canvas-el" width="1920" height="1080" style="width: 100%; height: 100%;"></canvas>
+          <canvas class="particles-js-canvas-el" width="1920" height="1080" style="width: 100%; height: 100%;"></canvas>
      </div>
      ```
-
+   
    + ```js
-      mounted(){
-           particlesJS('particles-js',
-           {
-           "particles": {
-             "number": {
-               "value": 40,//数量
-               "density": {
-                 "enable": true, //启用粒子的稀密程度
-                 "value_area": 800 //区域散布密度大小
-               }
-             },
-             "color": {
-               "value": "#f3eaa1" //原子的颜色
-             },
-             "shape": {
-               "type": "star", //原子的形状 "circle" ,"edge" ,"triangle" ,"polygon" ,"star" ,"image" ,["circle", "triangle", "image"]
-               "stroke": {
-                 "width": 0, //原子的宽度
-                 "color": "#f3eaa1" //原子颜色
-               },
-               "polygon": {
-                 "nb_sides": 5 // 原子的多边形边数
-               },
-               "image": {
-                 "src": "img/github.svg", // 原子的图片可以使用自定义图片 "assets/img/yop.svg" , "http://mywebsite.com/assets/img/yop.png"
-                 "width": 100, //图片宽度
-                 "height": 100 //图片高度
-               }
-             },
-             "opacity": {
-               "value": 1, //不透明度
-               "random": true, //随机不透明度
-               "anim": {
-                 "enable": true, //渐变动画
-                 "speed": 1, // 渐变动画速度
-                 "opacity_min": 0, //渐变动画不透明度
-                 "sync": true
-               }
-             },
-             "size": {
-               "value": 3, //原子大小
-               "random": true, // 原子大小随机
-               "anim": {
-                 "enable": false, // 原子渐变
-                 "speed": 4, //原子渐变速度
-                 "size_min": 0.3,
-                 "sync": false
-               }
-             },
-             "line_linked": {
-               "enable": false, //连接线
-               "distance": 150, //连接线距离
-               "color": "#ffffff", //连接线颜色
-               "opacity": 0.4, //连接线不透明度
-               "width": 1 //连接线的宽度
-             },
-             "move": {
-               "enable": true, //原子移动
-               "speed": 1, //原子移动速度
-               "direction": "none", //原子移动方向   "none" ,"top" ,"top-right" ,"right" ,"bottom-right" ,"bottom" ,"bottom-left" ,"left" ,"top-left"
-               "random": true, //移动随机方向
-               "straight": false, //直接移动
-               "out_mode": "out", //是否移动出画布
-               "bounce": false, //是否跳动移动
-               "attract": {
-                 "enable": false, // 原子之间吸引
-                 "rotateX": 600, //原子之间吸引X水平距离
-                 "rotateY": 600  //原子之间吸引Y水平距离
-               }
-             }
-           },
-           "interactivity": {
-             "detect_on": "canvas", //原子之间互动检测 "canvas", "window"
-             "events": {
-               "onhover": {
-                 "enable": true, //悬停
-                 "mode": "bubble" //悬停模式      "grab"抓取临近的,"bubble"泡沫球效果,"repulse"击退效果,["grab", "bubble"]
-               },
-               "onclick": {
-                 "enable": false,  //点击效果
-                 "mode": "repulse"  //点击效果模式   "push" ,"remove" ,"bubble" ,"repulse" ,["push", "repulse"]
-               },
-               "resize": true // 互动事件调整
-             },
-             "modes": {
-               "grab": {
-                 "distance": 100, //原子互动抓取距离
-                 "line_linked": {
-                   "opacity": 0.8  //原子互动抓取距离连线不透明度
-                 }
-               },
-               "bubble": {
-                 "distance": 250, //原子抓取泡沫效果之间的距离
-                 "size": 4, // 原子抓取泡沫效果之间的大小
-                 "duration": 2, //原子抓取泡沫效果之间的持续事件
-                 "opacity": 1, //原子抓取泡沫效果透明度
-                 "speed": 3
-               },
-               "repulse": {
-                 "distance": 400, //击退效果距离
-                 "duration": 0.4 //击退效果持续事件
-               },
-               "push": {
-                 "particles_nb": 4 //粒子推出的数量
-               },
-               "remove": {
-                 "particles_nb": 2
-               }
-             }
-           },
-           "retina_detect": true
-         }
-       
-         );
-      }
+     mounted(){
+          particlesJS('particles-js',
+          {
+          "particles": {
+            "number": {
+              "value": 40,//数量
+              "density": {
+                "enable": true, //启用粒子的稀密程度
+                "value_area": 800 //区域散布密度大小
+              }
+            },
+            "color": {
+              "value": "#f3eaa1" //原子的颜色
+            },
+            "shape": {
+              "type": "star", //原子的形状 "circle" ,"edge" ,"triangle" ,"polygon" ,"star" ,"image" ,["circle", "triangle", "image"]
+              "stroke": {
+                "width": 0, //原子的宽度
+                "color": "#f3eaa1" //原子颜色
+              },
+              "polygon": {
+                "nb_sides": 5 // 原子的多边形边数
+              },
+              "image": {
+                "src": "img/github.svg", // 原子的图片可以使用自定义图片 "assets/img/yop.svg" , "http://mywebsite.com/assets/img/yop.png"
+                "width": 100, //图片宽度
+                "height": 100 //图片高度
+              }
+            },
+            "opacity": {
+              "value": 1, //不透明度
+              "random": true, //随机不透明度
+              "anim": {
+                "enable": true, //渐变动画
+                "speed": 1, // 渐变动画速度
+                "opacity_min": 0, //渐变动画不透明度
+                "sync": true
+              }
+            },
+            "size": {
+              "value": 3, //原子大小
+              "random": true, // 原子大小随机
+              "anim": {
+                "enable": false, // 原子渐变
+                "speed": 4, //原子渐变速度
+                "size_min": 0.3,
+                "sync": false
+              }
+            },
+            "line_linked": {
+              "enable": false, //连接线
+              "distance": 150, //连接线距离
+              "color": "#ffffff", //连接线颜色
+              "opacity": 0.4, //连接线不透明度
+              "width": 1 //连接线的宽度
+            },
+            "move": {
+              "enable": true, //原子移动
+              "speed": 1, //原子移动速度
+              "direction": "none", //原子移动方向   "none" ,"top" ,"top-right" ,"right" ,"bottom-right" ,"bottom" ,"bottom-left" ,"left" ,"top-left"
+              "random": true, //移动随机方向
+              "straight": false, //直接移动
+              "out_mode": "out", //是否移动出画布
+              "bounce": false, //是否跳动移动
+              "attract": {
+                "enable": false, // 原子之间吸引
+                "rotateX": 600, //原子之间吸引X水平距离
+                "rotateY": 600  //原子之间吸引Y水平距离
+              }
+            }
+          },
+          "interactivity": {
+            "detect_on": "canvas", //原子之间互动检测 "canvas", "window"
+            "events": {
+              "onhover": {
+                "enable": true, //悬停
+                "mode": "bubble" //悬停模式      "grab"抓取临近的,"bubble"泡沫球效果,"repulse"击退效果,["grab", "bubble"]
+              },
+              "onclick": {
+                "enable": false,  //点击效果
+                "mode": "repulse"  //点击效果模式   "push" ,"remove" ,"bubble" ,"repulse" ,["push", "repulse"]
+              },
+              "resize": true // 互动事件调整
+            },
+            "modes": {
+              "grab": {
+                "distance": 100, //原子互动抓取距离
+                "line_linked": {
+                  "opacity": 0.8  //原子互动抓取距离连线不透明度
+                }
+              },
+              "bubble": {
+                "distance": 250, //原子抓取泡沫效果之间的距离
+                "size": 4, // 原子抓取泡沫效果之间的大小
+                "duration": 2, //原子抓取泡沫效果之间的持续事件
+                "opacity": 1, //原子抓取泡沫效果透明度
+                "speed": 3
+              },
+              "repulse": {
+                "distance": 400, //击退效果距离
+                "duration": 0.4 //击退效果持续事件
+              },
+              "push": {
+                "particles_nb": 4 //粒子推出的数量
+              },
+              "remove": {
+                "particles_nb": 2
+              }
+            }
+          },
+          "retina_detect": true
+        }
+     
+        );
+     }
      ```
-
+   
    ### 之所以这么写，是遇到了一些问题，自己将data数据抽离出去，就会报错（传的是相对路径），不知道为什么，还请各位小伙伴赐教。
-
+   
    ### 效果图如下
-![效果图](./src/12.png)## 组件封装(可以直接拿过去使用哦！！)
-```vue
-<template>
-  <div>
-    <div id="particles-js">
-      <canvas
-        class="particles-js-canvas-el"
-        width="1920"
-        height="1080"
-        style="width: 100%; height: 100%"
-      ></canvas>
-    </div>
-  </div>
-</template>
+   
+   ![效果图](./src/12.png)## 组件封装(可以直接拿过去使用哦！！)
+   
+   ```vue
+   <template>
+   <div>
+   <div id="particles-js">
+     <canvas
+       class="particles-js-canvas-el"
+       width="1920"
+       height="1080"
+       style="width: 100%; height: 100%"
+     ></canvas>
+   </div>
+   </div>
+   </template>
+   ```
 
 <script>
 export default {
@@ -2368,6 +2415,7 @@ export default {
   },
 };
 </script>
+
 <style lang="scss" scoped>
 #particles-js {
   position: fixed;
@@ -2377,38 +2425,38 @@ export default {
   left: 0;
 }
 </style>
-```
 
+```
 # (十四)HTML5使用Geoloacation API检测浏览器的支持性
 
 + 在调用HTML5 Deolocation API函数前，需要确保浏览器支持此功能。当浏览器不支持时，可以提供一些替代文本，以提示用户升级浏览器或安装插件（如 Gears）来增强现有浏览器功能。
 + 检测浏览器支持性，代码：
 
 ```javascript
-	function testSupport() {
-		if(navigator.geolocation){
-			document.getElementById("support").innerHTML = " 支持  HTML5 Geolocation";
-		}else{
-			document.getElementById("support").innerHTML= "该浏览器不支持 HTML5 Geolocation ！建议升级浏览器或安装插件（如：Gears）"
-		}
-	}
+    function testSupport() {
+        if(navigator.geolocation){
+            document.getElementById("support").innerHTML = " 支持  HTML5 Geolocation";
+        }else{
+            document.getElementById("support").innerHTML= "该浏览器不支持 HTML5 Geolocation ！建议升级浏览器或安装插件（如：Gears）"
+        }
+    }
 ```
 
 # (十五)HTML5实现头像的上传
 
 + 这是利用form-data给后台传输数据，来实现头像的上传加载！
-
 1. html代码
-```
-<!DOCTYPE html>
-<html lang="en">
-<head>
+   
+   ```
+   <!DOCTYPE html>
+   <html lang="en">
+   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     </head>
-<body>
+   <body>
     <div class="container">
         <input enctype="multipart/form-data" type="file">
         <input id="Susername"  type="text" placeholder="用户名">
@@ -2419,7 +2467,7 @@ export default {
         <input id="Sqq" type="text" placeholder="地址">
         <input id="Saddress" type="text" placeholder="座右铭">
         <input id="Smotto" type="button" value="上传">
-       
+   
         <div style="clear: both;"></div>
              <progress value="0" max="100"></progress>
     </div>
@@ -2427,11 +2475,13 @@ export default {
         <h3>显示区域</h3>
     </div>
     </body>
-</html>
-```
+   </html>
+   ```
+
 2. 样式代码
-```
- .container{
+   
+   ```
+   .container{
             box-sizing: border-box;
             width: 404px;
             height: 100px;
@@ -2444,7 +2494,7 @@ export default {
         input{
             padding: 0;
             margin: 0;
-          
+   
         }
         .container input[type=file]{
             width: 300px;
@@ -2480,15 +2530,17 @@ export default {
             text-align: center;
             border-bottom: 1px solid #cccc;
             color: #133131;
-            
+   
         }
         .showareaimg{
             max-width: 1000%;
         }
-```
+   ```
+
 3. javescript代码
-```
-  var file = document.querySelector('[type=file]');
+   
+   ```
+   var file = document.querySelector('[type=file]');
         var sub = document.querySelector('[type=button]');
         var show = document.querySelector('.showarea');
         var progress = document.querySelector('progress');
@@ -2500,7 +2552,7 @@ export default {
         var Sqq = document.getElementById('Sqq');
         var Saddress = document.getElementById('Saddress');
         var Smotto = document.getElementById('Smotto');
-        
+   
         sub.onclick = function(e){
             var fileobje = file.files[0];
             var formdata = new FormData();
@@ -2532,71 +2584,84 @@ export default {
           console.log(formdata)
         console.log(formdata.getAll("upload"))
         }
-```
+   ```
 
 # (十六)mui结合tomdJS实现前后端数据分离以及数据的渲染
 
 + mui结合tomdJS实现前后端数据分离以及数据的渲染
-
 1. 下载安装nodeJS
+
 2. 安装tmodJS
+   
+    `npm install -g tmodjs`
 
-	`npm install -g tmodjs`
 3. 后端就口地址
+   
+    `http://39.96.31.43:3000/books`
 
-	`http://39.96.31.43:3000/books`
 4. 创建 template文件夹，下一级目录在创建build文件夹，
+
 5. 根目录下创建 **index.html**
+
 6. template下创建**header.html**
+
 7. CMD 执行<kbd>tmod</kbd>
+   
+   + bulid下会生成**template.js**
+   + 在template下会生成**package.json**文件
 
-	+ bulid下会生成**template.js**
-	+ 在template下会生成**package.json**文件
 8. 目录：![目录结构](./src/13.png)
-9. index.js下的代码
 
-	<!DOCTYPE html>
-	<html lang="utf-8">
-	    <head>
-	        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	       
-	    </head>
-	
-	    <body>
-	        <!-- 头部-start -->
-	        <div id="headerDIV"></div>
-	        <!-- 头部-end -->
-	        <!-- header.html 编译后的 template.js -->
-	        <script src="js/mui.min.js"></script>
-	        <script type="text/javascript" src="./template/build/template.js"></script>
-			<script>
-				 mui.init();
-				 var headerDIV = document.getElementById('headerDIV');
-				 mui.plusReady(function(){
-				 	mui.get('http://39.96.31.43:3000/books',{category:'news'},function(success){
-				 			var data ={menu1:success[0].id,menu2:success[1].id,menu3:success[2].id};
-							var headerHTML = template('header',data); 
-								console.log(headerHTML)
-								headerDIV.innerHTML = headerHTML;
-						},'json'
-					);
-				 })
-			</script>
-	
-	    </body>
-	
-	</html>
+9. index.js下的代码
+   
+   <!DOCTYPE html>
+   
+   <html lang="utf-8">
+        <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   
+        </head>
+       
+        <body>
+            <!-- 头部-start -->
+            <div id="headerDIV"></div>
+            <!-- 头部-end -->
+            <!-- header.html 编译后的 template.js -->
+            <script src="js/mui.min.js"></script>
+            <script type="text/javascript" src="./template/build/template.js"></script>
+            <script>
+                 mui.init();
+                 var headerDIV = document.getElementById('headerDIV');
+                 mui.plusReady(function(){
+                     mui.get('http://39.96.31.43:3000/books',{category:'news'},function(success){
+                             var data ={menu1:success[0].id,menu2:success[1].id,menu3:success[2].id};
+                            var headerHTML = template('header',data); 
+                                console.log(headerHTML)
+                                headerDIV.innerHTML = headerHTML;
+                        },'json'
+                    );
+                 })
+            </script>
+       
+        </body>
+   
+   </html>
+
 10. 如果 报<kbd>...is null</kbd>,解决方法，调整**script标签**中的所有东西放在**body中**就可以解决
+
 11. header.html下的代码：
+    
     ```
-    	<ul>
+        <ul>
     <!--通过artTemplate引擎{{}}语法解析，-->
         <li>{{menu1}}</li>
         <li>{{menu2}}</li>
         <li>{{menu3}}</li>
     </ul>
     ```
+
 12. 渲染结果
     ![渲染结果](./src/14.png)
+
 13. tmod运行结果
     ![tmod运行结果](./src/15.png)

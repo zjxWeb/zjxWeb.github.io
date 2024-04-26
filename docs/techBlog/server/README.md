@@ -1,4 +1,4 @@
-#  (一)git的基本操作，大文件上传（码云和GitHub）和出现error处理
+# (一)git的基本操作，大文件上传（码云和GitHub）和出现error处理
 
 ### git的基本操作
 
@@ -9,7 +9,7 @@
 ### 2. 基本操作代码
 
 + git 的全局设置
-
+  
   + ```
     git config --global user.name "用户名"
     git config --global user.email "邮箱"
@@ -20,7 +20,7 @@
 + **记得安装git**
 
 + [git下载链接](https://git-scm.com/downloads)
-
+  
   + ```
     mkdir digital-twins-all
     cd digital-twins-all
@@ -33,7 +33,7 @@
     ```
 
 + 如果已有仓库可以执行以下代码
-
+  
   + ```
     cd existing_git_repo
     git remote add origin 你创建仓库的URL
@@ -43,35 +43,34 @@
 ### 3. 大文件的上传
 
 + 安装 git lfs（一个仓库里面执行一次就好了）
-
+  
   + `git lfs install`
 
 + 将需要上传的文件放置test3文件夹中，跟踪一下你要上传（push）的文件或指定文件类型（以指定文件model.h5为例）
-
+  
   ```bash
   git lfs track "*.zip" 或者 git lfs track "serverYyz.zip"
   ```
 
 + 添加.gitattributes（配置文件，缺少它执行其他git操作可能会有问题，具体作用不详述）
-
+  
   ```bash
   git add .gitattributes
   ```
 
 + 、添加要上传（push）的文件
-
+  
   ```bash
   git add 文件名
   ```
 
 + error
-
+  
   + ![请添加图片描述](./src/1.png)
 
++ `$ rm .git/hooks/pre-push `
 
-  + `$ rm .git/hooks/pre-push `
-
-  + `$ git push -u origin "master"`
++ `$ git push -u origin "master"`
 
 + **其余步骤同上**
 
@@ -79,21 +78,21 @@
 
 #### 生成密钥
 
-  ```
-  ssh-keygen -t rsa -C “email”
-  ```
+```
+ssh-keygen -t rsa -C “email”
+```
 
-  + 输入之间按三下回车，直到出现image,就是虚线的方框,红色部分
-
++ 输入之间按三下回车，直到出现image,就是虚线的方框,红色部分
+  
   +![请添加图片描述](./src/2.png)
 
-  + 可以使用下面的命令进行查看密钥：
-
-    ```bash
-    cat ~/.ssh/id_rsa.pub
-    ```
-
-    + 此处不做展示，自己查看即可
++ 可以使用下面的命令进行查看密钥：
+  
+  ```bash
+  cat ~/.ssh/id_rsa.pub
+  ```
+  
+  + 此处不做展示，自己查看即可
 
 + 下面就到码云或者github上配置，这里以gitee（码云）为例
   ![请添加图片描述](./src/3.png)
@@ -109,36 +108,36 @@
 要检查是否已正确配置Git LFS，您可以使用以下命令：
 
 1. 检查是否已安装Git LFS：
-
+   
    ```
    git lfs version
    ```
-
+   
    如果已成功安装Git LFS，则应该显示LFS版本和Git LFS指针锁定器版本。
 
 2. 查看已跟踪大文件列表：
-
+   
    ```
    git lfs track
    ```
-
+   
    这将列出所有当前被Git LFS跟踪的大文件。此命令列出的所有大文件都应该在上传时使用Git LFS指针锁定器上传。
 
 3. 检查LFS文件的指针：
-
+   
    ```
    git cat-file -p HEAD~1:path/to/largefile.dat
    ```
-
+   
    这将显示大文件的Git LFS指针。如果该文件已成功上传到Git LFS，应该会显示锁定器文件的OID和文件大小等信息。
 
 4. 检查文件是否正确下载：
-
+   
    ```
    git lfs fetch --all
    git lfs checkout
    ```
-
+   
    这将确保在正确配置Git LFS且已正确上传文件到Git LFS时，文件可以正确地下载回来。
 
 如果您在执行上述步骤时遇到任何错误，建议检查是否已在GIT配置文件中正确定义了LFS存储库，例如：
@@ -178,17 +177,17 @@ $ cat ~/.gitconfig
 > 如果出现权限相关的错误可以按照如下步骤进行
 
 1. `ping github.com`
-
+   
    - 如果成功则不需要管
-
+   
    - 如果不成功
-
+   
    - 在 `hosts`文件中添加如下
-
+   
    - ```
      ip   github.com
      ```
-
+     
      - ip获取工具
      - https://sites.ipaddress.com/github.com/
 
@@ -216,7 +215,6 @@ $ cat ~/.gitconfig
 
 - ![请添加图片描述](./src/6.png)
 
-
 ### 4. 进入Tomcat目录，打开配置文件：server.xml
 
 ```
@@ -228,7 +226,6 @@ $ cat ~/.gitconfig
 ### 5. 用浏览器打开url（ip+8080:upload/图片名）
 
 ![请添加图片描述](./src/7.png)
-
 
 ### 使用场景
 
@@ -242,10 +239,10 @@ $ cat ~/.gitconfig
 1. 在本地无法连接服务器
 2. phpMyAdmin无法登录
 3. 修改root密码
-![出现的问题](./src/9.png)
-1.停止mysql数据库
-`/etc/init.d/mysqld stop`
- （或者直接 kill -9 [PID]  杀进程！)
+   ![出现的问题](./src/9.png)
+   1.停止mysql数据库
+   `/etc/init.d/mysqld stop`
+   （或者直接 kill -9 [PID]  杀进程！)
 
 2.执行如下命令
 `mysqld_safe --user=mysql --skip-grant-tables --skip-networking &`
@@ -292,11 +289,9 @@ $ cat ~/.gitconfig
 
 ![11](./src/11.png)
 
-
 ### 2. 查看压缩包
 
 ![查看所要用到的压缩包](./src/12.png)
-
 
 ### 3. 解压缩
 
@@ -377,9 +372,10 @@ const server = app.listen(8081,  ()=> {
     const host = server.address().address
     const port = server.address().port
     console.log("应用实例，访问地址为 http://%s:%s", host, port)
-  
+
   })
 ```
+
 ### 利用回调函数的性质完成db.js:
 
 ```
@@ -401,6 +397,7 @@ exports.base = (sql,data,callback) => {
     connection.end();
 }
 ```
+
 ### 建立router.js路由模块（这里以图书管理为例）：
 
 ```
@@ -414,7 +411,7 @@ exports.base = (sql,data,callback) => {
 
 //  路由处理
  router.get('/',service.showIndex);
- 
+
  router.get('/toBook',service.toAddBook);
 
  router.post('/addBook',service.addBook);
@@ -426,6 +423,7 @@ exports.base = (sql,data,callback) => {
 //  router.get('/dBook',service.deleteBook)
  module.exports = router;
 ```
+
 ### 业务层抽离，专心业务的书写，建立serveice.js业务模块
 
 ```
@@ -484,7 +482,7 @@ exports.toEditBook= (req,res)=>{
     db.base(sql,data,(result) => {
         res.render('editBook',result[0]);
     })
-    
+
 }
 
 
@@ -517,12 +515,12 @@ exports.deleteBook = (req,res) => {
 //     let id = req.query.id;
 //     let sql = "ALTER TABLE book ADD id INT NOT NULL PRIMARY KEY AUTO_INCREMENT FIRST;"
 // }
-
 ```
+
 ### 数据交互采用的art-template
 
 - 目录结构
--![目录结构](./src/18.png)
+  -![目录结构](./src/18.png)
 
 ### 主页面，index.art:
 
@@ -567,6 +565,7 @@ exports.deleteBook = (req,res) => {
 </body>
 </html>
 ```
+
 ### 添加图书个管理图书界面（addBook.art,editBook.art）：
 
 ```
@@ -592,6 +591,7 @@ exports.deleteBook = (req,res) => {
 </body>
 </html>
 ```
+
 ```
 // editBook编辑图书
 <!DOCTYPE html>
@@ -615,15 +615,18 @@ exports.deleteBook = (req,res) => {
 </body>
 </html>
 ```
+
 ### 输入命令`nodemon index.js`来跑自己的程序吧！体验喜悦的时刻到了！
 
 # (六)git文件回滚
+
 ## 1. 查看提交日志
+
 + ` git reflog`
-## 2. 回滚
+  
+  ## 2. 回滚
+
 + `git reset --hard 8f3d055`(此处的‘8f3d055’为id，在日志中有的，可以依照自己的日志确定要恢复的版本)
-
-
 
 # (七)apt下载无法获得锁
 
@@ -632,38 +635,38 @@ exports.deleteBook = (req,res) => {
 如果在使用`apt`命令时出现“无法获得/ var / lib / dpkg / lock-frontend - open（11：资源临时不可用）”或“无法获得/ var / lib / dpkg / lock -open（11：资源临时不可用）”等错误消息，则表示系统中已存在一个APT进程正在运行，该进程可能在更新或安装软件包。在这种情况下，您可以执行以下操作：
 
 1. 确定哪个程序正在使用APT：
-
+   
    ```
    ps aux | grep apt
    ```
-
+   
    这将为您提供正在运行的APT进程的列表。从中找到ID号（PID）的进程，确认是否是您可以关闭其并释放APT锁的程序。
 
 2. 杀死APT进程：
-
+   
    如果找到了整在使用APT的进程，请尝试使用以下命令来杀死进程：
-
+   
    ```
    sudo kill -9 <PID>
    ```
-
+   
    其中， `<PID>` 是上一步找到的APT进程的PID号。这将中止进程并释放APT锁。
 
 3. 清除APT锁：
-
+   
    在完成上述操作之后，您需要清除APT锁文件。可以使用以下命令清除APT锁：
-
+   
    ```
    sudo rm /var/lib/{dpkg,apt}/lock
    sudo dpkg --configure -a
    ```
-
+   
    第一条命令将删除APT锁文件。第二个命令将配置缺失的程序包并重新配置APT。
 
 4. 更新APT：
-
+   
    在执行完上述步骤后，使用以下命令更新APT缓存：
-
+   
    ```
    sudo apt update
    ```
