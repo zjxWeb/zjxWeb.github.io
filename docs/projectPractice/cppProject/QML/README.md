@@ -13,7 +13,7 @@
 2. ![5](./src/5.png)
 
 3. 添加之后完成之后的路径
-
+   
    ![6](./src/6.png)
 
 ## 案列 || demo
@@ -30,88 +30,229 @@ Text {
 
 ### 2. `Canvas`画圆角
 
-> 针对项目当中要有不同地方的圆角，这样就需要使用 `Canvas`来进行绘制一下就是针对圆角的绘制
+> 针对项目当中要有矩形中不同地方的圆角，这样就需要使用 `Canvas`来进行绘制一下就是针对圆角的绘制
 
 ```c++
 import QtQuick
 import QtQuick.Controls 2.15
 
 Window {
-	visible: true
-	width: 1000
-	height: 900
-		Canvas {
-		id: canvas
-		anchors.fill: parent
-		
-		onPaint: {
-			var ctx = getContext("2d");
+    visible: true
+    width: 1000
+    height: 900
+        Canvas {
+        id: canvas
+        anchors.fill: parent
+
+        onPaint: {
+            var ctx = getContext("2d");
             // 渐变色的设置
-			var gradient = ctx.createLinearGradient(x,y+height,x+width,y+height)
+            var gradient = ctx.createLinearGradient(x,y+height,x+width,y+height)
             gradient.addColorStop(0.0, "#191919")
             gradient.addColorStop(1.0, "#272829")
-			var x = 50;
-			var y = 50;
-			var width = 200;
-			var height = 100;
-			var cornerSize = 20;
-			// 左下
-			// ctx.beginPath();
-			// ctx.moveTo(x + cornerSize, y);
-			// ctx.lineTo(x + width, y);
-			// ctx.lineTo(x + width, y + height);
-			// ctx.arcTo(x + width, y + height, x + width - cornerSize, y + height, cornerSize);
-			// ctx.lineTo(x + cornerSize, y + height);
-			// ctx.arcTo(x, y + height, x, y + height - cornerSize, cornerSize);
-			// ctx.lineTo(x, y + cornerSize);
-			// ctx.lineTo(x, y);
-			// ctx.closePath();
+            var x = 50;
+            var y = 50;
+            var width = 200;
+            var height = 100;
+            var cornerSize = 20;
+            // 左下
+            // ctx.beginPath();
+            // ctx.moveTo(x + cornerSize, y);
+            // ctx.lineTo(x + width, y);
+            // ctx.lineTo(x + width, y + height);
+            // ctx.arcTo(x + width, y + height, x + width - cornerSize, y + height, cornerSize);
+            // ctx.lineTo(x + cornerSize, y + height);
+            // ctx.arcTo(x, y + height, x, y + height - cornerSize, cornerSize);
+            // ctx.lineTo(x, y + cornerSize);
+            // ctx.lineTo(x, y);
+            // ctx.closePath();
 
-			// 带圆角的矩形
-			// ctx.beginPath();
-			// ctx.moveTo(x + cornerSize, y);
-			// ctx.arcTo(x + width, y, x + width, y + cornerSize, cornerSize);//右上
-			// ctx.lineTo(x + width, y + height - cornerSize);
-			// ctx.arcTo(x + width, y + height, x + width - cornerSize, y + height, cornerSize);//右下
-			// ctx.lineTo(x + cornerSize, y + height);
-			// ctx.arcTo(x, y + height, x, y + height - cornerSize, cornerSize);//左下
-			// ctx.lineTo(x, y + cornerSize);
-			// ctx.arcTo(x, y, x + cornerSize, y, cornerSize);// 左上
-			// ctx.closePath();
+            // 带圆角的矩形
+            // ctx.beginPath();
+            // ctx.moveTo(x + cornerSize, y);
+            // ctx.arcTo(x + width, y, x + width, y + cornerSize, cornerSize);//右上
+            // ctx.lineTo(x + width, y + height - cornerSize);
+            // ctx.arcTo(x + width, y + height, x + width - cornerSize, y + height, cornerSize);//右下
+            // ctx.lineTo(x + cornerSize, y + height);
+            // ctx.arcTo(x, y + height, x, y + height - cornerSize, cornerSize);//左下
+            // ctx.lineTo(x, y + cornerSize);
+            // ctx.arcTo(x, y, x + cornerSize, y, cornerSize);// 左上
+            // ctx.closePath();
 
-			// 右上+左上
-			// ctx.beginPath();
-			// ctx.moveTo(x + cornerSize, y);
-			// ctx.arcTo(x + width, y, x + width, y + cornerSize, cornerSize);//右上
-			// ctx.lineTo(x + width, y + height);
-			// ctx.lineTo(x + cornerSize, y + height);
-			// ctx.lineTo(x, y + height);
-			// ctx.arcTo(x, y, x + cornerSize, y, cornerSize);// 左上
-			// ctx.closePath();
+            // 右上+左上
+            // ctx.beginPath();
+            // ctx.moveTo(x + cornerSize, y);
+            // ctx.arcTo(x + width, y, x + width, y + cornerSize, cornerSize);//右上
+            // ctx.lineTo(x + width, y + height);
+            // ctx.lineTo(x + cornerSize, y + height);
+            // ctx.lineTo(x, y + height);
+            // ctx.arcTo(x, y, x + cornerSize, y, cornerSize);// 左上
+            // ctx.closePath();
 
-			// 右下
-			ctx.beginPath();
-			ctx.moveTo(x + cornerSize, y);
-			ctx.lineTo(x + width, y);
-			ctx.lineTo(x + width, y + height - cornerSize);
-			ctx.arcTo(x + width, y + height, x + width - cornerSize, y + height, cornerSize);//右下
-			ctx.lineTo(x + width, y + height);
-			ctx.lineTo(x, y + height);
-			ctx.lineTo(x, y);
+            // 右下
+            ctx.beginPath();
+            ctx.moveTo(x + cornerSize, y);
+            ctx.lineTo(x + width, y);
+            ctx.lineTo(x + width, y + height - cornerSize);
+            ctx.arcTo(x + width, y + height, x + width - cornerSize, y + height, cornerSize);//右下
+            ctx.lineTo(x + width, y + height);
+            ctx.lineTo(x, y + height);
+            ctx.lineTo(x, y);
 
 
-			ctx.closePath();
+            ctx.closePath();
 
-			ctx.fillStyle = gradient;
-			ctx.strokeStyle = 'transparent';// 边框
-			ctx.fill();
-			ctx.stroke();
-		}
-	}
+            ctx.fillStyle = gradient;
+            ctx.strokeStyle = 'transparent';// 边框
+            ctx.fill();
+            ctx.stroke();
+        }
+    }
 }
 ```
 
+### 3.  关闭按钮
 
+```qml
+import QtQuick
+import QtQuick.Controls 2.15
+
+Window {
+    width: 640
+    height: 480
+    visible: true
+    title: qsTr("Hello World")
+    Canvas {
+    id: canvas
+    anchors.fill: parent
+
+        onPaint: {
+            var ctx = getContext("2d");
+
+            // 定义矩形位置和大小
+            var rectX = 0;
+            var rectY = 0;
+            var rectWidth = 59;
+            var rectHeight = 59;
+
+            // 定义圆弧半径
+            var arcRadius = 8;
+
+            // 计算圆弧位置
+            var arcX = rectX + rectWidth;//109
+            var arcY = rectY// 50
+            var arcStartX = arcX + arcRadius;//117
+            var arcStartY = rectY;//50
+            var arcEndX = arcStartX; //117
+            var arcEndY = arcStartY + arcRadius;// 58r
+            console.log(arcX,arcY,arcStartX,arcStartY,arcEndX,arcEndY)
+
+            // 绘制矩形
+            ctx.fillStyle = "#000000";
+
+            // 绘制右上角圆弧
+            ctx.beginPath();
+            ctx.moveTo(rectX, rectY);// 50 50
+            ctx.lineTo(arcX, arcY);// 109 50
+            ctx.arcTo(arcStartX, arcStartY, arcEndX, arcEndY, arcRadius);
+            ctx.lineTo(arcEndX, arcEndY);
+            ctx.lineTo(arcEndX, rectY + rectHeight);
+            ctx.lineTo(rectX, rectY + rectHeight);
+            ctx.closePath();
+            ctx.fill();
+            // 计算 X 图标的位置
+            var xIconSize = 20;
+            var xIconX = rectX + 3　+ (rectWidth - xIconSize) / 2;
+            var xIconY = rectY + (rectHeight - xIconSize) / 2;
+
+            // 绘制 X 关闭图标
+            ctx.beginPath();
+            ctx.moveTo(xIconX, xIconY);
+            ctx.lineTo(xIconX + xIconSize, xIconY + xIconSize);
+            ctx.moveTo(xIconX + xIconSize, xIconY);
+            ctx.lineTo(xIconX, xIconY + xIconSize);
+            ctx.strokeStyle = Qt.rgba(255, 255, 255, 0.7);
+            ctx.lineWidth = 3;
+            ctx.stroke();
+        }
+    }
+}
+```
+
+![](./src/8.png)
+
+### 4. QT 进度条放`gif`
+
+```cpp
+#include <QApplication>
+#include <QProgressBar>
+#include <QPropertyAnimation>
+#include <QPixmap>
+#include <QMovie>
+#include <QLabel>
+
+
+int main(int argc, char *argv[])
+{
+
+    QApplication a(argc, argv);
+
+    QProgressBar progressBar;
+    QLabel label(&progressBar);
+    QMovie movie(":/tenor-1.gif");  // 从资源中加载 GIF 图片
+    label.setMovie(&movie);
+    movie.start();
+
+    progressBar.show();
+
+    return a.exec();
+}
+
+```
+
+>  效果就是导航栏上放一个gif图片的动态效果，当然加载 `gif`的相关东西也是可以参考；
+
+### QT进度条加入css属性
+
+```cpp
+#include <QApplication>
+#include <QProgressBar>
+#include <QTimer>
+
+int main(int argc, char *argv[])
+{
+    QApplication a(argc, argv);
+
+    QProgressBar progressBar;
+    progressBar.setRange(0, 100); // 设置进度条范围为 0 到 100
+
+    QTimer timer;
+    int progress = 0;
+
+    // 每隔一段时间更新进度条的值，模拟加载过程
+    QObject::connect(&timer, &QTimer::timeout, [&](){
+        progress += 1;
+        progressBar.setValue(progress);
+
+        if (progress >= 100) {
+            timer.stop();
+        }
+    });
+
+    timer.start(100); // 每100毫秒更新一次进度条
+
+    // 设置进度条的样式，使其具有流动的效果
+    progressBar.setStyleSheet("QProgressBar { border: 2px solid grey; border-radius: 5px; text-align: center; }"
+                              "QProgressBar::chunk { background-color: #37c9e1; width: 20px; margin: 1px; }");
+
+    progressBar.show();
+
+    return a.exec();
+}
+
+```
+
+![](./src/9.png)
 
 ## 属性
 
@@ -174,7 +315,7 @@ Item {
 ```
 
 + 在上面的示例中，我们定义了一个 Loader 组件，根据 showComponent 属性的值来加载或卸载 componentA 组件。当 showComponent 为 true 时，componentA 被加载并显示；当 showComponent 为 false 时，componentA 被卸载。
-+  通过点击按钮，可以动态切换 showComponent 属性的值，从而实现类似 v-if 的效果。 
++ 通过点击按钮，可以动态切换 showComponent 属性的值，从而实现类似 v-if 的效果。 
 + 这种方法可以让你在 QML 中根据条件动态加载组件，实现类似于 Vue.js 中 v-if 的功能。
 
 ### 布局
@@ -242,6 +383,3 @@ Grid {
 > 在qml中的X，Y定位相对于web中的absolute定位
 
 + 这种定位的位置，是`相对于它的父级元素而言的，x，y,`而不是相对于 全局的 `window`来定位的，重要！重要！重要！
-
-
-
