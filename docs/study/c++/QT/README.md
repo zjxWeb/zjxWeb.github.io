@@ -1,5 +1,7 @@
 # QT大法
 
+[qml实战及其相关属性](/projectPractice/cppProject/QML/)
+
 ## 1. 入门介绍
 
 ### 1.1 版本控制工具
@@ -39,7 +41,6 @@ int main(int argc, char *argv[])
     // 让代码阻塞到这行
     return a.exec();
 }
-
 ```
 
 ### 2.2 注意和帮助
@@ -72,6 +73,7 @@ myWidget::~myWidget()
 {
 }
 ```
+
 ### 2.3 QT创建流程
 
 + ![4](./src/4.png)
@@ -82,7 +84,8 @@ myWidget::~myWidget()
 + ![9](./src/9.png)
 + ![10](./src/10.png)
 + ![11](./src/11.png)
-## 3. 常用控件
+  
+  ## 3. 常用控件
 
 ### 3.1 按钮
 
@@ -135,7 +138,7 @@ myWidget::myWidget(QWidget *parent)
       // 参数2 发送的信号（函数的地址）
       // 参数3 信号的接收者
       // 参数4 处理的槽函数
-  	// connect(btn2,&QPushButton::clicked,this,&myWidget::close);
+      // connect(btn2,&QPushButton::clicked,this,&myWidget::close);
       connect(btn2,&QPushButton::clicked,this,&QWidget::close);
   ```
 
@@ -163,7 +166,6 @@ signals:
 };
 
 #endif // TEACHER_H
-
 ```
 
 + `teacher.cpp`
@@ -296,7 +298,7 @@ Widget::~Widget()
 + 需要利用函数指针，明确指向函数的地址
 
 ```C++
-	// 连接带参数的 信号和槽
+    // 连接带参数的 信号和槽
     // 指针-> 地址
     // 函数指针 -> 函数地址
     void(Teacher:: *teacherSignal)(QString) = &Teacher::hungry;
@@ -319,7 +321,7 @@ void Student::treat(QString foodName)
 ### 4.3 信号连接信号
 
 ```c++
- 	// 点击一个 下课的按钮，再触发下课
+     // 点击一个 下课的按钮，再触发下课
     QPushButton * btn = new QPushButton("下课",this);
     this->resize(600,400);
     // 点击按钮 触发下课
@@ -340,12 +342,12 @@ void Student::treat(QString foodName)
 + 扩展
   + 信号是可以连接信号
   + 一个信号可以连接多个槽函数
-  +  多个信号 可以连接 同一个槽函数
-  +  信号和槽函数的参数 必须是一一对应的
-  +  信号和槽函数的参数个数  信号的参数个数  可以多于  槽函数的参数个数
+  + 多个信号 可以连接 同一个槽函数
+  + 信号和槽函数的参数 必须是一一对应的
+  + 信号和槽函数的参数个数  信号的参数个数  可以多于  槽函数的参数个数
 
 ```c++
-	// QT4版本以前的信号和槽连接方式
+    // QT4版本以前的信号和槽连接方式
     // 利用 QT4信号槽 连接无参版本
     // Qt4版本底层sIGNAL ( "hungry")SLOT ( "treat")
     connect(zt,SIGNAL(hungry()),st,SLOT(treat()));
@@ -362,7 +364,8 @@ void Student::treat(QString foodName)
   + `[ capture ] ( params ) opt -> ret { body; };`
   + 其中 capture 是捕获列表，params 是参数表，opt 是函数选项，ret 是返回值类型，body是函数体。
 + lambda 表达式还可以通过捕获列表捕获一定范围内的变量：
-> [] 不捕获任何变量。
+  
+  > [] 不捕获任何变量。
 
 > [&] 捕获外部作用域中所有变量，并作为引用在函数体中使用（按引用捕获）。
 
@@ -381,11 +384,11 @@ void Student::treat(QString foodName)
 ```
 
 + 可修改标示符:
-
+  
   + mutable 声明，这部分可以省略。按值传递函数对象参数时，加上 mutable修饰符后，可以修改按值传递进来的拷贝（注意是能修改拷贝，而不是值本身)。
-
+  
   ```c++
-    	QPushButton * myBtn = new QPushButton (this) ;
+        QPushButton * myBtn = new QPushButton (this) ;
       QPushButton * myBtn2 = new QPushButton (this);myBtn2->move (100,100);
       int m = 10;
       connect (myBtn,&QPushButton::clicked,this,[m] ()mutable { m = 100+10; qDebug () <<m; });
@@ -394,11 +397,11 @@ void Student::treat(QString foodName)
   ```
 
 + 函数返回值
-
+  
   + ->返回值类型，标识函数返回值的类型，当返回值为void，或老函数体中只有一处return 的地方（此时编译器可以自动推断出返回值类型）时，这部分可以省略。
 
 + 函数体
-
+  
   + {}，标识函数的实现，这部分不能省略，但函数体可以为空。
 
 + 案列
@@ -510,28 +513,30 @@ MainWindow::~MainWindow()
 
 ## 7. 对话框
 
-+  模态和非模态对话框
-```c++
-      // 点击新建按钮 弹出一个对话框
-      connect(ui->actionnew,&QAction::triggered,[=](){
-          // 对话框 分类
-          // 模态对话框（可以对其他窗口进行操作） 非模态对话框（可以对其他窗口进行操作）
-          // 模态创建 阻塞
++ 模态和非模态对话框
+  
+  ```c++
+     // 点击新建按钮 弹出一个对话框
+     connect(ui->actionnew,&QAction::triggered,[=](){
+         // 对话框 分类
+         // 模态对话框（可以对其他窗口进行操作） 非模态对话框（可以对其他窗口进行操作）
+         // 模态创建 阻塞
   //        QDialog dlg(this);
   //        dlg.exec();
   //        dlg.resize(200,100);
   //        qDebug() << "模态对话框弹出";
   
-          // 非模态对话框
-          QDialog * dlg2 =  new QDialog(this);
-          dlg2->resize(300,200);
-          dlg2->setAttribute(Qt::WA_DeleteOnClose);
-          dlg2->show();
+         // 非模态对话框
+         QDialog * dlg2 =  new QDialog(this);
+         dlg2->resize(300,200);
+         dlg2->setAttribute(Qt::WA_DeleteOnClose);
+         dlg2->show();
   
-      });
-```
+     });
+  ```
 
 + 标准对话框
+  
   + QColorDialog:   选择颜色;
   + QEileDialog:   选择文件或者目录;
   + QFontDialgg:   选择字体;
@@ -542,7 +547,7 @@ MainWindow::~MainWindow()
   + QPxintPxexiewDialog:打印预览;
   + QProgxessDialog:  显示操作过程。
 
-``` c++
+```c++
  // 消息对话框
         // 错误对话框
 //        QMessageBox::critical(this,"critical","错误");
@@ -579,7 +584,7 @@ MainWindow::~MainWindow()
         // 字体对话框
         bool flage;
         QFont font = QFontDialog::getFont(&flage,QFont("华文彩云",26));
-        qDebug()<< "字体： " << font.family().toUtf8().data() << "字号： " << font.pointSize() << "是否加粗 " << 			font.bold() << "是否倾斜 " << font.italic() ;
+        qDebug()<< "字体： " << font.family().toUtf8().data() << "字号： " << font.pointSize() << "是否加粗 " <<             font.bold() << "是否倾斜 " << font.italic() ;
 ```
 
 ## 8. 界面布局
@@ -906,10 +911,10 @@ bool myLabel::event(QEvent *e)
     // 其他事件 交给父类处理  默认处理
     return QLabel::event(e);
 }
-
 ```
 
 + ev->button() 可以判断所有案件 Qt::LeftButton  Qt::RightButton
+
 + ev->buttons()判断组合案件  判断move时候的左右键 结合& 操作符
 
 + mylabel.h
@@ -945,7 +950,6 @@ signals:
 };
 
 #endif // MYLABEL_H
-
 ```
 
 + widget.cpp
@@ -1028,8 +1032,6 @@ Widget::~Widget()
 {
     delete ui;
 }
-
-
 ```
 
 + widget.h
@@ -1067,22 +1069,20 @@ private:
     Ui::Widget *ui;
 };
 #endif // WIDGET_H
-
 ```
-
-
 
 ### 11.2  定时器
 
 + 第一种定时器
-
+  
   + 利用事件 void timerEvent(QTimerEvent *ev)
-
+  
   + 启动定时器 startTimer（1000） 毫秒为单位
-
+  
   + timerEvent 的返回值是定时器的唯一标识，可以和ev-> timerId做比较
 
 + 第二种定时器
+  
   + 利用定时器类 QTimer
   + 创建定时器对象 ` QTimer * timer = new QTimer(this);`
   + 启动定时器 ` timer->start(500);毫秒`
@@ -1094,7 +1094,7 @@ private:
 + ![17](./src/17.png)
 
 + 用途
-
+  
   + 用于事件的分发
   + 也可以做拦截操作（**不建议**）
 
@@ -1130,7 +1130,7 @@ private:
 + 在程序将事件分发到事件分发器前，可以利用过滤器做拦截
 
 + 步骤
-
+  
   + 给控件安装事件过滤器
   + 重写eventFilter函数 （obj ，ev）
 
@@ -1190,17 +1190,17 @@ private:
 ### 11.4 绘图事件
 
 + QPainter绘画
-
+  
   + 绘图事件void paintEvent()
-
+  
   + 声明一个画家对象QPainter    painter(this)    this 指定绘图设备
-
+  
   + 画线、画圆、画矩形、画文字√
-
+  
   + 设嚣画笔QPen设置画笔宽度、风格
-
+  
   + 设置画刷QBrush设置画刷风格
-
+  
   + ```c++
     // 绘图事件
     void Widget::paintEvent(QPaintEvent *)
@@ -1235,7 +1235,7 @@ private:
     ```
 
 + QPinter高级设置
-
+  
   + ```c++
       //高级设置
         QPainter painter(this);
@@ -1256,6 +1256,7 @@ private:
     ```
 
 + 手动调用绘画事件
+  
   + 如果想要手动调用绘图随事件  利用update
   + 利用画家画图片  ` painter.drawPixmap(posx,10,QPixmap(":/img/cat.jpg"));`
 
@@ -1263,15 +1264,15 @@ private:
 
 + 绘图设备是指继承QPainterDevice,的子类。9t一共提供了四个这样的类，分别
   是QPixmap、QBitmap.QImage和QPicture。其中，
-
+  
   + QPixmap,专门为图像在屏幕上的显示做了优化
-
+  
   + QBitmap,是 QPixmap,的一个子类，它的色深限定为1，可以使用QPixmap_的isQBitmap()函数来确定这个QPixmap,是不是一个
-
+    
     QBitmap。
-
+  
   + QImage.专门为图像的像素级访凤做了优化。
-
+  
   + QPicture则可以记录和重现 QPaintex的各条命令。
 
 ```c+
@@ -1463,7 +1464,7 @@ Widget::~Widget()
 ## 14. QT 注册实例
 
 > 首先要在 `.pro文件中添加  network`
->
+> 
 > ```qt
 > QT       += core gui network
 > ```
@@ -1555,4 +1556,3 @@ void Login::on_regButton_clicked()
 
 }
 ```
-
