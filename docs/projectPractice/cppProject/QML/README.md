@@ -207,7 +207,6 @@ int main(int argc, char *argv[])
 
     return a.exec();
 }
-
 ```
 
 >  效果就是导航栏上放一个gif图片的动态效果，当然加载 `gif`的相关东西也是可以参考；
@@ -249,7 +248,6 @@ int main(int argc, char *argv[])
 
     return a.exec();
 }
-
 ```
 
 ![](./src/9.png)
@@ -317,6 +315,80 @@ Item {
 + 在上面的示例中，我们定义了一个 Loader 组件，根据 showComponent 属性的值来加载或卸载 componentA 组件。当 showComponent 为 true 时，componentA 被加载并显示；当 showComponent 为 false 时，componentA 被卸载。
 + 通过点击按钮，可以动态切换 showComponent 属性的值，从而实现类似 v-if 的效果。 
 + 这种方法可以让你在 QML 中根据条件动态加载组件，实现类似于 Vue.js 中 v-if 的功能。
+
+### Overlay
+
++ Overlay QML类型是用于在其子项之上显示另一组子项的布局类型。Overlay的子项会覆盖在其它子项之上，可以用于创建浮动窗口、弹出菜单等效果。
+
+### qml之ShaderEffectSource获取控件快照
+
+> **ShaderEffectSource**和**grabToImage**的大致区别：  
+> grabToImage接口可以提取出图像，但是这个需要把显存中的数据复制到内存中,非常耗时，而ShaderEffectSource是完全GPU内实现，不存在拷贝到内存的开销。
+
++ **ShaderEffectSource**类型将**sourceItem**渲染为纹理并在场景中显示
+  
+  + `hideSource：`
+    
+    + 如果此属性为true，则sourceItem将被隐藏，尽管它仍将呈现到纹理中。 与通过将visible设置为false来隐藏sourceItem相反，将此属性设置为true不会阻止鼠标或键盘输入到达sourceItem。
+  
+  + `live`：
+    
+    + ShaderEffectSource默认情况下会随着设置的Item变化而变化,设置为false渲染完一次后，就不会发生变化
+  
+  + **`sourceItem`**：  
+    
+    + 就是生成快照的数据源，如果**live**为true，则将其设置为null将释放纹理资源
+
+```qml
+import QtQuick 2.0
+Window {
+    width: 640
+    height: 480
+    visible: true
+    title: qsTr("Hello World")
+
+    Rectangle {
+            id:id_root
+            width: 800
+            height: 400
+            color:"black"
+            Rectangle {
+                width: 400
+                height: 200
+                gradient: Gradient {
+                    GradientStop { position: 0; color: "white" }
+                    GradientStop { position: 1; color: "gray" }
+                }
+                Row {
+                    id:id_row
+                    opacity: 1.0
+                    Item {
+                        id: foo
+                        width: 100; height: 100
+                        Rectangle { x: 5; y: 5; width: 60; height: 60; color: "red" }
+                        Rectangle { x: 20; y: 20; width: 60; height: 60; color: "orange" }
+                        Rectangle { x: 35; y: 35; width: 60; height: 60; color: "yellow" }
+                    }
+                }
+                ShaderEffectSource {
+                    width: 100; height: 70
+                    anchors.horizontalCenter: id_row.horizontalCenter
+                    anchors.top: id_row.bottom
+                    sourceItem: foo
+                    opacity:0.3
+                    rotation: 0 // 快照的旋转角度
+                    format:ShaderEffectSource.Alpha //单通道（Alpha通道）
+                    //format: ShaderEffectSource.RGB //三通道
+                    //format: ShaderEffectSource.RGBA // 四通道
+                    //mipmap:true
+                }
+            }
+        }
+
+}
+
+
+```
 
 ### 布局
 
