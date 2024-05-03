@@ -265,7 +265,7 @@ class DIVComponent extends HTMLElement {
         dialog.appendChild(btn)
         btn.addEventListener('click', () => {
             dialog.style.display = "none"
-            location.reload();
+            // location.reload();
         })
 
         shadow.appendChild(button);
