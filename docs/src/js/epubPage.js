@@ -165,8 +165,8 @@ class DIVComponent extends HTMLElement {
             var book = ePub(url);
             var rendition = book.renderTo(epubShow, {
                 // 默认双页显示
-                width: '95%',
-                height: '95%',
+                width: '100%',
+                height: '100%',
                 // 单页滚动显示epub，推荐加上下面两个属性
                 // manager: "continuous",
                 // flow: "scrolled"
@@ -214,14 +214,14 @@ class DIVComponent extends HTMLElement {
               button.style.backgroundColor = 'LightSkyBlue';
           });
           var dialog = document.createElement('dialog');
-          dialog.style.width = "100vw";
-          dialog.style.height = "100vh";
+          dialog.style.width = "93vw";
+          dialog.style.height = "90vh";
         //   dialog.style.backgroundColor = "rgba(0,0,0,0.5)"
           dialog.style.dialog = "none"
           dialog.style.zIndex = "9999"
           dialog.style.position = "fixed"
-          dialog.style.top = "0"
-          dialog.style.left = "0"
+          dialog.style.top = "3vh"
+          dialog.style.left = "-4.5vw"
         // 获取传入的src属性值
         var btnsrc = this.getAttribute('src');
         button.setAttribute('src', btnsrc);
