@@ -6,7 +6,7 @@ teme.innerText = "主题";
 
 // 样式
 teme.style.position = "fixed";
-teme.style.right = "40px";
+teme.style.right = "1vw";
 teme.style.bottom = "66px";
 teme.style.width = "65px";
 teme.style.height = "35px";
