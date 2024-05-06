@@ -11,6 +11,7 @@ class DIVComponent extends HTMLElement {
             containerDiv.style.position = 'fixed';
             containerDiv.style.left = '40%';
             containerDiv.style.top = '0px';
+            containerDiv.style.zIndex = '9999';
           
             // 创建背景色输入框  
             var backcolorInput = document.createElement('input');  
@@ -58,6 +59,7 @@ class DIVComponent extends HTMLElement {
             smallFont.style.lineHeight = "20px";
             smallFont.style.textAlign = "center";
             smallFont.style.cursor = "pointer";
+            smallFont.style.zIndex = "9999";
           
             // 字体放大
             var bigFont = document.createElement('button');
@@ -78,6 +80,7 @@ class DIVComponent extends HTMLElement {
             bigFont.style.lineHeight = "20px";
             bigFont.style.textAlign = "center";
             bigFont.style.cursor = "pointer";
+            bigFont.style.zIndex = "9999";
             
           
             // 添加文本标签  
@@ -220,8 +223,8 @@ class DIVComponent extends HTMLElement {
           dialog.style.dialog = "none"
           dialog.style.zIndex = "9999"
           dialog.style.position = "fixed"
-          dialog.style.top = "3vh"
-          dialog.style.left = "-4.5vw"
+          dialog.style.top = "0"
+          dialog.style.left = "0"
         // 获取传入的src属性值
         var btnsrc = this.getAttribute('src');
         button.setAttribute('src', btnsrc);
@@ -262,6 +265,7 @@ class DIVComponent extends HTMLElement {
         btn.style.lineHeight = "20px";
         btn.style.textAlign = "center";
         btn.style.cursor = "pointer";
+        btn.style.zIndex = "9999"
         dialog.appendChild(btn)
         btn.addEventListener('click', () => {
             dialog.style.display = "none"
