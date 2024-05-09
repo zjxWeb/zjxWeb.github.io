@@ -386,8 +386,155 @@ Window {
         }
 
 }
+```
+
+### Q_PROPERTY宏
+
+> 要声明属性，需要继承QObject并使用Q_PROPERTY()宏。
+
+```qml
+Q_PROPERTY(type name
+           (READ getFunction [WRITE setFunction] |
+            MEMBER memberName [(READ getFunction | WRITE setFunction)])
+           [RESET resetFunction]
+           [NOTIFY notifySignal]
+           [REVISION int]
+           [DESIGNABLE bool]
+           [SCRIPTABLE bool]
+           [STORED bool]
+           [USER bool]
+           [CONSTANT]
+           [FINAL])
+```
+
+> 在QML中访问C++，通过C++类暴露属性来使用，接上面实例如下：
+
+1. 新建Qt Quick工程：qt PROPERTY
+
+2. 新建C++类TestProperty，公有继承于QObject
+
+3. 为TestProperty类设置上述属性title
+
+        Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged);
+
+4. 属性读写函数声明与实现
+
+> `TestProperty.h`
+
+```cpp
+#ifndef TESTPROPERTY_H
+#define TESTPROPERTY_H
+
+#include <QObject>
+
+class TestProperty : public QObject
+{
+    Q_OBJECT
+public:
+    explicit TestProperty(QObject *parent = nullptr);
+    Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged);
+
+    QString title();
+    void setTitle(QString strTitle);
 
 
+signals:
+    void titleChanged();
+
+public slots:
+
+private:
+    QString     m_title;
+
+};
+
+#endif // TESTPROPERTY_H
+
+```
+
+> `TestProperty.cpp`
+
+```cpp
+#include "TestProperty.h"
+
+TestProperty::TestProperty(QObject *parent) : QObject(parent)
+{
+
+}
+
+QString TestProperty::title()
+{
+    return  m_title;
+}
+
+void TestProperty::setTitle(QString strTitle)
+{
+    m_title = strTitle;
+    emit titleChanged();
+}
+```
+
+> `main.cpp`
+
+```cpp
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
+
+#include "TestProperty.h"
+
+
+int main(int argc, char *argv[])
+{
+    QGuiApplication app(argc, argv);
+
+    // 注册这个类，到处到qml
+    // template<typename T>
+    // int qmlRegisterType(const char *uri, int versionMajor, int versionMinor, const char *qmlName);
+
+    // template<typename T, int metaObjectRevision>
+    // int qmlRegisterType(const char *uri, int versionMajor, int versionMinor, const char *qmlName);
+
+    qmlRegisterType<TestProperty>("TestProperty", 1, 0, "TestProperty");
+
+    QQmlApplicationEngine engine;
+    const QUrl url(QStringLiteral("qrc:/12/Main.qml"));
+    QObject::connect(
+        &engine,
+        &QQmlApplicationEngine::objectCreationFailed,
+        &app,
+        []() { QCoreApplication::exit(-1); },
+        Qt::QueuedConnection);
+    engine.load(url);
+
+    return app.exec();
+}
+
+```
+
+> `main.qml   `
+
+```qml
+import QtQuick 2.9
+import QtQuick.Window 2.2
+// 1. 导入
+import TestProperty 1.0
+
+Window {
+    visible: true
+    width: 640
+    height: 480
+    title: qsTr("Hello Qt")
+
+    // 2. 使用
+    TestProperty{
+        id: testProperty
+        title: qsTr("Hello World")
+    }
+
+    Component.onCompleted: {
+        title = testProperty.title;
+    }
+}
 ```
 
 ### 布局
