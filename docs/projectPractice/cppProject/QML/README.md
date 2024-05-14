@@ -18,6 +18,8 @@
 
 ## 案列 || demo
 
+> 可以参考的资料：`https://github.com/gongjianbo/MyTestCode/blob/master/README.md`
+
 ### 1. 文本省略号
 
 ```qml
@@ -536,6 +538,81 @@ Window {
     }
 }
 ```
+
+### invokeMethod()
+
+> Qt元对象系统是Qt最核心的一个基础特性，元对象系统负责信号和插槽对象间通信机制、运行时类型信息和Qt属性系统。为应用程序中使用的每个QObject子类创建一个QMetaObject实例，此实例存储QObject子类的所有元信息。通过元对象系统，你可以查询QObject的某个派生类的类名、有哪些信号、槽、属性、可调用方法等信息，然后可以使用QMetaObject::invokeMethod()调用QObject的某个注册到元对象系统中的方法。
+
+#### QMetaObject::invokeMethod()
+
+>  QMetaObject的invokeMethod()方法用来调用一个对象的信号、槽、可调用的方法。这是一个静态方法，其函数原型如下
+
+```cpp
+bool QMetaObject::invokeMethod(QObject *obj, const char *member, 
+							Qt::ConnectionType type, 
+							QGenericReturnArgument ret,
+							QGenericArgument val0 = QGenericArgument(nullptr), 
+							QGenericArgument val1 = QGenericArgument(), 
+							QGenericArgument val2 = QGenericArgument(), 
+						    QGenericArgument val3 = QGenericArgument(), 
+							QGenericArgument val4 = QGenericArgument(),
+							QGenericArgument val5 = QGenericArgument(),
+							QGenericArgument val6 = QGenericArgument(), 
+							QGenericArgument val7 = QGenericArgument(),
+							QGenericArgument val8 = QGenericArgument(),
+							QGenericArgument val9 = QGenericArgument())
+
+```
+
++ 在最新的Qt5.13中，QMetaObject中的invokeMethod函数一共有五个，除上面这个以外其他都是重载函数
+
++ 该函数就是调用obj对象中的member方法，如果调用成功则返回true，调用失败则返回false，失败的话要么就是没有这个方法要么就是参数传入不对。
+
++ 参数介绍
+  
+  + 第一个参数是被调用对象的指针；
+  
+  + 第二个参数是方法的名字；
+  
+  + 第三个参数是连接类型。可以指定连接类型，来决定是同步还是异步调用。
+    
+    + 如果type是Qt :: DirectConnection，则会立即调用该成员。
+    
+    + 如果type是Qt :: QueuedConnection，则会发送一个QEvent，并在应用程序进入主事件循环后立即调用该成员。
+    
+    + 如果type是Qt :: BlockingQueuedConnection，则将以与Qt :: QueuedConnection相同的方式调用该方法，除了当前线程将阻塞直到事件被传递。使用此连接类型在同一线程中的对象之间进行通信将导致死锁。
+    
+    + 如果type是Qt :: AutoConnection，则如果obj与调用者位于同一个线程中，则会同步调用该成员; 否则它将异步调用该成员。
+    
+    + 第四个参数接收被调用函数的返回值；注意，如果调用是异步的，则无法计算返回值。
+    
+    + 注意：传入的参数是有个数限制的，可以向成员函数传递最多十个参数（val0，val1，val2，val3，val4，val5，val6，val7，val8和val9）。
+
+> QGenericArgument和QGenericReturnArgument是内部帮助程序类。由于可以动态调用信号和槽，因此必须使用Q_ARG（）和Q_RETURN_ARG（）宏来封装参数。Q_ARG（）接受该类型的类型名称和const引用; Q_RETURN_ARG（）接受类型名称和非const引用。
+
+> 注意：此功能是线程安全的。
+
++ #### 调用示例
+  
+  + 假设一个对象有一个槽compute(QString,int,double),返回一个QString对象，那么调用方式如下（同步）：
+
+```cpp
+QString retVal;
+QMetaObject::invokeMethod(obj, "compute", Qt::DirectConnection,
+                          Q_RETURN_ARG(QString, retVal),
+                          Q_ARG(QString, "sqrt"),
+                          Q_ARG(int, 42),
+                          Q_ARG(double, 9.7));
+
+```
+
++ 假设要异步调用QThread上的quit（）槽:
+
+```cpp
+QMetaObject::invokeMethod(thread, "quit", Qt::QueuedConnection);
+```
+
+> **注意，要调用的类型必须是信号、槽，以及Qt元对象系统能识别的类型， 如果不是信号和槽，可以使用qRegisterMetaType（）来注册数据类型。此外，使用Q_INVOKABLE来声明函数，也可以正确调用。**
 
 ### 布局
 
