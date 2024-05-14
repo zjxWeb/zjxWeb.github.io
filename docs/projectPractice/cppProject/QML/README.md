@@ -614,6 +614,31 @@ QMetaObject::invokeMethod(thread, "quit", Qt::QueuedConnection);
 
 > **注意，要调用的类型必须是信号、槽，以及Qt元对象系统能识别的类型， 如果不是信号和槽，可以使用qRegisterMetaType（）来注册数据类型。此外，使用Q_INVOKABLE来声明函数，也可以正确调用。**
 
+### C++加载qml界面[参考资料](https://blog.csdn.net/u011283226/article/details/117398629)
+
+```cpp
+/// 启动画面的视图
+m_view = new QQuickView;
+m_view->rootContext()->setContextProperty("$screenController", this);
+/// 无边框
+m_view->setFlags(Qt::FramelessWindowHint);
+/// 背景透明
+m_view->setColor(QColor(Qt::transparent));
+/// 置顶启动画面
+m_view->setFlags(Qt::SplashScreen | Qt::WindowStaysOnTopHint);
+VLOG(Info) << "background Picture to show:" << picPath.toStdString();
+const QUrl splashScreenUrl(QStringLiteral("qrc:/views/SplashScreen.qml"));
+QUrl backImageSource("qrc:/imgs/SplashScreen_Background_FreeScan.png");
+m_view->setInitialProperties({{"backImageSource", backImageSource}});
+m_view->setSource(splashScreenUrl);
+/// 设置到屏幕中心
+const auto& width = m_view->width();
+const auto& height = m_view->height();
+const auto& screenSize = QGuiApplication::primaryScreen()->size();
+m_view->setPosition((screenSize.width() - width) / 2, (screenSize.height() - height) / 2);
+m_view->show();
+```
+
 ### 布局
 
 #### Row 行布局
