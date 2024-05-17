@@ -451,7 +451,6 @@ private:
 };
 
 #endif // TESTPROPERTY_H
-
 ```
 
 > `TestProperty.cpp`
@@ -510,7 +509,6 @@ int main(int argc, char *argv[])
 
     return app.exec();
 }
-
 ```
 
 > `main.qml   `
@@ -549,19 +547,18 @@ Window {
 
 ```cpp
 bool QMetaObject::invokeMethod(QObject *obj, const char *member, 
-							Qt::ConnectionType type, 
-							QGenericReturnArgument ret,
-							QGenericArgument val0 = QGenericArgument(nullptr), 
-							QGenericArgument val1 = QGenericArgument(), 
-							QGenericArgument val2 = QGenericArgument(), 
-						    QGenericArgument val3 = QGenericArgument(), 
-							QGenericArgument val4 = QGenericArgument(),
-							QGenericArgument val5 = QGenericArgument(),
-							QGenericArgument val6 = QGenericArgument(), 
-							QGenericArgument val7 = QGenericArgument(),
-							QGenericArgument val8 = QGenericArgument(),
-							QGenericArgument val9 = QGenericArgument())
-
+                            Qt::ConnectionType type, 
+                            QGenericReturnArgument ret,
+                            QGenericArgument val0 = QGenericArgument(nullptr), 
+                            QGenericArgument val1 = QGenericArgument(), 
+                            QGenericArgument val2 = QGenericArgument(), 
+                            QGenericArgument val3 = QGenericArgument(), 
+                            QGenericArgument val4 = QGenericArgument(),
+                            QGenericArgument val5 = QGenericArgument(),
+                            QGenericArgument val6 = QGenericArgument(), 
+                            QGenericArgument val7 = QGenericArgument(),
+                            QGenericArgument val8 = QGenericArgument(),
+                            QGenericArgument val9 = QGenericArgument())
 ```
 
 + 在最新的Qt5.13中，QMetaObject中的invokeMethod函数一共有五个，除上面这个以外其他都是重载函数
@@ -603,7 +600,6 @@ QMetaObject::invokeMethod(obj, "compute", Qt::DirectConnection,
                           Q_ARG(QString, "sqrt"),
                           Q_ARG(int, 42),
                           Q_ARG(double, 9.7));
-
 ```
 
 + 假设要异步调用QThread上的quit（）槽:
@@ -613,6 +609,101 @@ QMetaObject::invokeMethod(thread, "quit", Qt::QueuedConnection);
 ```
 
 > **注意，要调用的类型必须是信号、槽，以及Qt元对象系统能识别的类型， 如果不是信号和槽，可以使用qRegisterMetaType（）来注册数据类型。此外，使用Q_INVOKABLE来声明函数，也可以正确调用。**
+
+### Q_INVOKABLE及Qt中反射的使用
+
++ invokeableMethod()可以调用用Q_INVOKABLE修饰过的函数。加了Q_INVOKABLE的宏注册到元对象系统里面，并且能够被元对象系统使用，普通的没有注册过的函数是不能被使用的。
+
+> 案列
+
++ `ReflectTest.h`
+
+```cpp
+#ifndef REFLECTTEST_H
+#define REFLECTTEST_H
+
+#include <QObject>
+
+class ReflectTest : public QObject
+{
+    Q_OBJECT
+public:
+    ReflectTest(QObject *parent = nullptr);
+    Q_INVOKABLE void setPrint(const QString &print);
+    Q_INVOKABLE QString getPrint();
+    Q_INVOKABLE QString testFunction(QString para);
+
+private:
+    QString m_print;
+
+};
+
+#endif // REFLECTTEST_H
+```
+
+> `ReflectTest.cpp`
+
+```cpp
+#include "ReflectTest.h"
+
+ReflectTest::ReflectTest(QObject *parent) : QObject(parent)
+{
+
+}
+
+void ReflectTest::setPrint(const QString &print)
+{
+    m_print = print;
+}
+
+QString ReflectTest::getPrint()
+{
+    return m_print;
+}
+
+QString ReflectTest::testFunction(QString para)
+{
+    return "return:" + para;
+}
+```
+
+> `main.cpp`
+
+```
+#include <QCoreApplication>
+#include <QDebug>
+#include <QMetaObject>
+#include <QMetaMethod>
+#include "ReflectTest.h"
+
+int main(int argc, char *argv[])
+{
+    QCoreApplication a(argc, argv);
+
+    ReflectTest test1;
+    test1.setPrint("one");
+    qDebug() << test1.getPrint();
+    qDebug() << "----------华丽的分割线----------";
+    int count = test1.metaObject()->methodCount();
+    for(int i = 0; i < count; i++){
+
+        qDebug() << test1.metaObject()->method(i).name();
+    }
+
+    qDebug() << "----------华丽的分割线----------";
+
+    qDebug() << test1.getPrint();
+    qDebug() << QMetaObject::invokeMethod(&test1, "setPrint", Qt::DirectConnection, Q_ARG(QString, "one+one"));
+    QString retVal;
+    QMetaObject::invokeMethod(&test1, "getPrint", Qt::DirectConnection, Q_RETURN_ARG(QString, retVal));
+    qDebug() << retVal;
+
+    QMetaObject::invokeMethod(&test1, "testFunction", Qt::DirectConnection, Q_RETURN_ARG(QString, retVal), Q_ARG(QString, "one+one+one"));
+    qDebug() << retVal;
+
+    return a.exec();
+}
+```
 
 ### C++加载qml界面[参考资料](https://blog.csdn.net/u011283226/article/details/117398629)
 
