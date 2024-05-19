@@ -795,3 +795,399 @@ Grid {
 > 在qml中的X，Y定位相对于web中的absolute定位
 
 + 这种定位的位置，是`相对于它的父级元素而言的，x，y,`而不是相对于 全局的 `window`来定位的，重要！重要！重要！
+
+## 通信
+
+<!-- tabs:start -->
+
+#### **通过单例的方式进行全局注册**
+
+`MyObject.h`
+
+```cpp
+public:
+	static MyObject * getInstance();// 单例模式
+```
+
+`MyObject.cpp`
+
+```cpp
+MyObject *MyObject::getInstance()
+{
+    static MyObject * obj = new MyObject();
+    return obj;
+}
+```
+
+`main.cpp`
+
+```cpp
+// 我们一定要通过创建对象来定义一个我们自定义得object
+qmlRegisterType<MyObject>("MyObj",1,0,"MyObject");
+// 这种注册方式，使用的时候，我们需要在qml中进行如下写法，才可使用
+ MyObject {
+        id:myobj
+    }
+
+
+// 创建一个全局的单例——这种写法不需要在qml在此写 MyObject {id:myobj }
+qmlRegisterSingletonInstance("MyObj",1,0,"MyObject",MyObject::getInstance());
+```
+
+#### **`qml->c++`**
+
+> 首先我们得MyObjecty以及注册过了，注册方式有两种，如下
+>
+> ```c++
+> // 第一种   
+> QQmlApplicationEngine engine;
+> //    QQmlContext *context = new QQmlContext(engine.rootContext());
+>     // 注册的上下文对象  它是作用于全局的
+> //    context->setContextProperty("MyObject", MyObject::getInstance());
+> 
+> 
+> // 第二种
+>     qmlRegisterType<MyObject>("MyObj",1,0,"MyObject");
+> ```
+
++ `MyObject.h`
+
+```cpp
+Q_INVOKABLE void func();
+```
+
++ `MyObject.cpp`
+
+```cpp
+void MyObject::func()
+{
+    // 打印函数的名字
+    qDebug() << __FUNCTION__;
+}
+```
+
++ `main.qml`
+
+```qml
+import QtQuick 2.15
+import QtQuick.Window 2.15
+import QtQuick.Controls 2.0
+import MyObj 1.0
+Window {
+    width: 640
+    height: 480
+    visible: true
+    title: qsTr("Hello World")
+
+    Button{
+        onClicked: {
+            myobj.func()
+        }
+    }
+    MyObject {
+        id:myobj
+    }
+}
+```
+
+> 信号和槽
++ `MyObject.h`
+  + 声明槽函数
+
+
+```cpp
+public slots:
+    void cppSolt(int i,QString s);
+```
+
++ `MyObject.cpp`
+  + 定义槽函数
+
+
+```cpp
+void MyObject::cppSolt(int i, QString s)
+{
+    qDebug() << __FUNCTION__ << " " << i << " " << s;
+}
+```
+
++ `main.qml`
+
+```qml
+import QtQuick 2.15
+import QtQuick.Window 2.15
+import QtQuick.Controls 2.0
+import MyObj 1.0
+Window {
+    id: root
+    width: 640
+    height: 480
+    visible: true
+    title: qsTr("Hello World")
+
+    signal qmlSig(int i ,string s);
+    Button{
+        onClicked: {
+            // 发送一个信号
+            qmlSig(10,"zhangsan")
+        }
+    }
+    MyObject {
+        id:myobj
+    }
+    // 第一种方法——连接信号和槽
+    Connections{
+        target: root // 发送信号得
+        // 要触发得信号
+        function onQmlSig(i,s){
+         // 要触发得槽函数
+            myobj.cppSolt(i,s);
+        }
+    }
+    
+    //第二种方法——连接信号和槽
+    // Component.onCompleted: {
+    //    qmlSig.connect(myobj.cppSolt)
+    //}
+}
+
+```
+
+> 在C++端完成信号和槽得绑定
+
+`main.cpp`
+
+```cpp
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
+#include <QQmlContext>
+#include "myobject.h"
+
+int main(int argc, char *argv[])
+{
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
+    QGuiApplication app(argc, argv);
+
+    QQmlApplicationEngine engine;
+//    QQmlContext *context = new QQmlContext(engine.rootContext());
+    // 注册的上下文对象  它是作用于全局的
+//    context->setContextProperty("MyObject", MyObject::getInstance());
+    qmlRegisterType<MyObject>("MyObj",1,0,"MyObject");
+    const QUrl url(QStringLiteral("qrc:/main.qml"));
+    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
+        &app, [url](QObject *obj, const QUrl &objUrl) {
+            if (!obj && url == objUrl)
+                QCoreApplication::exit(-1);
+        }, Qt::QueuedConnection);
+    engine.load(url);
+
+    // 在C++端完成信号和槽得绑定 ——一定要在load之后
+    auto list = engine.rootObjects(); // 获取主对象
+    auto window = list.first();
+//    auto objName = list.first()->objectName();// window
+//    auto objChild = list.first()->findChild<QObject *>("mybut");
+    QObject::connect(window,SIGNAL(qmlSig(int,QString)),
+                     MyObject::getInstance(),SLOT(cppSolt(int,QString)));
+
+
+    return app.exec();
+}
+```
+
+`main.qml`
+
+```qml
+import QtQuick 2.15
+import QtQuick.Window 2.15
+import QtQuick.Controls 2.0
+import MyObj 1.0
+Window {
+    id: root
+    width: 640
+    height: 480
+    visible: true
+    title: qsTr("Hello World")
+    objectName: "window"
+    signal qmlSig(int i ,string s);
+    Button{
+        onClicked: {
+            objectName: "mybut"
+            // 发送一个信号
+            qmlSig(10,"zhangsan")
+        }
+    }
+    MyObject {
+        id:myobj
+    }
+}
+```
+
+#### **`C++->qml`**
+
++ `MyObject.h`
+
+```cpp
+void cppSig(int i,QString s);
+```
+
++ `MyObject.cpp`
+
+```cpp
+null
+```
+
++ `main.qml`
+
+```qml
+import QtQuick 2.15
+import QtQuick.Window 2.15
+import QtQuick.Controls 2.0
+import MyObj 1.0
+Window {
+    id: root
+    width: 640
+    height: 480
+    visible: true
+    title: qsTr("Hello World")
+    // 定义一个槽函数
+    function  qmlSlot(i,s){
+        console.log("qml",i,s);
+    }
+
+    Button{
+        onClicked: {
+            myobj.cppSig(99,"lisi");
+        }
+    }
+    MyObject {
+        id:myobj
+    }
+    Connections{
+        target: myobj // 发送信号得
+        // 要触发得信号
+        function onCppSig(i,s){
+            // 要触发得槽函数
+            qmlSlot(i,s);
+        }
+    }
+}
+
+```
+
+> 另一种方法(此处注册方式，采用的是全局注册单例)
+
++ `MyObject.h`
+
+```cpp
+Q_INVOKABLE void func();
+```
+
++ `MyObject.cpp`
+
+```cpp
+void MyObject::func()
+{
+    emit cppSig(109,"wangwu");
+    qDebug() << __FUNCTION__ ;
+}
+```
+
++ `main.qml`
+
+```qml
+import QtQuick 2.15
+import QtQuick.Window 2.15
+import QtQuick.Controls 2.0
+import MyObj 1.0
+Window {
+    id: root
+    width: 640
+    height: 480
+    visible: true
+    title: qsTr("Hello World")
+    // 定义一个槽函数
+    function  qmlSlot(i,s){
+        console.log("qml",i,s);
+    }
+
+    Button{
+        onClicked: {
+            MyObject.func();
+        }
+    }
+    Connections{
+        target: MyObject // 发送信号得
+        // 要触发得信号
+        function onCppSig(i,s){
+            // 要触发得槽函数
+            qmlSlot(i,s);
+        }
+    }
+}
+
+```
+
+> 最后一种方法 `connect`
+
+> 参数类型  对应`CPP`端 收拾`QVariant`
+
++ `MyObject.h`
+
+```cpp
+public:
+	Q_INVOKABLE void func();
+signals:
+	void cppSig(QVariant i,QVariant s);// 信号
+```
+
++ `MyObject.cpp`
+
+```cpp
+void MyObject::func()
+{
+    emit cppSig(109,"wangwu");
+    qDebug() << __FUNCTION__ ;
+}
+```
+
++ `main.cpp`
+
+```cpp
+engine.load(url);
+
+auto list = engine.rootObjects(); // 获取主对象
+auto window = list.first();
+QObject::connect(MyObject::getInstance(),SIGNAL(cppSig(QVariant,QVariant)),window,
+                 SLOT(qmlSlot(QVariant,QVariant)));
+```
+
++ `main.qml`
+
+```qml
+import QtQuick 2.15
+import QtQuick.Window 2.15
+import QtQuick.Controls 2.0
+import MyObj 1.0
+Window {
+    id: root
+    width: 640
+    height: 480
+    visible: true
+    title: qsTr("Hello World")
+    objectName: "window"
+    // 定义一个槽函数
+    function  qmlSlot(i,s){ // 参数类型  对应CPP端 收拾QVariant
+        console.log("qml",i,s);
+    }
+
+    Button{
+        onClicked: {
+            MyObject.func();
+        }
+    }
+}
+```
+
+<!-- tabs:end -->
