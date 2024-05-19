@@ -1190,4 +1190,48 @@ Window {
 }
 ```
 
+> `C++`直接调用qml端函数
+
++ `main.cpp`
+
+```cpp
+auto list = engine.rootObjects(); // 获取主对象
+auto window = list.first();
+ // 调用的对象  调用的函数  返回值放到那  传递的参数
+QVariant res;
+QVariant arg1 = 123;
+QVariant arg2 = "lisi";
+QMetaObject::invokeMethod(window,
+                          "qmlFunc",
+                          Q_RETURN_ARG(QVariant,res),
+                          Q_ARG(QVariant,arg1),
+                          Q_ARG(QVariant,arg2));
+```
+
++ `main.qml`
+
+```qml
+import QtQuick 2.15
+import QtQuick.Window 2.15
+import QtQuick.Controls 2.0
+import MyObj 1.0
+Window {
+    id: root
+    width: 640
+    height: 480
+    visible: true
+    title: qsTr("Hello World")
+
+    function qmlFunc(i,s){
+        return "success";
+    }
+
+    Button{
+        onClicked: {
+            MyObject.func();
+        }
+    }
+}
+```
+
 <!-- tabs:end -->
