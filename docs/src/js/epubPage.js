@@ -46,7 +46,7 @@ class DIVComponent extends HTMLElement {
             smallFont.id = 'smallFontChange';
             smallFont.style.display = "block";
             smallFont.style.position = "fixed";
-            smallFont.style.right = "1vw";
+            smallFont.style.right = "0";
             smallFont.style.top = "54vh";
             smallFont.style.width = "65px";
             smallFont.style.height = "35px";
@@ -67,7 +67,7 @@ class DIVComponent extends HTMLElement {
             bigFont.id = 'bigFontChange';
             bigFont.style.display = "block";
             bigFont.style.position = "fixed";
-            bigFont.style.right = "1vw";
+            bigFont.style.right = "0";
             bigFont.style.top = "50vh";
             bigFont.style.width = "65px";
             bigFont.style.height = "35px";
@@ -129,7 +129,7 @@ class DIVComponent extends HTMLElement {
                 rendition.prev();
             });
             prevPageBtn.style.position = "fixed";
-            prevPageBtn.style.right = "1vw";
+            prevPageBtn.style.right = "0";
             prevPageBtn.style.bottom = "195px";
             prevPageBtn.style.width = "65px";
             prevPageBtn.style.height = "35px";
@@ -150,7 +150,7 @@ class DIVComponent extends HTMLElement {
                 rendition.next();
             });
             nextPageBtn.style.position = "fixed";
-            nextPageBtn.style.right = "1vw";
+            nextPageBtn.style.right = "0";
             nextPageBtn.style.bottom = "155px";
             nextPageBtn.style.width = "65px";
             nextPageBtn.style.height = "35px";
@@ -252,7 +252,7 @@ class DIVComponent extends HTMLElement {
         // 样式
         btn.style.display = "block";
         btn.style.position = "fixed";
-        btn.style.right = "1vw";
+        btn.style.right = "0";
         btn.style.bottom = "110px";
         btn.style.width = "65px";
         btn.style.height = "35px";
