@@ -730,6 +730,79 @@ m_view->setPosition((screenSize.width() - width) / 2, (screenSize.height() - hei
 m_view->show();
 ```
 
+### `ListModel`绑定数据[单选按钮]
+
+```qml
+ListModel {
+  id: deviceModel
+  ListElement {index:0;name:"FreeScan UE"; active:1; deviceType:11}
+  ListElement {index:1;name:"FreeScan UE Pro"; active:0; deviceType:12}
+  ListElement {index:2;name:"FreeScan Combo"; active:0; deviceType:15}
+  ListElement {index:3;name:"FreeScan UE Pro2"; active:0; deviceType:16}
+}
+Column{
+  id: showNoDogBoxDevice
+  spacing: 12 * rw
+  height: 2 * rw * (deviceModel.count - 1) + deviceTxt.contentHeight * deviceModel.count
+  anchors.horizontalCenter: parent.horizontalCenter
+  anchors.top: contentColumn.bottom
+  anchors.topMargin: 20 * rw
+  Repeater {
+    model:deviceModel
+    delegate: Row{
+    spacing: 2 * rw
+    Image {
+      id: showNoDogBoxRadio
+      source: model.active ? "qrc:/imgs/radioTrue.svg" : "qrc:/imgs/radioFalse.svg"
+      MouseArea {
+        anchors.fill: parent
+        cursorShape: Qt.PointingHandCursor
+        onClicked: {
+        for(var i = 0; i < deviceModel.count;i++){
+            if(i !== model.index){
+              deviceModel.setProperty(i,"active",0)
+            }
+          }
+          deviceModel.setProperty(model.index,"active",1)
+          if(model.active === 1){
+              type = model.deviceType
+            }
+          }
+        }
+      }
+      Text {
+        id: deviceTxt
+        text: qsTr(model.name)
+        font.pixelSize: 20 * rf
+        font.family: family
+        font.bold: true
+        color: "#DBDBDB"
+        wrapMode: Text.Wrap
+        anchors.top: parent.top
+        anchors.topMargin: 1 * rw
+        MouseArea {
+        anchors.fill: parent
+        cursorShape: Qt.PointingHandCursor
+        onClicked: {
+        for(var i = 0; i < deviceModel.count;i++){
+          if(i !== model.index){
+            deviceModel.setProperty(i,"active",0)
+            }
+          }
+          deviceModel.setProperty(model.index,"active",1)
+          if(model.active === 1){
+            type = model.deviceType
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+```
+
 ### 布局
 
 #### Row 行布局
@@ -806,7 +879,7 @@ Grid {
 
 ```cpp
 public:
-	static MyObject * getInstance();// 单例模式
+    static MyObject * getInstance();// 单例模式
 ```
 
 `MyObject.cpp`
@@ -837,7 +910,7 @@ qmlRegisterSingletonInstance("MyObj",1,0,"MyObject",MyObject::getInstance());
 #### **`qml->c++`**
 
 > 首先我们得MyObjecty以及注册过了，注册方式有两种，如下
->
+> 
 > ```c++
 > // 第一种   
 > QQmlApplicationEngine engine;
@@ -891,9 +964,9 @@ Window {
 ```
 
 > 信号和槽
+
 + `MyObject.h`
   + 声明槽函数
-
 
 ```cpp
 public slots:
@@ -902,7 +975,6 @@ public slots:
 
 + `MyObject.cpp`
   + 定义槽函数
-
 
 ```cpp
 void MyObject::cppSolt(int i, QString s)
@@ -944,13 +1016,12 @@ Window {
             myobj.cppSolt(i,s);
         }
     }
-    
+
     //第二种方法——连接信号和槽
     // Component.onCompleted: {
     //    qmlSig.connect(myobj.cppSolt)
     //}
 }
-
 ```
 
 > 在C++端完成信号和槽得绑定
@@ -1073,7 +1144,6 @@ Window {
         }
     }
 }
-
 ```
 
 > 另一种方法(此处注册方式，采用的是全局注册单例)
@@ -1126,7 +1196,6 @@ Window {
         }
     }
 }
-
 ```
 
 > 最后一种方法 `connect`
@@ -1137,9 +1206,9 @@ Window {
 
 ```cpp
 public:
-	Q_INVOKABLE void func();
+    Q_INVOKABLE void func();
 signals:
-	void cppSig(QVariant i,QVariant s);// 信号
+    void cppSig(QVariant i,QVariant s);// 信号
 ```
 
 + `MyObject.cpp`
