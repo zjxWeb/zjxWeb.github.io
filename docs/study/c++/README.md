@@ -7,3 +7,4 @@
 <div-component src="../../src/pdf/program/c++/UNIX环境高级编程.epub"></div-component>
 <div-component src="../../src/pdf/program/c++/UNIX网络编程卷一.epub"></div-component>
 <div-component src="../../src/pdf/program/c++/UNIX网络编程 卷2 进程间通信.epub"></div-component>
+<div-component src="../../src/pdf/program/c++/OpenCV 安卓编程示例.epub"></div-component>
