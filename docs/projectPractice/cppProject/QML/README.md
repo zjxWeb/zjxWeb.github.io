@@ -30,6 +30,59 @@ Text {
 }
 ```
 
+> 文字省略制作文本气泡全显示，是十分重要的
+
+```qml
+import QtQuick 2.12
+import QtQuick.Window 2.12
+import QtQuick.Controls 2.5
+import QtQuick.Layouts 1.12
+
+Window {
+    visible: true
+    width: 640
+    height: 480
+    title: qsTr("Hello World")
+
+    TextMetrics{
+        id: textMetrics
+        elide: Text.ElideRight
+        elideWidth: 600
+        text: "Negativnsets to place a shadow outside the popup's boundaries:"
+
+    }
+    //文字显示缩略
+    TextArea {
+        id: referMessage
+        color: "#000000"
+        anchors.top: parent.top
+        anchors.topMargin: 100
+        anchors.left: parent.left
+        anchors.leftMargin: 100
+        width: 300
+        height: 90
+        text: textMetrics.elidedText //文字缩略
+        font.pixelSize: 14
+        font.weight: Font.Light
+        wrapMode: TextArea.WrapAnywhere
+        readOnly: true
+        verticalAlignment: Text.AlignVCenter
+        focusReason: Qt.MouseFocusReason
+        textFormat: TextArea.AutoText
+
+        background: Rectangle {
+            anchors.fill: parent
+            color: "#ffff00"
+        }
+    }
+    Component.onCompleted:
+    {
+        console.log("str=====", textMetrics.elidedText)
+    }
+}
+
+```
+
 ### 2. `Canvas`画圆角
 
 > 针对项目当中要有矩形中不同地方的圆角，这样就需要使用 `Canvas`来进行绘制一下就是针对圆角的绘制
@@ -213,7 +266,7 @@ int main(int argc, char *argv[])
 
 >  效果就是导航栏上放一个gif图片的动态效果，当然加载 `gif`的相关东西也是可以参考；
 
-### QT进度条加入css属性
+### 5. QT进度条加入css属性
 
 ```cpp
 #include <QApplication>
@@ -253,6 +306,61 @@ int main(int argc, char *argv[])
 ```
 
 ![](./src/9.png)
+
+### 6. 鼠标右击
+
+> 点击鼠标右键，弹出框，做选择
+
+```qml
+import QtQuick 2.12
+import QtQuick.Window 2.12
+import QtQuick.Controls 2.5
+import QtQuick.Layouts 1.12
+
+Window {
+    visible: true
+    width: 640
+    height: 480
+    title: qsTr("Hello World")
+
+    Rectangle {
+        width: 200
+        height: 200
+        color: "lightblue"
+
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.RightButton
+
+            onClicked: {
+                menu.popup()
+            }
+        }
+
+        Menu {
+            id: menu
+
+            MenuItem {
+                text: "Option 1"
+                onTriggered: {
+                    console.log("Option 1 selected")
+                }
+            }
+
+            MenuItem {
+                text: "Option 2"
+                onTriggered: {
+                    console.log("Option 2 selected")
+                }
+            }
+        }
+    }
+}
+
+
+```
+
+![](./src/10.png)
 
 ## 属性
 
