@@ -1,3 +1,5 @@
+<iframe-component src="../../src/pdf/program/c++/QmlBook.pdf"></iframe-component>
+
 ## 创建项目
 
 1. ![1](./src/1.png)
@@ -80,7 +82,6 @@ Window {
         console.log("str=====", textMetrics.elidedText)
     }
 }
-
 ```
 
 ### 2. `Canvas`画圆角
@@ -356,8 +357,6 @@ Window {
         }
     }
 }
-
-
 ```
 
 ![](./src/10.png)
