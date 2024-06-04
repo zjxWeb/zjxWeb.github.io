@@ -1,6 +1,6 @@
 <iframe-component src="../../src/pdf/program/c++/QmlBook.pdf"></iframe-component>
 
-<iframe-component src="../../src/pdf/program/c++/Qt Quick核心编程(完整版).pdf"></iframe-component>
+<iframe-component src="../../src/pdf/program/c++/Qt Quick核心编程(完整版) .pdf"></iframe-component>
 
 
 
