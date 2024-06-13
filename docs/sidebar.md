@@ -4,6 +4,7 @@
     * [📃c++语法](study/c++/c++base/)
     * [📃c++网络编程](study/c++/c++network/)
     * [📃OpenSSL](study/c++/OpenSSL/)
+    * [📃OpenCV](study/c++/OpenCV/)
     * [📃QT](study/c++/QT/)
     * [📃GDB](study/c++/gdb/)
     * [📃MAKEFILE](study/c++/makefile/)
