@@ -1108,3 +1108,219 @@ void QuickDemo::mouse_demo(Mat &image) {
 
 ### 17. 图像数据类型转化和归一化
 
+> 像素类型转换
+
++ `image.convertTo(image, CV_32FC3);`
+  + 将image(第一个)转换为CV_32FC3类型，最终输出为image(第二个)
+
++ 对于数据类型而言，其结构为：CV_<bit_depth>(S|U|F)C<number_of_channels>
++ _例如：CV_32FC3 细分：CV_ 32 F C3
+  + 32表示每个像素点值所占32bit
+  + F表示Float单精度浮点数
+  + C3表示4通道图像，为啥呢？C表示通道数，C1是单通道、C2是三通道、C3是四通道，多了一个alpha透明度通道，PNG格式里面就有alpha通道
+  + 当然也可以省略，默认为C1
++ 其实就三个参数而已，总结一下
+
+| **参数一(CV_**`32`**FC3)**  | **参数二(CV_32**`F`**C3)**  | **参数三(CV_32F**`C3`**) 该参数可省略，默认为C1** |
+| :-------------------------: | :-------------------------: | :-----------------------------------------------: |
+|              8              |  S：signed int，有符号整形  |                    C1：单通道                     |
+|             16              | U：unsigned int，无符号整形 |                    C2：三通道                     |
+|             32              |   F：float，单精度浮点型    |           C3：四通道，多了一个alpha通道           |
+|             64              |                             |                                                   |
+| 表示每个像素点值所占的bit位 |                             |                                                   |
+
+> 归一化
+
++ `normalize(image, result, 1.0, 0, NORM_MINMAX);`
+  + 参数一：处理对象为image
+  + 参数二：输出结果为result
+  + 参数三：alpha
+  + 参数四：beta
+  + 参数五：不同归一化操作，包括：`NORM_L1、NORM_L2、NORM_INF、NORM_MINMAX`
+
++ `NORM_L1：`
+  1. 求解image图片中所有像素点绝对值之和sum
+  2. `result[0,0] = (alpha * image[0,0]) / sum`，得到result的第一个像素值，以此类推得到result图像
+
++ `NORM_L2：`
+  1. 求解image图片中各像素点值的平方和的开方sum(也就是L2-范数)
+  2. `result[0,0] = (alpha * image[0,0]) / sum`，得到result的第一个像素值，以此类推得到result图像
+
++ `NORM_INF：`
+  1. 求解image图片中所有像素点值最大的那个max
+  2. `result[0,0] = (alpha * image[0,0]) / max`，得到result的第一个像素值，以此类推得到result图像
+
++ `NORM_MINMAX：`【**常用**】
+  1. alpha和beta系统会自动判断出最大值和最小值，分别赋值为max和min
+  2. 根据公式计算出result的每个像素点的值
+
+![12](./src/12.png)
+
+```cpp
+void QuickDemo::norm_demo(Mat &image) {
+	Mat dst;
+	cout << image.type() << endl;
+	image.convertTo(image, CV_32F);
+	cout << image.type() << endl;
+	normalize(image,dst,1.0,0,NORM_MINMAX);
+	cout << dst.type() << endl;
+	imshow("图像数据归一化", dst);
+}
+```
+
+### 18. 图像的缩放和插值
+
+<!-- tabs:start -->
+
+#### **API**
+
+>  1.resize 重设图像宽长 区别一下resizewindow改原图不输出，另一个输出可差值
+
+```tex
+  共6个参数
+            第1个参数 输入
+            第2个参数 输出
+            
+            第3个参数 输出图像的size
+            第4个参数 fx 沿水平的比例因子
+            第5个参数 fy 沿垂直的比例因子
+                    可以使用size做放缩插值，也可以使用fx，fy卷积做放缩插值
+            第6个参数 插值方法
+```
+
+resize的应用场景有很多，其中最常见的就是：
+
+> 在做一些神经网络训练，深度网络训练，卷积网络训练等的时候，为了方便处理，会把图像resize到指定大小
+
+#### **插值算法**
+
+>  [插值算法详解](https://blog.csdn.net/jia20003/article/details/40020775)
+
++ 关于插值算法，这里简单介绍一下
++ 首先，图像放缩的时候为什么要用插值算法呢？
+
+> 这是因为，图像放缩时，像素点的位置会发生变化
+
+> 要想得到放缩后图像像素点的位置，就要经过某种算法计算得来
+
+> 这种计算的算法就是插值算法。
+
++ 插值算法有很多相关的应用场景，比如：
+
+> 几何变换
+
+> 透视变换
+
+> 插值计算新像素
+
+> resize
+
++  而常见的插值算法有4种，其中前两种比较快，后两种比较慢
+
+> `INTER_NEAREST =` 0 ——最近邻插值
+
+> `INTER_LINEAR = 1` ——线性插值
+
+> `INTER_CUBIC = 2` ——立方插值
+
+> `INTER_LANCZOS4 = 4` ——`Lanczos`插值
+
+#### **案列**
+
+```cpp
+void QuickDemo::resize_demo(Mat &image) {
+	Mat zoomin, zoomout;//缩小，放大
+
+	int w = image.cols;
+	int h = image.rows;
+
+	imshow("原图", image);
+
+	//resize(image, zoomin, Size(w / 2, h / 2), 0, 0, INTER_LINEAR);
+	//imshow("缩小", zoomin);
+
+	resize(image, zoomout, Size(w * 2, h * 2), 0, 0, INTER_LINEAR);
+	imshow("放大", zoomout);
+}
+```
+
+<!-- tabs:end -->
+
+### 19. 图像的反转
+
+```cpp
+void QuickDemo::flip_demo(Mat &image) {
+	Mat dst;
+	flip(image,dst,0);// 输入；输出；0—上下反转，1—左右，-1——180°旋转
+	imshow("图像反转", dst);
+}
+```
+
+### 20. [图像旋转](https://blog.csdn.net/weixin_46098612/article/details/127873093)
+
+![13](./src/13.png)
+
+```cpp
+void QuickDemo::rotate_demo(Mat& image) {
+
+	Mat dst, M;//M为变换矩阵
+
+	int w = image.cols;
+	int h = image.rows;
+	/*
+	 共3个参数
+		第1个参数 图像的旋转中心
+		第2个参数 旋转角度（规定坐标原点左上角，正值表示逆时针旋转）
+		第3个参数 各向同性比例因子（对图像本身大小的放缩）
+	*/
+	M = getRotationMatrix2D(Point2f(w / 2, h / 2), 45, 1.0);// 原来图像的中心位置；旋转角度；图片本省是否需要放缩
+
+	//C++的abs则可以自然支持对整数和浮点数两个版本（实际上还能够支持复数）
+	double cos = abs(M.at<double>(0, 0));
+	double sin = abs(M.at<double>(0, 1));
+
+	int nw = w * cos + h * sin;
+	int nh = w * sin + h * cos;
+
+	//新图像的旋转中心
+	M.at<double>(0, 2) += (nw / 2 - w / 2);
+	M.at<double>(1, 2) += (nh / 2 - h / 2);
+	/*
+	共7个参数
+		第1个参数 输入
+		第2个参数 输出
+		第3个参数 输入的变换矩阵（2行3列）
+		第4个参数 输出图像的size
+		第5个参数 插值方法
+		第6个参数 边界模式（暂且不学习。深入探讨的话，还会涉及很多的东西）
+		第7个参数 边界颜色（暂且不学习。深入探讨的话，还会涉及很多的东西）
+	*/
+	warpAffine(image, dst, M, Size(nw, nh), INTER_LINEAR, 0, Scalar(0, 200, 0));
+
+	imshow("旋转演示", dst);
+}
+```
+
+### 21. 视频文件摄像头使用
+
+```cpp
+void QuickDemo::video_demo(Mat& image) {
+	VideoCapture capture(0);// "参数也可以是具体的视频路径"
+	Mat frame;
+	while (true) {
+		capture.read(frame);
+		flip(frame, frame, 1);
+		if (frame.empty()) {
+			break;
+		}
+		imshow("frame", frame);
+		int c = waitKey(1);
+		if (c == 27) break;
+	}
+    capture.release();
+}
+```
+
+### 22. 视频处理与保存
+
+> `SD`标准清晰度    `HD`高清   `UHD`蓝光
