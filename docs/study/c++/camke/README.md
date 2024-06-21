@@ -1,5 +1,9 @@
 # [CMake入门](https://subingwen.cn/cmake/CMake-primer/#2-1-1-%E5%85%B1%E5%A4%84%E4%B8%80%E5%AE%A4)     [官方文档](https://cmake.org/documentation)
 
+| 问题                                                         | 解决方式                        |
+| ------------------------------------------------------------ | ------------------------------- |
+| [windows平台不生成Makefile文件的问题](https://blog.csdn.net/weixin_74027669/article/details/138260707) | `cmake .. -G "MinGW Makefiles`` |
+
 ## 1. CMake概述
 
 + CMake 是一个项目构建工具，并且是跨平台的。关于项目构建我们所熟知的还有Makefile（通过 make 命令进行项目的构建），大多是IDE软件都集成了make，比如：VS 的 nmake、linux 下的 GNU make、Qt 的 qmake等，如果自己动手写 makefile，会发现，makefile 通常依赖于当前的编译平台，而且编写 makefile 的工作量比较大，解决依赖关系时也容易出错。
@@ -1832,3 +1836,4 @@ $ cmake ..
 ```
 
 > 可以看到当列表中的元素全部被弹出之后，列表的长度变成了`0`，此时`while`循环也就退出了。
+
