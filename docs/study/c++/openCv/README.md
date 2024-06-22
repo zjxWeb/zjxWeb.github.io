@@ -1321,6 +1321,385 @@ void QuickDemo::video_demo(Mat& image) {
 }
 ```
 
-### 22. 视频处理与保存
+### 22. [视频处理与保存](https://blog.csdn.net/qq_33867131/article/details/133344471)
 
 > `SD`标准清晰度    `HD`高清   `UHD`蓝光
+
+```cpp
+void QuickDemo::video_demo(Mat& image) {
+	VideoCapture capture("E:/study/openCV/1.mp4");
+	int frame_width = capture.get(CAP_PROP_FRAME_WIDTH); //视频帧宽度
+	int frame_heigh = capture.get(CAP_PROP_FRAME_HEIGHT);//视频帧高度
+	int count = capture.get(CAP_PROP_FRAME_COUNT); // 总帧数
+	double fps = capture.get(CAP_PROP_FPS);
+	cout << "frame width:" << frame_width  << endl;
+	cout << "frame_heigh" << frame_heigh << endl;
+	cout << "fps" << fps << endl;
+	cout << "Number of Frames:" << count << endl;
+	VideoWriter writer("E:/study/openCV/test.mp4",capture.get(CAP_PROP_FOURCC),fps,Size(frame_width, frame_heigh),true);
+	Mat frame;
+	while (true) {
+		capture.read(frame);
+		flip(frame, frame, 1);
+		if (frame.empty()) {
+			break;
+		}
+		imshow("frame", frame);
+		writer.write(frame);
+		int c = waitKey(1);
+		if (c == 27) break;
+	}
+	//relase
+	capture.release();
+	writer.release();
+}
+```
+
+### 23. [图像直方图](https://blog.csdn.net/qq_43199575/article/details/133762252)
+
+```cpp
+void calcHist(const Mat* images,
+              int nimages,
+              const int* channels,
+              InputArray mask,
+              OutputArray hist,
+              int dims,
+              const int* histSize,
+              const float** ranges,
+              bool uniform = true,
+              bool accumulate = false);
+
+```
+
+**images**:
+
+- 类型：`const Mat*`
+- 说明：输入图像的数组（通常只有一个图像）。该参数需要传入一个指向 `Mat` 类型的指针。
+
+**nimages**:
+
+- 类型：`int`
+- 说明：输入图像的数量。通常为 1。
+
+**channels**:
+
+- 类型：`const int*`
+- 说明：表示需要计算直方图的通道索引。例如，对于灰度图像，值通常为 `[0]`；对于彩色图像，值可以为 `[0]`（蓝色通道）、`[1]`（绿色通道）、`[2]`（红色通道）。
+
+**mask**:
+
+- 类型：`InputArray`
+- 说明：可选的操作掩码，通常用于指定图像中感兴趣的区域。传 `noArray()` 表示不使用掩码。
+
+**hist**:
+
+- 类型：`OutputArray`
+- 说明：输出的直方图，是一个 `Mat` 类型的数组。
+
+**dims**:
+
+- 类型：`int`
+- 说明：直方图的维度。例如，对于一维直方图，值为 1；对于二维直方图，值为 2。
+
+**histSize**:
+
+- 类型：`const int*`
+- 说明：表示每个维度直方图的大小（即每个维度的箱数 bin）。例如，对于一维直方图，`histSize` 可以是 `[256]`，表示将值划分为 256 个箱。
+
+**ranges**:
+
+- 类型：`const float**`
+- 说明：表示每个维度的值范围。例如，对于灰度图像，范围可以是 `[[0, 256]]`。
+
+**uniform**:
+
+- 类型：`bool`
+- 默认值：`true`
+- 说明：指示直方图的 bin 是否具有相同的宽度。如果为 `true`，表示所有的 bin 具有相同的宽度；如果为 `false`，表示 bin 可以具有不同的宽度。
+
+**accumulate**:
+
+- 类型：`bool`
+- 默认值：`false`
+- 说明：指示是否要将直方图累积到先前的计算结果中。如果为 `true`，表示累积直方图；如果为 `false`，表示清除现有的直方图并重新计算。
+
+```cpp
+void QuickDemo::showHistogram(Mat& image) {
+
+	//三通道分离
+	vector <Mat> bgr_plane;
+	split(image, bgr_plane);
+	//定义参数变量
+	const int channels[1] = { 0 };
+	const int bins[1] = { 256 };
+	float hranges[2] = { 0,255 };
+	const float* ranges[1] = { hranges };
+	Mat b_hist;
+	Mat g_hist;
+	Mat r_hist;
+	//计算Blue、Green、Red通道直方图
+	calcHist(&bgr_plane[0], 1, 0, Mat(), b_hist, 1, bins, ranges);
+	calcHist(&bgr_plane[1], 1, 0, Mat(), g_hist, 1, bins, ranges);
+	calcHist(&bgr_plane[2], 1, 0, Mat(), r_hist, 1, bins, ranges);
+	//显示直方图
+	int hist_w = 512;
+	int hist_h = 400;
+	int bin_w = cvRound((double)hist_w / bins[0]);
+	Mat histImage = Mat::zeros(hist_h, hist_w, CV_8UC3);
+	//归一化直方图数据-->将直方图的取值范围限制在画布高度中
+	normalize(b_hist, b_hist, 0, histImage.rows, NORM_MINMAX, -1, Mat());
+	normalize(g_hist, g_hist, 0, histImage.rows, NORM_MINMAX, -1, Mat());
+	normalize(r_hist, r_hist, 0, histImage.rows, NORM_MINMAX, -1, Mat());
+
+	//绘制直方图曲线
+	for (int i = 1; i < bins[0]; i++)
+	{
+		line(histImage, Point(bin_w * (i - 1), hist_h - cvRound(b_hist.at<float>(i - 1))),
+			Point(bin_w * (i), hist_h - cvRound(b_hist.at<float>(i))), Scalar(255, 0, 0), 2, 8, 0);
+		line(histImage, Point(bin_w * (i - 1), hist_h - cvRound(g_hist.at<float>(i - 1))),
+			Point(bin_w * (i), hist_h - cvRound(g_hist.at<float>(i))), Scalar(0, 255, 0), 2, 8, 0);
+		line(histImage, Point(bin_w * (i - 1), hist_h - cvRound(r_hist.at<float>(i - 1))),
+			Point(bin_w * (i), hist_h - cvRound(r_hist.at<float>(i))), Scalar(0, 0, 255), 2, 8, 0);
+	}
+
+	//显示直方图
+	namedWindow("Histogram Demo", WINDOW_AUTOSIZE);
+	imshow("Histogram Demo", histImage);
+}
+```
+
+### 24. 二维直方图
+
+`cv::minMaxLoc()` 是 OpenCV 中用于寻找数组中最小值和最大值及其位置的函数。以下是该函数的参数和用法介绍：
+
+```cpp
+void minMaxLoc(InputArray src,
+               double* minVal,
+               double* maxVal,
+               Point* minLoc = nullptr,
+               Point* maxLoc = nullptr,
+               InputArray mask = noArray());
+```
+
+**src**:
+
+- 类型：`InputArray`
+- 说明：输入数组（可以是单通道的图像）。
+
+**minVal**:
+
+- 类型：`double*`
+- 说明：指向双精度浮点数的指针，用于存储找到的最小值。如果不需要，可以传 `nullptr`。
+
+**maxVal**:
+
+- 类型：`double*`
+- 说明：指向双精度浮点数的指针，用于存储找到的最大值。如果不需要，可以传 `nullptr`。
+
+**minLoc**:
+
+- 类型：`Point*`
+- 说明：指向 `Point` 类型的指针，用于存储找到的最小值的位置。如果不需要，可以传 `nullptr`。
+
+**maxLoc**:
+
+- 类型：`Point*`
+- 说明：指向 `Point` 类型的指针，用于存储找到的最大值的位置。如果不需要，可以传 `nullptr`。
+
+**mask**:
+
+- 类型：`InputArray`
+- 默认值：`noArray()`
+- 说明：可选的操作掩码。如果提供，则只在掩码不为零的元素中寻找最小值和最大值。
+
+```cpp
+void QuickDemo::histogram_2d_demo(Mat& image) {
+	Mat hsv, hs_hist;
+	cvtColor(image, hsv, COLOR_BGR2HSV);
+	int hbins = 30, sbins = 32;
+	int hist_bins[] = { hbins,sbins };
+	float h_range[] = { 0,180 };
+	float s_range[] = { 0,256 };
+	const float* hs_ranges[] = { h_range,s_range };
+	int hs_channels[] = { 0,1 };
+	calcHist(&hsv, 1, hs_channels, Mat(), hs_hist, 2, hist_bins, hs_ranges, true, false);
+	double maxVal = 0;
+	minMaxLoc(hs_hist, 0, &maxVal, 0, 0);
+	int scale = 10;
+	Mat hist2d_image = Mat::zeros(sbins * scale, hbins * scale, CV_8UC3);
+	for (int h = 0; h < hbins; h++)
+	{
+		for (int s = 0; s < sbins; s++)
+		{
+			float binVal = hs_hist.at<float>(h, s);
+			int intensity = cvRound(binVal * 255 / maxVal);
+			rectangle(hist2d_image, Point(h * scale, s * scale), Point((h + 1)*scale - 1, (s + 1)*scale - 1), Scalar::all(intensity), -1);
+		}
+	}
+	//applyColorMap(hist2d_image, hist2d_image, COLORMAP_JET); // 将灰度图转为彩色图
+	imshow("H_s", hist2d_image);
+}
+```
+
+### 25. 直方图均衡化
+
+> 直方图均衡化（Histogram Equalization）是一种图像处理技术，用于增强图像的对比度。它通过调整图像的灰度级直方图，使得输出图像的灰度级分布更加均匀，从而改善图像的整体对比度和视觉效果。以下是对直方图均衡化的详细解释：
+
+#### 直方图均衡化的基本原理
+
+1. **直方图的定义**：
+   - 直方图是描述图像中每个灰度级出现频率的统计图。对于灰度图像，直方图的横轴表示灰度级（通常从0到255），纵轴表示该灰度级出现的像素数量。
+2. **直方图均衡化的目标**：
+   - 直方图均衡化的目标是重新分配图像的灰度级，使得图像的直方图尽可能平坦，即每个灰度级的像素数量大致相同，从而增强图像的对比度。
+
+![14](./src/14.png)
+
+`cv::equalizeHist()` 是 OpenCV 中用于直方图均衡化的函数。直方图均衡化是一种图像处理技术，用于增强图像的对比度。以下是该函数的参数和用法介绍：
+
+```cpp
+void equalizeHist(InputArray src, OutputArray dst);
+```
+
+**src**:
+
+- 类型：`InputArray`
+- 说明：输入图像，**必须是单通道的灰度图像**。
+
+**dst**:
+
+- 类型：`OutputArray`
+- 说明：输出图像，与输入图像具有相同的大小和类型。
+
+```cpp
+void QuickDemo::hisogram_eq_demo(Mat& image) {
+	Mat gray;
+	cvtColor(image, gray, COLOR_BGR2GRAY);
+	imshow("灰度图像", gray);
+	Mat dst;
+	equalizeHist(gray, dst);
+	imshow("直方图均衡化", dst);
+}
+```
+
+![15](./src/15.png)
+
+### 26. 图像卷积操作
+
+> `blur` 函数是用来对图像进行均值滤波的，它使用一个归一化的盒状内核进行模糊处理。以下是 `blur` 函数的一些关键参数及其说明：
+
+1. **src**: 输入图像，即源图像。该函数对通道是独立处理的，且可以处理任意通道数的图片。待处理的图片深度应该为`CV_8U`, `CV_16U`, `CV_16S`, `CV_32F` 以及 `CV_64F`之一。
+2. **ksize**: 表示模糊内核的大小。内核大小是以（宽度，高度）表示的元组形式。例如，`(1,15)`表示生成的模糊内核是一个`1*15`的矩阵。常见的形式包括`3*3`和`5*5`。
+3. **dst**: 输出图像，与源图像 `src` 具有相同的尺寸和类型。
+4. **anchor**: 表示锚点（即被平滑的那个点），它是一个整数类型的变量，其默认值是 `Point(-1, -1)`，意味着锚点位于内核的中心。
+5. **borderType**: 描述边框的添加方式，定义了图像边界外像素的某种边界模式。它由一些标志定义，如`cv2.BORDER_CONSTANT,` `cv2.BORDER_REFLECT`等，具有默认值`BORDER_DEFAULT`。
+
+> 卷积核越大，越模糊
+
+```cpp
+void QuickDemo::blur_demo(Mat& image) {
+	Mat dst;
+	//blur(image, dst, Size(3, 3), Point(-1, -1));
+    blur(image, dst, Size(15, 1), Point(-1, -1));//一维卷积
+	imshow("图像模糊", dst);
+}
+```
+
+### 27. 高斯模糊
+
+> 高斯模糊可以通过`cv2.GaussianBlur`函数实现，以下是该函数的一些关键参数：
+
+1. **src**: 输入图像，即源图像。
+2. **ksize**: 高斯内核的大小，以(width, height)的形式给出。这个值应该是正奇数，例如(3, 3)、(5, 5)等。内核大小越大，模糊效果越明显。
+3. **sigmaX**: X方向上的高斯标准差。如果设置为0，OpenCV会根据内核大小自动计算。
+4. **sigmaY**: Y方向上的高斯标准差。如果设置为0，将使用与X方向相同的值。如果sigmaY也指定了值，它将覆盖sigmaX的值。
+5. **dst**: 输出图像，与源图像`src`具有相同的尺寸和类型。
+6. **borderType**: 描述边框的添加方式，定义了图像边界外像素的某种边界模式。它由一些标志定义，如cv2.BORDER_CONSTANT, cv2.BORDER_REFLECT等。
+
+![16](./src/16.png)
+
+```cpp
+void  QuickDemo::gaussian_blur_demo(Mat& image)
+{
+	Mat dst;
+	GaussianBlur(image, dst, Size(5, 5), 15);
+	imshow("高斯模糊", dst);
+}
+```
+
+## 28. [高斯双边模糊](https://blog.csdn.net/weixin_39682477/article/details/110299865)
+
++ 高斯双边模糊（Bilateral Gaussian Blur）是一种结合了空间域和强度域的图像滤波技术。与普通的高斯模糊不同，**它在平滑图像的同时，能够更好地保留边缘信息**。这是因为双边模糊不仅考虑像素在空间上的邻近程度，还考虑像素值的相似度。
+
++ 在OpenCV中，可以使用`cv2.bilateralFilter`函数来实现高斯双边模糊，以下是该函数的关键参数：
+
+1. **src**: 输入图像，即源图像。
+2. **d**: 过滤器直径，即周围邻域的直径，`必须是正奇数`。
+3. **sigmaColor**: 颜色空间中的高斯标准差，用于像素强度值的比较。值越大，允许的像素强度差异越大。
+4. **sigmaSpace**: 空间中的高斯标准差，用于确定邻域内像素的权重。值越大，邻域内像素的权重越接近。
+5. **dst**: 输出图像，与源图像`src`具有相同的尺寸和类型。
+6. **borderType**: 描述边框的添加方式，定义了图像边界外像素的某种边界模式。它由一些标志定义，如`cv2.BORDER_CONSTANT`, `cv2.BORDER_REFLECT`等。
+
+![17](./src/17.png)
+
+>  **高斯双边模糊特别适合去除图像噪声的同时保留边缘信息，常用于图像去噪和细节增强**。
+
+```cpp
+void  QuickDemo::bifilter_demo(Mat& image)
+{
+	Mat dst;
+	bilateralFilter(image, dst, 0, 100, 10);
+	imshow("双边模糊", dst);
+}
+```
+
+### 人脸检测
+
+```cpp
+#include <iostream>
+#include <opencv2/opencv.hpp>
+using namespace std;
+using namespace cv;
+
+int main(int argc,char** argv) {
+	string pf_file_path = "E:/study/openCV/opencv_face_detector_uint8.pb";
+	string pbtxt_file_path = "E:/study/openCV/opencv_face_detector.pbtxt";
+	dnn::Net net = dnn::readNetFromTensorflow(pf_file_path, pbtxt_file_path);
+	VideoCapture cap(0);
+	Mat frame;
+	while (true) {
+		cap.read(frame);
+		if (frame.empty()) {
+			break;
+		}
+		Mat blob = dnn::blobFromImage(frame,1.0,Size(300,300),Scalar(104,177,123),false,false);
+		net.setInput(blob);//输入
+		Mat probs = net.forward();//推理
+		// 1*1*n*7
+		Mat detectMat(probs.size[2], probs.size[3], CV_32F, probs.ptr<float>());
+		for (int row = 0; row < detectMat.rows; row++) {
+			float conf = detectMat.at<float>(row, 2);
+			if (conf > 0.5) {
+				float x1 = detectMat.at<float>(row, 3) * frame.cols;
+				float y1 = detectMat.at<float>(row, 4) * frame.rows;
+				float x2 = detectMat.at<float>(row, 5) * frame.cols;
+				float y2 = detectMat.at<float>(row, 6) * frame.rows;
+				Rect box(x1, y1, x2 - x1, y2 - y1);
+				rectangle(frame, box, Scalar(0, 0, 255), 2, 8);
+			}
+		}
+		imshow("OpenCv DNN人脸检测", frame);
+		char c = waitKey(1);
+		if (c == 27) {// esc
+			break;
+		}
+	}
+	waitKey(0);
+	destroyAllWindows();
+	return 0;
+}
+```
+
+
+
+
+
