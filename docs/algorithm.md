@@ -136,6 +136,30 @@ cout<<s<<endl;
 22.23
 ```
 
++ [2288. 价格减免](https://leetcode.cn/problems/apply-discount-to-prices/)
+
+```cpp
+class Solution {
+public:
+    string discountPrices(string sentence, int discount) {
+        double d = 1 - discount / 100.0;
+        stringstream ss(sentence);
+         string res,w;
+        while(ss >> w){
+            if(!res.empty()) res += ' ';
+            if(w.length() >1 && w[0] == '$' && all_of(w.begin()+1,w.end(),::isdigit)){
+                stringstream s;
+                //字符串 w 中除第一个字符外的剩余部分转换为长整型，并乘以 d 后，以保留两位小数的浮点数形式输出，输出时前面加上 '$' 符号。
+                s << fixed << setprecision(2) << '$' << stoll(w.substr(1)) * d;
+                res += s.str();
+            }
+            else res += w;
+        }
+        return res;
+    }
+};  
+```
+
 > 字符串按格式拆分
 
 ```cpp
