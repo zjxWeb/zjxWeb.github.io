@@ -5,6 +5,225 @@
 
 ![ASCII](./src/img/ASCII.jpg)
 
+#### **C++常用刷题技巧**
+
+> 参考博客：https://www.yuque.com/jackyao/ifeq8i/vyigt9?
+
+> 自带的宏常量
+
+```cpp
+// 建议使第三个，一二容易造成溢出
+int N = INT_MIN; 
+int N = INT_MAX;
+const int INF = 0x3f3f3f3f; //通常用来代替最大值，防止运算过程中溢出
+```
+
+> 字符串判断函数
+
+```cpp
+isdigit(c)  //判断c字符是不是数字
+isalpha(c)  //判断c字符是不是字母
+isalnum(c)  //判断c字符是不是数字或者字母
+tolower(c)  //转为小写
+toupper(c)  //转为大写
+isupper()  // 判断是否是大写
+islower()	// 判断是否是小写
+```
+
+> 字符串和数值间的转换
+
+```cpp
+int num = 100;
+string str = to_string(num); //整形转字符串
+int number = stoi(str);  //字符串转为整形 stol()是字符串转为长整形
+```
+
+> 字符串和数值间的转换
+
+```cpp
+int num = 100;
+string str = to_string(num); //整形转字符串
+int number = stoi(str);  //字符串转为整形 stol()是字符串转为长整形
+```
+
+> 迭代器的二分
+
+```cpp
+vector<int> nums{1,2,34,44,99};
+int k = lower_bound(nums.begin(), nums.end(), 56) - nums.begin(); //第一个大于等于目标值的迭代器位置
+int k = upper_bound(nums.begin(), nums.end(), 56) - nums.begin(); // 找到第一个大于目标值的迭代器位置
+```
+
+> 字符串转为小写
+
+```cpp
+transform(str.begin(), str.end(), str.begin(), ::tolower());
+```
+
+> 小根堆
+
+```cpp
+priority_queue<int> pq; //默认是大根堆
+priority_queue<int, vector<int>, greater<int>> pq; //小根堆
+```
+
+> 快速初始化数组
+
+```cpp
+// 注意：这个函数是按字节初始化的
+memset(nums, 0, sizeof nums);
+memset(nums, -1, sizeof nums);
+memset(nums, 0x3f, sizeof nums);
+```
+
+> C++11的特性
+
+```cpp
+auto p = new ListNode(); // auto 关键字
+Node* pre = nullptr   // nullptr代替NULL
+unordered_map<int,int> mp; //哈希表 内部是无序的
+unordered_set<int> st; //无序集合
+```
+
+> bitset
+
+```cpp
+uint32_t reverseBits(uint32_t n) {
+    string s = bitset<32>(n).to_string();
+    reverse(s.begin(), s.end());
+    return bitset<32>(s).to_ulong();
+}
+```
+
+> 字符串分割[将字符串按照空格分割]
+
+```cpp
+string s = "hello world my name is yao jun";
+stringstream ss(s);
+string str;
+int cnt = 0;
+while(ss >> str){
+    cnt++;
+    cout<<str<<endl;
+}
+cout<<cnt<<endl;
+```
+
+```txt
+执行结果：
+hello
+world
+my
+name
+is
+yao
+jun
+7
+```
+
+> 四舍五入保留小数
+
+```cpp
+char str[10];
+double num = 22.23434;
+sprintf(str, "%.2f", num);
+string s = str;
+cout<<s<<endl;
+```
+
+```txt
+执行结果
+22.23
+```
+
+> 字符串按格式拆分
+
+```cpp
+string a = "12:59:36";
+char str2[100];
+memcpy(str2, a.c_str(), strlen(a.c_str()));
+int u, v, w;
+sscanf(str2, "%d:%d:%d", &u, &v, &w);
+cout<<u<<" "<<v<<" "<<w<<endl;
+```
+
+```txt
+执行结果：
+12 59 36
+```
+
+> 相同字符的字符串
+
+```cpp
+string s(10, 'a');
+cout<<s<<endl;
+```
+
+```txt
+执行结果:
+aaaaaaaaaa
+```
+
+> 结构体排序
+
+```cpp
+struct node{
+    int a, b;
+    // 从小到大排序
+    bool operator < (const node& node_)const{
+        if(a != node_.a) return a < node_.a;
+        return b < node_.b;
+    }
+};
+int main(){
+    vector<node> tt;
+    tt.push_back({1,5});
+    tt.push_back({2,3});
+    sort(tt.begin(), tt.end());
+    for(auto &node: tt){
+        cout<<node.a<<" "<<node.b<<endl;
+    }
+    return 0;
+}
+```
+
+```txt
+执行结果：
+1 5
+2 3
+```
+
+> 优先队列自定义排序
+
+```cpp
+struct node{
+    int a, b;
+    // 在优先队列中，跟排序的规则是反的，这里是指a大的排在前面，a相同时，b大的排在前面
+    bool operator < (const node& node_)const{
+        if(a != node_.a) return a < node_.a;
+        return b < node_.b;
+    }
+};
+int main(){
+    priority_queue<node> pq;
+    pq.push({1,5});
+    pq.push({2,3});
+    pq.push({2,5});
+    while(!pq.empty()) {
+        cout<<pq.top().a<<" "<<pq.top().b<<endl;
+        pq.pop();
+    }
+    return 0;
+}
+```
+
+```txt
+执行结果
+2 5
+2 3
+1 5
+```
+
 #### **滑动窗口**
 
 ```cpp
@@ -479,7 +698,7 @@ void unity(int x,int y){
 >                 }
 >             }
 >         }
->                                     
+>                                         
 >         int sumRegion(int row1, int col1, int row2, int col2) {
 >             return sum[row2+1][col2+1] - sum[row1][col2+1] - sum[row2+1][col1] + sum[row1][col1];
 >         }
