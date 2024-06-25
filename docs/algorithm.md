@@ -248,6 +248,64 @@ int main(){
 1 5
 ```
 
+#### **ACM形式的刷题技巧**
+
+> acm形式的刷题技巧可以参考如下
+
+```cpp
+
+#include <bits/stdc++.h>
+ 
+#define endl '\n'
+using ll = long long;
+typedef unsigned long long ull;
+using namespace std;
+ 
+void GordenGhost();
+ 
+signed main() {
+#ifdef Gorden
+    freopen("in.txt", "rt", stdin);
+    freopen("out.txt", "wt", stdout);
+#endif
+    ios::sync_with_stdio(false);//将C++标准输入输出流与C语言的输入输出流分离，使得它们可以独立工作
+    /*
+        这两个函数分别将cin与cout的绑定关系解除。具体解释如下：
+        cin.tie(nullptr): 该行代码将cin（标准输入流）的tie关系设置为nullptr，
+            意味着不再自动刷新关联的输出流（默认是cout）
+            每当从cin读取之前。这可以提升程序效率，避免不必要的输出缓冲区刷新。
+
+        cout.tie(nullptr): 同样地，这一行将cout（标准输出流）的tie关系设为nullptr，
+            断开与任何输入流的关联，防止在写入cout前自动刷新输入流
+            （尽管默认情况下cout没有被其他输入流tie）
+     */
+    cin.tie(nullptr), cout.tie(nullptr);
+    int t;
+    cin>>t;
+    while (t--)
+        GordenGhost();
+    return 0;
+}
+ 
+void GordenGhost() {
+    ll n,ma=-1;
+    cin>>n;
+    vector<ll>w(n),q(n);
+    for (int i = 0; i < n - 1; ++i) {
+        cin>>w[i];
+        ma= max(ma,w[i]);
+    }
+    for (int i = 0; i < n; ++i) {
+        if (!i)q[i]=ma+1;
+        else {
+            q[i]=q[i-1]+w[i-1];
+        }
+    }
+    for (auto i : q)cout<<i<<' ';
+    cout<<endl;
+}
+```
+
 #### **滑动窗口**
 
 ```cpp
@@ -732,7 +790,7 @@ void unity(int x,int y){
 >                 }
 >             }
 >         }
->                                         
+>                                             
 >         int sumRegion(int row1, int col1, int row2, int col2) {
 >             return sum[row2+1][col2+1] - sum[row1][col2+1] - sum[row2+1][col1] + sum[row1][col1];
 >         }
