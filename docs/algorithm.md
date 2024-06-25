@@ -300,7 +300,17 @@ void slidingWindow(string s) {
 
 ```
 
+> 环形链表 	[503. 下一个更大元素 II](https://leetcode.cn/problems/next-greater-element-ii/description/)
 
+```cpp
+int arr[] = {1,2,3,4,5};
+int n = sizeof(arr) / sizeof(arr[0]), index = 0;
+while (true) {
+    // 在环形数组中转圈
+    cout << arr[index % n] << endl;
+    index++;
+}
+```
 
 #### **链表测试模板**
 
