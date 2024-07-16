@@ -5234,7 +5234,32 @@ int main()
 ```
 <!-- tabs:end -->
 
+## 7. 自定义数据类型
 
+```cpp
+#include <bits/stdc++.h>
+
+using namespace std;
+
+class MyInt{
+    int value;
+public:
+    MyInt(int _value):value(_value){}
+    MyInt operator+(const MyInt& rhs) const{
+        return MyInt(value + rhs.value);
+    }
+    friend ostream& operator<<(ostream& os, const MyInt& rhs){
+        return os << rhs.value;
+    }
+};
+
+int main(){
+    MyInt a = 0;
+    MyInt b = 5;
+    MyInt c = a + b;
+    cout << c << endl;
+}
+```
 
 # C++11 新特性
 

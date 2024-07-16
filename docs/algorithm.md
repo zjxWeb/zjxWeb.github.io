@@ -306,6 +306,37 @@ void GordenGhost() {
 }
 ```
 
+> ```cpp
+> #include <bits/stdc++.h>
+> #define endl '\n'
+> 
+> using namespace std;
+> 
+> int minConcatenation(const string& tar,const vector<string>& container){
+>     vector<int> dp(tar.size()+1,INT_MAX);
+>     dp[0] = 0;
+>     for(int i = 1;i <= tar.size();i++){
+>         for(const string& str : container){
+>             if(i >= str.size() && dp[i-str.size()] !=INT_MAX && tar.substr(i-str.size(),str.size()) == str){
+>                 dp[i] = min(dp[i],dp[i-str.size()]+1);
+>             }
+>         }
+>     }
+>     return dp[tar.size()] == INT_MAX ? -1 : dp[tar.size()];
+> }
+> 
+> 
+> int main(){
+>     ios::sync_with_stdio(false);
+>     string tar;
+>     cin >> tar;
+>     int m; cin >> m;
+>     vector<string> container(m);
+>     for(int i = 0; i < m;i++) cin >> container[i];
+>     cout << minConcatenation(tar,container) << endl;
+> }
+> ```
+
 #### **滑动窗口**
 
 ```cpp
