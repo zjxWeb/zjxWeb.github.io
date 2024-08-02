@@ -1,5 +1,5 @@
 ## vi/vim 终端中的编辑器
-
+> 插件推荐 https://github.com/chxuan/vimplus
 1. ```
    在终端中输入 vi 在后面跟上文件名 即可
    $ vi 文件名 +行数
