@@ -15,5 +15,5 @@
 	```
 5. 注意： ！！！
 	+ 输入命令：netstat -ano，列出所有端口的情况！
-	+ 输入命令：netstat -aon|findstr "端口号"！
+	+ 输入命令：netstat -ano|findstr "端口号"！
 	+ 不通过可以尝试另换端口，或者检查路径是否准确！
