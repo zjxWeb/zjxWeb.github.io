@@ -3,7 +3,7 @@
   * [📁c++](study/c++/)
     * [📃c++语法](study/c++/c++base/)
     * [📃线程池](study/c++/threadPool/)
-    * [📃c++语法](study/c++/c++base/)
+    * [📃C++网络](study/c++/c++network/)
     * [📃OpenSSL](study/c++/OpenSSL/)
     * [📃OpenCV](study/c++/openCv/)
     * [📃QT](study/c++/QT/)
