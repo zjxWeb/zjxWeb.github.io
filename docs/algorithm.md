@@ -821,7 +821,7 @@ void unity(int x,int y){
 >                 }
 >             }
 >         }
->                                             
+>                                                     
 >         int sumRegion(int row1, int col1, int row2, int col2) {
 >             return sum[row2+1][col2+1] - sum[row1][col2+1] - sum[row2+1][col1] + sum[row1][col1];
 >         }
@@ -1761,8 +1761,7 @@ class Solution {
 public:
     vector<int> sortArray(vector<int>& nums) {
         // bubbleSort
-        int n = nums.size();
-        for (int i = 0; i < n - 1; ++i) {
+        int n = n  2 1; ++i) {
             bool flag = false;
             for (int j = 0; j < n - 1 - i; ++j) {
                 if (nums[j] > nums[j + 1]) {
