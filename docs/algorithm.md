@@ -250,6 +250,16 @@ int main(){
 
 #### **ACM形式的刷题技巧**
 
+```cpp
+#include <bits/stdc++.h>
+using ll = long long;
+typedef unsigned long long ull;
+using namespace std;
+int main(){
+	ios::sync_with_stdio(0), cin.tie(0), cout.tie(0);
+}
+```
+
 > acm形式的刷题技巧可以参考如下
 
 ```cpp
@@ -821,7 +831,7 @@ void unity(int x,int y){
 >                 }
 >             }
 >         }
->                                                     
+>                                                         
 >         int sumRegion(int row1, int col1, int row2, int col2) {
 >             return sum[row2+1][col2+1] - sum[row1][col2+1] - sum[row2+1][col1] + sum[row1][col1];
 >         }

@@ -870,9 +870,9 @@ commit;
 >
 >   ```sql
 >   SELECT @@TRANSACTION_ISOLATION;
->                                                                 
+>                                                                   
 >   set session transaction isolation level read uncommitted ;
->                                                                 
+>                                                                   
 >   set session transaction isolation level repeatable read ;
 >   ```
 
