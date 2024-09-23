@@ -831,7 +831,7 @@ void unity(int x,int y){
 >                 }
 >             }
 >         }
->                                                         
+>                                                             
 >         int sumRegion(int row1, int col1, int row2, int col2) {
 >             return sum[row2+1][col2+1] - sum[row1][col2+1] - sum[row2+1][col1] + sum[row1][col1];
 >         }
@@ -1492,6 +1492,76 @@ int BFS(Node start, Node target) {
 }
 
 ```
+
+```cpp
+class Solution {
+public:
+	int numIslands(vector<vector<char>>& grid) {
+		int count = 0;
+		for (int i = 0; i < grid.size(); i++) {
+			for (int j = 0; j < grid[0].size(); j++) {
+				if (grid[i][j] == '1') {
+					bfs(grid, i, j); count++;
+				}
+			}
+		}
+		return  count;
+	}
+private:
+	void dfs(vector<vector<char>>& grid, int i, int j) {
+		if (i < 0 || i >= grid.size() || j < 0 || j >= grid[0].size() || grid[i][j] == '0') {
+			return;
+		}
+		grid[i][j] = '0';
+		dfs(grid, i - 1, j);
+		dfs(grid, i + 1, j);
+		dfs(grid, i, j - 1);
+		dfs(grid, i, j + 1);
+	}
+	void bfs(vector<vector<char>>& grid, int i, int j) {
+		queue < pair<int, int>>q;
+		q.push(make_pair(i, j));
+		while (!q.empty()) {
+			pair<int, int>p = q.front();
+			q.pop();
+			int x = p.first;
+			int y = p.second;
+			if (x < 0 || x >= grid.size() || y < 0 || y >= grid[0].size() || grid[x][y] == '0') continue;
+			grid[x][y] = '0';
+			q.push(make_pair(x - 1, y));
+			q.push(make_pair(x + 1, y));
+			q.push(make_pair(x, y - 1));
+			q.push(make_pair(x, y + 1));
+		}
+	}
+};
+
+
+// dfs 访问8个方向
+int dfs(vector<vector<int>>& grid, int x, int y) {
+	if (x < 0 || x >= grid.size() || y < 0 || y >= grid[0].size() || grid[x][y] != 0) return 0;
+	grid[x][y] = 1;
+	int cnt0 = 1;
+	// 访问八方向的 0
+	for (int i = x - 1; i <= x + 1; i++)
+		for (int j = y - 1; j <= y + 1; j++)
+			cnt0 += dfs(grid, i, j);
+	return cnt0;
+}
+void dfs(vector<string>& grid, int x, int y, int& flag, char ch, int& count) {
+	if (x < 0 || x >= grid.size() || y < 0 || y >= grid[0].size() || grid[x][y] == '0') {
+		flag = 0; return;
+	}
+	if (grid[x][y] != ch) return;
+	grid[x][y] = '6';
+	dfs(grid, x + 1, y, flag, ch, count);
+	dfs(grid, x - 1, y, flag, ch, count);
+	dfs(grid, x, y + 1, flag, ch, count);
+	dfs(grid, x, y - 1, flag, ch, count);
+}
+```
+
+
 
 > [2415. 反转二叉树的奇数层](https://leetcode.cn/problems/reverse-odd-levels-of-binary-tree/)
 
