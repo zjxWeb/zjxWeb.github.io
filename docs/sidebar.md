@@ -11,7 +11,7 @@
     * [📃MAKEFILE](study/c++/makefile/)
     * [📃CMake](study/c++/camke/)
     * [📃CS106X](study/c++/cs106X/)
-    * [📃面试](study/c++/ms/)
+    <!-- * [📃面试](study/c++/ms/) -->
   * [📁go](study/go/)
     * [📃基础学习](study/go/base/) 
   * [📁AI](study/AI/)
