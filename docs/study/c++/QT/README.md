@@ -1,8 +1,5 @@
-# QT大法
-
+# QT大法  <iframe-component src="../../src/pdf/program/c++/QT.pdf"></iframe-component>
 [qml实战及其相关属性](/projectPractice/cppProject/QML/)
-
-<iframe-component src="../../../src/pdf/program/c++/Qt.pdf"></iframe-component>
 
 ## 1. 入门介绍
 
