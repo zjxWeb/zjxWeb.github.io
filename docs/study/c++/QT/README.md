@@ -2,6 +2,8 @@
 
 [qml实战及其相关属性](/projectPractice/cppProject/QML/)
 
+<iframe-component src="../../src/pdf/program/c++/Qt.pdf"></iframe-component>
+
 ## 1. 入门介绍
 
 ### 1.1 版本控制工具
