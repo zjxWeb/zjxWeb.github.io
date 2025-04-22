@@ -7,6 +7,7 @@
     * [📃OpenSSL](study/c++/OpenSSL/)
     * [📃OpenCV](study/c++/openCv/)
     * [📃QT](study/c++/QT/)
+    * [📃wxWidgets](study/c++/wxWidgets/)
     * [📃GDB](study/c++/gdb/)
     * [📃MAKEFILE](study/c++/makefile/)
     * [📃CMake](study/c++/camke/)
