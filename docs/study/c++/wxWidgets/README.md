@@ -534,3 +534,529 @@ wxIMPLEMENT_APP(MyApp);
 ```
 
 ![13](./src/13.png)
+
+### 2.3 对话小窗口
+
+```cpp
+// testd.h
+#ifndef MYAPP_H
+#define MYAPP_H
+
+#include <wx/wx.h>
+
+// 主应用程序类
+class MyApp : public wxApp
+{
+public:
+	virtual bool OnInit() override;
+};
+
+// 主窗口类
+class MainFrame : public wxFrame
+{
+public:
+	MainFrame(const wxString& title);
+
+private:
+	// 事件处理函数
+	void OnHello(wxCommandEvent& event);
+	void OnExit(wxCommandEvent& event);
+	void OnAbout(wxCommandEvent& event);
+	void OnShowDialog(wxCommandEvent& event);
+	void OnButtonClicked(wxCommandEvent& event);
+	void OnTextEnter(wxCommandEvent& event);
+
+	// 控件指针
+	wxTextCtrl* m_textCtrl;
+	wxButton* m_button;
+};
+
+#endif // MYAPP_H
+```
+
+```cpp
+// test.cpp
+#include "test.h"
+#include <wx/artprov.h>
+#include <wx/toolbar.h>
+#include <wx/aboutdlg.h>
+// 实现应用程序入口点
+wxIMPLEMENT_APP(MyApp);
+
+bool MyApp::OnInit()
+{
+	// 创建主窗口
+	MainFrame* frame = new MainFrame("wxWidgets现代示例");
+
+	// 设置应用程序图标（可选）
+#ifdef __WXMSW__
+	frame->SetIcon(wxICON(app_icon)); // Windows使用资源文件中的图标
+#endif
+
+	// 显示主窗口
+	frame->Show(true);
+
+	return true;
+}
+
+// 主窗口构造函数
+MainFrame::MainFrame(const wxString& title)
+	: wxFrame(NULL, wxID_ANY, title)
+{
+	// 1. 创建菜单栏
+	wxMenu* menuFile = new wxMenu;
+	menuFile->Append(wxID_NEW, "&新建\tCtrl+N");
+	menuFile->AppendSeparator();
+	menuFile->Append(wxID_EXIT, "退出\tAlt+F4", "退出应用程序");
+
+	wxMenu* menuHelp = new wxMenu;
+	menuHelp->Append(wxID_ABOUT, "关于\tF1", "显示关于对话框");
+
+	wxMenuBar* menuBar = new wxMenuBar;
+	menuBar->Append(menuFile, "文件(&F)");
+	menuBar->Append(menuHelp, "帮助(&H)");
+
+	SetMenuBar(menuBar);
+
+	// 2. 创建工具栏
+	wxToolBar* toolBar = CreateToolBar();
+	if (toolBar) {
+		// 使用wxArtProvider获取系统图标
+		wxBitmap exitBitmap = wxArtProvider::GetBitmap(wxART_QUIT, wxART_TOOLBAR, wxSize(16, 16));
+
+		// 添加工具（使用wxID_EXIT以获得标准行为）
+		toolBar->AddTool(wxID_EXIT, "退出", exitBitmap, "退出应用程序");
+
+		// 对于其他平台可能需要添加此调用
+#ifndef __WXMSW__
+		toolBar->SetToolBitmapSize(wxSize(16, 16));
+#endif
+
+		toolBar->Realize();
+	}
+
+	// 3. 创建状态栏
+	CreateStatusBar();
+	SetStatusText("欢迎使用wxWidgets!");
+
+	// 4. 创建主面板（作为所有控件的容器）
+	wxPanel* panel = new wxPanel(this);
+
+	// 5. 创建垂直布局管理器
+	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
+
+	// 6. 添加控件
+	// 6.1 添加静态文本
+	mainSizer->Add(
+		new wxStaticText(panel, wxID_ANY, "请输入内容:"),
+		0, wxALL, 5);
+
+	// 6.2 添加文本框（保存指针以便后续访问）
+	m_textCtrl = new wxTextCtrl(panel, wxID_ANY, "",
+		wxDefaultPosition, wxDefaultSize,
+		wxTE_PROCESS_ENTER);
+	mainSizer->Add(m_textCtrl, 0, wxEXPAND | wxLEFT | wxRIGHT, 5);
+
+	// 6.3 添加按钮
+	m_button = new wxButton(panel, wxID_ANY, "点击我");
+	mainSizer->Add(m_button, 0, wxALIGN_CENTER | wxALL, 10);
+
+	// 6.4 添加对话框按钮
+	wxButton* dialogBtn = new wxButton(panel, wxID_ANY, "显示对话框");
+	mainSizer->Add(dialogBtn, 0, wxALIGN_CENTER | wxALL, 10);
+
+	// 7. 设置面板布局
+	panel->SetSizerAndFit(mainSizer);
+
+	// 8. 绑定事件处理（现代方式）
+
+	// 8.1 菜单项事件
+	Bind(wxEVT_MENU, &MainFrame::OnHello, this, wxID_NEW);
+	Bind(wxEVT_MENU, &MainFrame::OnExit, this, wxID_EXIT);
+	Bind(wxEVT_MENU, &MainFrame::OnAbout, this, wxID_ABOUT);
+
+	// 8.2 工具栏事件
+	Bind(wxEVT_MENU, &MainFrame::OnExit, this, wxID_EXIT);
+
+	// 8.3 按钮点击事件
+	m_button->Bind(wxEVT_BUTTON, &MainFrame::OnButtonClicked, this);
+
+	// 8.4 文本框回车事件
+	m_textCtrl->Bind(wxEVT_TEXT_ENTER, &MainFrame::OnTextEnter, this);
+
+	// 8.5 对话框按钮事件
+	dialogBtn->Bind(wxEVT_BUTTON, &MainFrame::OnShowDialog, this);
+}
+
+// 事件处理函数实现
+
+void MainFrame::OnHello(wxCommandEvent& event)
+{
+	wxLogMessage("你点击了'新建'菜单项");
+	SetStatusText("创建新文档...");
+}
+
+void MainFrame::OnExit(wxCommandEvent& event)
+{
+	Close(true); // 关闭窗口
+}
+
+void MainFrame::OnAbout(wxCommandEvent& event)
+{
+	wxAboutDialogInfo aboutInfo;
+	aboutInfo.SetName("wxWidgets现代示例");
+	aboutInfo.SetVersion("1.0");
+	aboutInfo.SetDescription("这是一个展示现代wxWidgets用法的示例程序");
+	aboutInfo.SetCopyright("(C) 2023");
+	aboutInfo.AddDeveloper("开发者名称");
+
+	wxAboutBox(aboutInfo);
+}
+
+void MainFrame::OnButtonClicked(wxCommandEvent& event)
+{
+	wxString text = m_textCtrl->GetValue();
+	if (text.empty()) {
+		wxMessageBox("请输入一些内容!", "提示", wxOK | wxICON_INFORMATION, this);
+	}
+	else {
+		wxMessageBox("你输入了: " + text, "结果", wxOK | wxICON_INFORMATION, this);
+	}
+}
+
+void MainFrame::OnTextEnter(wxCommandEvent& event)
+{
+	wxMessageBox("你按下了回车键!", "提示", wxOK | wxICON_INFORMATION, this);
+}
+
+void MainFrame::OnShowDialog(wxCommandEvent& event)
+{
+	// 创建自定义对话框
+	wxDialog dialog(this, wxID_ANY, "示例对话框", wxDefaultPosition, wxSize(300, 200));
+
+	// 对话框布局
+	wxBoxSizer* dialogSizer = new wxBoxSizer(wxVERTICAL);
+
+	// 添加控件
+	dialogSizer->Add(new wxStaticText(&dialog, wxID_ANY, "这是一个自定义对话框"),
+		0, wxALIGN_CENTER | wxTOP, 20);
+
+	wxCheckBox* checkBox = new wxCheckBox(&dialog, wxID_ANY, "启用选项");
+	dialogSizer->Add(checkBox, 0, wxALIGN_CENTER | wxTOP, 15);
+
+	// 添加按钮行
+	wxBoxSizer* btnSizer = new wxBoxSizer(wxHORIZONTAL);
+	btnSizer->Add(new wxButton(&dialog, wxID_OK, "确定"), 0, wxRIGHT, 10);
+	btnSizer->Add(new wxButton(&dialog, wxID_CANCEL, "取消"), 0);
+
+	dialogSizer->Add(btnSizer, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, 20);
+
+	// 设置对话框布局
+	dialog.SetSizerAndFit(dialogSizer);
+
+	// 显示对话框并处理结果
+	if (dialog.ShowModal() == wxID_OK) {
+		wxString msg = checkBox->IsChecked() ?
+			"你选择了确定并启用了选项" : "你选择了确定但未启用选项";
+		wxMessageBox(msg, "对话框结果", wxOK | wxICON_INFORMATION, this);
+	}
+}
+```
+
+![14](./src/14.png)
+
+### 2.4 文件操作对应的小安列——简单的记事本
+
+```cpp
+#include <wx/wx.h>
+#include <wx/wfstream.h>  // 文件流类
+#include <wx/datstrm.h>   // 数据流类
+#include <wx/txtstrm.h>   // 文本流类
+#include <wx/textfile.h>
+
+// 自定义数据类，用于演示二进制读写
+class PersonData {
+public:
+	wxString name;
+	int age;
+	double height;
+
+	// 用于二进制写入
+	void WriteTo(wxDataOutputStream& out) const {
+		out << name << age << height;
+	}
+
+	// 用于二进制读取
+	void ReadFrom(wxDataInputStream& in) {
+		in >> name >> age >> height;
+	}
+
+	wxString ToString() const {
+		return wxString::Format("Name: %s, Age: %d, Height: %.2f", name, age, height);
+	}
+};
+
+// 主框架类
+class MyFrame : public wxFrame {
+public:
+	MyFrame(const wxString& title)
+		: wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(400, 300)) {
+
+		// 创建菜单栏
+		wxMenuBar* menuBar = new wxMenuBar;
+		wxMenu* fileMenu = new wxMenu;
+
+		fileMenu->Append(wxID_NEW, "&New\tCtrl+N", "Create a new file");
+		fileMenu->Append(wxID_OPEN, "&Open\tCtrl+O", "Open an existing file");
+		fileMenu->Append(wxID_SAVE, "&Save\tCtrl+S", "Save the current file");
+		fileMenu->AppendSeparator();
+		fileMenu->Append(wxID_EXIT, "E&xit\tAlt+F4", "Quit this program");
+
+		menuBar->Append(fileMenu, "&File");
+		SetMenuBar(menuBar);
+
+		// 创建文本控件用于显示内容
+		textCtrl = new wxTextCtrl(this, wxID_ANY, "",
+			wxDefaultPosition, wxDefaultSize,
+			wxTE_MULTILINE | wxTE_RICH);
+
+		// 绑定事件
+		Bind(wxEVT_MENU, &MyFrame::OnNew, this, wxID_NEW);
+		Bind(wxEVT_MENU, &MyFrame::OnOpen, this, wxID_OPEN);
+		Bind(wxEVT_MENU, &MyFrame::OnSave, this, wxID_SAVE);
+		Bind(wxEVT_MENU, &MyFrame::OnExit, this, wxID_EXIT);
+	}
+
+private:
+	wxTextCtrl* textCtrl;
+
+	// 新建文件
+	void OnNew(wxCommandEvent& event) {
+		textCtrl->Clear();
+		SetTitle("Untitled");
+	}
+
+	// 打开文件
+	void OnOpen(wxCommandEvent& event) {
+		// 创建文件选择对话框
+		wxFileDialog openFileDialog(this, _("Open file"), "", "",
+			"Text files (*.txt)|*.txt|Binary files (*.dat)|*.dat",
+			wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+
+		if (openFileDialog.ShowModal() == wxID_CANCEL)
+			return;
+
+		wxString filename = openFileDialog.GetPath();
+		wxString ext = openFileDialog.GetFilterIndex() == 0 ? "txt" : "dat";
+
+		if (ext == "txt") {
+			// 读取文本文件
+			ReadTextFile(filename);
+		}
+		else {
+			// 读取二进制文件
+			ReadBinaryFile(filename);
+		}
+
+		SetTitle(filename);
+	}
+
+	// 保存文件
+	void OnSave(wxCommandEvent& event) {
+		wxFileDialog saveFileDialog(this, _("Save file"), "", "",
+			"Text files (*.txt)|*.txt|Binary files (*.dat)|*.dat",
+			wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+
+		if (saveFileDialog.ShowModal() == wxID_CANCEL)
+			return;
+
+		wxString filename = saveFileDialog.GetPath();
+		wxString ext = saveFileDialog.GetFilterIndex() == 0 ? "txt" : "dat";
+
+		if (ext == "txt") {
+			// 保存为文本文件
+			WriteTextFile(filename);
+		}
+		else {
+			// 保存为二进制文件
+			WriteBinaryFile(filename);
+		}
+
+		SetTitle(filename);
+	}
+
+	// 退出程序
+	void OnExit(wxCommandEvent& event) {
+		Close(true);
+	}
+
+	// 读取文本文件
+	void ReadTextFile(const wxString& filename) {
+		// 使用wxTextFile类读取文本文件（逐行读取）
+		wxTextFile textFile;
+		if (!textFile.Open(filename)) {
+			wxLogError("Cannot open file '%s'.", filename);
+			return;
+		}
+
+		textCtrl->Clear();
+
+		// 逐行读取并添加到文本控件
+		for (wxString str = textFile.GetFirstLine(); !textFile.Eof(); str = textFile.GetNextLine()) {
+			textCtrl->AppendText(str + "\n");
+		}
+
+		textFile.Close();
+
+		// 另一种方法：使用wxFileInputStream和wxTextInputStream
+		/*
+		wxFileInputStream input(filename);
+		if (!input.IsOk()) {
+			wxLogError("Cannot open file '%s'.", filename);
+			return;
+		}
+
+		wxTextInputStream textInput(input);
+		textCtrl->Clear();
+
+		while (!input.Eof()) {
+			wxString line = textInput.ReadLine();
+			textCtrl->AppendText(line + "\n");
+		}
+		*/
+	}
+
+	// 写入文本文件
+	void WriteTextFile(const wxString& filename) {
+		// 方法1：使用wxTextFile类
+		wxTextFile textFile;
+		if (!textFile.Create(filename)) {
+			wxLogError("Cannot create file '%s'.", filename);
+			return;
+		}
+
+		wxString content = textCtrl->GetValue();
+		wxArrayString lines = wxSplit(content, '\n');
+
+		for (const wxString& line : lines) {
+			textFile.AddLine(line);
+		}
+
+		textFile.Write();
+		textFile.Close();
+
+		// 方法2：使用wxFileOutputStream和wxTextOutputStream
+		/*
+		wxFileOutputStream output(filename);
+		if (!output.IsOk()) {
+			wxLogError("Cannot create file '%s'.", filename);
+			return;
+		}
+
+		wxTextOutputStream textOutput(output);
+		wxString content = textCtrl->GetValue();
+		textOutput.WriteString(content);
+		*/
+	}
+
+	// 读取二进制文件
+	void ReadBinaryFile(const wxString& filename) {
+		wxFileInputStream input(filename);
+		if (!input.IsOk()) {
+			wxLogError("Cannot open file '%s'.", filename);
+			return;
+		}
+
+		wxDataInputStream dataInput(input);
+		textCtrl->Clear();
+
+		try {
+			// 读取文件头，验证文件类型
+			wxUint32 magic;
+			dataInput >> magic;
+			if (magic != 0xDEADBEEF) {
+				wxLogError("Invalid binary file format.");
+				return;
+			}
+
+			// 读取版本号
+			wxUint16 version;
+			dataInput >> version;
+			textCtrl->AppendText(wxString::Format("File version: %d\n", version));
+
+			// 读取字符串
+			wxString header;
+			dataInput >> header;
+			textCtrl->AppendText("Header: " + header + "\n\n");
+
+			// 读取自定义数据
+			PersonData person;
+			person.ReadFrom(dataInput);
+			textCtrl->AppendText("Person data:\n" + person.ToString() + "\n\n");
+
+			// 读取数组数据
+			wxUint32 count;
+			dataInput >> count;
+			textCtrl->AppendText(wxString::Format("Array count: %d\n", count));
+
+			for (wxUint32 i = 0; i < count; ++i) {
+				double value;
+				dataInput >> value;
+				textCtrl->AppendText(wxString::Format("%.2f ", value));
+			}
+
+		}
+		catch (...) {
+			wxLogError("Error reading binary file.");
+		}
+	}
+
+	// 写入二进制文件
+	void WriteBinaryFile(const wxString& filename) {
+		wxFileOutputStream output(filename);
+		if (!output.IsOk()) {
+			wxLogError("Cannot create file '%s'.", filename);
+			return;
+		}
+
+		wxDataOutputStream dataOutput(output);
+
+		// 写入文件头（魔数）
+		dataOutput.Write32(0xDEADBEEF);
+
+		// 写入版本号
+		dataOutput.Write16(1);
+
+		// 写入字符串
+		dataOutput.WriteString("This is a binary file example");
+
+		// 写入自定义数据
+		PersonData person;
+		person.name = "John Doe";
+		person.age = 30;
+		person.height = 1.75;
+		person.WriteTo(dataOutput);
+
+		// 写入数组数据
+		double values[] = { 1.1, 2.2, 3.3, 4.4, 5.5 };
+		dataOutput.Write32(5); // 数组长度
+		for (int i = 0; i < 5; ++i) {
+			dataOutput.WriteDouble(values[i]);
+		}
+	}
+};
+
+// 应用程序类
+class MyApp : public wxApp {
+public:
+	virtual bool OnInit() {
+		MyFrame* frame = new MyFrame("wxWidgets File I/O Example");
+		frame->Show(true);
+		return true;
+	}
+};
+
+wxIMPLEMENT_APP(MyApp);
+```
+
+![15](./src/15.png)
