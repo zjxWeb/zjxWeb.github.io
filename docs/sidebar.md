@@ -12,7 +12,7 @@
     * [📃MAKEFILE](study/c++/makefile/)
     * [📃CMake](study/c++/camke/)
     * [📃CS106X](study/c++/cs106X/)
-    <!-- * [📃面试](study/c++/ms/) -->
+    * [📃面试](study/c++/ms/)
   * [📁go](study/go/)
     * [📃基础学习](study/go/base/) 
   * [📁AI](study/AI/)
@@ -28,7 +28,7 @@
     * [📃redis实战](study/dataBase/redisApply/)
     * [📃redis高级](study/dataBase/redisHigh/)
     * [📃redis集群](study/dataBase/redisGroup/)
-  * [📁设计模式](study/designPattern/)
+  <!-- * [📁设计模式](study/designPattern/) -->
   * [📁java](study/java/)
     * [📃javaweb](study/java/javaweb/)
     * [📃多线程](study/java/Multithreading/)
@@ -48,6 +48,7 @@
   * [📁git](techBlog/git/)
   * [📁vmware](techBlog/vmware/)
   * [📁hadoop安装及数组查重](techBlog/hadoop/)
+  * [📁agent](techBlog/agent/)
 * [**好东西tips**](tips)
   * [📁docsify](tips/docsify/)
   * [📁Hubilder连接nox](tips/noxHubilder/)
