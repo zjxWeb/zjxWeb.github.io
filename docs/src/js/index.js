@@ -1,5 +1,6 @@
 window.$docsify = { 
     el: '#app',
+    routerMode: 'history',
     auto2top: true,//切换页面后是否自动跳转到页面顶部。
     mergeNavbar: true,//小屏设备下合并导航栏到侧边栏。
     repo: 'https://github.com/zjxWeb/zjxWeb.github.io',
@@ -8,7 +9,6 @@ window.$docsify = {
     onlyCover: true,
     autoHeader: true,
     notFoundPage: true,//在找不到指定页面时加载_404.md
-    routerMode: 'hash',
     subMaxLevel: 4,
     search: 'auto', // seach默认值
     //字数统计
