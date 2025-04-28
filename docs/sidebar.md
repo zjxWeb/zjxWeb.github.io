@@ -6,6 +6,7 @@
     * [📃C++网络](study/c++/c++network/)
     * [📃OpenSSL](study/c++/OpenSSL/)
     * [📃OpenCV](study/c++/openCv/)
+    * [📃OpenGL](study/c++/openGL/)
     * [📃QT](study/c++/QT/)
     * [📃wxWidgets](study/c++/wxWidgets/)
     * [📃GDB](study/c++/gdb/)
@@ -28,7 +29,7 @@
     * [📃redis实战](study/dataBase/redisApply/)
     * [📃redis高级](study/dataBase/redisHigh/)
     * [📃redis集群](study/dataBase/redisGroup/)
-  <!-- * [📁设计模式](study/designPattern/) -->
+    <!-- * [📁设计模式](study/designPattern/) -->
   * [📁java](study/java/)
     * [📃javaweb](study/java/javaweb/)
     * [📃多线程](study/java/Multithreading/)
