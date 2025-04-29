@@ -7,17 +7,22 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="description" content="Description">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-  <link rel="icon" href="./src/img/logo.jpg" type="image/x-icon"/>
+  <link rel="icon" href="./src/img/logo.jpg" type="image/x-icon" />
   <!-- 主题 -->
   <!-- <link rel="stylesheet" href="./src/css/vue.css"> -->
-  <link id="theme-link" rel="stylesheet" type="text/css"> 
-  <link rel="stylesheet" href="./src/css/index.css"> 
+  <link id="theme-link" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="./src/css/index.css">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2876176774317849"
-     crossorigin="anonymous"></script>
+    crossorigin="anonymous"></script>
 </head>
 
 <body>
   <div id="app"></div>
+  <script>
+    if (typeof navigator.serviceWorker !== 'undefined') {
+      navigator.serviceWorker.register('sw.js')
+    }
+  </script>
   <!-- 代码高亮  https://cdn.jsdelivr.net/npm/prismjs@1/components/-->
   <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-php.min.js"></script>
@@ -44,18 +49,18 @@
   <script src="./src/js/epubPage.js"></script>
   <script src="./src/js/theme.js"></script>
   <script src="./src/js/shop.js"></script>
-   <!-- 颜色选择器 -->
-   <script src="./src/js/color.js"></script>
+  <!-- 颜色选择器 -->
+  <script src="./src/js/color.js"></script>
   <!-- 密码进入 -->
   <!-- <script src="./src/js/passwd.js"></script> -->
   <!-- pdf -->
   <script src="./src/js/pdfShow.js"></script>
-  <script  src="./src/js/index.js"></script>
+  <script src="./src/js/index.js"></script>
   <!-- 谷歌统计 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-9ERSCJXVMS"></script>
   <script src="./src/js/googlefx.js"></script>
   <script src="./src/js/docsify.min.js"></script>
-  <script src="./src/js/search.min.js"></script> 
+  <script src="./src/js/search.min.js"></script>
   <!-- 字数统计 -->
   <script src="./src/js/countable.js"></script>
   <!-- docsify-tabs (latest v1.x.x) -->
@@ -69,9 +74,7 @@
   <!-- 粒子背景效果1  -->
   <!-- <script type='text/javascript' color='66,133,244' zIndex='-1' opacity='0.5'
    count='99' src='//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js'></script> -->
-   
-</body> 
+
+</body>
 
 </html>
-
-
