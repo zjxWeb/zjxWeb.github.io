@@ -49,8 +49,11 @@ class IFrameComponent extends HTMLElement {
 
     
       iframe.setAttribute('src', btnsrc);
-      iframe.style.width = '98%';
-      iframe.style.height = '95%';
+      iframe.style.position = "absolute"
+      iframe.style.top = "0"
+      iframe.style.left = "0"
+      iframe.style.width = '100%';
+      iframe.style.height = '100%';
 
       // 右下角关闭按钮
       // 创建一个按钮元素
@@ -59,21 +62,21 @@ class IFrameComponent extends HTMLElement {
       btn.innerText = "关闭";
 
       // 样式
-      btn.style.display = "block";
-      btn.style.position = "fixed";
-      btn.style.right = "0";
-      btn.style.bottom = "110px";
-      btn.style.width = "65px";
-      btn.style.height = "35px";
-      btn.style.background = "#29a9e0cf";
-      btn.style.color = "#ffffff";
+      btn.style.display      = "block";
+      btn.style.position     = "fixed";
+      btn.style.right        = "0";
+      btn.style.bottom       = "110px";
+      btn.style.width        = "65px";
+      btn.style.height       = "35px";
+      btn.style.background   = "#29a9e0cf";
+      btn.style.color        = "rebeccapurple";
       btn.style.borderRadius = "15px";
-      btn.style.fontSize = "16px";
-      btn.style.color = "rebeccapurple";
-      btn.style.fontWeight = "600";
-      btn.style.lineHeight = "20px";
-      btn.style.textAlign = "center";
-      btn.style.cursor = "pointer";
+      btn.style.fontSize     = "16px";
+      btn.style.fontWeight   = "600";
+      btn.style.lineHeight   = "20px";
+      btn.style.textAlign    = "center";
+      btn.style.cursor       = "pointer";
+      btn.style.zIndex       = "10002";  // ← add this
       dialog.appendChild(btn)
       btn.addEventListener('click', () => {
           dialog.style.display = "none"

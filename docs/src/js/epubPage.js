@@ -217,14 +217,14 @@ class DIVComponent extends HTMLElement {
               button.style.backgroundColor = 'LightSkyBlue';
           });
           var dialog = document.createElement('dialog');
-          dialog.style.width = "93vw";
-          dialog.style.height = "90vh";
+          dialog.style.width = "94vw";
+          dialog.style.height = "100vh";
         //   dialog.style.backgroundColor = "rgba(0,0,0,0.5)"
           dialog.style.dialog = "none"
           dialog.style.zIndex = "9999"
           dialog.style.position = "fixed"
           dialog.style.top = "0"
-          dialog.style.left = "0"
+          dialog.style.left = "-3vw "
         // 获取传入的src属性值
         var btnsrc = this.getAttribute('src');
         button.setAttribute('src', btnsrc);
