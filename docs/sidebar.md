@@ -49,7 +49,7 @@
   * [📁git](techBlog/git/)
   * [📁vmware](techBlog/vmware/)
   * [📁hadoop安装及数组查重](techBlog/hadoop/)
-  * [📁agent](techBlog/agent/)
+  * [📁科学上网](techBlog/agent/)
 * [**好东西tips**](tips)
   * [📁docsify](tips/docsify/)
   * [📁Hubilder连接nox](tips/noxHubilder/)
