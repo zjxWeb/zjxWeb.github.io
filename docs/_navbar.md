@@ -9,4 +9,4 @@
   * [我的B站](https://space.bilibili.com/330132447?spm_id_from=333.1007.0.0)
   * [我的联系方式](onself)
   * [赞赏](pay)
-  * [导航页](guide)
+  * [主页](/)
