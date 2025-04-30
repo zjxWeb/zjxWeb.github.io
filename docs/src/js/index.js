@@ -5,6 +5,7 @@ window.$docsify = {
     mergeNavbar: true,//小屏设备下合并导航栏到侧边栏。
     repo: 'https://github.com/zjxWeb/zjxWeb.github.io',
     loadSidebar: 'sidebar.md',
+    loadNavbar: true,
     coverpage: 'cover.md',
     onlyCover: true,
     autoHeader: true,
@@ -40,6 +41,26 @@ window.$docsify = {
 
         hook.afterEach(function (html) {
           return html + footer;
+        });
+      },
+      function(hook) {
+        hook.ready(function() {
+          // 日期处理
+          const options = { year: 'numeric', month: 'long', day: 'numeric' };
+          const currentDate = new Date().toLocaleDateString('zh-CN', options);
+          
+          // 文档数量统计
+          fetch('../../sidebar.md')
+            .then(response => response.text())
+            .then(content => {
+              const count = (content.match(/\*/g) || []).length;
+              const cover = document.querySelector('.cover');
+              if (cover) {
+                cover.innerHTML = cover.innerHTML
+                  .replace('{{date}}', currentDate)
+                  .replace('{{docsify-updated-count}}', count);
+              }
+            });
         });
       }
     ],

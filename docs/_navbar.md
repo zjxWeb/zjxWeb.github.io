@@ -1,0 +1,12 @@
+* 快速导航
+  * [学习笔记](guide)
+  * [技术博客](tech)
+  * [工具|效率](tips)
+  * [项目实战](projectPractice)
+  * [算法集合](algorithm)
+* 我的地址
+  * [github地址](https://github.com/zjxWeb/zjxWeb.github.io)
+  * [我的B站](https://space.bilibili.com/330132447?spm_id_from=333.1007.0.0)
+  * [我的联系方式](onself)
+  * [赞赏](pay)
+  * [导航页](guide)
