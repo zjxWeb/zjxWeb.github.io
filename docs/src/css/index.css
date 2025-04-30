@@ -17,6 +17,10 @@
     font-size: 25px;
    
 }
+
+.cover-main p{
+    font-weight: 600;
+}
 :root {
     /* Tab blocks */
     --docsifytabs-border-color          : #ededed;
