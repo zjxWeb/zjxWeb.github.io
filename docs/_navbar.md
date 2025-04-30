@@ -5,8 +5,8 @@
   * [项目实战](projectPractice)
   * [算法集合](algorithm)
 * 我的地址
-  * [github地址](https://github.com/zjxWeb/zjxWeb.github.io)
   * [我的B站](https://space.bilibili.com/330132447?spm_id_from=333.1007.0.0)
-  * [我的联系方式](onself)
+  * [我的git](https://github.com/zjxWeb/zjxWeb.github.io)
+  * [联系我](onself)
   * [赞赏](pay)
   * [主页](/)
