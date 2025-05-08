@@ -34,7 +34,16 @@ window.$docsify = {
         var footer = [
           '<hr/>',
           '<footer>',
-            '<span>',
+            '<div class="thanks">',
+              '<p style="font-size:18px;font-weight:600; margin:12px 0; line-height:1.6; text-align:left;">感谢您的阅读与支持！若本文对您有所帮助，欢迎：</p>',
+              '<ul style="padding-left:20px; margin:0;">',
+                '<li style="margin:4px 0;">⭐ <strong>点赞收藏</strong> - 您的认可是我持续分享的动力</li>',
+                '<li style="margin:4px 0;">🐛 <strong>问题反馈</strong> - 欢迎在评论区留言指正或提出优化建议</li>',
+                '<li style="margin:4px 0;">☕ <strong>支持作者</strong> - 可通过 <a href="https://zjxweb.github.io/#/pay" target="_blank">点击🖱 赞赏支持创作</a></li>',
+                '<li style="margin:4px 0;">💼 <strong>定制开发</strong> - 如需个性化功能开发，欢迎通过邮箱联系 <a href="mailto:agonytriumph@163.com">agonytriumph@163.com</a></li>',
+              '</ul>',
+            '</div>',
+           '<span>',
               '<a href="https://github.com/zjxWeb/zjxWeb.github.io" target="_blank">',
                 'GitHub 仓库【别忘了 ⭐⭐⭐】',
               '</a>',
@@ -43,15 +52,6 @@ window.$docsify = {
             '<span>',
               '赞赏：<a href="https://zjxweb.github.io/#/pay" target="_blank">😊👉点这👈😊</a>.',
             '</span>',
-            '<div class="thanks">',
-              '<p>感谢您的阅读与支持！若本文对您有所帮助，欢迎：</p>',
-              '<ul>',
-                '<li>⭐ <strong>点赞收藏</strong> - 您的认可是我持续分享的动力</li>',
-                '<li>🐛 <strong>问题反馈</strong> - 欢迎在评论区留言指正或提出优化建议</li>',
-                '<li>☕ <strong>支持作者</strong> - 可通过 <a href="https://zjxweb.github.io/#/pay" target="_blank">点击🖱 赞赏支持创作</a></li>',
-                '<li>💼 <strong>定制开发</strong> - 如需个性化功能开发，欢迎通过邮箱联系 <a href="mailto:agonytriumph@163.com">agonytriumph@163.com</a></li>',
-              '</ul>',
-            '</div>',
           '</footer>'
         ].join('');
 
