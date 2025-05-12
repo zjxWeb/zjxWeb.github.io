@@ -52,17 +52,11 @@
 | [html5实现头像的上传](techBlog/web/?id=十五html5实现头像的上传)                                                |                                                                                    |                                                                                                | [插入命令](techBlog/vim/?id=插入命令)             |
 | [mui结合tomdjs实现前后端数据分离以及数据的渲染](techBlog/web/?id=十六mui结合tomdjs实现前后端数据分离以及数据的渲染)                  |                                                                                    |                                                                                                | [分屏](techBlog/vim/?id=分屏命令)               |
 
-| [📁docsify 博客搭建及其部属实现在线访问](/tips/docsify/)                               |
-| ------------------------------------------------------------------------ |
-| [📁**Hubilder连接nox，实现真机运行**](/tips/noxHubilder/)                         |
-| [📁**vscode相关技巧，插件分享，和使用技巧**](/tips/vsCodeTools/)                        |
-| [📁**好用的小工具，分享一下日常发现的神仙软件和工具**](http://localhost:3000/#/tips/goodTools/) |
-
-<color-tool></color-tool>
-
-| 小技巧分享合集                                                                  |
+| [小技巧分享合集](/tips)                                                         |
 |:------------------------------------------------------------------------:|
 | [📁**Hubilder连接nox，实现真机运行**](/tips/noxHubilder/)                         |
 | [📁**vscode相关技巧，插件分享，和使用技巧**](/tips/vsCodeTools/)                        |
 | [📁**好用的小工具，分享一下日常发现的神仙软件和工具**](http://localhost:3000/#/tips/goodTools/) |
 | [📁**docsify 博客搭建及其部属实现在线访问**](/tips/docsify/)                           |
+
+<color-tool/>
