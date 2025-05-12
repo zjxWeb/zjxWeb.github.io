@@ -258,6 +258,11 @@ table a {
     text-decoration: none !important;
 }
 
+.markdown-section{
+    max-width: 90% !important;
+    padding:30px 5px 40px 0 !important;
+}
+
 /* 通用表格样式 */
 .markdown-section table {
     border-collapse: separate;
