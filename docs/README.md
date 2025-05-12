@@ -1,5 +1,26 @@
-> 📚 知行合一 · 技术博客与知识库的完美融合  
-<color-tool></color-tool>
+<!-- 主标题 -->
+<span style="
+  font-size: 42px;
+  font-weight: 800;
+  color: #FF6F61;
+  text-align: center;
+  display: block;
+  margin: 20px 0 10px;
+  text-shadow: 0 2px 4px rgba(255,111,97,0.3);
+  letter-spacing: 1.5px;">
+  📚 知行合一
+</span>
+
+<!-- 副标题 -->
+<span style="
+  font-size: 24px;
+  color: #666;
+  text-align: center;
+  display: block;
+  margin-bottom: 30px;
+  font-family: '微软雅黑', sans-serif;">
+  · 技术博客与知识库的完美融合
+</span>
 
 
 | 常用URL                                                      | 翻译软件                                                     | c++相关                                                      | digitalTwins                                                 | 算法                                                         | web                                                          | work                                                         |
@@ -38,3 +59,4 @@
 | [📁**vscode相关技巧，插件分享，和使用技巧**](/tips/vsCodeTools/) |
 | [📁**好用的小工具，分享一下日常发现的神仙软件和工具**](http://localhost:3000/#/tips/goodTools/) |
 
+<color-tool></color-tool>
