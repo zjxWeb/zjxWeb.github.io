@@ -1,51 +1,55 @@
-.cover,.show{
-    background: linear-gradient(to bottom right, #5489ba, #2073c2 60%, #dff6ff)!important;
+.cover,
+.show {
+    background: linear-gradient(to bottom right, #5489ba, #2073c2 60%, #dff6ff) !important;
     /* color: antiquewhite; */
 }
 
 /* logo 图片设置 */
 .cover-main p img {
-    width        : 150px;
+    width: 150px;
     border-radius: 50%;
-} 
-.anchor{
+}
+
+.anchor {
     font-weight: 600;
     color: rgb(171, 201, 227) !important;
 }
-.cover-main ul li{
-    color:rgb(11, 246, 235);
+
+.cover-main ul li {
+    color: rgb(11, 246, 235);
     font-size: 25px;
-   
+
 }
 
-.cover-main p{
+.cover-main p {
     font-weight: 600;
 }
+
 :root {
     /* Tab blocks */
-    --docsifytabs-border-color          : #ededed;
-    --docsifytabs-border-px             : 1px;
-    --docsifytabs-border-radius-px      : ;
-    --docsifytabs-margin                : 1.5em 0;
+    --docsifytabs-border-color: #ededed;
+    --docsifytabs-border-px: 1px;
+    --docsifytabs-border-radius-px: ;
+    --docsifytabs-margin: 1.5em 0;
 
     /* Tabs */
-    --docsifytabs-tab-background        : #f8f8f8;
+    --docsifytabs-tab-background: #f8f8f8;
     --docsifytabs-tab-background--active: var(--docsifytabs-content-background);
-    --docsifytabs-tab-color             : #999;
-    --docsifytabs-tab-color--active     : inherit;
-    --docsifytabs-tab-highlight-px      : 3px;
-    --docsifytabs-tab-highlight-color   : var(--theme-color, currentColor);
-    --docsifytabs-tab-padding           : 0.6em 1em;
+    --docsifytabs-tab-color: #999;
+    --docsifytabs-tab-color--active: inherit;
+    --docsifytabs-tab-highlight-px: 3px;
+    --docsifytabs-tab-highlight-color: var(--theme-color, currentColor);
+    --docsifytabs-tab-padding: 0.6em 1em;
 
     /* Tab content */
-    --docsifytabs-content-background    : inherit;
-    --docsifytabs-content-padding       : 1.5rem;
+    --docsifytabs-content-background: inherit;
+    --docsifytabs-content-padding: 1.5rem;
 }
 
 
 /* 密码校验 */
- /* 遮罩层样式 */
- .overlay {
+/* 遮罩层样式 */
+.overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -60,8 +64,10 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 80%; /* 设置容器宽度为屏幕宽度的80% */
-    max-width: 400px; /* 设置容器最大宽度为400px */
+    width: 80%;
+    /* 设置容器宽度为屏幕宽度的80% */
+    max-width: 400px;
+    /* 设置容器最大宽度为400px */
     padding: 20px;
     background-color: white;
     border-radius: 10px;
@@ -96,11 +102,11 @@
     color: white;
     border: none;
     border-radius: 5px;
-    cursor:pointer
+    cursor: pointer
 }
 
 .password_input button:hover {
-    background-color:#3E8E41
+    background-color: #3E8E41
 }
 
 /* 主题 */
@@ -123,11 +129,12 @@
 .teme:hover {
     background-color: #ebdfa3;
     transform: scale(1.05);
-  }
-  .shop:hover {
+}
+
+.shop:hover {
     background-color: #ebdfa3;
     transform: scale(1.05);
-  }
+}
 
 
 /* 定义滑动按钮的基本样式 */
@@ -201,35 +208,248 @@ input:checked + .slider:before {
     text-align: center;  
     cursor: pointer;
   }
+
+  
  */
-  #scrollToTopBtn:hover {
+#scrollToTopBtn:hover {
     background-color: #ebdfa3;
     transform: scale(1.05);
-  }
+}
 
-  /* 菜谱app图片样式 */
-  .menuAppClass{
+/* 菜谱app图片样式 */
+.menuAppClass {
     width: 20vw;
     margin-left: 20vw;
-  }
-  
+}
 
-  /* go study style */
 
-  .goBaseImg{
+/* go study style */
+
+.goBaseImg {
     width: 29vw;
-  }
+}
 
 /* 全局样式 */
-.halfWidth{
+.halfWidth {
     width: 40vw;
     margin-left: 10vw;
 }
+
 /* 全局样式  :class=bsWidth'*/
-.bsWidth{
+.bsWidth {
     width: 80vw;
 }
+
 /* github图标层级 */
-.github-corner{
-    z-index: 0!important;
+.github-corner {
+    z-index: 0 !important;
+}
+
+
+/* 调整全局样式——大调整 */
+
+/* 去除所有表格文字下划线 */
+table {
+    text-decoration: none;
+}
+
+/* 针对超链接下划线 */
+table a {
+    text-decoration: none !important;
+}
+
+/* 通用表格样式 */
+.markdown-section table {
+    border-collapse: separate;
+    border-spacing: 0 12px;
+    /* 行间距 */
+    width: 100%;
+}
+
+/* 卡片式单元格 */
+.markdown-section td {
+    background: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    padding: 16px 20px;
+    transition: transform 0.2s;
+}
+
+/* 列宽优化 */
+.markdown-section td:nth-child(1) {
+    width: 16%;
+    min-width: 160px;
+}
+
+.markdown-section td:nth-child(2) {
+    width: 14%;
+}
+
+.markdown-section td:nth-child(3) {
+    width: 15%;
+}
+
+.markdown-section td:nth-child(4) {
+    width: 14%;
+}
+
+.markdown-section td:nth-child(5) {
+    width: 12%;
+}
+
+.markdown-section td:nth-child(6) {
+    width: 14%;
+}
+
+.markdown-section td:nth-child(7) {
+    width: 13%;
+}
+
+/* 链接样式增强 */
+.markdown-section td a {
+    color: #2c3e50;
+    display: block;
+    padding: 8px 12px;
+    border-radius: 6px;
+    position: relative;
+}
+
+/* 动态交互效果 */
+.markdown-section td:hover {
+    transform: translateY(-3px);
+    background: #fff;
+}
+
+.markdown-section td a:hover {
+    background: rgba(255, 111, 97, 0.08);
+}
+
+/* ♦️符号统一化 */
+.markdown-section td a::before {
+    content: "♦️";
+    color: #FF6F61;
+    margin-right: 8px;
+    filter: drop-shadow(0 2px 2px rgba(255, 111, 97, 0.2));
+}
+
+
+/* 模块化导航卡片 */
+.markdown-section .nav-card {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    margin: 24px 0;
+}
+
+/* 卡片容器 */
+.nav-card>div {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s;
+}
+
+/* 悬停动效 */
+.nav-card>div:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* 标题样式 */
+.nav-card h3 {
+    color: #2c3e50;
+    font-size: 18px;
+    padding-bottom: 12px;
+    margin: 0 0 16px;
+    border-bottom: 2px solid #FF6F61;
+}
+
+/* 子链接列表 */
+.nav-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-card li {
+    margin: 10px 0;
+}
+
+.nav-card a {
+    color: #555;
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border-radius: 6px;
+}
+
+/* 链接标识符 */
+.nav-card a::before {
+    content: "";
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: #FF6F61;
+    border-radius: 50%;
+    margin-right: 12px;
+}
+
+
+/* 功能卡片组 */
+.feature-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    margin-top: 40px;
+}
+
+.feature-card {
+    background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid rgba(255, 111, 97, 0.15);
+    transition: all 0.3s;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(255, 111, 97, 0.08);
+}
+
+.feature-card h2 {
+    color: #FF6F61;
+    font-size: 20px;
+    margin: 0 0 12px;
+}
+
+.feature-card h2::before {
+    content: "📁 ";
+    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.1));
+}
+
+@media (max-width: 768px) {
+
+    /* 表格转为垂直排列 */
+    .markdown-section table,
+    .markdown-section tbody,
+    .markdown-section tr,
+    .markdown-section td {
+        display: block;
+        width: 100% !important;
+    }
+
+    .markdown-section td {
+        margin-bottom: 15px;
+    }
+
+    /* 导航卡片调整 */
+    .nav-card>div {
+        margin-bottom: 20px;
+    }
+
+    /* 功能卡片文字缩放 */
+    .feature-card h2 {
+        font-size: 18px;
+    }
 }
