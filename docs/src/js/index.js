@@ -45,29 +45,33 @@ window.$docsify = {
               <div class="action-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:1.5rem;">
                   <!-- 卡片1：正向反馈 -->
                   <div class="action-card" style="padding:1.5rem; background:white; border-radius:12px; box-shadow:0 6px 15px -3px rgba(0,0,0,0.05); transition:transform 0.25s ease;">
+                    <a href="https://zjxweb.github.io/#/pay">    
                       <div style="display:flex; align-items:center; gap:0.8rem; margin-bottom:1rem;">
-                          <div style="width:40px; height:40px; background:#ffe3e3; border-radius:8px; display:grid; place-items:center;">
-                              ⭐
-                          </div>
-                          <h4 style="margin:0; color:#2b2d42; font-weight:600;">正向激励</h4>
-                      </div>
-                      <p style="margin:0; color:#495057; line-height:1.6; font-size:0.95rem;">
-                          您的每次互动都是我们持续优化的动力源
-                      </p>
+                            <div style="width:40px; height:40px; background:#ffe3e3; border-radius:8px; display:grid; place-items:center;">
+                                ⭐
+                            </div>
+                            <h4 style="margin:0; color:#2b2d42; font-weight:600;">正向激励</h4>
+                        </div>
+                        <p style="margin:0; color:#495057; line-height:1.6; font-size:0.95rem;">
+                            您的每次互动都是我们持续优化的动力源
+                        </p>
+                      </a>
                   </div>
                   
                   <!-- 卡片2：即时反馈 -->
                   <div class="action-card" style="padding:1.5rem; background:white; border-radius:12px; box-shadow:0 6px 15px -3px rgba(0,0,0,0.05); transition:transform 0.25s ease;">
+                     <a href="mailto:agonytriumph@163.com">  
                       <div style="display:flex; align-items:center; gap:0.8rem; margin-bottom:1rem;">
-                          <div style="width:40px; height:40px; background:#d0f4ff; border-radius:8px; display:grid; place-items:center;">
-                              💬
-                          </div>
-                          <h4 style="margin:0; color:#2b2d42; font-weight:600;">即时沟通</h4>
-                      </div>
-                      <p style="margin:0; color:#495057; line-height:1.6; font-size:0.95rem;">
-                          问题反馈24小时内响应<br>
-                          <a href="mailto:agonytriumph@163.com" style="color:#4dabf7; text-decoration:none; border-bottom:1px dashed currentColor;">直达作者邮箱</a>
-                      </p>
+                            <div style="width:40px; height:40px; background:#d0f4ff; border-radius:8px; display:grid; place-items:center;">
+                                💬
+                            </div>
+                            <h4 style="margin:0; color:#2b2d42; font-weight:600;">即时沟通</h4>
+                        </div>
+                        <p style="margin:0; color:#495057; line-height:1.6; font-size:0.95rem;">
+                            问题反馈24小时内响应<br>
+                            <a href="mailto:agonytriumph@163.com" style="color:#4dabf7; text-decoration:none; border-bottom:1px dashed currentColor;">直达作者邮箱</a>
+                        </p>
+                      </a>
                   </div>
               </div>
           </div>
