@@ -11,7 +11,7 @@ window.$docsify = {
   onlyCover: true,
   autoHeader: true,
   notFoundPage: true,//在找不到指定页面时加载_404.md
-  subMaxLevel: 3,
+  subMaxLevel: 4,
   search: 'auto', // seach默认值
   //字数统计
   count: {
