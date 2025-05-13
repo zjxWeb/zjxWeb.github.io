@@ -61,4 +61,4 @@
 | [📁**好用的小工具，分享一下日常发现的神仙软件和工具**](http://localhost:3000/#/tips/goodTools/) |
 | [📁**docsify 博客搭建及其部属实现在线访问**](/tips/docsify/)                           |
 ---
-<color-tool/>
+<color-tool></color-tool>
