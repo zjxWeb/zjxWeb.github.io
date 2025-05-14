@@ -1,6 +1,6 @@
 # web显示obj文件
 
-[对应完整代码github仓库地址](https://github.com/zjxWeb/webObj-.git)
+[在web界面显示obj三维模型完整代码🖱️点击下载](https://download.csdn.net/download/qq_44891434/90835302?spm=1001.2014.3001.5503)
 
 > 本项目是针对在web界面显示obj文件提供的解决方案，执行很简单；
 
