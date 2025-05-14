@@ -1,4 +1,5 @@
 <!-- * [**返回主页**](/guide.md) -->
+
 * [**📚学习笔记**](guide.md)
   * [📁c++](study/c++/)
     * [📃c++语法](study/c++/c++base/)
@@ -29,7 +30,8 @@
     * [📃redis实战](study/dataBase/redisApply/)
     * [📃redis高级](study/dataBase/redisHigh/)
     * [📃redis集群](study/dataBase/redisGroup/)
-    <!-- * [📁设计模式](study/designPattern/) -->
+      
+      <!-- * [📁设计模式](study/designPattern/) -->
   * [📁java](study/java/)
     * [📃javaweb](study/java/javaweb/)
     * [📃多线程](study/java/Multithreading/)
@@ -54,6 +56,7 @@
   * [📁docsify](tips/docsify/)
   * [📁Hubilder连接nox](tips/noxHubilder/)
   * [📁vscode相关技巧](tips/vsCodeTools/)
+  * [📁web显示obj三维模型](tips/webObj/)
   * [📁好用的小工具](tips/goodTools/)
 * [**🚩项目实战**](projectPractice)
   * [📁C++Project](projectPractice/cppProject/)
