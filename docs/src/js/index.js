@@ -6,8 +6,8 @@ window.$docsify = {
   // repo: 'https://github.com/zjxWeb/zjxWeb.github.io',
   loadSidebar: 'sidebar.md',
   loadNavbar: true,
-  // coverpage: 'cover.md',
-  coverpage: false,
+  coverpage: 'cover.md',
+  // coverpage: false,
   onlyCover: true,
   autoHeader: true,
   notFoundPage: true,//在找不到指定页面时加载_404.md
