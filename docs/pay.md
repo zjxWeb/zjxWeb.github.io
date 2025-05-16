@@ -1,12 +1,11 @@
 <!-- tabs:start -->
+#### **微信打赏**
+
+<img style="width:20vw;margin-left:10vw;" src="./src/img/wxpay.jpg"/>
 
 #### **支付宝打赏**
 
 <img style="width:20vw;" src="./src/img/zfbpay.jpg">
-
-#### **微信打赏**
-
-<img style="width:20vw;margin-left:10vw;" src="./src/img/wxpay.jpg"/>
 
 <!-- tabs:end -->
 # 🧠 知识复利计划：用持续记录对抗「自动驾驶人生」
