@@ -60,6 +60,38 @@
   <div class="bubble bubble-1"></div>
   <div class="bubble bubble-2"></div>
   <div class="bubble bubble-3"></div>
+
+  <!-- 新增底部区域 -->
+  <footer class="site-footer">
+    <!-- 波浪分隔线 -->
+    <div class="footer-wave">
+      <svg class="editorial" viewBox="0 24 150 28" preserveAspectRatio="none">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"/>
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="50" y="0" fill="rgba(255,255,255,0.3)"/>
+          <use xlink:href="#gentle-wave" x="50" y="3" fill="rgba(255,255,255,0.2)"/>
+          <use xlink:href="#gentle-wave" x="50" y="6" fill="rgba(255,255,255,0.1)"/>
+        </g>
+      </svg>
+    </div>
+    
+    <!-- 底部内容容器 -->
+    <div class="footer-container">
+      <div class="copyright">
+        <p>© <span id="currentYear"></span> 拼搏的小浣熊. 保留所有权利</p>
+        <p>知行合一·技术博客与知识库的完美融合</p>
+      </div>
+      
+      <div class="footer-links">
+        <a href="/#/about">关于我们</a>
+        <a href="/#/privacy">隐私政策</a>
+        <a href="/#/onself">联系我们</a>
+        <a href="/#/guide">网站地图</a>
+      </div>
+    </div>
+  </footer>
 </div>
 
 <style>
@@ -77,6 +109,7 @@
 
 /* 基础布局 */
 .hero-container {
+    width: 100vw;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -456,6 +489,134 @@
     width: 90%;
   }
 }
+/* 底部整体样式 */
+.site-footer {
+  width: 100vw;
+  position: relative;
+  margin-top: 11vh;
+  z-index: 3;
+}
+
+/* 波浪效果 */
+.footer-wave {
+  width: 100%;
+  height: 40px;
+  position: absolute;
+  top: -39px;
+  left: 0;
+  overflow: hidden;
+}
+
+.editorial {
+  display: block;
+  width: 100%;
+  height: 40px;
+  margin: 0;
+}
+
+.parallax > use {
+  animation: move-forever 12s linear infinite;
+}
+
+.parallax > use:nth-child(1) { animation-delay: -2s; }
+.parallax > use:nth-child(2) { 
+  animation-delay: -2s;
+  animation-duration: 5s;
+}
+.parallax > use:nth-child(3) {
+  animation-delay: -4s;
+  animation-duration: 3s;
+}
+
+@keyframes move-forever {
+  0% { transform: translate(-90px, 0%); }
+  100% { transform: translate(85px, 0%); }
+}
+
+/* 底部内容容器 */
+.footer-container {
+  background: rgba(26, 35, 70, 0.85);
+  backdrop-filter: blur(5px);
+  padding: 30px 20px 25px;
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 版权信息 */
+.copyright {
+  font-size: 0.9em;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+.copyright p:first-child {
+  font-weight: 500;
+  letter-spacing: 0.03em;
+}
+
+/* 链接样式 */
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.footer-links a {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-size: 0.85em;
+  position: relative;
+  padding: 4px 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.footer-links a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--yellow-accent);
+  transition: width 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: var(--yellow-accent);
+}
+
+.footer-links a:hover::after {
+  width: 100%;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .footer-container {
+    padding: 25px 15px;
+  }
+  
+  .footer-links {
+    gap: 15px;
+  }
+  
+  .copyright {
+    font-size: 0.8em;
+  }
+}
+
+/* 确保内容不足时页脚仍在底部 */
+body, html {
+  height: 100%;
+}
+
+.hero-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 </style>
 
 <script>
@@ -484,5 +645,26 @@ document.addEventListener('DOMContentLoaded', function() {
     
     container.appendChild(bubble);
   }
+});
+document.addEventListener('DOMContentLoaded', function() {
+  // 原有粒子效果代码...
+  
+  // 更新年份
+  document.getElementById('currentYear').textContent = new Date().getFullYear();
+  
+  // 底部定位调整
+  function adjustFooterLayout() {
+    const footer = document.querySelector('.site-footer');
+    const main = document.querySelector('.hero-container');
+    
+    if (main.scrollHeight <= window.innerHeight) {
+      footer.style.marginTop = 'auto';
+    } else {
+      footer.style.marginTop = '60px';
+    }
+  }
+  
+  adjustFooterLayout();
+  window.addEventListener('resize', adjustFooterLayout);
 });
 </script>
