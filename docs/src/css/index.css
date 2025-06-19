@@ -1,51 +1,6 @@
-.cover,
-.show {
-    background: linear-gradient(to bottom right, #5489ba, #2073c2 60%, #dff6ff) !important;
-    /* color: antiquewhite; */
+section.cover .cover-main{
+    margin: 0 !important;
 }
-
-/* logo 图片设置 */
-.cover-main p img {
-    width: 150px;
-    border-radius: 50%;
-}
-
-.anchor {
-    font-weight: 600;
-    color: rgb(171, 201, 227) !important;
-}
-
-.cover-main ul li {
-    color: rgb(11, 246, 235);
-    font-size: 25px;
-
-}
-
-.cover-main p {
-    font-weight: 600;
-}
-
-:root {
-    /* Tab blocks */
-    --docsifytabs-border-color: #ededed;
-    --docsifytabs-border-px: 1px;
-    --docsifytabs-border-radius-px: ;
-    --docsifytabs-margin: 1.5em 0;
-
-    /* Tabs */
-    --docsifytabs-tab-background: #f8f8f8;
-    --docsifytabs-tab-background--active: var(--docsifytabs-content-background);
-    --docsifytabs-tab-color: #999;
-    --docsifytabs-tab-color--active: inherit;
-    --docsifytabs-tab-highlight-px: 3px;
-    --docsifytabs-tab-highlight-color: var(--theme-color, currentColor);
-    --docsifytabs-tab-padding: 0.6em 1em;
-
-    /* Tab content */
-    --docsifytabs-content-background: inherit;
-    --docsifytabs-content-padding: 1.5rem;
-}
-
 
 /* 密码校验 */
 /* 遮罩层样式 */
