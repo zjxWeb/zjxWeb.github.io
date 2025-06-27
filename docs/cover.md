@@ -559,9 +559,10 @@
 .footer-links {
   display: flex;
   justify-content: center;
-  gap: 25px;
+  gap: 2em;
   margin-top: 10px;
   flex-wrap: wrap;
+  color: rgba(226, 208, 208, 0.7);
 }
 
 .footer-links a {
