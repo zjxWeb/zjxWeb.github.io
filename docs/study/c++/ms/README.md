@@ -8,7 +8,7 @@
 
 ![56](./src/56.png)
 
-#### **动态库和静态库的区别**
+#### **动态库和静态库**
 
 ![57](./src/57.png)
 
@@ -22,15 +22,28 @@
 
 ![44](./src/44.png)
 
+`构造函数能否声明为虚函数或者纯虚函数，析构函数呢？`
+
+>  析构函数：
+
++ 析构函数可以为虚函数，并且⼀般情况下基类析构函数要定义为虚函数。
++ 只有在基类析构函数定义为虚函数时，调⽤操作符delete销毁指向对象的基类指针时，才能准确调⽤派⽣类的析构函数（从该级向上按序调⽤虚函数），才能准确销毁数据。
++ **析构函数可以是纯虚函数**，含有纯虚函数的类是抽象类，此时不能被实例化。但派⽣类中可以根据⾃身需求᯿新改写基类中的纯虚函数。
+
+> 构造函数
+
++ 构造函数不能定义为虚函数。在构造函数中可以调⽤虚函数，不过此时调⽤的是正在构造的类中的虚函数，⽽不是⼦类的虚函数，因为此时⼦类尚未构造好。
++ 虚函数对应⼀个vtable(虚函数表)，类中存储⼀个vptr指向这个vtable。如果构造函数是虚函数，就需要通过vtable调⽤，可是对象没有初始化就没有vptr，⽆法找到vtable，所以构造函数不能是虚函数。
+
 #### **类型推导**
 
 ![44](./src/45.png)
 
-#### **function，lambda，bind之间的关系**
+#### **fun/lam/bind关系**
 
 ![](./src/46.png)
 
-#### **如何写线程安全的程序**
+#### **写线程安全的程序**
 
 ![47](./src/47.png)
 
@@ -38,7 +51,7 @@
 
 ![](./src/48.png)
 
-#### **智能指针**
+#### **智能ptr**
 
 ![49](./src/49.png)
 
@@ -80,6 +93,410 @@ int main() {
 
 ![62](./src/62.png)
 
+#### **野指针和悬空指针**
+
++ 都是是指向⽆效内存区域(这⾥的⽆效指的是"不安全不可控")的指针，访问⾏为将会导致未定义⾏为。
+
+> 野指针
+
++ 野指针，指的是没有被初始化过的指针
+
+```cpp
+int main(void){
+    int* p;// 未初始化
+    cout << *p << endl;// 未初始化就被使用
+    return 0;
+}
+```
+
++ 因此，为了防⽌出错，对于指针初始化时都是赋值为 `nullptr` ，这样在使⽤时编译器就会直接报错，产⽣⾮法内存访问。
+
+> 悬空指针
+
++ 悬空指针，指针最初指向的内存已经被释放了的⼀种指针。
+
+```cpp
+int mian(void){
+    int * p = nullptr;
+    int * p2 = new int;
+    p = p2;
+    delete p2;
+}
+```
+
++ 此时 p和p2就是悬空指针，指向的内存已经被释放。继续使⽤这两个指针，⾏为不可预料。需要设置为 `p=p2=nullptr` 。此时再使⽤，编译器会直接保错。
++ 避免野指针比较简单，但悬空指针比较麻烦。c++引⼊了智能指针，C++智能指针的本质就是避免悬空指针的产⽣。
+
+> 解决方法
+
++ 野指针： 指针变量未及时初始化=> 定义指针变量及时初始化，要么置空；
++ 悬空指针：指针free或delete之后没有及时置空=>释放操作立即置空；
+
+#### **内存模型**
+
+>  内存四区模型主要包括代码区、全局区（或静态存储区）、栈区和堆区。以下是这四个区域的特性：
+
+**代码区**：
+
+- 内容：存放**函数体的二进制代码**，由操作系统进行管理。
+- 特性
+  - 共享性：代码区是共享的，对于频繁执行的程序，只需要在内存中有一份代码即可。
+  - 只读性：代码区是只读的，以防止程序意外地修改了它的指令。
+  - 初始化：在程序编译时确定，由编译器和链接器负责生成和放置
+
+**全局区（或静态存储区）**.data/.bss/.rodata（只读区）：
+
+- 内容
+
+  - 存放**全局变量和静态变量**。
+  - 存放**常量**，包括常量和字符串常量。
+
+- 特性
+
+  - 生命周期：全局区内的变量**在程序编译阶段就已经分配好了内存空间并初始化**，且在程序的整个运行期间都存在。
+
+  - 不可修改性：静态存储区内的常量一经初始化，不可修改。全局常变量存放在静态常量区，不可以通过指针或引用间接修改。
+
+    - 全局变量和函数的释放是由操作
+
+      系统自动回收内存
+
+      - 如果全局变量引用了动态分配的资源，那么需要确保在程序结束前适当地释放这些资源。
+
+    - 全局作用域中的**类对象才会调用析构进行释放**
+
+**栈区**：
+
+- 内容：由编译器自动分配释放，存放函数的参数值、局部变量等。
+- 特性
+  - 生命周期：栈区的内容从函数左括号开始，到右括号为止。函数结束后，内存自动释放回收。
+  - 生长方向：栈区向下生长，数值逐渐减小。
+  - 栈区的内存会自动释放
+  - **函数内的局部变量**（不包括静态局部变量）以及函**数调用的参数**通常存放在栈上
+
+**堆区**：
+
+- 内容：由程序员分配和释放。
+
+- 特性
+
+  - 管理：堆区的内容由程序员自己开辟，手动释放。如果程序员不释放，程序结束时由系统回收。
+  - 生长方向：堆区向上生长，数值逐渐增大。
+  - 由程序员分配和释放的内存区域，通常使用 `malloc`、`calloc`、`realloc` 和 `free` 等函数在C语言中管理。在高级语言中，如Python，垃圾回收机制负责自动管理堆上的内存。
+
+  > 堆和栈都是程序运行时才分配的空间。
+
+#### **写时拷贝**
+
++ 写时拷贝是浅拷贝解决浅拷贝析构冲突的一种解决方案，写时拷贝也叫延时拷贝，几个对象共用一块空间，当执行读操作时不会有影响，当你需要进行写操作改变一个对象的内容时，空间的值不能被修改，会互相影响，那么就需要单独开辟一块空间将对象拷贝过去然后改，不改变就不需要开辟。
+
++ 写时浅拷贝与深拷贝比较的优点：占用空间少（相同内容不开辟新空间），复制效率高
+
+> 写时拷贝有两种方案
+
++ 1.写时拷贝（引用计数），一个对象第一次开辟空间存放字符串，再开辟一块新的空间存放引用计数。当它拷贝构造其他对象时，让其他对象的引用计数也都指向存放引用计数的同一块空间，引用计数加一。
++ ![63](./src/63.png)
+  + 缺陷：（1）每次new两块空间，创建多个对象的时候效率较低；
+  + （2）它多次分配小块空间，容易造成内存碎片化，导致分配不出来大块内存。
+
+
++ 优化即第二种方案写时拷贝（指针），仿照new的底层实现，开辟一块空间，在其头四个字节计数，其思想就是在构造对象的时候多开辟四个字节用来存引用计数，这样就不需要变量了，要用引用计数的时候只需要把它取出来就可以了。
+
+> string 的写时拷贝（维护一个指针）
+
+```cpp
+class String
+{
+public:
+	//构造
+	String(const char* str)
+		:_str(new char[strlen(str) + 1])
+		,_pCount(new int(1))
+	{
+		strcpy(_str, str);
+	}
+
+	//拷贝构造
+	String(const String& s)
+		:_str(s._str)
+		,_pCount(s._pCount)
+	{
+		(*_pCount)++;
+	}
+
+	//赋值运算符重载
+	String& operator=(const String& s)
+	{
+		if(_str != s._str)
+		{
+			if(--(*_pCount) == 0)
+			{
+				delete[] _str;
+				delete _pCount;
+			}
+			_str = s._str;
+			_pCount = s._pCount;
+			(*_pCount)++;
+		}
+		return *this;
+	}
+
+	~String()
+	{
+		if(--(*_pCount) == 0)
+		{
+			delete[] _str;
+			delete _pCount;
+		}
+	}
+
+	char& operator[](size_t pos)
+	{
+		if(*_pCount > 1)
+		{
+			char* newstr = new char[strlen(_str) + 1];
+			strcpy(newstr, _str);
+			--(*_pCount);
+			_str = newstr;
+			_pCount = new int(1);
+		}
+		return _str[pos];
+	}
+
+	const char* c_str()
+	{
+		return _str;
+	}
+private:
+	char* _str;
+	int* _pCount;
+};
+
+```
+
+#### **指针和引用**
+
+> 指针：
+
+- **定义**：指针是存储变量地址的变量。通过指针，我们可以直接访问和操作内存中的数据。指针变量本身存储的是一个地址值，该地址指向另一个变量的内存位置。
+- **操作**：指针可以进行多种操作，包括赋值（指向不同的地址）、算术运算（如指针递增以访问数组中的下一个元素）、比较（比较两个指针是否指向同一位置）等。
+- **特点**：指针具有灵活性，但也带来了复杂性，因为不当的指针操作可能会导致内存泄漏、野指针（dangling pointer）等问题。
+
+> 引用：
+
+- **定义**：引用是变量的别名。一旦引用被初始化为某个变量的别名，它就不能再被改变为另一个变量的别名（即引用必须被初始化，且一旦初始化后就不能再被重新绑定到另一个对象）。
+- **操作**：对引用的操作就像是对它所引用的变量的直接操作一样。引用通常用于函数参数传递和返回值，以避免不必要的拷贝和提高性能。
+- **特点**：引用提供了一种更安全、更简洁的方式来访问和操作变量，因为它在语法上表现得就像是直接访问变量本身一样。然而，引用也有限制，比如它必须在声明时被初始化，并且之后不能改变其绑定的对象。
+
+> **指针和引用的主要区别**：
+
+1. **初始化**：指针在声明时不必初始化（尽管这是一个好习惯），而引用必须在声明时被初始化。
+2. **空值**：指针可以被设置为`nullptr`（或在C中为`NULL`），表示它不指向任何对象；而引用必须始终指向某个对象，不能为空。
+3. **灵活性**：指针比引用更灵活，可以进行算术运算、比较等操作；而引用一旦绑定到某个对象后，就不能改变其指向。
+4. **安全性**：引用在安全性上通常优于指针，因为它避免了空指针解引用、野指针等常见错误。
+5. **存储**：sizeof指针得到的是指针的大小，sizeof引用得到的是引所指向变量的大小
+
+>  传递参数时，什么时候使用指针，什么时候使用引用
+
+- 返回函数内局部变量的内存的时候用**指针**，使用指针需要开辟内存，用完要记得释放指针，不然会内存泄漏。
+- **类**对象作为参数传递使用**引用**。
+- 对栈空间大小比较敏感（递归）时使用**引用**，引用作为别名传递时不需要创建临时变量，开销更小。
+
+#### **初始化列表**
+
+- 在构造函数的冒号后面使用初始化列表
+- 初始化列表是**给数据成员分配内存空间时就进行初始化**
+- 初始化顺序是由类的成员声明顺序决定的，而不是初始化列表顺序
+
+**成员列表初始化：**
+
+- 初始化一个**const成员**时
+- 初始化一个**引用成员**时
+- 当**调用一个基类的构造函数**，而它拥有一组参数
+- 当调用一个成员类的构造函数，其拥有一组参数。
+  - **成员对象**：对象作为类的成员，如果他有构造函数，且构造函数参数不为空，必须使用列表初始化
+
+#### **左右值**
+
+- **左值：**程序运行过程中，有持久的存储位置（表达式结束后仍旧存在），可以出现在赋值运算符的左边。（结构体/类的实例、++i）
+- **右值：**临时性的、不再需要的表达式结果，不可以被取地址，不能出现在赋值运算符的左边。（常量值、函数返回值、i++)
+- **左值引用：**可以理解为是**对左值的引用**。对于左值引用，等号右边的值必须可以取地址，也就是说必须是左值。
+- **右值引用：**可以理解为是对右值的引用。**通过移动语义来避免无谓拷贝问题**，通过**move语义可以将临时生成的左值中的资源无代价的转移到另一个对象中去**，通过**完美转发**来解决不能按照参数实际类型来转发的问题。这样可以避免内存空间的释放和分配，能够延长变量值的声明周期。
+- **移动语义：**转移所有权，转移资源而不进行深拷贝。移动语义通常用于那些比较大的对象，搭配移动构造函数或移动赋值运算符来使用。通过move实现，std:move 的作用只有一个，无论输入参数是左值还是右值，都强制转成右值。
+
+#### **移动语义**
+
++ 移动语义很简单，方便大家区分你到底要移动还是复制罢了。
+
+> 右值引用就是右值引用，它和左值引用一样，算是一种引用。
+
+```cpp
+struct X{
+	X() = default;// 默认构造
+    X(const X& x){
+		// 拷贝构造  进行资源的复制
+    }
+    X(X&& x) noexcpt{
+        // 移动构造  进行资源的移动
+    }
+}
+```
+
++ 开发者们约定移动构造这些右值引用的函数，是“转移所有权”
++ 复制就是复制一份新的，但是移动呢，是把原对象的`指向资源的指针，赋给新的对象成员`，也就是所谓的转移所有权，通常的实现是转移指向数据的那个指针给新对象就行(当然了，这种移动是取决于你自己的移动构造移动赋值的实现的)，自然没有复制开销，举一个标准库例子:
+
+![64](./src/64.png)
+
+> `move到底是做什么的`
+
++ 让左值表达式转换为亡值表达式，用于匹配移动构造或移动赋值等函数。
+  + 标志着“移动”，即转移了原对象的资源。
+
+#### **完美转发**
+
+```cpp
+#include <iostream>
+#include <type_traits>
+using namespace  std;
+
+struct Person
+{
+    Person(string&){ // 拷贝构造
+        cout << "left value" << endl;
+    }
+    Person(string&&){ // 移动构造
+        cout << "right value" << endl;
+    }
+};
+
+/*
+ *问题:
+参数会导致对象发生拷贝、移动操作传递到构造函数，无法区分值的类别(左值、右值)
+1.param
+2.param
+如何避免拷贝和移动?
+使用引用参数
+左值引用:就无法接收右值参数
+右值引用:就无法接收左值参数
+常量引用:万能引用，既可以引用左值、也可以引用右值原因:由于我们写的是常量引用，这样使得传递的参数增加const性
+-- 希望参数“原封不动”传递到目标函数中
+ */
+//Person make_person(const string& param){
+//    // 如果传递的参数 param 是左值
+//    return Person(param);
+//}
+
+
+// C++支持泛型编程（模板计数），函数模板而言，很重要的特性，就是实现类型的自动推导
+// T& 只能匹配左值
+// T&& 可以
+template<class  T>
+Person make_person(T&& param){
+
+    /*
+     * 问题：区分左右值
+     * T&& 引用折叠能够确定最终的类型：左右值
+     * 左值引用：理解为对左值对象的一个别名
+     * 右值引用：右值是即将被废弃的对象，右值引用目的就是未来给这些即将废弃的对象续命
+     * 此时，无论左值对象、右值对象都变成具名对象(有名字的对象)，是一个左值对象了
+     *
+     * 解决方法：
+     * 将param再转化为原来的类型，传递给Person构造函数里就可以了
+     * */
+    // 如果传递的参数 param 是左值
+    cout << "是否左值:"<< is_lvalue_reference<T&&>::value << endl;
+    cout<<  "是否右值:"<< is_rvalue_reference<T&&>::value << endl;
+//    return Person((T&&)param); // c分格
+    // C++
+    //return Person(static_cast<T&&>(param));
+    
+    // 标准库----建议使用
+    return Person(forward<T>(param);); 
+ }
+
+void test(){
+    // 1. 传递左值
+    string name = "zjx";
+    make_person(name);
+
+    //2. 传递右值
+    make_person(move(name));
+}
+
+int main(){
+    test();
+    return 0;
+}
+```
+
+#### **锁**
+
+|              锁类型               |                  特点                  |                     优缺点                     |           使用场景            |
+| :-------------------------------: | :------------------------------------: | :--------------------------------------------: | :---------------------------: |
+|        **互斥锁 (Mutex)**         | 仅一个线程可以获取锁，其他线程必须等待 |       优点：简单易用；缺点：可能导致阻塞       |     常用于确保数据一致性      |
+|       **自旋锁 (Spinlock)**       |       线程循环检查锁，直到获得锁       |     优点：减少上下文切换；缺点：高CPU占用      |   适用于锁等待时间短的情况    |
+|   **读写锁 (Read-Write Lock)**    |      多线程可同时读，但写操作独占      |     优点：读性能高；缺点：写时会阻塞读操作     |  读多写少的场景，如缓存系统   |
+|    **递归锁 (Recursive Lock)**    |         允许同一线程多次获得锁         |      优点：支持递归调用；缺点：增加锁开销      |   递归函数或嵌套锁使用场景    |
+| **条件变量 (Condition Variable)** |            等待特定条件触发            |    优点：灵活控制线程同步；缺点：复杂度较高    |    线程需要等待某些条件时     |
+|  **分布式锁 (Distributed Lock)**  |      多进程/线程跨系统间锁定资源       |     优点：适用于分布式环境；缺点：实现复杂     | 分布式系统资源锁定，如Redis锁 |
+|     **偏向锁 (Biased Lock)**      |       锁偏向于第一次获取锁的线程       |   优点：降低竞争锁开销；缺点：有额外内存开销   |   同一线程频繁获取锁的场景    |
+|  **轻量级锁 (Lightweight Lock)**  |        尝试避免操作系统层级的锁        | 优点：减少阻塞；缺点：性能较差时自动膨胀为重锁 |    无高并发需求的小型应用     |
+|   **乐观锁 (Optimistic Lock)**    |        假设没有竞争，失败后重试        |      优点：减少锁开销；缺点：失败后需重试      |   无锁开销高或读多写少场景    |
+|   **悲观锁 (Pessimistic Lock)**   |      假设有竞争，始终加锁保护资源      |      优点：确保数据一致性；缺点：影响性能      |    数据一致性要求高的场景     |
+
+#### **死锁**
+
+>  **死锁**是并发编程中常见的问题，指的是两个或多个进程或线程因为竞争资源而相互等待对方释放资源，从而陷入无限的等待状态。由于每个进程或线程都在等待其他进程或线程释放资源，而没有一个进程或线程能够释放资源，导致系统无法继续执行，这种状态被称为死锁。
+
++ **死锁的四个必要条件**
+
+> 为了死锁的发生，必须同时满足以下四个条件（也称为“Coffman条件”）：
+
+1. **互斥**：某种资源一次只允许一个进程访问，即该资源一旦分配给某个进程，其他进程就不能再访问，直到该进程访问结束。
+2. **占有且等待**：一个进程本身占有资源（一种或多种），同时还有资源未得到满足，正在等待其他进程释放该资源。
+3. **不可抢占**：别人已经占有了某项资源，你不能因为自己也需要该资源，就去把别人的资源抢过来。
+4. **循环等待**：存在一个进程链，使得每个进程都占有下一个进程所需的至少一种资源。
+
++ **死锁的预防**
+
+1. **破坏“不可抢占”条件**
+   - 当一个已经持有了一些资源的`进程在提出新的资源请求没有得到满足时，它必须释放已经保持的所有资源`，待以后需要使用的时候再重新申请。这就意味着进程已占有的资源会被短暂地释放或者说是被抢占了。
+   - 该种方法**实现起来比较复杂，且代价也比较大**。释放已经保持的资源很有可能会导致进程之前的工作实效等，反复的申请和释放资源会导致进程的执行被无限的推迟，这不仅会延长进程的周转周期，还会影响系统的吞吐量。
+2. **破坏“占有且等待”条件**
+   - 方法1：所有的进程在开始运行之前，必须一次性地申请其在整个运行过程中所需要的全部资源。
+     - 优点：简单易实施且安全。
+     - 缺点：因为某项资源不满足，进程无法启动，而其他已经满足了的资源也不会得到利用，严重降低了资源的利用率，造成资源浪费。
+       - 使进程经常发生饥饿现象。
+   - 方法2：该方法是对第一种方法的改进，**允许进程只获得运行初期需要的资源，便开始运行，在运行过程中逐步释放掉分配到的已经使用完毕的资源，然后再去请求新的资源**。这样的话，资源的利用率会得到提高，也会减少进程的饥饿问题。
+3. **破坏“循环等待”条件**
+   - 采用资源有序分配其基本思想是`将系统中的所有资源顺序编号`，将**紧缺的，稀少的采用较大的编号**，在申请资源时必须按照编号的顺序进行（**从小往大申请**），一个进程只有获得较小编号的进程才能申请较大编号的进程。
+
+> **避免死锁**就是破坏造成死锁的，若干条件中的任意一个，常见的方法如下：
+
+1. 加锁顺序
+   + 当多个线程需要相同的一些锁，但是按照不同的顺序加锁，死锁就很容易发生。如果能确保所有的线程都是按照相同的顺序获得锁，那么死锁就不会发生，这是避免出现循环等待条件。
+
+2. 加锁时限
+
+   + 在尝试获取锁的时候加一个超时时间，这也就意味着在尝试获取锁的过程中若超过了这个时限该线程则放弃对该锁请求。若一个线程没有在给定的时限内成功获得所有需要的锁，则会进行回退并释放所有已经获得的锁，然后等待一段随机的时间再重试(对应条件2、3)。
+
+   + 需要注意的是，由于存在锁的超时，所以我们不能认为这种场景就一定是出现了死锁。也可能是因为获得了锁的线程（导致其它线程超时）需要很长的时间去完成它的任务。
+
+   + 此外，如果有非常多的线程同一时间去竞争同一批资源，就算有超时和回退机制，还是可能会导致这些线程重复地尝试但却始终得不到锁。
+
+> 死锁检测
+
++ 死锁检测是一个更好的死锁预防机制，它主要是针对那些不可能实现按序加锁并且锁超时也不可行的场景。
+
++ 每当一个线程获得了锁，会在线程和锁相关的数据结构中（map、graph等等）将其记下。除此之外，每当有线程请求锁，也需要记录在这个数据结构中。
+
++ 当一个线程请求锁失败时，这个线程可以遍历锁的关系图看看是否有死锁发生。例如，线程A请求锁7，但是锁7这个时候被线程B持有，这时线程A就可以检查一下线程B是否已经请求了线程A当前所持有的锁。如果线程B确实有这样的请求，那么就是发生了死锁（线程A拥有锁1，请求锁7；线程B拥有锁7，请求锁1）。
+
++ 当然，死锁一般要比两个线程互相持有对方的锁这种情况要复杂的多。线程A等待线程B，线程B等待线程C，线程C等待线程D，线程D又在等待线程A。线程A为了检测死锁，它需要递进地检测所有被B请求的锁。从线程B所请求的锁开始，线程A找到了线程C，然后又找到了线程D，发现线程D请求的锁被线程A自己持有着。这是它就知道发生了死锁。
++ 一个可行的做法是释放所有锁，回退，并且等待一段随机的时间后重试。这个和简单的加锁超时类似，不一样的是只有死锁已经发生了才回退，而不会是因为加锁的请求超时了。虽然有回退和等待，但是如果有大量的线程竞争同一批锁，它们还是会重复地死锁。
++ 一个更好的方案是给这些线程设置优先级，让一个（或几个）线程回退，剩下的线程就像没发生死锁一样继续保持着它们需要的锁。如果赋予这些线程的优先级是固定不变的，同一批线程总是会拥有更高的优先级。为避免这个问题，可以在死锁发生的时候设置随机的优先级。
+
+
 ####  **`malloc,free`和 `new，delete`的区别**
 
 > `malloc`,`free` c语言中库函数，`new`，`delete`是C++操作符
@@ -119,7 +536,7 @@ Task *ptask = (Task *) malloc(sizeof(*ptask));
 + `malloc`申请的空间小于`128k`，释放内存，不会还给操作系统由`malloc`内部管理起来
 + `malloc`申请的空间大于等于`128k`，释放内存，还给操作系统
 
-#### **`const`和`static`的作用**
+#### **`const`和`static`**
 
 + `static`
 
@@ -177,7 +594,7 @@ Task *ptask = (Task *) malloc(sizeof(*ptask));
 
 6.修饰不同---重载对访问修饰没有特殊要求，重写访问修饰符的限制一定要大于被重写方法的访问修饰符。
 
-#### **联合体 (Union)**
+#### **`Union`**
 
 - **联合体的定义：** Union是一种特殊的C语言数据结构，它可以存储多个类型的变量，但任意时刻只有一个成员有效。所有成员共享同一块内存。
 
@@ -200,7 +617,7 @@ Task *ptask = (Task *) malloc(sizeof(*ptask));
 
 - **now同时赋值问题：** 联合体不允许多个成员同时存储值，只有一个成员有效。如果需要多个成员同时存储值，则需要使用结构体或其他机制。
 
-#### **四种强制类型转换符**
+#### **四种类型转换**
 
 > `static_cast`
 
@@ -438,6 +855,32 @@ B* b_ptr = reinterpret_cast<B*>(&a_obj);  // 将 A* 转换为 B*
 
 + `std:.unordered_map` 的底层实现基于**哈希表**。每个键值对通过哈希函数被映射到一个桶(bucket)中。桶实际上是一个链表，用于处理哈希冲突(即不同键具有相同哈希值的情况)。当插入一个键值对时，首先通过哈希函数计算出键的哈希值，然后定位到对应的桶，最后将这个键值对添加到桶的链表中。查找和删除操作也类似，首先通过哈希函数找到桶，然后在桶的链表中查找或删除相应的键值对。
 
+#### **多线程多进程场景**
+
+> 多线程的使用场景：
+
++ I/O密集型任务：当程序需要进行大量的I/O操作（如文件读写、网络通信等）时，可以使用多线程来提高效率，因为在I/O操作时，CPU大部分时间处于空闲状态，可以让其他线程继续执行。
++ GUI应用程序：在用户界面程序中，需要保持UI的响应性，而且有很多后台任务需要同时执行，这时可以使用多线程来处理后台任务，以免阻塞主线程导致UI无响应。
++ 异步编程：通过多线程可以很方便地实现异步编程，例如在Web开发中处理并发请求、消息处理等场景。
+
+> 多进程的使用场景：
+
++ CPU密集型任务：当程序需要进行大量的CPU计算时，可以使用多进程来充分利用多核CPU，提高计算效率。
++ 并行计算：在需要进行并行计算的应用中，多进程可以实现真正的并行执行，每个进程独享一部分系统资源，不会受到GIL（全局解释器锁）的限制。
++ 服务端程序：在需要同时处理多个客户端连接的服务器程序中，可以使用多进程来处理每个客户端的请求，以提高并发处理能力。
+
+>  在多线程中，如何避免出现死锁、竞争等问题
+
++ 在多线程编程中，避免死锁、竞争等问题是非常重要的。以下是一些常见的方法来避免这些问题：
+  + 使用锁：使用锁（Lock）来保护临界资源，确保在同一时间只有一个线程可以访问共享资源。通过良好的加锁机制，可以避免竞争条件和数据竞争的问题。
+  + 避免嵌套锁：在多线程编程中，应尽量避免在持有一个锁的情况下再去请求另一个锁，这样很容易导致死锁。如果确实需要多个锁，尽量按照相同的顺序获取锁，避免交叉获取造成死锁。
+  + 使用条件变量：条件变量（Condition）是一种线程同步的工具，它允许线程在满足特定条件时才继续执行，可以用于线程间的通信和协调。
+  + 使用原子操作：对于简单的原子操作（如加减操作），可以使用原子操作或者线程安全的数据结构来避免竞争条件。
+  + 合理设计数据结构：合理的数据结构设计可以减少对共享资源的竞争，例如使用无锁的数据结构、immutable对象等。
+  + 合理的线程通信：合理地利用线程间的通信机制，如队列、事件、信号量等，避免直接对共享资源进行读写操作。
+  + 避免线程间的依赖关系：尽量设计独立的线程，避免线程间的复杂依赖关系，降低线程间竞争的可能性。
+  + 使用线程安全的库和工具：在实际开发中，可以使用有线程安全保障的第三方库和工具，减少手动处理并发问题的复杂度。
+
 #### **进程调度方法**
 
 进程调度是操作系统中一项关键任务，负责按照一定的策略和算法从就绪态进程中为当前空闲的CPU选择要运行的进程。以下是几种常见的进程调度方法：
@@ -450,7 +893,7 @@ B* b_ptr = reinterpret_cast<B*>(&a_obj);  // 将 A* 转换为 B*
 6. `时间片轮转`：系统将CPU处理时间划分为多个时间片，进程按照到达先后顺序排列。每次调度选择队首的进程，执行完一个时间片后，该进程移动至队尾。这种算法适用于分时系统，能够在规定时间内响应所有用户的请求‌。
 
 
-#### **线程间的通信方式**
+#### **线程间的通信**
 
 - 使用全局变量
   + 主要由于多个线程可能更改全局变量，因此全局变量最好声明为volatile
@@ -480,7 +923,7 @@ B* b_ptr = reinterpret_cast<B*>(&a_obj);  // 将 A* 转换为 B*
     3)调用WaitForSingleObject()来监视CEvent对象
     ```
 
-#### **线程间的同步方式**
+#### **线程间的同步**
 
 + 各个线程可以访问进程中的公共变量，资源，所以使用多线程的过程中需要注意的问题是如何防止两个或两个以上的线程同时访问同一个数据，以免破坏数据的完整性。数据之间的相互制约包括
 
@@ -514,7 +957,7 @@ B* b_ptr = reinterpret_cast<B*>(&a_obj);  // 将 A* 转换为 B*
 
     > PS:事件是内核对象,可以解决线程间同步问题，因此也能解决互斥问题
 
-#### 进程间通信方式
+#### **进程间通信**
 
 + 进程间通信又称`IPC(Inter-Process Communication),`指多个进程之间相互通信，交换信息的方法。根据进程通信时信息量大小的不同,可以将进程通信划分为两大类型:
   + 低级通信,控制信息的通信(主要用于进程之间的同步,互斥,终止和挂起等等控制信息的传递)
@@ -533,6 +976,65 @@ B* b_ptr = reinterpret_cast<B*>(&a_obj);  // 将 A* 转换为 B*
 + **[共享内存( `shared memor`y )]** ：共享内存就是映射一段能被其他进程所访问的内存，这段共享内存由一个进程创建，但多个进程都可以访问。`共享内存是最快的` `IPC` 方式，它是针对其他进程间通信方式运行效率低而专门设计的。它往往与其他通信机制，如信号两，配合使用，来实现进程间的同步和通信。
 
 + **套接字( `socket` )** ： 套接字也是一种进程间通信机制，与其他通信机制不同的是，它可用于不同机器间的进程通信
+
+#### **断点上传和下载**
+
+### 2断点续传
+
+### 2.1 什么是断点续传
+
+断点续传是在下载或上传时，将下载或上传任务（一个文件或一个压缩包）人为的划分为几个部分，每一个部分采用一个线程进行上传或下载，如果碰到网络故障，可以从已经上传或下载的部分开始继续上传或者下载未完成的部分，而没有必要从头开始上传或者下载。
+
+### 2.2 应用场景
+
+断点续传可以看成是分片上传的一个衍生，因此可以使用分片上传的场景，都可以使用断点续传。
+
+### 2.3 实现断点续传的核心逻辑
+
++ 在分片上传的过程中，如果因为系统崩溃或者网络中断等异常因素导致上传中断，这时候客户端需要记录上传的进度。在之后支持再次上传时，可以继续从上次上传中断的地方进行继续上传。
+
++ 为了避免客户端在上传之后的进度数据被删除而导致重新开始从头上传的问题，服务端也可以提供相应的接口便于客户端对已经上传的分片数据进行查询，从而使客户端知道已经上传的分片数据，从而从下一个分片数据开始继续上传。
+
+>  整体的过程如下：
+
+1.  前端将文件安装百分比进行计算,每次上传文件的百分之一(文件分片),给文件分片做上序号
+2.  后端将前端每次上传的文件,放入到缓存目录
+3.  等待前端将全部的文件内容都上传完毕后,发送一个合并请求
+4.  后端使用RandomAccessFile进多线程读取所有的分片文件,一个线程一个分片
+5.  后端每个线程按照序号将分片的文件写入到目标文件中
+6.  在上传文件的过程中发生断网了或者手动暂停了,下次上传的时候发送续传请求,让后端删除最后一个分片
+7.  前端重新发送上次的文件分片
+
+#### **time_wait**
+
+在TCP网络编程中，`TIME_WAIT`是一个常见的状态，它出现在主动关闭连接的一方完成关闭请求后，用于确保之前发送的数据包都被正确接收和处理。其主要作用有以下几点：
+
+1. **防止旧数据包影响新连接**：TCP连接在关闭后，如果立即允许新的连接重用相同的端口号，可能会因为网络延迟导致旧连接的数据包（如重传包）影响到新连接。`TIME_WAIT`状态会持续一段时间（通常是2倍的最大段寿命，即`2*MSL`），确保旧数据包完全从网络中消失。
+2. **确保可靠关闭**：`TIME_WAIT`状态使得主动关闭方能发送最终的`ACK`确认包，确保双方都已正确关闭连接，避免资源未释放导致的问题。
+
+### 关闭或绕过`TIME_WAIT`
+
+在某些高并发或服务器重启的场景中，大量处于`TIME_WAIT`状态的连接会占用系统资源。虽然`TIME_WAIT`的存在有其必要性，但在一些开发场景中可以采取措施优化。
+
+1. **设置端口复用**：通过设置`SO_REUSEADDR`或`SO_REUSEPORT`选项，可以允许一个新的进程或线程立即绑定一个处于`TIME_WAIT`状态的端口。这是最常见的方法，不会立即关闭`TIME_WAIT`状态，但允许快速复用端口。
+
+   ```
+   cpp复制代码int reuse = 1;
+   setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse));
+   ```
+
+2. **降低`TIME_WAIT`持续时间**：在某些操作系统中（如Linux），可以通过设置`tcp_tw_recycle`或`tcp_tw_reuse`参数缩短`TIME_WAIT`的持续时间。
+
+   ```
+   bash复制代码# 允许快速复用TIME_WAIT的连接
+   echo 1 > /proc/sys/net/ipv4/tcp_tw_reuse
+   ```
+
+3. **避免短时间内大量关闭连接**：通过优化应用逻辑，减少主动关闭的频率，或者使用连接池来管理连接，避免频繁的连接关闭。
+
+4. **避免主动关闭**：如果可能，让客户端而非服务器主动关闭连接，这样服务器端就不会进入`TIME_WAIT`状态。
+
+需要注意的是，绕过或缩短`TIME_WAIT`会带来一定的风险，尤其是在数据传输对可靠性要求较高的场景下。
 
 #### **排序算法**
 
@@ -1022,6 +1524,8 @@ public:
 
 ![1](./src/1.png)
 
+![75](./src/75.png)
+
 ### 四次挥手
 
 ![2](./src/2.png)
@@ -1030,9 +1534,80 @@ public:
 
 ![56](./src/59.png)
 
+#### **htpp/https**
+
+> http
+
+| 特性             | HTTP/0.9            | HTTP/1.0                | HTTP/1.1                   | HTTP/2                   | HTTP/3               |
+| ---------------- | ------------------- | ----------------------- | -------------------------- | ------------------------ | -------------------- |
+| **发布年份**     | 1991                | 1996                    | 1997                       | 2015                     | 2020                 |
+| **数据传输方式** | 仅支持简单的GET请求 | 支持GET、POST、HEAD请求 | 增加PUT、DELETE等请求      | 基于二进制帧传输         | 基于UDP协议          |
+| **连接管理**     | 每次请求新建连接    | 每次请求新建连接        | 支持持久连接（Keep-Alive） | 多路复用，单连接多请求   | 多路复用，减少延迟   |
+| **请求头压缩**   | 不支持              | 不支持                  | 不支持                     | 支持（HPACK算法）        | 支持（QPACK算法）    |
+| **服务器推送**   | 不支持              | 不支持                  | 不支持                     | 支持                     | 支持                 |
+| **安全性**       | 无                  | 无                      | 无                         | 支持TLS（不强制）        | 默认支持TLS          |
+| **传输速度**     | 慢                  | 较慢                    | 较快（持久连接）           | 更快（多路复用，帧压缩） | 最快（基于UDP）      |
+| **典型应用场景** | 早期简单网页传输    | 静态内容的请求/响应     | 动态内容与复杂网页加载     | 高效多资源网页加载       | 移动端和延迟敏感场景 |
+
+> https
+
+```tex
+1. 客户端发起HTTPS请求连接到443端口，服务器端产生一个公钥和一个私钥
+2. 服务器将非对称加密的公钥以证书的形式传递给客户端
+3. 客户端接受到证书后进行验证，查看证书是否有问题，如果有问题HTTPS请求无法请求。如果没有问题客户端生成一个公钥ClinetKey结合加密算法进行对请求非对称加密，然后将请求和公钥ClinetKey发送到服务器端
+4. 服务器端接受到客户端的请求使用私钥结合解密算法进行解密得到明文和ClinetKey然后服务器端给客户端做出响应
+```
+
+1 客户端发送：
+
+- 在TCP三次握手之后，客户端会向服务器发送`Client Hello`消息。
+  - 这个消息包含客户端支持的TLS版本（如TLS 1.2）
+  - 支持的加密套件（加密算法和哈希算法的组合）
+  - 客户端生成的**随机数**（Client Random，比如这里的571，但实际上这是一个更长的随机数）,后面用于**生成「会话秘钥」条件之一**，以及可能的会话ID（如果客户端希望重用之前的会话）。
+
+2 服务端发送：
+
+- 服务端收到`Client Hello`后，会响应`Server Hello`消息，告知客户端它**选择的TLS版本、加密套件，并生成一个服务端随机数**（Server Random）也是后面用于生产「会话秘钥」条件之一。
+- 紧接着，服务端会发送自己的**证书**（Certificate）给客户端。客户端将使用数字证书认证机构（CA）的**公钥**（通常预装在客户端的受信任根证书列表中）来验证证书的合法性。验证通过后，客户端会从证书中提取服务器的公钥。
+- 在某些情况下，如果服务器选择的密钥交换协议需要额外的参数（如DH或ECDH密钥交换），服务器会发送`Server Key Exchange`消息。然而，如果使用的是RSA密钥交换，这一步可能会省略，因为公钥已经在证书中发送了。
+- 最后，服务器发送`Server Hello Done`消息，表示服务端的初始握手消息已全部发送完毕。
+
+3 客户端处理：
+
+- 客户端在验证完服务器证书并获取**公钥**后，会生成一个预主密钥（Pre-Master Secret）,用它**加密报文**。这个预主密钥是临时的，仅用于此次会话。
+- 客户端使用服务器证书中的公钥对**一个随机数**进行加密，并将加密后的随机数发送给服务器（在`Client Key Exchange`消息中）。
+- 客户端发送`Change Cipher Spec`消息，通知服务器后续的消息将使用协商好的加密套件和密钥进行加密。
+- 客户端发送`Encrypted Handshake Message`，这是使用协商好的加密套件和之前生成的密钥（基于Client Random、Server Random和Pre-Master Secret）加密的第一个消息。它通常包含客户端的握手消息的MAC（消息认证码），用于验证消息的完整性和真实性。
+- 服务器和客户端有了这**三个随机数**（Client Random、Server Random、pre-master key），接着就用双方协商的加密算法，**各自生成本次通信的「会话秘钥」**
+
+4 服务器处理：
+
+- 服务器收到`Client Key Exchange`消息后，使用自己的私钥解密出这三个随机数。
+- 服务器和客户端都使用Client Random、Server Random和Pre-Master Secret作为输入，通过伪随机数生成器（PRF）生成会话密钥（Session Key），包括对称加密密钥、MAC密钥和IV（初始化向量）等。
+- 服务器也发送`Change Cipher Spec`消息，通知客户端后续的消息将使用协商好的加密套件和密钥进行加密。
+- 服务器发送`Encrypted Handshake Message`，这是服务器加密的握手消息的确认，包括服务器的握手消息的MAC。
+
+至此，TLS握手过程完成，客户端和服务器都拥有了相同的会话密钥，并可以开始加密传输应用层数据了。
+
+![69](./src/69.png)
+
 #### **Redis**
 
 <!-- tabs:start -->
+
+#### **数据结构**
+
+![71](./src/71.png)
+
+![72](./src/72.png)
+
+#### **缓存雪崩**
+
+![73](./src/73.png)
+
+#### **缓存击穿**
+
+![74](./src/74.png)
 
 #### **持久化机制**
 
@@ -1049,6 +1624,57 @@ public:
 ## 数据库
 
 <!-- tabs:start -->
+
+#### **数据库隔离级别**
+
++ **未提交读**，事务中发⽣了修改，即使没有提交，其他事务也是可⻅的，⽐如对于⼀个数A原来50修改为100，但是我还没有提交修改，另⼀个事务看到这个修改，⽽这个时候原事务发⽣了回滚，这时候A还是50，但是另⼀个事务看到的A是100.**可能会导致脏读、幻读或不可᯿复读**
++ **提交读**，对于⼀个事务从开始直到提交之前，所做的任何修改是其他事务不可⻅的，举例就是对于⼀个数A原来是50，然后提交修改成100，这个时候另⼀个事务在A提交修改之前，读取的A是50，刚读取完，A就被修改成100，这个时候另⼀个事务再进⾏读取发现A就突然变成100了；**可以阻⽌脏读，但是幻读或不可᯿复读仍有可能发⽣**
++ **可重复读**，就是对⼀个记录读取多次的记录是相同的，⽐如对于⼀个数A读取的话⼀直是A，前后两次读取的A是⼀致的；**可以阻⽌脏读和不可᯿复读，但幻读仍有可能发⽣**
+
++ **可串⾏化读**，在并发情况下，和串⾏化的读取的结果是⼀致的，没有什么不同，⽐如不会发⽣脏读和幻读；**该级别可以防⽌脏读、不可᯿复读以及幻读**
+
+![70](./src/70.png)
+
+#### **mysql中innodb和myisam引擎区别及各自使用场景**
+
+> 1.他们的区别分为五点：
+
+```tex
+(1).事务处理：
+	MyISAM是非事务安全型的，而InnoDB是事务安全型的（支持事务处理等）
+(2).锁机制不同:
+	MyISAM是表锁，InnoDB是行级锁。
+(3).增删改查操作:
+	MyISAM：如果执行大量的查询操作，MyISAM是更好的选择
+	InnoDB：如果你的数据执行大量的插入/更新，出于性能方面的考虑，应该使用InnoDB表
+(4).查询表的行数不用:
+	MyISAM: 执行select count() from table语句时 MyISAM只需要简单的查询出保存好的行数，当count()语句包含 where条件时，两种表的操作是一样的。
+	InnoDB: InnoDB 中不保存表的具体行数，也就是说，执行select count(*) from table时，InnoDB要扫描一遍整个表来计算有多少行
+(5).外键
+	MyISAM不支持外键
+	mysiam表不支持外键，而InnoDB支持
+```
+
+在选择存储引擎时，应该根据应用系统的特点选择合适的存储引擎。对于复杂的应用系统，还可以根据实际情况选择多种存储引擎进行组合。
+
+- `InnoDB`: 如果应用对事物的完整性有比较高的要求，在并发条件下要求数据的一致性，数据操作除了插入和查询之外，还包含很多的更新、删除操作，则 `InnoDB` 是比较合适的选择
+- `MyISAM`: 如果应用是以读操作和插入操作为主，只有很少的更新和删除操作，并且对事务的完整性、并发性要求不高，那这个存储引擎是非常合适的。
+- Memory: 将所有数据保存在内存中，访问速度快，通常用于临时表及缓存。Memory 的缺陷是对表的大小有限制，太大的表无法缓存在内存中，而且无法保障数据的安全性
+
+电商中的足迹和评论适合使用 `MyISAM` 引擎，缓存适合使用 `Memory` 引擎。
+
+| 特点         | InnoDB              | MyISAM | Memory |
+| ------------ | ------------------- | ------ | ------ |
+| 存储限制     | 64TB                | 有     | 有     |
+| 事务安全     | 支持                | -      | -      |
+| 锁机制       | 行锁                | 表锁   | 表锁   |
+| B+tree索引   | 支持                | 支持   | 支持   |
+| Hash索引     | -                   | -      | 支持   |
+| 全文索引     | 支持（5.6版本之后） | 支持   | -      |
+| 空间使用     | 高                  | 低     | N/A    |
+| 内存使用     | 高                  | 低     | 中等   |
+| 批量插入速度 | 低                  | 高     | 高     |
+| 支持外键     | 支持                | -      | -      |
 
 #### **锁**
 
@@ -1806,9 +2432,9 @@ commit;
 >
 >   ```sql
 >   SELECT @@TRANSACTION_ISOLATION;
->               
+>                                     
 >   set session transaction isolation level read uncommitted ;
->               
+>                                     
 >   set session transaction isolation level repeatable read ;
 >   ```
 
@@ -2006,7 +2632,79 @@ char* self_strcpy(char* dest, const char* src) {
 }
 ```
 
-#### **层次排序**
+#### **层序排序**
+
+```cpp
+#include<iostream>
+#include<vector>
+#include<queue>
+using namespace std;
+
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
+};
+// 迭代法
+class Solution {
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>>res;
+        queue<TreeNode*>q;
+        if (root != NULL) q.push(root);
+        while (!q.empty()) {
+            vector<int>count;
+            int n = q.size();
+            for (int i = 0; i < n; i++)
+            {
+                TreeNode* node = q.front();
+                q.pop();
+                count.push_back(node->val);
+                if (node->left) q.push(node->left);
+                if (node->right) q.push(node->right);
+            }
+            res.push_back(count);
+        }
+        return res;
+    }
+};
+// 递归法
+class Solution {
+public:
+    void order(TreeNode* cur, vector<vector<int>>& result, int depth)
+    {
+        if (cur == nullptr) return;
+        if (result.size() == depth) result.push_back(vector<int>());
+        result[depth].push_back(cur->val);
+        order(cur->left, result, depth + 1);
+        order(cur->right, result, depth + 1);
+    }
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>> result;
+        int depth = 0;
+        order(root, result, depth);
+        return result;
+    }
+};
+int main()
+{
+    Solution s;
+    TreeNode* root = new TreeNode(1);
+    root->left = new TreeNode(2);
+    root->right = new TreeNode(3);
+    root->left->left = new TreeNode(4);
+    root->left->right = new TreeNode(5);
+    for (auto el : s.levelOrder(root)) {
+        for (auto e : el) {
+            cout << e << endl;
+        }
+    }
+}
+
+```
 
 ```cpp
 class Node {
@@ -2157,6 +2855,603 @@ public:
         int n = nums.size();
         quickSort(nums, 0, n - 1);
         return nums;
+    }
+};
+```
+
+#### **不引用新的数组的情况下 循环移位数组内的元素**
+
+> 反转整个数组。
+>
+> 反转数组的前 kkk 个元素。
+>
+> 反转数组剩余的元素（从第 kkk 位到数组末尾）。
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+void reverseArray(std::vector<int>& arr, int start, int end) {
+    while (start < end) {
+        std::swap(arr[start], arr[end]);
+        start++;
+        end--;
+    }
+}
+
+void rotateArray(std::vector<int>& arr, int k) {
+    int n = arr.size();
+    k = k % n; // 防止 k 大于 n
+    if (k == 0) return; // 如果 k 是 0，不需要旋转
+
+    // 步骤 1: 反转整个数组
+    reverseArray(arr, 0, n - 1);
+
+    // 步骤 2: 反转前 k 个元素
+    reverseArray(arr, 0, k - 1);
+
+    // 步骤 3: 反转剩余的元素
+    reverseArray(arr, k, n - 1);
+}
+
+int main() {
+    std::vector<int> arr = {1, 2, 3, 4, 5, 6, 7};
+    int k = 3;
+
+    rotateArray(arr, k);
+
+    for (int num : arr) {
+        std::cout << num << " ";
+    }
+
+    return 0;
+}
+```
+
+#### **生产者和消费者**
+
+```cpp
+#include <iostream>
+#include <thread>
+#include <mutex>
+#include <condition_variable>
+#include <queue>
+#include <chrono>
+
+std::mutex mtx;
+std::condition_variable cv;
+std::queue<int> queue;
+const int maxQueueSize = 10; // 最大队列大小，用于限制生产者
+
+// 生产者函数
+void producer(int id) {
+    int data = 0;
+    while (true) {
+        std::unique_lock<std::mutex> lock(mtx);
+        cv.wait(lock, [] { return queue.size() < maxQueueSize; }); // 如果队列已满，生产者等待
+
+        // 生产数据并添加到队列
+        data++;
+        queue.push(data);
+        std::cout << "Producer " << id << " produced: " << data << std::endl;
+
+        // 通知消费者队列不为空
+        cv.notify_all();
+        lock.unlock();
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(100)); // 模拟生产速度
+    }
+}
+
+// 消费者函数
+void consumer(int id) {
+    while (true) {
+        std::unique_lock<std::mutex> lock(mtx);
+        cv.wait(lock, [] { return !queue.empty(); }); // 如果队列为空，消费者等待
+
+        // 消费数据并从队列中移除
+        int data = queue.front();
+        queue.pop();
+        std::cout << "Consumer " << id << " consumed: " << data << std::endl;
+
+        // 通知生产者队列不满
+        cv.notify_all();
+        lock.unlock();
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(150)); // 模拟消费速度
+    }
+}
+
+int main() {
+    std::thread producers[2], consumers[3];
+
+    // 启动生产者线程
+    for (int i = 0; i < 2; ++i) {
+        producers[i] = std::thread(producer, i + 1);
+    }
+
+    // 启动消费者线程
+    for (int i = 0; i < 3; ++i) {
+        consumers[i] = std::thread(consumer, i + 1);
+    }
+
+    // 等待所有线程完成
+    for (auto& p : producers) {
+        p.join();
+    }
+    for (auto& c : consumers) {
+        c.join();
+    }
+
+    return 0;
+}
+
+```
+
+#### **无重复字符的最长子串**
+
+```cpp
+// 滑动窗口+哈希表
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        int n = s.size();
+        if(n <= 1) return n;
+        int maxL = 0;
+        int l = 0, r = 0;
+        unordered_set<char>win;
+        while(r < n){
+            char cur = s[r];
+            if(!win.count(cur)){
+                maxL = max(maxL,r- l + 1);
+                win.insert(cur);
+                r++;
+            }else{
+                win.erase(s[l]);
+                l++;
+            }
+        }
+        return maxL;
+    }
+};
+```
+
+#### **实现一个share_ptr**
+
+```cpp
+#include <iostream>
+#include <atomic>
+
+template <typename T>
+class SharedPtr {
+private:
+    T* ptr; // 指向对象的指针
+    std::atomic<int>* ref_count; // 引用计数器
+
+    void release() {
+        if (ref_count) {
+            // 引用计数减一
+            if (--(*ref_count) == 0) {
+                delete ptr;      // 释放对象内存
+                delete ref_count; // 释放引用计数的内存
+            }
+        }
+    }
+
+public:
+    // 构造函数
+    explicit SharedPtr(T* p = nullptr) : ptr(p), ref_count(nullptr) {
+        if (ptr) {
+            ref_count = new std::atomic<int>(1); // 初始引用计数为1
+        }
+    }
+
+    // 拷贝构造函数
+    SharedPtr(const SharedPtr& other) {
+        ptr = other.ptr;
+        ref_count = other.ref_count;
+        if (ref_count) {
+            ++(*ref_count); // 增加引用计数
+        }
+    }
+
+    // 移动构造函数
+    SharedPtr(SharedPtr&& other) noexcept {
+        ptr = other.ptr;
+        ref_count = other.ref_count;
+        other.ptr = nullptr;
+        other.ref_count = nullptr;
+    }
+
+    // 拷贝赋值运算符
+    SharedPtr& operator=(const SharedPtr& other) {
+        if (this != &other) {
+            release(); // 先释放当前对象的引用
+            ptr = other.ptr;
+            ref_count = other.ref_count;
+            if (ref_count) {
+                ++(*ref_count); // 增加引用计数
+            }
+        }
+        return *this;
+    }
+
+    // 移动赋值运算符
+    SharedPtr& operator=(SharedPtr&& other) noexcept {
+        if (this != &other) {
+            release(); // 先释放当前对象的引用
+            ptr = other.ptr;
+            ref_count = other.ref_count;
+            other.ptr = nullptr;
+            other.ref_count = nullptr;
+        }
+        return *this;
+    }
+
+    // 解引用运算符
+    T& operator*() const { return *ptr; }
+
+    // 成员访问运算符
+    T* operator->() const { return ptr; }
+
+    // 获取引用计数
+    int use_count() const {
+        return ref_count ? *ref_count : 0;
+    }
+
+    // 判断是否为唯一引用
+    bool unique() const {
+        return use_count() == 1;
+    }
+
+    // 析构函数
+    ~SharedPtr() {
+        release();
+    }
+};
+
+int main() {
+    SharedPtr<int> sp1(new int(10));
+    std::cout << "sp1 count: " << sp1.use_count() << std::endl;
+
+    {
+        SharedPtr<int> sp2 = sp1;
+        std::cout << "sp1 count after sp2 copy: " << sp1.use_count() << std::endl;
+        std::cout << "sp2 count: " << sp2.use_count() << std::endl;
+    } // sp2 超出作用域
+
+    std::cout << "sp1 count after sp2 goes out of scope: " << sp1.use_count() << std::endl;
+
+    return 0;
+}
+```
+
+#### **寻找旋转排序数组中的最小值**
+
+```cpp
+class Solution {
+public:
+    int findMin(vector<int>& nums) {
+        int n = nums.size();
+        int l = 0,r = n - 1;
+        while(l < r){
+            int mid = l + ((r - l) >> 2);
+            if(nums[mid] > nums[r]) l = mid + 1;
+            else r = mid;
+        }
+        return nums[l];
+    }
+};
+```
+
+#### **回文数-不能采用额外空间**
+
+```cpp
+bool isPalindrome(int x) {
+    // 负数或以0结尾的非零数不能为回文数
+    if (x < 0 || (x % 10 == 0 && x != 0)) return false;
+
+    int reversedHalf = 0;
+    while (x > reversedHalf) {
+        // 构造反转的后半部分
+        reversedHalf = reversedHalf * 10 + x % 10;
+        x /= 10;
+    }
+
+    // 当数字为奇数时，去掉中间一位的影响
+    return x == reversedHalf || x == reversedHalf / 10;
+}
+```
+
+#### **括号匹配**
+
+```cpp
+class Solution {
+public:
+    bool isValid(string s) {
+        if (s.length() % 2) { // s 长度必须是偶数
+            return false;
+        }
+        stack<char> st;
+        for (char c : s) {
+            if (c == '(') {
+                st.push(')'); // 入栈对应的右括号
+            } else if (c == '[') {
+                st.push(']');
+            } else if (c == '{') {
+                st.push('}');
+            } else { // c 是右括号
+                if (st.empty() || st.top() != c) {
+                    return false; // 没有左括号，或者左括号类型不对
+                }
+                st.pop(); // 出栈
+            }
+        }
+        return st.empty(); // 所有左括号必须匹配完毕
+    }
+};
+```
+
+**两数之和**
+
+```cpp
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        // 第一种
+//        int len=nums.size();
+//        for(int i=0;i<len;i++)
+//        {
+//            for(int j=i+1;j<len;j++)
+//            {
+//                if(nums[i]+nums[j]==target){
+//                    return {i,j};
+//                }
+//            }
+//        }
+//        return {};
+//  第二种
+//        map<int,int>index;
+//        for(int i=0;i<nums.size();i++)  //存储每个元素的下标
+//            index[nums[i]]=i;
+//        for(int j=0;j<nums.size();j++)
+//            //当target-nums[j]的差的下标存在，同时不是j的时候，输出相应的下标
+//            if(index[target-nums[j]]!=0&&index[target-nums[j]]!=j)
+//                return {j,index[target-nums[j]]};
+//        return {};
+//  第三种
+        map<int,int>h;
+        for (int i = 0; i < nums.size(); ++i) {
+            int n = target - nums[i];
+            if(h.find(n) != h.end())
+            {
+                return {h.at(n),i};
+            }
+            else
+            {
+                h[nums[i]] = i;
+            }
+        }
+        return {};
+    }
+};
+```
+
+#### **LRU**
+
+```cpp
+class Node {
+public:
+	int key, value;
+	Node* prev, *next;
+	Node(int k = 0, int v = 0) :key(k), value(v) {}
+};
+
+class LRUCache {
+public:
+   LRUCache(int capacity) : capacity(capacity), dummy(new Node()) {
+		dummy->next = dummy;
+		dummy->prev = dummy;
+	}
+    
+    int get(int key) {
+        auto node = get_node(key);
+        return node ? node->value : -1;
+    }
+    
+    void put(int key, int value) {
+        auto node = get_node(key);
+        // 有这本书；
+        if(node){
+            node->value = value;
+            return;
+        }
+        // 新书；
+        key_to_node[key] = node = new Node(key,value);
+        push_front(node);
+        // 容量太大，去掉最后一本书
+        // 获取最后一本书
+        if(key_to_node.size() > capacity){
+            auto back_node = dummy->prev;
+            key_to_node.erase(back_node->key);
+            remve(back_node);
+            delete(back_node);
+        }
+    }
+private:
+    int capacity;
+    Node *dummy;
+    unordered_map<int,Node *>key_to_node;
+    void remve(Node* x){
+        x->prev->next = x->next;
+		x->next->prev = x->prev;
+    }
+    void push_front(Node* x){
+        x->prev = dummy;
+        x->next = dummy->next;
+        x->prev->next = x;
+        x->next->prev = x;
+    }
+    Node* get_node(int key){
+        auto it = key_to_node.find(key);
+        if(it == key_to_node.end()) return nullptr;
+        // 找到书了
+        auto node = it->second;
+        // 抽出来，放到最上面；
+        remve(node);
+        push_front(node);
+        return node;
+    }
+};
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache* obj = new LRUCache(capacity);
+ * int param_1 = obj->get(key);
+ * obj->put(key,value);
+ */
+```
+
+#### **线程池**
+
+线程池的组成主要分为3个部分，这三部分配合工作就可以得到一个完整的线程池：
+
+1. ```
+   任务队列，存储需要处理的任务，由工作的线程来处理这些任务
+   ```
+
+   - 通过线程池提供的API函数，将一个待处理的任务添加到任务队列，或者从任务队列中删除
+   - 已处理的任务会被从任务队列中删除
+   - 线程池的使用者，也就是调用线程池函数往任务队列中添加任务的线程就是生产者线程
+
+2. ```
+   工作的线程（任务队列任务的消费者） ，N个
+   ```
+
+   - 线程池中维护了一定数量的工作线程, 他们的作用是是不停的读任务队列, 从里边取出任务并处理
+   - 工作的线程相当于是任务队列的消费者角色，
+   - 如果任务队列为空, 工作的线程将会被阻塞 (使用条件变量/信号量阻塞)
+   - 如果阻塞之后有了新的任务, 由生产者将阻塞解除, 工作线程开始工作
+
+3. ```
+   管理者线程（不处理任务队列中的任务），1个
+   ```
+
+   - 它的任务是周期性的对任务队列中的任务数量以及处于忙状态的工作线程个数进行检测
+   - 当任务过多的时候, 可以适当的创建一些新的工作线程
+   - 当任务过少的时候, 可以适当的销毁一些工作的线程
+
+#### **反转链表**
+
+```cpp
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        ListNode *pre = nullptr,* cur = head;
+        while(cur){
+            ListNode*nxt = cur->next;
+            cur->next = pre;
+            pre = cur;
+            cur = nxt;
+        }
+        return pre;
+    }
+};
+```
+
+#### **相交链表**
+
+```cpp
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        // 双指针
+        if(headA==NULL || headB==NULL) return NULL;
+        ListNode* nodea = headA,*nodeb = headB;
+        while(nodea != nodeb){
+            nodea = nodea==NULL ? headB : nodea->next;
+            nodeb = nodeb==NULL ? headA : nodeb->next;
+        }
+        return nodea;
+    }
+};
+```
+
+#### **环形列表**
+
+```cpp
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        ListNode *s = head,* f = head;
+        while(f && f->next){
+            s = s->next;
+            f = f->next->next;
+            if(f == s) return true;
+        }
+        return false;
+    }
+};
+```
+
+#### **K个一组反转链表**
+
+```cpp
+class Solution {
+public:
+    ListNode* reverseKGroup(ListNode* head, int k) {
+        // 统计节点个数
+        int n = 0;
+        for (ListNode* cur = head; cur; cur = cur->next) {
+            n++;
+        }
+
+        ListNode dummy(0, head);
+        ListNode* p0 = &dummy;
+        ListNode* pre = nullptr;
+        ListNode* cur = head;
+
+        // k 个一组处理
+        for (; n >= k; n -= k) {
+            for (int i = 0; i < k; i++) {
+                ListNode* nxt = cur->next;
+                cur->next = pre; // 每次循环只修改一个 next
+                pre = cur;
+                cur = nxt;
+            }
+            ListNode* nxt = p0->next;
+            p0->next->next = cur;
+            p0->next = pre;
+            p0 = nxt;
+        }
+        return dummy.next;
     }
 };
 ```
