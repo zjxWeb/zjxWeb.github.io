@@ -60,6 +60,7 @@
   * [📁web显示obj三维模型](tips/webObj/)
   * [📁好用的小工具](tips/goodTools/)
 * [**🚩项目实战**](projectPractice)
+  
   * [📁C++Project](projectPractice/cppProject/)
     * [📃QML实战及其案列](projectPractice/cppProject/QML/)
     * [📃机房预约系统](projectPractice/cppProject/computerOrder/)
@@ -72,7 +73,10 @@
     * [📃菜谱APP(可改任意APP)](projectPractice/App/healthApp/)
   * [📁Golang实战](projectPractice/go/)
     * [📃即时通信系统](projectPractice/go/instantMesg/)
+  * [📁硬件](projectPractice/hardware/)
+    * [📃宿舍小灯改小度智能灯](projectPractice/hardware/xdToLight/)
 * [**🧠算法(ASCII)**](algorithm)
+  
   * [📁LeetCode](algorithm/leetcode/)
 * [**📞个人联系方式**](onself)
 * [**❤️赞赏**](pay)
