@@ -74,7 +74,7 @@
   * [📁Golang实战](projectPractice/go/)
     * [📃即时通信系统](projectPractice/go/instantMesg/)
   * [📁硬件](projectPractice/hardware/)
-    * [📃宿舍小灯改小度智能灯](projectPractice/hardware/xdToLight/)
+    * [📃智能灯系列](projectPractice/hardware/xdToLight/)
 * [**🧠算法(ASCII)**](algorithm)
   
   * [📁LeetCode](algorithm/leetcode/)
