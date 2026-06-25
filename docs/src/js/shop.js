@@ -62,7 +62,7 @@ popup.innerHTML = `
         为了获得最佳体验，<span class="highlight">请务必</span><br>
         <span class="link-text">在手机浏览器</span>打开以下链接：
       </p>
-      <p class="popup-link">https://b23.tv/CrKiRjb</p>
+      <p class="popup-link">https://mall.bilibili.com/neul-next/detailshop/index.html?channel=WEIXIN&curTab=LIVE_REPLAY&loadingShow=1&msource=cps_showcase_330132447&noTitleBar=1&outsideMall=yes&page=detailshop_detail&share_mid=585178195&smallShopMid=330132447#themeType=1</p>
     </div>
     <div class="popup-footer">
       <button id="copyBtn" class="action-btn">复制并打开</button>
